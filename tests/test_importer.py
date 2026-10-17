@@ -13,7 +13,7 @@ class ImportTests(unittest.TestCase):
         self.assertEqual(extract("jobmail@jobs.ch", "Bitte bestätigen Sie Ihre Anmeldung", "https://jobs.ch/job/123"), [])
     def test_multiple_and_incremental_and_cross_sender(self):
         a = {"id":"m1","from":"jobmail@jobs.ch","subject":"Neue Stellen","body":"", "html":'<a href="https://jobs.ch/jobs/123?utm_source=x">Projektleiter Energie</a><a href="https://jobs.ch/jobs/456">Fachplaner Fernwärme</a><a href="https://x.ch/unsubscribe">Abmelden</a>',"received_at":"2026-10-17T10:00:00+00:00"}
-        b = dict(a,id="m2",from_="x")
+        b = dict(a, id="m2")
         b["from"] = "no-reply@publicjobs.ch"
         b["html"] = '<a href="https://jobs.ch/jobs/123?utm_source=public">Projektleiter Energie</a>'
         with tempfile.TemporaryDirectory() as folder:
