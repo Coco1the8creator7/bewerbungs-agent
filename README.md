@@ -2,7 +2,7 @@
 
 Entwicklungs-Repository für einen lokalen Stellen-Importer und ein interaktives HTML-Dashboard. Vor der geplanten Veröffentlichung als öffentliches Repository ist die Git-Historie auf private Daten zu prüfen.
 
-**Projektstand: 17.10.2026 · Dashboard-Prüfworkflow (Entwicklungsversion)**
+**Projektstand: 17.10.2026 · Dashboard-Layout v0.2 (Entwicklungsversion)**
 
 ## Ziel
 
@@ -10,7 +10,7 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 
 ## Verzeichnisstruktur
 
-- \`dashboard/index.html\` – Offline-Dashboard: JSON-Datei laden, suchen, filtern, Details/Notizen bearbeiten, Entscheidungen separat importieren/exportieren und eingebaute Demo testen.
+- \`dashboard/index.html\` – Dashboard mit drei Abschnitten: vier Status-KPIs, laufende Bewerbungen, neue Inserate mit optionalem Fit-Score. Daten-/Demo-Tools dezent am Seitenende. Import-/Export und Notizen bleiben erhalten.
 - \`schemas/job.schema.json\` – Schema für **ein** normalisiertes Stelleninserat (v0.1.0). Die lokale Datei \`data/jobs.json\` enthält ein Array solcher Einträge.
 - \`config/job-alerts.json\` – Quellen und in Gmail nachgewiesene Job-Abo-Bestätigungen; keine Logins, Aktivierungslinks oder personenbezogenen Postfachdaten.
 - \`docs/suchvorgaben.md\` – technische Zusammenfassung relevanter Entscheidungen; **nicht** die vollständige Originaldatei des Pflichtenhefts v0.7.
@@ -19,16 +19,22 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 - \`examples/jobs.example.json\` – ausdrücklich fiktive Datensätze zum Testen der Anzeige.
 - \`data/\` – künftig lokale produktive Daten (**per .gitignore ausgeschlossen**).
 
+## Neuer Dashboard-Aufbau v0.2
+
+Oben: **Neue Inserate**, **Seit letzter Woche in Prüfung**, **Total in Prüfung**, **Absagen neu** (rollierendes 7-Tage-Fenster). Darunter die **laufenden Bewerbungen** mit Status und die **noch ungeprüften neuen Stellen** mit optionalem Fit-Score. Im Footer: ausklappbarer Bereich **Daten & Entwicklung** mit Demo, JSON-Import und Status-Export. Details und KPI-Logik: [docs/dashboard-v0.2.md](docs/dashboard-v0.2.md).
+
+Auf GitHub Pages werden beim ersten Aufruf ausdrücklich **fiktive Demo-Daten** angezeigt. Die echte Gmail-Anbindung, ein dauerhaftes Status-Backend und die Matching-Engine sind noch nicht vorhanden. Reale Scores werden deshalb nicht erfunden.
+
 ## Offline testen (ohne Gmail)
 
 1. Repository als ZIP herunterladen oder später auf dem Mac klonen.
-2. Datei dashboard/index.html im Browser öffnen.
-3. Auf „Demo anzeigen“ klicken, um drei fiktive Jobs zu laden – **ohne Jobmails**.
+2. Datei dashboard/index.html im Browser öffnen oder die veröffentlichte GitHub-Pages-URL aufrufen.
+3. Die Demo wird bereits beim Start mit mehreren fiktiven Inseraten geladen – **ohne Jobmails**.
 4. Filter ausprobieren, persönliche Entscheidungen treffen und in „Details / Notiz“ Notizen ergänzen.
-5. „Entscheidungen exportieren“ sichert eine eigenständige JSON-Datei mit Inserat-IDs, persönlichen Entscheidungen und Notizen.
-6. „Entscheidungen laden“ kann diese Daten wiederherstellen; „Stellen-JSON laden“ importiert echte Inserate aus einer separaten lokalen Datei.
+5. „Statusdatei exportieren“ sichert eine eigenständige JSON-Datei mit Inserat-IDs, persönlichen Entscheidungen und Notizen.
+6. „Statusdatei laden“ stellt diese Daten wieder her; „Stellen-JSON laden“ importiert echte Inserate.
 
-**Datentrennung:** processing.state bleibt der technische Importstatus. Persönliche Entscheidungen (Offen, Merkliste, Später prüfen, Nicht relevant, Beworben) verändern die Ursprungsjobs nicht und werden getrennt exportiert.
+**Datentrennung:** processing.state bleibt der technische Importstatus. Der persönliche Status (z. B. In Prüfung, Bewerbung vorbereiten, Beworben, Absage erhalten) wird getrennt geführt und als JSON exportiert (Format v0.2.0, ältere Dateien v0.1.0 einlesbar).
 
 **Schul-/Arbeitgebergerät:** Bewusst keine dauerhafte Browser-Speicherung. Beim Schliessen/Neuladen gehen nicht exportierte Entscheidungen verloren. Private Bewerbungsnotizen nicht auf verwalteten Geräten eingeben; Exporte mit personenbezogenen Inhalten nicht in GitHub laden.
 
