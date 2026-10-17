@@ -1,0 +1,75 @@
+[
+  {
+    "schema_version": "0.1.0",
+    "id": "DEMO-jobs.ch-001",
+    "source": "jobs.ch",
+    "source_job_id": "DEMO-001",
+    "title": "DEMO – Projektleiter Fernwärme",
+    "company": "Fiktive Energie AG",
+    "location": "Zürich",
+    "remote_mode": "hybrid",
+    "url": "https://example.com/demo-job-001",
+    "published_at": "2026-10-16",
+    "first_seen_at": "2026-10-17T12:00:00+02:00",
+    "last_seen_at": null,
+    "categories": [
+      "Fernwärme",
+      "Projektleitung"
+    ],
+    "description": "Fiktives Beispiel zum Testen der Anzeige.",
+    "salary_chf_year_min": 105000,
+    "salary_chf_year_max": 120000,
+    "salary_kind": "explicit",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "permanent",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": "DEMO – kein echtes Job-Abo"
+    },
+    "processing": {
+      "state": "new",
+      "warnings": [],
+      "extraction_confidence": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "DEMO-publicjobs-002",
+    "source": "publicjobs.ch",
+    "source_job_id": "DEMO-002",
+    "title": "DEMO – Fachbereichsleitung Energie",
+    "company": "Fiktive Gemeinde",
+    "location": "Winterthur",
+    "remote_mode": "unknown",
+    "url": null,
+    "published_at": null,
+    "first_seen_at": "2026-10-17T12:05:00+02:00",
+    "last_seen_at": null,
+    "categories": [
+      "Fachbereich Energie",
+      "Entwicklungschancen",
+      "Neue Karriereoptionen"
+    ],
+    "description": "Fiktiver Prüffall ohne verifizierte Original-URL.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": "DEMO – kein echtes Job-Abo"
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Original-Inserat-URL fehlt im Demo-Datensatz"
+      ],
+      "extraction_confidence": null
+    }
+  }
+]
