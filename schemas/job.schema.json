@@ -211,6 +211,95 @@
           "maximum": 1
         }
       }
+    },
+    "matching": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Optionales Ergebnis der späteren Fit-Analyse. Ohne Abschlussstatus und gültigen Score keine Kennzahl anzeigen.",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "score"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "complete",
+            "error",
+            "not_run"
+          ]
+        },
+        "score": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Score 0 bis 100. Nur bei status=complete anzeigen."
+        },
+        "rationale": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Nachvollziehbare Begründung des Fit-Scores."
+        },
+        "evaluated_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "pending",
+                  "error",
+                  "not_run"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "score": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }
