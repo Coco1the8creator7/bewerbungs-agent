@@ -15,72 +15,197 @@ input,select{width:100%;padding:11px 12px;border:1px solid #cad4e2;border-radius
 .footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding-top:8px}.footer a{color:#174a85;font-weight:600;text-decoration:none}.footer a:hover{text-decoration:underline}
 .empty{grid-column:1/-1;text-align:center;color:#5d6b80;padding:44px 14px;border:1px dashed #bac8db;border-radius:14px}.status{font-size:.78rem;padding:4px 8px;background:#fff4dc;border-radius:5px}
 #message{margin-top:14px;min-height:1.2em;font-size:.9rem}@media(max-width:760px){.filters{grid-template-columns:1fr 1fr}.filters>div:first-child{grid-column:1/-1}}@media(max-width:480px){.filters{grid-template-columns:1fr}.filters>div:first-child{grid-column:auto}.stat{padding:10px}.stat strong{font-size:1.3rem}}
+
+/* Offline-Prüfworkflow: Bewerberentscheidungen bleiben strikt vom Importstatus getrennt. */
+header .actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+button.secondary{background:#e9eff7;color:#24456d}button.secondary:hover{background:#dbe6f3}
+.stats{grid-template-columns:repeat(4,1fr)}
+.review-bar{border-top:1px solid #e6ebf2;padding-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:auto}
+.review-bar label{margin:0;font-size:.8rem}.review-bar select{width:auto;max-width:100%;flex:1}
+.review-bar button{font-size:.85rem;padding:9px 12px}
+dialog{width:min(650px,calc(100vw - 28px));border:1px solid #cad4e2;border-radius:16px;box-shadow:0 16px 70px #17243a44;color:#17243a;padding:24px}
+dialog::backdrop{background:#17243a88}
+dialog h2{margin:0 0 8px}.dialog-field{margin-top:18px}
+dialog textarea{width:100%;min-height:115px;padding:11px;border:1px solid #cad4e2;border-radius:9px;font:inherit;resize:vertical}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;flex-wrap:wrap}
+#detailDescription{white-space:pre-wrap;max-height:220px;overflow:auto;line-height:1.5}
+#message{line-height:1.45}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){header .actions button{flex:1}.review-bar select{flex-basis:100%}}
 </style>
 </head>
 <body><main>
 <header><div><h1>Stellenübersicht</h1><p class="muted sub">Bewerbungs-Agent · lokaler Prototyp · noch ohne Matching</p></div>
-<div><input type="file" id="picker" accept=".json,application/json" hidden><button type="button" id="choose">JSON-Datei laden / aktualisieren</button></div></header>
-<div id="message" class="muted" role="status" aria-live="polite">Noch keine Datei geladen. Wähle später deine lokale data/jobs.json aus.</div>
-<section class="stats" aria-label="Statistik"><div class="stat"><span class="muted">Total Inserate</span><strong id="allCount">0</strong></div><div class="stat"><span class="muted">Sichtbar</span><strong id="shownCount">0</strong></div><div class="stat"><span class="muted">Zur Prüfung</span><strong id="reviewCount">0</strong></div></section>
+<div class="actions">
+<input type="file" id="picker" accept=".json,application/json" hidden>
+<input type="file" id="decisionsPicker" accept=".json,application/json" hidden>
+<button type="button" id="demo" class="secondary">Demo anzeigen</button>
+<button type="button" id="choose">Stellen-JSON laden</button>
+<button type="button" id="importDecisions" class="secondary">Entscheidungen laden</button>
+<button type="button" id="exportDecisions" class="secondary">Entscheidungen exportieren</button>
+</div></header>
+<div id="message" class="muted" role="status" aria-live="polite">Noch keine Stellen geladen. Für einen Test ohne Jobmails «Demo anzeigen» wählen. Entscheidungen bleiben nur bis zum Schliessen dieses Tabs im Speicher.</div>
+<section class="stats" aria-label="Statistik"><div class="stat"><span class="muted">Total Inserate</span><strong id="allCount">0</strong></div><div class="stat"><span class="muted">Sichtbar</span><strong id="shownCount">0</strong></div><div class="stat"><span class="muted">Zur Prüfung</span><strong id="reviewCount">0</strong></div><div class="stat"><span class="muted">Gemerkt</span><strong id="savedCount">0</strong></div></section>
 <section class="panel" aria-label="Filter"><div class="filters">
 <div><label for="query">Freitextsuche</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Ort …"></div>
 <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
 <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
 <div><label for="status">Importstatus</label><select id="status"><option value="">Alle Status</option><option value="new">Neu</option><option value="needs_review">Zur Prüfung</option><option value="processed">Verarbeitet</option><option value="excluded">Ausgeschlossen</option></select></div>
+<div><label for="decisionFilter">Meine Entscheidung</label><select id="decisionFilter">
+<option value="">Alle Entscheidungen</option>
+<option value="open">Offen</option>
+<option value="saved">Merkliste</option>
+<option value="later">Später prüfen</option>
+<option value="rejected">Nicht relevant</option>
+<option value="applied">Beworben</option>
+</select></div>
 </div></section>
 <section id="list" class="results" aria-label="Stelleninserate"></section>
-<p class="muted" style="margin-top:28px;font-size:.85rem">Alle Daten werden nur im Browser verarbeitet. Diese Seite ruft weder Gmail noch externe APIs ab und lädt nichts auf GitHub hoch.</p>
+<p class="muted" style="margin-top:28px;font-size:.85rem">Diese Seite läuft vollständig offline: kein Gmail-, KI- oder GitHub-Zugriff. Änderungen werden absichtlich nicht automatisch auf diesem Gerät gespeichert. Sichere die Entscheidungen vor dem Schliessen über «Entscheidungen exportieren» als separate JSON-Datei. Auf gemeinsam verwalteten Geräten keine privaten Bewerbungsnotizen eingeben.</p>
+<dialog id="details" aria-labelledby="detailTitle">
+<h2 id="detailTitle">Inserat</h2>
+<p class="muted" id="detailMeta"></p>
+<div class="dialog-field"><strong>Beschreibung aus Inserat</strong><p id="detailDescription" class="muted"></p></div>
+<div class="dialog-field"><label for="detailDecision">Meine Entscheidung</label><select id="detailDecision"></select></div>
+<div class="dialog-field"><label for="detailNote">Persönliche Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Zum Beispiel: Fragen für ein späteres Gespräch …"></textarea></div>
+<div class="dialog-actions"><button id="closeDetails" class="secondary" type="button">Abbrechen</button><button id="saveDetails" type="button">Entscheidung übernehmen</button></div>
+</dialog>
 </main><script>
 "use strict";
+// Bewusst keine localStorage-Verwendung: auf Schul-/Arbeitgebergeräten keine privaten Spuren.
 const el=id=>document.getElementById(id);
-let jobs=[];
-const locale=new Intl.DateTimeFormat("de-CH",{year:"numeric",month:"short",day:"numeric"});
 const txt=v=>v==null?"":String(v);
+const locale=new Intl.DateTimeFormat("de-CH",{year:"numeric",month:"short",day:"numeric"});
+const decisions=[["open","Offen"],["saved","Merkliste"],["later","Später prüfen"],["rejected","Nicht relevant"],["applied","Beworben"]];
+const decisionNames=new Map(decisions);
+const annotations=new Map(); // {jobId => {decision, note}}; getrennt vom technischen processing.state
+let jobs=[],currentJobId=null;
 function unique(v){return [...new Set(v.filter(Boolean))].sort((a,b)=>a.localeCompare(b,"de-CH"));}
 function refill(s,values,label){const old=s.value;s.replaceChildren(new Option(label,""));for(const value of values)s.add(new Option(value,value));s.value=values.includes(old)?old:"";}
 function safeLink(value){try{const u=new URL(value);return ["https:","http:"].includes(u.protocol)?u.href:null;}catch{return null;}}
 function dateLabel(value){if(!value)return "";const d=new Date(value);return Number.isFinite(d.getTime())?locale.format(d):"";}
 function node(tag,value,klass){const e=document.createElement(tag);if(klass)e.className=klass;e.textContent=txt(value);return e;}
+function decisionOf(id){return annotations.get(id)?.decision||"open";}
+function noteOf(id){return annotations.get(id)?.note||"";}
+function choiceSelect(value){
+ const select=document.createElement("select");
+ for(const [key,label] of decisions)select.add(new Option(label,key));
+ select.value=value;
+ return select;
+}
+function setAnnotation(id,decision,note){
+ if(!decisionNames.has(decision))throw Error("Unbekannte Entscheidung");
+ if(typeof note!=="string"||note.length>2000)throw Error("Ungültige Notiz");
+ if(decision==="open"&&!note.trim())annotations.delete(id);
+ else annotations.set(id,{decision,note});
+ render();
+}
 function render(){
- const needle=el("query").value.trim().toLocaleLowerCase("de-CH"),category=el("category").value,source=el("source").value,status=el("status").value;
+ const needle=el("query").value.trim().toLocaleLowerCase("de-CH"),category=el("category").value,source=el("source").value,status=el("status").value,decisionFilter=el("decisionFilter").value;
  const visible=jobs.filter(j=>{
-   const tags=Array.isArray(j.categories)?j.categories:[];
-   const hay=[j.title,j.company,j.location,j.source,...tags].map(txt).join(" ").toLocaleLowerCase("de-CH");
-   return (!needle||hay.includes(needle))&&(!category||tags.includes(category))&&(!source||j.source===source)&&(!status||j.processing?.state===status);
+  const tags=Array.isArray(j.categories)?j.categories:[];
+  const hay=[j.title,j.company,j.location,j.source,...tags].map(txt).join(" ").toLocaleLowerCase("de-CH");
+  return (!needle||hay.includes(needle))&&(!category||tags.includes(category))&&(!source||j.source===source)&&(!status||j.processing?.state===status)&&(!decisionFilter||decisionOf(j.id)===decisionFilter);
  }).sort((a,b)=>txt(b.first_seen_at).localeCompare(txt(a.first_seen_at)));
- el("allCount").textContent=jobs.length;el("shownCount").textContent=visible.length;
+ el("allCount").textContent=jobs.length;
+ el("shownCount").textContent=visible.length;
  el("reviewCount").textContent=jobs.filter(j=>j.processing?.state==="needs_review").length;
+ el("savedCount").textContent=jobs.filter(j=>decisionOf(j.id)==="saved").length;
  const list=el("list");list.replaceChildren();
- if(!visible.length){list.append(node("div",jobs.length?"Keine Inserate entsprechen diesen Filtern.":"Noch keine Stellen geladen.","empty"));return;}
+ if(!visible.length){list.append(node("div",jobs.length?"Keine Inserate entsprechen diesen Filtern.":"Noch keine Stellen geladen. Probiere die Demo aus.","empty"));return;}
  for(const j of visible){
-  const card=document.createElement("article");card.append(node("div",j.source,"meta"),node("h3",j.title));
-  card.append(node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort nicht bekannt","meta"));
-  const tags=document.createElement("div");tags.className="tags";for(const tag of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",tag,"tag"));card.append(tags);
+  const card=document.createElement("article");
+  card.append(node("div",j.source,"meta"),node("h3",j.title),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort nicht bekannt","meta"));
+  const tags=document.createElement("div");tags.className="tags";
+  for(const tag of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",tag,"tag"));
+  card.append(tags);
   const salary=j.salary_chf_year_min!=null||j.salary_chf_year_max!=null
-    ?"CHF "+(j.salary_chf_year_min??"?")+"–"+(j.salary_chf_year_max??"?")+" / Jahr ("+(j.salary_kind==="estimated"?"Schätzung":"Angabe")+")"
-    :"Lohn nicht angegeben";
+   ?"CHF "+(j.salary_chf_year_min??"?")+"–"+(j.salary_chf_year_max??"?")+" / Jahr ("+(j.salary_kind==="estimated"?"Schätzung":j.salary_kind==="explicit"?"Inserat":"unbekannte Quelle")+")"
+   :"Lohn nicht angegeben";
   card.append(node("div",salary,"meta"));
+  if(noteOf(j.id))card.append(node("div","Notiz vorhanden","meta"));
   const footer=document.createElement("div");footer.className="footer";const link=safeLink(j.url);
   if(link){const a=document.createElement("a");a.href=link;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Originalinserat ↗";footer.append(a);}
   else footer.append(node("span","Kein gültiger Link","muted"));
-  footer.append(j.processing?.state==="needs_review"?node("span","Prüfen","status"):node("small",dateLabel(j.published_at||j.first_seen_at),"muted"));
-  card.append(footer);list.append(card);
+  footer.append(j.processing?.state==="needs_review"?node("span","Importer: Prüfen","status"):node("small",dateLabel(j.published_at||j.first_seen_at),"muted"));
+  card.append(footer);
+  const bar=document.createElement("div");bar.className="review-bar";
+  const label=node("label","Meine Entscheidung:");label.htmlFor="choice-"+j.id;
+  const selection=choiceSelect(decisionOf(j.id));selection.id="choice-"+j.id;
+  selection.addEventListener("change",()=>setAnnotation(j.id,selection.value,noteOf(j.id)));
+  const details=node("button","Details / Notiz");details.type="button";details.className="secondary";
+  details.addEventListener("click",()=>openDetails(j.id));
+  bar.append(label,selection,details);card.append(bar);list.append(card);
  }
+}
+function openDetails(id){
+ const j=jobs.find(row=>row.id===id);if(!j)return;
+ currentJobId=id;
+ el("detailTitle").textContent=j.title;
+ el("detailMeta").textContent=[j.company,j.location,j.source,j.workload_pct_min!=null?(j.workload_pct_min+"–"+(j.workload_pct_max??"?")+" %"):null].filter(Boolean).join(" · ");
+ el("detailDescription").textContent=j.description||"Keine Beschreibung im Datensatz.";
+ el("detailDecision").value=decisionOf(id);
+ el("detailNote").value=noteOf(id);
+ el("details").showModal();
+}
+function loadJobs(rows,name){
+ if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||Array.isArray(j)||typeof j.id!=="string"||!j.id||typeof j.title!=="string"||!j.title||typeof j.source!=="string"||!j.source))
+  throw Error("Erwartet wird ein Array aus Inseraten mit nichtleeren id, title und source.");
+ if(new Set(rows.map(j=>j.id)).size!==rows.length)throw Error("Doppelte Inserat-IDs in der Datei.");
+ jobs=rows;
+ refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
+ refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
+ el("message").textContent=jobs.length+" Stellen aus «"+name+"» geladen. Änderungen vor dem Verlassen separat exportieren.";
+ render();
 }
 el("choose").addEventListener("click",()=>{el("picker").value="";el("picker").click();});
 el("picker").addEventListener("change",async e=>{
  const file=e.target.files?.[0];if(!file)return;
  try{
-  const raw=JSON.parse(await file.text()),rows=Array.isArray(raw)?raw:raw?.jobs;
-  if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||!j.id||!j.title||!j.source))
-    throw new Error("Erwartet wird ein Array aus Inseraten mit id, title und source.");
-  jobs=rows;
-  refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
-  refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
-  el("message").textContent=jobs.length+" Inserate aus «"+file.name+"» geladen.";
-  render();
- }catch(err){el("message").textContent="Die JSON-Datei konnte nicht geladen werden: "+err.message;}
+  if(file.size>10_000_000)throw Error("Datei grösser als 10 MB.");
+  const raw=JSON.parse(await file.text());loadJobs(Array.isArray(raw)?raw:raw?.jobs,file.name);
+ }catch(err){el("message").textContent="Stellen-Datei nicht geladen: "+err.message;}
 });
-["query","category","source","status"].forEach(id=>el(id).addEventListener("input",render));
+el("demo").addEventListener("click",()=>{
+ const base={schema_version:"0.1.0",first_seen_at:"2026-10-17T12:00:00+02:00",salary_chf_year_min:null,salary_chf_year_max:null,salary_kind:"unknown",url:null};
+ loadJobs([
+  {...base,id:"DEMO-FW-01",source:"jobs.ch",title:"DEMO – Projektleitung Fernwärme",company:"Fiktive Energie AG",location:"Zürich",categories:["Fernwärme","Projektleitung"],description:"Fiktive Stelle: Planung und Koordination von Fernwärmeprojekten.",processing:{state:"new",warnings:[]}},
+  {...base,id:"DEMO-ENERGIE-02",source:"publicjobs.ch",title:"DEMO – Fachbereich Energie",company:"Fiktive Gemeinde",location:"Winterthur",categories:["Fachbereich Energie","Entwicklungschancen"],description:"Fiktive Stelle im kommunalen Energiemanagement.",processing:{state:"needs_review",warnings:["Original-URL fehlt"]}},
+  {...base,id:"DEMO-NEU-03",source:"ewz",title:"DEMO – Energieberatung",company:"Fiktives Stadtwerk",location:"Zürich",categories:["Energieberatung","Neue Karriereoptionen"],description:"Fiktive Beratungsstelle für erneuerbare Energien.",processing:{state:"processed",warnings:[]}}
+ ],"eingebaute Demo (keine echten Inserate)");
+});
+el("saveDetails").addEventListener("click",()=>{
+ if(currentJobId!==null)setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
+ el("details").close();currentJobId=null;
+});
+el("closeDetails").addEventListener("click",()=>{el("details").close();currentJobId=null;});
+el("details").addEventListener("close",()=>{currentJobId=null;});
+el("exportDecisions").addEventListener("click",()=>{
+ const records=[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note}));
+ const payload={schema_version:"0.1.0",type:"bewerbungs-agent-decisions",exported_at:new Date().toISOString(),annotations:records};
+ const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
+ const a=document.createElement("a");a.href=url;a.download="bewerbungs-entscheidungen-"+new Date().toISOString().slice(0,10)+".json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+ el("message").textContent=records.length+" Entscheidungen exportiert (nicht die Stelleninserate).";
+});
+el("importDecisions").addEventListener("click",()=>{el("decisionsPicker").value="";el("decisionsPicker").click();});
+el("decisionsPicker").addEventListener("change",async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  if(file.size>2_000_000)throw Error("Datei grösser als 2 MB.");
+  const obj=JSON.parse(await file.text());
+  if(obj?.type!=="bewerbungs-agent-decisions"||obj?.schema_version!=="0.1.0"||!Array.isArray(obj.annotations))throw Error("Kein gültiger Entscheidungen-Export v0.1.0.");
+  const incoming=new Map();
+  for(const item of obj.annotations){
+   if(!item||typeof item.id!=="string"||!item.id||!decisionNames.has(item.decision)||typeof item.note!=="string"||item.note.length>2000||incoming.has(item.id))
+    throw Error("Ungültiger oder doppelter Eintrag in Entscheidungen-Datei.");
+   incoming.set(item.id,{decision:item.decision,note:item.note});
+  }
+  for(const [id,item] of incoming)annotations.set(id,item);
+  el("message").textContent=incoming.size+" Entscheidungen übernommen. Änderungen vor dem Verlassen erneut exportieren.";
+  render();
+ }catch(err){el("message").textContent="Entscheidungen nicht importiert: "+err.message;}
+});
+["query","category","source","status","decisionFilter"].forEach(id=>el(id).addEventListener("input",render));
+const detailOptions=el("detailDecision");for(const [key,label] of decisions)detailOptions.add(new Option(label,key));
 render();
 </script></body></html>
