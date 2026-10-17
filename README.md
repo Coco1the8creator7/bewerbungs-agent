@@ -1,6 +1,6 @@
 # KI-Bewerbungs-Agent
 
-Privates Entwicklungs-Repository für einen lokalen Stellen-Importer und ein interaktives HTML-Dashboard.
+Entwicklungs-Repository für einen lokalen Stellen-Importer und ein interaktives HTML-Dashboard. Vor der geplanten Veröffentlichung als öffentliches Repository ist die Git-Historie auf private Daten zu prüfen.
 
 **Projektstand: 17.10.2026 · Dashboard-Prüfworkflow (Entwicklungsversion)**
 
@@ -34,11 +34,13 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 
 **Automatische Offline-Tests:** GitHub Actions validiert JavaScript-Syntax und die fiktiven Datensätze gegen das JSON-Schema. Lokal: Python mit jsonschema sowie Node.js installieren, dann: python -m unittest discover -s tests -v.
 
-## Permanente Webadresse (ohne lokalen Rechner)
+## Permanente Webadresse über GitHub Pages
 
-Das statische Dashboard kann über **Cloudflare Pages** aus diesem privaten Repository als öffentliche HTTPS-Seite veröffentlicht werden. Einmalig ist eine GitHub-Autorisierung im Cloudflare-Dashboard erforderlich; anschliessend aktualisiert sich die Seite automatisch bei Änderungen an `main`. Die genaue Einrichtung (Build-Ausgabeordner `dashboard`) und die Datenschutzgrenzen stehen in [docs/hosting.md](docs/hosting.md).
+Für die statische Website verwenden wir denselben Hosting-Ansatz wie bei `was-ist-der-plan`: `.github/workflows/deploy-pages.yml` veröffentlicht ausschliesslich den Ordner `dashboard/`.
 
-**Wichtig:** Eine veröffentlichte HTML-Seite ist kein geschütztes Benutzerkonto und enthält weiterhin keine persistente private Datenbank oder einen Gmail-Importer. Nur fiktive Beispieldaten im Code; reale Bewerbungsdaten niemals in den veröffentlichten Ordner committen.
+**Voraussetzungen:** Sicherheitsprüfung der vorhandenen Git-Historie, anschliessend Umstellung auf **öffentlich**, `Settings → Pages → Source: GitHub Actions` und einmaliger manueller Workflow-Start. Die erwartete URL lautet nach erfolgreicher Einrichtung `https://coco1the8creator7.github.io/bewerbungs-agent/` (noch nicht live bestätigt). Details unter [docs/hosting.md](docs/hosting.md).
+
+**Achtung:** Bei einem öffentlichen Repository wird **das gesamte Repository mitsamt Historie** sichtbar, nicht bloss `dashboard/`. Unter `docs/suchvorgaben.md` liegen derzeit persönliche Gehalts- und Pendelpräferenzen. Keine privaten Dateien oder Zugangsdaten veröffentlichen.
 
 ## Spätere produktive Nutzung
 
