@@ -2,7 +2,7 @@
 
 Entwicklungs-Repository für einen lokalen Stellen-Importer und ein interaktives HTML-Dashboard. Vor der geplanten Veröffentlichung als öffentliches Repository ist die Git-Historie auf private Daten zu prüfen.
 
-**Projektstand: 17.10.2026 · Dashboard-Layout v0.2 (Entwicklungsversion)**
+**Projektstand: 17.10.2026 · Dashboard mit lokaler JSON-Persistenz v0.3**
 
 ## Ziel
 
@@ -23,7 +23,15 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 
 Oben: **Neue Inserate**, **Seit letzter Woche in Prüfung**, **Total in Prüfung**, **Absagen neu** (rollierendes 7-Tage-Fenster). Darunter die **laufenden Bewerbungen** mit Status und die **noch ungeprüften neuen Stellen** mit optionalem Fit-Score. Im Footer: ausklappbarer Bereich **Daten & Entwicklung** mit Demo, JSON-Import und Status-Export. Details und KPI-Logik: [docs/dashboard-v0.2.md](docs/dashboard-v0.2.md).
 
-Auf GitHub Pages werden beim ersten Aufruf ausdrücklich **fiktive Demo-Daten** angezeigt. Die echte Gmail-Anbindung, ein dauerhaftes Status-Backend und die Matching-Engine sind noch nicht vorhanden. Reale Scores werden deshalb nicht erfunden.
+Auf GitHub Pages werden beim ersten Aufruf ausdrücklich **fiktive Demo-Daten** angezeigt. Die echte Gmail-Anbindung, ein geschütztes geräteübergreifendes Status-Backend und die Matching-Engine sind noch nicht vorhanden. Reale Scores werden deshalb nicht erfunden.
+
+## Dauerhafte Bearbeitung & Sicherung (v0.3)
+
+Das Dashboard bietet **opt-in Speicherung im aktuellen Browser** (IndexedDB) über den dezenten Footer «Daten & Entwicklung». Damit werden Jobliste, Status, Notizen und manuelle Inseratkorrekturen bei einem Neuladen auf demselben Gerät wiederhergestellt. Die Speicherung ist standardmässig **aus** – insbesondere auf Arbeitgeber- und Schulgeräten nicht aktivieren.
+
+Im Detailfenster lassen sich Inseratdaten (Arbeitgeber, Ort, Kategorien, Pensum, Gehalt, Arbeitsmodell etc.) ändern. Es können vollständige Inserat-JSON-Dateien, separate Statusdateien und eine **Gesamtsicherung v0.3** exportiert und wieder importiert werden. Bei einem erneuten Jobimport bleiben manuelle Korrekturen nach Inserat-ID erhalten. Bestehende Fit-Scores werden nach inhaltlichen Änderungen als veraltet markiert, nicht unverändert angezeigt.
+
+**Keine Cloud-Synchronisierung:** Die öffentliche GitHub-Pages-Webseite hat keinen sicheren Schreibzugriff auf eine private Datenbank oder lokale Mac-Dateien; sie schreibt auch nicht zurück ins GitHub-Repository. Für mehrere Geräte wäre später ein authentifiziertes Backend erforderlich. Technische Details: [docs/persistence-v0.3.md](docs/persistence-v0.3.md).
 
 ## Offline testen (ohne Gmail)
 
@@ -36,7 +44,7 @@ Auf GitHub Pages werden beim ersten Aufruf ausdrücklich **fiktive Demo-Daten** 
 
 **Datentrennung:** processing.state bleibt der technische Importstatus. Der persönliche Status (z. B. In Prüfung, Bewerbung vorbereiten, Beworben, Absage erhalten) wird getrennt geführt und als JSON exportiert (Format v0.2.0, ältere Dateien v0.1.0 einlesbar).
 
-**Schul-/Arbeitgebergerät:** Bewusst keine dauerhafte Browser-Speicherung. Beim Schliessen/Neuladen gehen nicht exportierte Entscheidungen verloren. Private Bewerbungsnotizen nicht auf verwalteten Geräten eingeben; Exporte mit personenbezogenen Inhalten nicht in GitHub laden.
+**Schul-/Arbeitgebergerät:** Die optionale lokale Browser-Speicherung nicht aktivieren. Ohne Aktivierung gehen beim Neuladen nicht exportierte Änderungen verloren. Private Bewerbungsnotizen nicht auf verwalteten Geräten eingeben; Exporte mit personenbezogenen Inhalten nicht in GitHub laden.
 
 **Automatische Offline-Tests:** GitHub Actions validiert JavaScript-Syntax und die fiktiven Datensätze gegen das JSON-Schema. Lokal: Python mit jsonschema sowie Node.js installieren, dann: python -m unittest discover -s tests -v.
 

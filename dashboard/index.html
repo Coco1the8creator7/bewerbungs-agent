@@ -59,6 +59,21 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
 .dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
 @media(max-width:920px){.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,2fr) minmax(105px,1fr) 82px}.pipeline-head .changed,.pipeline-row .changed{display:none}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{gap:9px}.stat{padding:18px 13px;min-height:120px}}
 @media(max-width:650px){main{padding:26px 15px 55px}header{display:block}.context{display:inline-block;margin-top:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.pipeline-head{display:none}.pipeline-row{grid-template-columns:1fr auto;gap:7px 10px;padding:15px}.pipeline-row .stage-cell{grid-column:1;grid-row:2}.pipeline-row .action-cell{grid-column:2;grid-row:1/3;text-align:right}.stat strong{font-size:1.9rem}.section{margin-top:27px}}
+
+/* Local workspace controls remain in the small footer; no public write API. */
+.persist-panel{background:#f5f8fd;border:1px solid #dce5f1;border-radius:11px;padding:13px 15px;margin:11px 0}
+.persist-panel label{display:flex;align-items:flex-start;gap:9px;font-size:.84rem;margin:0;cursor:pointer}
+.persist-panel input{width:auto;margin-top:4px;flex-shrink:0}
+.persist-panel p{font-size:.77rem;margin:7px 0 0 25px;color:#7a8798}
+.data-state{font-weight:650;font-size:.77rem;margin-top:10px}
+.dialog-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dialog-grid .span-all{grid-column:1/-1}
+#editFields{margin-top:19px;border-top:1px solid #e4eaf1;padding-top:10px}
+#editFields summary{color:#365f8b;font-weight:650;cursor:pointer;font-size:.89rem;margin-bottom:9px}
+.archive{border-top:1px solid #e8edf2;padding:12px 21px}
+.archive summary{color:#63748a;cursor:pointer;font-size:.84rem;font-weight:650}
+.archive .pipeline-row{padding-left:0;padding-right:0}
+@media(max-width:650px){.dialog-grid{grid-template-columns:1fr}.dialog-grid .span-all{grid-column:1}}
 </style>
 </head>
 <body>
@@ -81,6 +96,7 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
   <div class="panel">
     <div class="pipeline-head"><span>Stelle / Arbeitgeber</span><span>Status</span><span class="changed">Letzte Statusänderung</span><span>Aktion</span></div>
     <div id="pipelineList" aria-live="polite"><div class="empty">Noch keine laufenden Bewerbungen.</div></div>
+    <details class="archive"><summary id="archiveLabel">Abgeschlossen / Archiv (0)</summary><div id="archiveList"></div></details>
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
@@ -99,14 +115,26 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
     <div class="buttons">
       <input type="file" id="picker" accept=".json,application/json" hidden>
       <input type="file" id="decisionsPicker" accept=".json,application/json" hidden>
+      <input type="file" id="workspacePicker" accept=".json,application/json" hidden>
       <button type="button" class="secondary" id="demo">Demo neu laden</button>
       <button type="button" class="secondary" id="choose">Stellen-JSON laden</button>
       <button type="button" class="secondary" id="importDecisions">Statusdatei laden</button>
       <button type="button" class="secondary" id="exportDecisions">Statusdatei exportieren</button>
+      <button type="button" class="secondary" id="exportJobs">Inserate-JSON exportieren</button>
+      <button type="button" class="secondary" id="exportWorkspace">Gesamtsicherung exportieren</button>
+      <button type="button" class="secondary" id="importWorkspace">Gesamtsicherung laden</button>
+      <button type="button" class="secondary" id="addJob">Inserat manuell erfassen</button>
+    </div>
+    <div class="persist-panel">
+      <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
+        <span><strong>Auf diesem Gerät dauerhaft speichern</strong> (Browser-Datenbank, freiwillig)</span>
+      </label>
+      <p>Nur auf einem privaten, vertrauenswürdigen Gerät aktivieren. Ohne Aktivierung bleiben Änderungen nur bis zum Neuladen erhalten. Diese Option synchronisiert keine Daten zwischen Geräten und speichert nichts in GitHub.</p>
+      <div class="data-state" id="storageStatus" role="status" aria-live="polite">Nur aktuelle Sitzung · nicht dauerhaft gespeichert</div>
     </div>
     <p id="message" role="status" aria-live="polite" class="status-message">Demo-Daten geladen. Kein Zugriff auf Gmail oder ein Backend.</p>
   </details>
-  <p class="disclaimer">Der Prototyp verarbeitet Dateien ausschliesslich im Browser. Es gibt noch keine automatische Synchronisierung oder Speicherung. Statusänderungen vor dem Schliessen als JSON exportieren. Auf fremden Geräten keine sensiblen Notizen erfassen.</p>
+  <p class="disclaimer">Der Prototyp verarbeitet Dateien ausschliesslich im Browser. Mit deiner ausdrücklichen Zustimmung können Änderungen ausschliesslich auf diesem Gerät gespeichert werden. Ohne Aktivierung bitte JSON-Dateien exportieren; keine geräteübergreifende Synchronisierung. Auf fremden Geräten keine sensiblen Notizen erfassen.</p>
 </footer>
 <dialog id="details" aria-labelledby="detailTitle">
   <h2 id="detailTitle">Inserat</h2><p id="detailMeta" class="muted"></p>
@@ -114,9 +142,32 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
   <div class="dialog-field"><strong>Fit-Bewertung</strong><p id="detailScore" class="muted"></p></div>
   <div class="dialog-field"><label for="detailDecision">Bearbeitungsstatus</label><select id="detailDecision"></select></div>
   <div class="dialog-field"><label for="detailNote">Meine Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Anforderungen, offene Fragen, weitere Schritte …"></textarea></div>
+  <details id="editFields">
+    <summary>Inseratdaten bearbeiten (wirkt auf das Inserate-JSON)</summary>
+    <p class="muted" style="font-size:.82rem">Manuelle Korrekturen ändern deinen lokalen Datensatz. Technische Importnachweise und KI-Scores bleiben unverändert.</p>
+    <div class="dialog-grid">
+      <div class="span-all"><label for="editTitle">Stellenbezeichnung *</label><input id="editTitle" maxlength="250" required></div>
+      <div><label for="editCompany">Arbeitgeber</label><input id="editCompany" maxlength="250"></div>
+      <div><label for="editLocation">Arbeitsort</label><input id="editLocation" maxlength="250"></div>
+      <div><label for="editSource">Quelle / Plattform *</label><input id="editSource" maxlength="120" required></div>
+      <div><label for="editPublished">Publikationsdatum</label><input id="editPublished" type="date"></div>
+      <div class="span-all"><label for="editUrl">Original-URL</label><input id="editUrl" type="url" placeholder="https://…"></div>
+      <div class="span-all"><label for="editCategories">Karriere-Kategorien (mit Komma trennen)</label><input id="editCategories" placeholder="Fernwärme, Projektleitung"></div>
+      <div><label for="editWorkloadMin">Pensum min. %</label><input id="editWorkloadMin" type="number" min="0" max="100" step="1"></div>
+      <div><label for="editWorkloadMax">Pensum max. %</label><input id="editWorkloadMax" type="number" min="0" max="100" step="1"></div>
+      <div><label for="editSalaryMin">Jahreslohn min. CHF</label><input id="editSalaryMin" type="number" min="0" step="1"></div>
+      <div><label for="editSalaryMax">Jahreslohn max. CHF</label><input id="editSalaryMax" type="number" min="0" step="1"></div>
+      <div><label for="editSalaryKind">Lohnangabe</label><select id="editSalaryKind"><option value="unknown">Nicht bekannt</option><option value="explicit">Im Inserat angegeben</option><option value="estimated">Schätzung</option></select></div>
+      <div><label for="editRemote">Arbeitsmodell</label><select id="editRemote"><option value="unknown">Unbekannt</option><option value="on_site">Vor Ort</option><option value="hybrid">Hybrid</option><option value="remote">Remote</option></select></div>
+      <div><label for="editContract">Vertragsart</label><select id="editContract"><option value="unknown">Unbekannt</option><option value="permanent">Unbefristet</option><option value="fixed_term">Befristet</option><option value="temporary">Temporär</option></select></div>
+      <div class="span-all"><label for="editDescription">Stellenbeschreibung</label><textarea id="editDescription" maxlength="30000"></textarea></div>
+    </div>
+  </details>
+  <p id="detailError" class="status-message" style="color:#a13232" role="alert"></p>
   <div class="dialog-actions"><button type="button" id="closeDetails" class="secondary">Abbrechen</button><button type="button" id="saveDetails">Änderungen übernehmen</button></div>
 </dialog>
 </main>
+<script src="./storage.js"></script>
 <script>
 "use strict";
 // Kein Browser-Dauerspeicher: private Status-/Notizdaten liegen nur im aktuellen Tab.
@@ -132,6 +183,81 @@ const stages=[
 const stageNames=new Map(stages);
 const activeStages=new Set(["review","saved","later","preparing","applied","interview","offer"]);
 const annotations=new Map();
+const manualOverrides=new Map(); // Field-level corrections survive later imports by stable job ID.
+const editableKeys=["title","source","company","location","url","published_at","categories","description",
+ "workload_pct_min","workload_pct_max","salary_chf_year_min","salary_chf_year_max","salary_kind","remote_mode","contract_type"];
+function applyManualOverrides(job){
+ const patch=manualOverrides.get(job.id);
+ if(!patch)return job;
+ const edited={...job};
+ for(const key of editableKeys)if(Object.prototype.hasOwnProperty.call(patch,key))edited[key]=structuredClone(patch[key]);
+ if(job.matching?.status==="complete"){
+  edited.matching={status:"not_run",score:null,rationale:"Manuelle Korrekturen erfordern eine neue Fit-Bewertung.",evaluated_at:null};
+ }
+ return edited;
+}
+function validateOverrides(records){
+ if(records==null)return new Map();
+ if(!Array.isArray(records))throw Error("Korrekturen müssen eine Liste sein.");
+ const result=new Map();
+ for(const entry of records){
+  if(!entry||typeof entry.id!=="string"||!entry.id||!entry.patch||typeof entry.patch!=="object"||Array.isArray(entry.patch)||result.has(entry.id))
+   throw Error("Ungültige Korrektur.");
+  const patch={};
+  for(const key of Object.keys(entry.patch)){
+   if(!editableKeys.includes(key))throw Error("Unbekanntes Korrekturfeld: "+key);
+   patch[key]=entry.patch[key];
+  }
+  result.set(entry.id,patch);
+ }
+ return result;
+}
+let persistEnabled=false;
+let pendingSave=Promise.resolve();
+let isRestoring=false;
+let newJobMode=false;
+function snapshot(){
+ return {
+  type:"bewerbungs-agent-workspace",
+  schema_version:"0.3.0",
+  exported_at:new Date().toISOString(),
+  demo_mode:demoMode,
+  jobs:structuredClone(jobs),
+  annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
+  overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
+ };
+}
+function saveChanges(){
+ if(isRestoring||!persistEnabled)return pendingSave;
+ const state=snapshot();
+ pendingSave=pendingSave.catch(()=>{}).then(async()=>{
+  if(!persistEnabled)return;
+  await window.AgentStore.save(state);
+  el("storageStatus").textContent="Auf diesem Gerät gespeichert · "+new Date().toLocaleTimeString("de-CH");
+ }).catch(e=>{
+  persistEnabled=false;
+  el("persistEnabled").checked=false;
+  el("storageStatus").textContent="Speicherung fehlgeschlagen: "+e.message+" · Bitte Gesamtsicherung exportieren.";
+  el("message").textContent="ACHTUNG: Änderungen sind nicht dauerhaft gesichert. Gesamtsicherung exportieren.";
+ });
+ return pendingSave;
+}
+function downloadJSON(filename,payload){
+ const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
+ const link=document.createElement("a");link.href=url;link.download=filename;
+ document.body.append(link);link.click();link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
+function validateAnnotations(records){
+ if(!Array.isArray(records))throw Error("Statusliste fehlt.");
+ const result=new Map();
+ for(const item of records){
+  if(!item||typeof item.id!=="string"||!item.id||!stageNames.has(item.decision)||typeof item.note!=="string"||item.note.length>2000||result.has(item.id))throw Error("Ungültiger oder doppelter Status-Eintrag.");
+  if(item.stage_changed_at!=null&&validDate(item.stage_changed_at)===null)throw Error("Ungültiger Status-Zeitstempel.");
+  result.set(item.id,{decision:item.decision,note:item.note,stage_changed_at:item.stage_changed_at||null});
+ }
+ return result;
+}
 let jobs=[],currentJobId=null,demoMode=false;
 const recentDays=7;
 const dayMs=24*60*60*1000;
@@ -155,6 +281,7 @@ function setAnnotation(id,decision,note){
  if(decision==="open"&&!note.trim())annotations.delete(id);
  else annotations.set(id,{decision,note,stage_changed_at});
  render();
+ saveChanges();
 }
 function stageSelect(job){
  const s=document.createElement("select");
@@ -164,8 +291,65 @@ function stageSelect(job){
  s.addEventListener("change",()=>setAnnotation(job.id,s.value,noteOf(job.id)));
  return s;
 }
+function displayEditFields(j){
+ const stringField=(id,value)=>{el(id).value=value??"";};
+ stringField("editTitle",j.title);
+ stringField("editSource",j.source);
+ stringField("editCompany",j.company);
+ stringField("editLocation",j.location);
+ stringField("editUrl",j.url);
+ stringField("editPublished",j.published_at);
+ stringField("editCategories",Array.isArray(j.categories)?j.categories.join(", "):"");
+ stringField("editSalaryMin",j.salary_chf_year_min);
+ stringField("editSalaryMax",j.salary_chf_year_max);
+ stringField("editWorkloadMin",j.workload_pct_min);
+ stringField("editWorkloadMax",j.workload_pct_max);
+ stringField("editSalaryKind",j.salary_kind||"unknown");
+ stringField("editRemote",j.remote_mode||"unknown");
+ stringField("editContract",j.contract_type||"unknown");
+ stringField("editDescription",j.description);
+}
+function inputNumber(id,max=null){
+ const raw=el(id).value.trim();
+ if(raw==="")return null;
+ const value=Number(raw);
+ if(!Number.isFinite(value)||value<0||(max!==null&&value>max))throw Error("Ungültige Zahl für "+el(id).labels?.[0]?.textContent);
+ return value;
+}
+function applyJobEdits(old){
+ const title=el("editTitle").value.trim(),source=el("editSource").value.trim();
+ if(!title||!source)throw Error("Stellenbezeichnung und Quelle dürfen nicht leer sein.");
+ const url=el("editUrl").value.trim();
+ if(url&&!safeLink(url))throw Error("Original-URL muss mit http:// oder https:// beginnen.");
+ const categories=unique(el("editCategories").value.split(",").map(v=>v.trim()));
+ const next={...old,title,source,
+  company:el("editCompany").value.trim()||null,
+  location:el("editLocation").value.trim()||null,
+  url:url||null,
+  published_at:el("editPublished").value||null,
+  categories,
+  description:el("editDescription").value.trim()||null,
+  workload_pct_min:inputNumber("editWorkloadMin",100),
+  workload_pct_max:inputNumber("editWorkloadMax",100),
+  salary_chf_year_min:inputNumber("editSalaryMin"),
+  salary_chf_year_max:inputNumber("editSalaryMax"),
+  salary_kind:el("editSalaryKind").value,
+  remote_mode:el("editRemote").value,
+  contract_type:el("editContract").value
+ };
+ for(const prefix of ["workload_pct","salary_chf_year"]){
+  const lo=next[prefix+"_min"],hi=next[prefix+"_max"];
+  if(lo!==null&&hi!==null&&lo>hi)throw Error("Minimum darf nicht über dem Maximum liegen.");
+ }
+ if(editableKeys.some(key=>JSON.stringify(next[key])!==JSON.stringify(old[key]))&&old.matching?.status==="complete"){
+  next.matching={status:"not_run",score:null,rationale:"Nach manueller Änderung erneut bewerten.",evaluated_at:null};
+ }
+ return next;
+}
 function openDetails(id){
- const j=jobs.find(row=>row.id===id);if(!j)return;currentJobId=id;
+ const j=jobs.find(row=>row.id===id);if(!j)return;currentJobId=id;newJobMode=false;
+ el("editFields").open=false;el("detailError").textContent="";
+ displayEditFields(j);
  el("detailTitle").textContent=j.title;
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
  el("detailDescription").textContent=j.description||"Keine Beschreibung vorhanden.";
@@ -174,6 +358,30 @@ function openDetails(id){
  el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);
  el("details").showModal();
 }
+function startNewJob(){
+ newJobMode=true;
+ currentJobId=null;
+ const j={
+  schema_version:"0.1.0",id:"MANUAL-"+(globalThis.crypto?.randomUUID?.()||String(Date.now())+"-"+Math.random().toString(36).slice(2)),
+  title:"",company:null,location:null,source:"manuell",url:null,published_at:null,
+  first_seen_at:new Date().toISOString(),last_seen_at:null,categories:[],description:null,
+  salary_chf_year_min:null,salary_chf_year_max:null,salary_kind:"unknown",
+  workload_pct_min:null,workload_pct_max:null,contract_type:"unknown",remote_mode:"unknown",
+  provenance:{source_message_id:null,source_received_at:null,alert_name:"Manueller Eintrag"},
+  processing:{state:"processed",warnings:[],extraction_confidence:null},
+  matching:{status:"not_run",score:null,rationale:null,evaluated_at:null}
+ };
+ newJobDraft=j;
+ el("detailTitle").textContent="Neues Inserat erfassen";
+ el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
+ el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
+ el("detailScore").textContent="Fit offen";
+ el("detailDecision").value="open";el("detailNote").value="";
+ el("detailError").textContent="";el("editFields").open=true;
+ displayEditFields(j);
+ el("details").showModal();
+}
+let newJobDraft=null;
 function actionButton(job){const b=node("button","Details","secondary compact-button");b.type="button";b.addEventListener("click",()=>openDetails(job.id));return b;}
 function renderStats(){
  el("newCount").textContent=jobs.filter(j=>stageOf(j.id)==="open"&&j.processing?.state!=="excluded"&&recent(j.first_seen_at)).length;
@@ -185,7 +393,7 @@ function renderPipeline(){
  const active=jobs.filter(j=>activeStages.has(stageOf(j.id))).sort((a,b)=>(validDate(stageChangedAt(b.id))||0)-(validDate(stageChangedAt(a.id))||0));
  el("pipelineSummary").textContent=active.length+" aktive Vorgänge";
  const target=el("pipelineList");target.replaceChildren();
- if(!active.length){target.append(node("div","Noch keine Inserate in Bearbeitung. Setze bei einer neuen Stelle den Status «In Prüfung».","empty"));return;}
+ if(!active.length)target.append(node("div","Noch keine Inserate in Bearbeitung. Setze bei einer neuen Stelle den Status «In Prüfung».","empty"));
  for(const j of active){
   const row=document.createElement("div");row.className="pipeline-row";
   const info=document.createElement("div");info.append(node("div",j.title,"job-title"),node("div",[j.company,j.location].filter(Boolean).join(" · ")||j.source,"job-meta"));
@@ -193,6 +401,18 @@ function renderPipeline(){
   const changed=node("div",dateLabel(stageChangedAt(j.id)),"job-meta changed");
   const action=document.createElement("div");action.className="action-cell";action.append(actionButton(j));
   row.append(info,cell,changed,action);target.append(row);
+ }
+ const archived=jobs.filter(j=>["declined","rejected"].includes(stageOf(j.id)));
+ el("archiveLabel").textContent="Abgeschlossen / Archiv ("+archived.length+")";
+ const archive=el("archiveList");archive.replaceChildren();
+ if(!archived.length){archive.append(node("div","Noch keine abgeschlossenen Vorgänge.","empty"));return;}
+ for(const j of archived){
+  const row=document.createElement("div");row.className="pipeline-row";
+  const info=document.createElement("div");info.append(node("div",j.title,"job-title"),node("div",j.company||j.source,"job-meta"));
+  const stage=document.createElement("div");stage.className="stage-cell";stage.append(node("span",stageNames.get(stageOf(j.id)),"stage "+stageOf(j.id)));
+  const date=node("div",dateLabel(stageChangedAt(j.id)),"job-meta changed");
+  const action=document.createElement("div");action.className="action-cell";action.append(actionButton(j));
+  row.append(info,stage,date,action);archive.append(row);
  }
 }
 function renderNewJobs(){
@@ -238,13 +458,18 @@ function loadJobs(rows,name,asDemo=false){
  el("dataContext").className="context"+(asDemo?" demo":"");
  el("message").textContent=jobs.length+" Inserate aus «"+name+"» geladen. Änderungen bei Bedarf exportieren.";
  render();
+ saveChanges();
 }
 function loadDemo(){
+ for(const id of [...manualOverrides.keys()])if(id.startsWith("DEMO-"))manualOverrides.delete(id);
  const isoAgo=d=>new Date(Date.now()-d*dayMs).toISOString();
  const job=(id,title,company,location,source,days,matching)=>({
   schema_version:"0.1.0",id:"DEMO-"+id,title:"DEMO – "+title,company,location,source,
   url:null,first_seen_at:isoAgo(days),categories:["Fernwärme","Projektleitung"],description:"Rein fiktives Inserat zum Testen des Bewerbungs-Dashboards.",
-  salary_chf_year_min:null,salary_chf_year_max:null,salary_kind:"unknown",processing:{state:"new",warnings:[]},
+  published_at:null,last_seen_at:null,remote_mode:"unknown",contract_type:"unknown",
+  workload_pct_min:null,workload_pct_max:null,
+  provenance:{source_message_id:null,source_received_at:null,alert_name:"DEMO"},
+  salary_chf_year_min:null,salary_chf_year_max:null,salary_kind:"unknown",processing:{state:"new",warnings:[],extraction_confidence:null},
   matching:matching==null?undefined:{status:"complete",score:matching,rationale:"Fiktives Score-Beispiel – das Matching ist noch nicht implementiert."}
  });
  const rows=[
@@ -264,50 +489,150 @@ function loadDemo(){
   ["DEMO-INTERVIEW-1","interview",1],["DEMO-DECLINED-1","declined",3]
  ])annotations.set(id,{decision,note:"",stage_changed_at:isoAgo(days)});
  render();
+ saveChanges();
 }
 el("choose").addEventListener("click",()=>{el("picker").value="";el("picker").click();});
 el("picker").addEventListener("change",async e=>{
  const file=e.target.files?.[0];if(!file)return;
  try{
   if(file.size>10_000_000)throw Error("Datei ist grösser als 10 MB.");
-  const json=JSON.parse(await file.text());loadJobs(Array.isArray(json)?json:json?.jobs,file.name);
+  const json=JSON.parse(await file.text());
+  const rows=validateJobs(Array.isArray(json)?json:json?.jobs);
+  if(!demoMode&&jobs.length&&!window.confirm("Neue Importdaten zusammenführen? Bestehende manuelle Korrekturen und selbst erfasste Inserate bleiben erhalten."))return;
+  const incoming=rows.map(j=>applyManualOverrides(j));
+  const byId=new Map(incoming.map(j=>[j.id,j]));
+  for(const existing of jobs)if(existing.id.startsWith("MANUAL-")&&!byId.has(existing.id))byId.set(existing.id,existing);
+  loadJobs([...byId.values()],file.name);
  }catch(err){el("message").textContent="Datei konnte nicht geladen werden: "+err.message;}
 });
-el("demo").addEventListener("click",loadDemo);
+el("demo").addEventListener("click",()=>{
+ if(!demoMode&&jobs.length&&!window.confirm("Aktuelle Inserate durch Demo-Daten ersetzen? Erstelle gegebenenfalls vorher eine Gesamtsicherung."))return;
+ loadDemo();
+ saveChanges();
+});
 el("saveDetails").addEventListener("click",()=>{
- if(currentJobId!==null)setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
- el("details").close();currentJobId=null;
+ try{
+  const old=newJobMode?newJobDraft:jobs.find(row=>row.id===currentJobId);
+  if(!old)throw Error("Datensatz nicht gefunden.");
+  const next=applyJobEdits(old);
+  if(newJobMode){
+   if(jobs.some(j=>j.id===next.id))throw Error("Diese Inserat-ID existiert bereits.");
+   jobs.push(next);newJobMode=false;newJobDraft=null;currentJobId=next.id;
+  }else{
+   const index=jobs.findIndex(row=>row.id===currentJobId);
+   jobs[index]=next;
+   const patch={...(manualOverrides.get(next.id)||{})};
+   for(const key of editableKeys)if(JSON.stringify(next[key])!==JSON.stringify(old[key]))patch[key]=structuredClone(next[key]);
+   if(Object.keys(patch).length)manualOverrides.set(next.id,patch);
+  }
+  refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
+  refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
+  setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
+  el("details").close();currentJobId=null;
+  saveChanges();
+ }catch(err){el("detailError").textContent=err.message;}
 });
 el("closeDetails").addEventListener("click",()=>{el("details").close();currentJobId=null;});
-el("details").addEventListener("close",()=>{currentJobId=null;});
+el("details").addEventListener("close",()=>{currentJobId=null;newJobMode=false;newJobDraft=null;});
+
 el("exportDecisions").addEventListener("click",()=>{
- const records=[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at}));
- const payload={schema_version:"0.2.0",type:"bewerbungs-agent-decisions",exported_at:new Date().toISOString(),annotations:records};
- const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
- const a=document.createElement("a");a.href=url;a.download="bewerbungs-status-"+new Date().toISOString().slice(0,10)+".json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
- el("message").textContent=records.length+" Status-Einträge exportiert. Die Stellenliste ist nicht enthalten.";
+ const data=snapshot();
+ downloadJSON("bewerbungs-status-"+new Date().toISOString().slice(0,10)+".json",{
+  type:"bewerbungs-agent-decisions",schema_version:"0.2.0",
+  exported_at:data.exported_at,annotations:data.annotations
+ });
+ el("message").textContent="Statusdatei exportiert. Sie enthält keine Inseratdetails.";
 });
+el("exportJobs").addEventListener("click",()=>{
+ downloadJSON("jobs-"+new Date().toISOString().slice(0,10)+".json",jobs);
+ el("message").textContent=jobs.length+" Stellen als separates JSON exportiert.";
+});
+el("exportWorkspace").addEventListener("click",()=>{
+ downloadJSON("bewerbungs-agent-backup-"+new Date().toISOString().slice(0,10)+".json",snapshot());
+ el("message").textContent="Gesamtsicherung erstellt (Inserate, Status und Notizen). Datei privat aufbewahren.";
+});
+el("addJob").addEventListener("click",startNewJob);
 el("importDecisions").addEventListener("click",()=>{el("decisionsPicker").value="";el("decisionsPicker").click();});
 el("decisionsPicker").addEventListener("change",async e=>{
  const file=e.target.files?.[0];if(!file)return;
  try{
   if(file.size>2_000_000)throw Error("Datei ist grösser als 2 MB.");
   const data=JSON.parse(await file.text());
-  if(data?.type!=="bewerbungs-agent-decisions"||!["0.1.0","0.2.0"].includes(data.schema_version)||!Array.isArray(data.annotations))throw Error("Ungültige Statusdatei.");
-  const incoming=new Map();
-  for(const item of data.annotations){
-   if(!item||typeof item.id!=="string"||!item.id||!stageNames.has(item.decision)||typeof item.note!=="string"||item.note.length>2000||incoming.has(item.id))throw Error("Ungültiger oder doppelter Statuseintrag.");
-   if(item.stage_changed_at!=null&&validDate(item.stage_changed_at)===null)throw Error("Ungültiges Datum.");
-   incoming.set(item.id,{decision:item.decision,note:item.note,stage_changed_at:item.stage_changed_at||null});
-  }
+  if(data?.type!=="bewerbungs-agent-decisions"||!["0.1.0","0.2.0"].includes(data.schema_version))throw Error("Ungültige Statusdatei.");
+  const incoming=validateAnnotations(data.annotations);
   for(const [id,item] of incoming)annotations.set(id,item);
-  el("message").textContent=incoming.size+" Status-Einträge geladen; Änderungen vor dem Verlassen wieder exportieren.";
-  render();
+  el("message").textContent=incoming.size+" Status-Einträge importiert.";
+  render();saveChanges();
  }catch(err){el("message").textContent="Statusdatei konnte nicht geladen werden: "+err.message;}
 });
+function validateJobs(rows){
+ if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||Array.isArray(j)||typeof j.id!=="string"||!j.id.trim()||typeof j.title!=="string"||!j.title.trim()||typeof j.source!=="string"||!j.source.trim()))
+  throw Error("Ungültige Inseratdaten.");
+ if(new Set(rows.map(j=>j.id)).size!==rows.length)throw Error("Doppelte Inserat-IDs.");
+ return rows;
+}
+function applyWorkspace(data,name){
+ if(!data||data.type!=="bewerbungs-agent-workspace"||data.schema_version!=="0.3.0"||typeof data.demo_mode!=="boolean")
+  throw Error("Ungültige Gesamtsicherung v0.3.0.");
+ const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations),overrides=validateOverrides(data.overrides);
+ isRestoring=true;
+ try{
+  loadJobs(structuredClone(rows),name,data.demo_mode);
+  annotations.clear();
+  for(const [id,item] of records)annotations.set(id,item);
+  manualOverrides.clear();
+  for(const [id,patch] of overrides)manualOverrides.set(id,patch);
+  render();
+ }finally{isRestoring=false;}
+ saveChanges();
+}
+el("importWorkspace").addEventListener("click",()=>{el("workspacePicker").value="";el("workspacePicker").click();});
+el("workspacePicker").addEventListener("change",async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  if(file.size>15_000_000)throw Error("Datei ist grösser als 15 MB.");
+  const data=JSON.parse(await file.text());
+  if(jobs.length&&!window.confirm("Gesamtsicherung laden? Die aktuellen Inserate und Statusdaten werden ersetzt. Vorher gegebenenfalls exportieren."))return;
+  applyWorkspace(data,file.name);
+  el("message").textContent="Gesamtsicherung geladen. Daten werden nur bei aktivierter Gerätespeicherung dauerhaft gespeichert.";
+ }catch(err){el("message").textContent="Gesamtsicherung konnte nicht geladen werden: "+err.message;}
+});
+el("persistEnabled").addEventListener("change",async e=>{
+ const enabled=e.target.checked;
+ if(enabled){
+  persistEnabled=true;
+  el("storageStatus").textContent="Speicherung wird eingerichtet …";
+  await saveChanges();
+ }else{
+  persistEnabled=false;
+  el("storageStatus").textContent="Lokale Speicherung wird entfernt …";
+  pendingSave=pendingSave.catch(()=>{}).then(()=>window.AgentStore.clear()).then(()=>{
+   el("storageStatus").textContent="Nur aktuelle Sitzung · gespeicherte Browserdaten gelöscht";
+  }).catch(err=>{
+   el("storageStatus").textContent="Entfernen fehlgeschlagen: "+err.message;
+  });
+  await pendingSave;
+ }
+});
+async function initialize(){
+ try{
+  const saved=await window.AgentStore.load();
+  if(saved!==undefined&&saved!==null){
+   applyWorkspace(saved,"lokal gespeicherter Arbeitsstand");
+   persistEnabled=true;
+   el("persistEnabled").checked=true;
+   el("storageStatus").textContent="Gespeicherter Arbeitsstand dieses Browsers wiederhergestellt";
+   el("message").textContent="Lokaler Arbeitsstand wiederhergestellt; keine GitHub- oder Cloud-Synchronisierung.";
+   return;
+  }
+ }catch(err){
+  el("storageStatus").textContent="Lokale Datenspeicherung nicht verfügbar: "+err.message;
+ }
+ loadDemo();
+}
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
 for(const [code,label] of stages)el("detailDecision").add(new Option(label,code));
-loadDemo();
+initialize();
 </script>
 </body>
 </html>
