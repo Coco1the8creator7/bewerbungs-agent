@@ -1,0 +1,29 @@
+# Lokal verarbeitete Inserate und E-Mails niemals committen
+/data/
+/local/
+/exports/
+*.eml
+*.mbox
+*.sqlite
+*.sqlite3
+*.db
+
+# Zugangsdaten, OAuth-Tokens und lokale Konfiguration
+.env
+.env.*
+!.env.example
+credentials.json
+token.json
+*oauth*token*.json
+secrets/
+
+# Python / Betriebssystem / Editor
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.DS_Store
+.vscode/
+.idea/
+*.log
