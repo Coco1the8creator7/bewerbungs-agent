@@ -183,6 +183,49 @@ const stages=[
 const stageNames=new Map(stages);
 const activeStages=new Set(["review","saved","later","preparing","applied","interview","offer"]);
 const annotations=new Map();
+let persistEnabled=false;
+let pendingSave=Promise.resolve();
+let isRestoring=false;
+let newJobMode=false;
+function snapshot(){
+ return {
+  type:"bewerbungs-agent-workspace",
+  schema_version:"0.3.0",
+  exported_at:new Date().toISOString(),
+  demo_mode:demoMode,
+  jobs:structuredClone(jobs),
+  annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null}))
+ };
+}
+function saveChanges(){
+ if(isRestoring||!persistEnabled)return pendingSave;
+ const state=snapshot();
+ pendingSave=pendingSave.catch(()=>{}).then(async()=>{
+  if(!persistEnabled)return;
+  await window.AgentStore.save(state);
+  el("storageStatus").textContent="Auf diesem Gerät gespeichert · "+new Date().toLocaleTimeString("de-CH");
+ }).catch(e=>{
+  el("storageStatus").textContent="Speicherung fehlgeschlagen: "+e.message+" · Bitte Gesamtsicherung exportieren.";
+  el("message").textContent="ACHTUNG: Änderungen sind nicht dauerhaft gesichert. Gesamtsicherung exportieren.";
+ });
+ return pendingSave;
+}
+function downloadJSON(filename,payload){
+ const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
+ const link=document.createElement("a");link.href=url;link.download=filename;
+ document.body.append(link);link.click();link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
+function validateAnnotations(records){
+ if(!Array.isArray(records))throw Error("Statusliste fehlt.");
+ const result=new Map();
+ for(const item of records){
+  if(!item||typeof item.id!=="string"||!item.id||!stageNames.has(item.decision)||typeof item.note!=="string"||item.note.length>2000||result.has(item.id))throw Error("Ungültiger oder doppelter Status-Eintrag.");
+  if(item.stage_changed_at!=null&&validDate(item.stage_changed_at)===null)throw Error("Ungültiger Status-Zeitstempel.");
+  result.set(item.id,{decision:item.decision,note:item.note,stage_changed_at:item.stage_changed_at||null});
+ }
+ return result;
+}
 let jobs=[],currentJobId=null,demoMode=false;
 const recentDays=7;
 const dayMs=24*60*60*1000;
@@ -206,6 +249,7 @@ function setAnnotation(id,decision,note){
  if(decision==="open"&&!note.trim())annotations.delete(id);
  else annotations.set(id,{decision,note,stage_changed_at});
  render();
+ saveChanges();
 }
 function stageSelect(job){
  const s=document.createElement("select");
@@ -215,8 +259,67 @@ function stageSelect(job){
  s.addEventListener("change",()=>setAnnotation(job.id,s.value,noteOf(job.id)));
  return s;
 }
+function displayEditFields(j){
+ const stringField=(id,value)=>{el(id).value=value??"";};
+ stringField("editTitle",j.title);
+ stringField("editSource",j.source);
+ stringField("editCompany",j.company);
+ stringField("editLocation",j.location);
+ stringField("editUrl",j.url);
+ stringField("editPublished",j.published_at);
+ stringField("editCategories",Array.isArray(j.categories)?j.categories.join(", "):"");
+ stringField("editSalaryMin",j.salary_chf_year_min);
+ stringField("editSalaryMax",j.salary_chf_year_max);
+ stringField("editWorkloadMin",j.workload_pct_min);
+ stringField("editWorkloadMax",j.workload_pct_max);
+ stringField("editSalaryKind",j.salary_kind||"unknown");
+ stringField("editRemote",j.remote_mode||"unknown");
+ stringField("editContract",j.contract_type||"unknown");
+ stringField("editDescription",j.description);
+}
+function inputNumber(id,max=null){
+ const raw=el(id).value.trim();
+ if(raw==="")return null;
+ const value=Number(raw);
+ if(!Number.isFinite(value)||value<0||(max!==null&&value>max))throw Error("Ungültige Zahl für "+el(id).labels?.[0]?.textContent);
+ return value;
+}
+function applyJobEdits(old){
+ const title=el("editTitle").value.trim(),source=el("editSource").value.trim();
+ if(!title||!source)throw Error("Stellenbezeichnung und Quelle dürfen nicht leer sein.");
+ const url=el("editUrl").value.trim();
+ if(url&&!safeLink(url))throw Error("Original-URL muss mit http:// oder https:// beginnen.");
+ const categories=unique(el("editCategories").value.split(",").map(v=>v.trim()));
+ const next={...old,title,source,
+  company:el("editCompany").value.trim()||null,
+  location:el("editLocation").value.trim()||null,
+  url:url||null,
+  published_at:el("editPublished").value||null,
+  categories,
+  description:el("editDescription").value.trim()||null,
+  workload_pct_min:inputNumber("editWorkloadMin",100),
+  workload_pct_max:inputNumber("editWorkloadMax",100),
+  salary_chf_year_min:inputNumber("editSalaryMin"),
+  salary_chf_year_max:inputNumber("editSalaryMax"),
+  salary_kind:el("editSalaryKind").value,
+  remote_mode:el("editRemote").value,
+  contract_type:el("editContract").value
+ };
+ for(const prefix of ["workload_pct","salary_chf_year"]){
+  const lo=next[prefix+"_min"],hi=next[prefix+"_max"];
+  if(lo!==null&&hi!==null&&lo>hi)throw Error("Minimum darf nicht über dem Maximum liegen.");
+ }
+ const editable=["title","source","company","location","url","published_at","categories","description",
+  "workload_pct_min","workload_pct_max","salary_chf_year_min","salary_chf_year_max","salary_kind","remote_mode","contract_type"];
+ if(editable.some(key=>JSON.stringify(next[key])!==JSON.stringify(old[key]))&&old.matching?.status==="complete"){
+  next.matching={status:"not_run",score:null,rationale:"Nach manueller Änderung erneut bewerten.",evaluated_at:null};
+ }
+ return next;
+}
 function openDetails(id){
- const j=jobs.find(row=>row.id===id);if(!j)return;currentJobId=id;
+ const j=jobs.find(row=>row.id===id);if(!j)return;currentJobId=id;newJobMode=false;
+ el("editFields").open=false;el("detailError").textContent="";
+ displayEditFields(j);
  el("detailTitle").textContent=j.title;
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
  el("detailDescription").textContent=j.description||"Keine Beschreibung vorhanden.";
@@ -225,6 +328,30 @@ function openDetails(id){
  el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);
  el("details").showModal();
 }
+function startNewJob(){
+ newJobMode=true;
+ currentJobId=null;
+ const j={
+  schema_version:"0.1.0",id:"MANUAL-"+(globalThis.crypto?.randomUUID?.()||String(Date.now())+"-"+Math.random().toString(36).slice(2)),
+  title:"",company:null,location:null,source:"manuell",url:null,published_at:null,
+  first_seen_at:new Date().toISOString(),last_seen_at:null,categories:[],description:null,
+  salary_chf_year_min:null,salary_chf_year_max:null,salary_kind:"unknown",
+  workload_pct_min:null,workload_pct_max:null,contract_type:"unknown",remote_mode:"unknown",
+  provenance:{source_message_id:null,source_received_at:null,alert_name:"Manueller Eintrag"},
+  processing:{state:"processed",warnings:[],extraction_confidence:null},
+  matching:{status:"not_run",score:null,rationale:null,evaluated_at:null}
+ };
+ newJobDraft=j;
+ el("detailTitle").textContent="Neues Inserat erfassen";
+ el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
+ el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
+ el("detailScore").textContent="Fit offen";
+ el("detailDecision").value="open";el("detailNote").value="";
+ el("detailError").textContent="";el("editFields").open=true;
+ displayEditFields(j);
+ el("details").showModal();
+}
+let newJobDraft=null;
 function actionButton(job){const b=node("button","Details","secondary compact-button");b.type="button";b.addEventListener("click",()=>openDetails(job.id));return b;}
 function renderStats(){
  el("newCount").textContent=jobs.filter(j=>stageOf(j.id)==="open"&&j.processing?.state!=="excluded"&&recent(j.first_seen_at)).length;
@@ -244,6 +371,18 @@ function renderPipeline(){
   const changed=node("div",dateLabel(stageChangedAt(j.id)),"job-meta changed");
   const action=document.createElement("div");action.className="action-cell";action.append(actionButton(j));
   row.append(info,cell,changed,action);target.append(row);
+ }
+ const archived=jobs.filter(j=>["declined","rejected"].includes(stageOf(j.id)));
+ el("archiveLabel").textContent="Abgeschlossen / Archiv ("+archived.length+")";
+ const archive=el("archiveList");archive.replaceChildren();
+ if(!archived.length){archive.append(node("div","Noch keine abgeschlossenen Vorgänge.","empty"));return;}
+ for(const j of archived){
+  const row=document.createElement("div");row.className="pipeline-row";
+  const info=document.createElement("div");info.append(node("div",j.title,"job-title"),node("div",j.company||j.source,"job-meta"));
+  const stage=document.createElement("div");stage.className="stage-cell";stage.append(node("span",stageNames.get(stageOf(j.id)),"stage "+stageOf(j.id)));
+  const date=node("div",dateLabel(stageChangedAt(j.id)),"job-meta changed");
+  const action=document.createElement("div");action.className="action-cell";action.append(actionButton(j));
+  row.append(info,stage,date,action);archive.append(row);
  }
 }
 function renderNewJobs(){
@@ -289,6 +428,7 @@ function loadJobs(rows,name,asDemo=false){
  el("dataContext").className="context"+(asDemo?" demo":"");
  el("message").textContent=jobs.length+" Inserate aus «"+name+"» geladen. Änderungen bei Bedarf exportieren.";
  render();
+ saveChanges();
 }
 function loadDemo(){
  const isoAgo=d=>new Date(Date.now()-d*dayMs).toISOString();
@@ -324,13 +464,32 @@ el("picker").addEventListener("change",async e=>{
   const json=JSON.parse(await file.text());loadJobs(Array.isArray(json)?json:json?.jobs,file.name);
  }catch(err){el("message").textContent="Datei konnte nicht geladen werden: "+err.message;}
 });
-el("demo").addEventListener("click",loadDemo);
+el("demo").addEventListener("click",()=>{
+ if(!demoMode&&jobs.length&&!window.confirm("Aktuelle Inserate durch Demo-Daten ersetzen? Erstelle gegebenenfalls vorher eine Gesamtsicherung."))return;
+ loadDemo();
+ saveChanges();
+});
 el("saveDetails").addEventListener("click",()=>{
- if(currentJobId!==null)setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
- el("details").close();currentJobId=null;
+ try{
+  const old=newJobMode?newJobDraft:jobs.find(row=>row.id===currentJobId);
+  if(!old)throw Error("Datensatz nicht gefunden.");
+  const next=applyJobEdits(old);
+  if(newJobMode){
+   if(jobs.some(j=>j.id===next.id))throw Error("Diese Inserat-ID existiert bereits.");
+   jobs.push(next);newJobMode=false;newJobDraft=null;currentJobId=next.id;
+  }else{
+   const index=jobs.findIndex(row=>row.id===currentJobId);
+   jobs[index]=next;
+  }
+  refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
+  refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
+  setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
+  el("details").close();currentJobId=null;
+  saveChanges();
+ }catch(err){el("detailError").textContent=err.message;}
 });
 el("closeDetails").addEventListener("click",()=>{el("details").close();currentJobId=null;});
-el("details").addEventListener("close",()=>{currentJobId=null;});
+el("details").addEventListener("close",()=>{currentJobId=null;newJobMode=false;newJobDraft=null;});
 el("exportDecisions").addEventListener("click",()=>{
  const records=[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at}));
  const payload={schema_version:"0.2.0",type:"bewerbungs-agent-decisions",exported_at:new Date().toISOString(),annotations:records};
