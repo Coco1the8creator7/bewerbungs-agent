@@ -235,6 +235,8 @@ function saveChanges(){
   await window.AgentStore.save(state);
   el("storageStatus").textContent="Auf diesem Gerät gespeichert · "+new Date().toLocaleTimeString("de-CH");
  }).catch(e=>{
+  persistEnabled=false;
+  el("persistEnabled").checked=false;
   el("storageStatus").textContent="Speicherung fehlgeschlagen: "+e.message+" · Bitte Gesamtsicherung exportieren.";
   el("message").textContent="ACHTUNG: Änderungen sind nicht dauerhaft gesichert. Gesamtsicherung exportieren.";
  });
@@ -391,7 +393,7 @@ function renderPipeline(){
  const active=jobs.filter(j=>activeStages.has(stageOf(j.id))).sort((a,b)=>(validDate(stageChangedAt(b.id))||0)-(validDate(stageChangedAt(a.id))||0));
  el("pipelineSummary").textContent=active.length+" aktive Vorgänge";
  const target=el("pipelineList");target.replaceChildren();
- if(!active.length){target.append(node("div","Noch keine Inserate in Bearbeitung. Setze bei einer neuen Stelle den Status «In Prüfung».","empty"));return;}
+ if(!active.length)target.append(node("div","Noch keine Inserate in Bearbeitung. Setze bei einer neuen Stelle den Status «In Prüfung».","empty"));
  for(const j of active){
   const row=document.createElement("div");row.className="pipeline-row";
   const info=document.createElement("div");info.append(node("div",j.title,"job-title"),node("div",[j.company,j.location].filter(Boolean).join(" · ")||j.source,"job-meta"));
