@@ -8,7 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from email.utils import parseaddr
 from html.parser import HTMLParser
-from urllib.parse import parse_qs, unquote, urlsplit, urlunsplit, urlencode
+from urllib.parse import parse_qs, parse_qsl, unquote, urlsplit, urlunsplit, urlencode
 import hashlib
 import re
 
@@ -61,9 +61,9 @@ def canonicalize(url):
             host = p.hostname.lower()
             qs = parse_qs(p.query)
             if (host in WRAPPER_HOSTS or host.endswith(".safelinks.protection.outlook.com")) and any(k in qs for k in ("url", "u", "q")):
-                url = unquote(next(iter(qs.get("url") or qs.get("u") or qs.get("q"))))
+                url = unquote((qs.get("url") or qs.get("u") or qs.get("q"))[0])
                 continue
-            pairs = [(k, v) for k, v in __import__("urllib.parse", fromlist=["parse_qsl"]).parse_qsl(p.query, keep_blank_values=True)
+            pairs = [(k, v) for k, v in parse_qsl(p.query, keep_blank_values=True)
                      if k.lower() not in TRACK_KEYS and not k.lower().startswith("utm_")]
             return urlunsplit(("https", host + ((":" + str(p.port)) if p.port and p.port != 443 else ""), p.path.rstrip("/") or "/", urlencode(pairs), ""))
         except ValueError:
