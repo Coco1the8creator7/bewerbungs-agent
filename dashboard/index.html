@@ -59,6 +59,21 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
 .dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
 @media(max-width:920px){.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,2fr) minmax(105px,1fr) 82px}.pipeline-head .changed,.pipeline-row .changed{display:none}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{gap:9px}.stat{padding:18px 13px;min-height:120px}}
 @media(max-width:650px){main{padding:26px 15px 55px}header{display:block}.context{display:inline-block;margin-top:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.pipeline-head{display:none}.pipeline-row{grid-template-columns:1fr auto;gap:7px 10px;padding:15px}.pipeline-row .stage-cell{grid-column:1;grid-row:2}.pipeline-row .action-cell{grid-column:2;grid-row:1/3;text-align:right}.stat strong{font-size:1.9rem}.section{margin-top:27px}}
+
+/* Local workspace controls remain in the small footer; no public write API. */
+.persist-panel{background:#f5f8fd;border:1px solid #dce5f1;border-radius:11px;padding:13px 15px;margin:11px 0}
+.persist-panel label{display:flex;align-items:flex-start;gap:9px;font-size:.84rem;margin:0;cursor:pointer}
+.persist-panel input{width:auto;margin-top:4px;flex-shrink:0}
+.persist-panel p{font-size:.77rem;margin:7px 0 0 25px;color:#7a8798}
+.data-state{font-weight:650;font-size:.77rem;margin-top:10px}
+.dialog-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dialog-grid .span-all{grid-column:1/-1}
+#editFields{margin-top:19px;border-top:1px solid #e4eaf1;padding-top:10px}
+#editFields summary{color:#365f8b;font-weight:650;cursor:pointer;font-size:.89rem;margin-bottom:9px}
+.archive{border-top:1px solid #e8edf2;padding:12px 21px}
+.archive summary{color:#63748a;cursor:pointer;font-size:.84rem;font-weight:650}
+.archive .pipeline-row{padding-left:0;padding-right:0}
+@media(max-width:650px){.dialog-grid{grid-template-columns:1fr}.dialog-grid .span-all{grid-column:1}}
 </style>
 </head>
 <body>
@@ -81,6 +96,7 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
   <div class="panel">
     <div class="pipeline-head"><span>Stelle / Arbeitgeber</span><span>Status</span><span class="changed">Letzte Statusänderung</span><span>Aktion</span></div>
     <div id="pipelineList" aria-live="polite"><div class="empty">Noch keine laufenden Bewerbungen.</div></div>
+    <details class="archive"><summary id="archiveLabel">Abgeschlossen / Archiv (0)</summary><div id="archiveList"></div></details>
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
@@ -99,14 +115,26 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
     <div class="buttons">
       <input type="file" id="picker" accept=".json,application/json" hidden>
       <input type="file" id="decisionsPicker" accept=".json,application/json" hidden>
+      <input type="file" id="workspacePicker" accept=".json,application/json" hidden>
       <button type="button" class="secondary" id="demo">Demo neu laden</button>
       <button type="button" class="secondary" id="choose">Stellen-JSON laden</button>
       <button type="button" class="secondary" id="importDecisions">Statusdatei laden</button>
       <button type="button" class="secondary" id="exportDecisions">Statusdatei exportieren</button>
+      <button type="button" class="secondary" id="exportJobs">Inserate-JSON exportieren</button>
+      <button type="button" class="secondary" id="exportWorkspace">Gesamtsicherung exportieren</button>
+      <button type="button" class="secondary" id="importWorkspace">Gesamtsicherung laden</button>
+      <button type="button" class="secondary" id="addJob">Inserat manuell erfassen</button>
+    </div>
+    <div class="persist-panel">
+      <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
+        <span><strong>Auf diesem Gerät dauerhaft speichern</strong> (Browser-Datenbank, freiwillig)</span>
+      </label>
+      <p>Nur auf einem privaten, vertrauenswürdigen Gerät aktivieren. Ohne Aktivierung bleiben Änderungen nur bis zum Neuladen erhalten. Diese Option synchronisiert keine Daten zwischen Geräten und speichert nichts in GitHub.</p>
+      <div class="data-state" id="storageStatus" role="status" aria-live="polite">Nur aktuelle Sitzung · nicht dauerhaft gespeichert</div>
     </div>
     <p id="message" role="status" aria-live="polite" class="status-message">Demo-Daten geladen. Kein Zugriff auf Gmail oder ein Backend.</p>
   </details>
-  <p class="disclaimer">Der Prototyp verarbeitet Dateien ausschliesslich im Browser. Es gibt noch keine automatische Synchronisierung oder Speicherung. Statusänderungen vor dem Schliessen als JSON exportieren. Auf fremden Geräten keine sensiblen Notizen erfassen.</p>
+  <p class="disclaimer">Der Prototyp verarbeitet Dateien ausschliesslich im Browser. Mit deiner ausdrücklichen Zustimmung können Änderungen ausschliesslich auf diesem Gerät gespeichert werden. Ohne Aktivierung bitte JSON-Dateien exportieren; keine geräteübergreifende Synchronisierung. Auf fremden Geräten keine sensiblen Notizen erfassen.</p>
 </footer>
 <dialog id="details" aria-labelledby="detailTitle">
   <h2 id="detailTitle">Inserat</h2><p id="detailMeta" class="muted"></p>
@@ -114,9 +142,32 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
   <div class="dialog-field"><strong>Fit-Bewertung</strong><p id="detailScore" class="muted"></p></div>
   <div class="dialog-field"><label for="detailDecision">Bearbeitungsstatus</label><select id="detailDecision"></select></div>
   <div class="dialog-field"><label for="detailNote">Meine Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Anforderungen, offene Fragen, weitere Schritte …"></textarea></div>
+  <details id="editFields">
+    <summary>Inseratdaten bearbeiten (wirkt auf das Inserate-JSON)</summary>
+    <p class="muted" style="font-size:.82rem">Manuelle Korrekturen ändern deinen lokalen Datensatz. Technische Importnachweise und KI-Scores bleiben unverändert.</p>
+    <div class="dialog-grid">
+      <div class="span-all"><label for="editTitle">Stellenbezeichnung *</label><input id="editTitle" maxlength="250" required></div>
+      <div><label for="editCompany">Arbeitgeber</label><input id="editCompany" maxlength="250"></div>
+      <div><label for="editLocation">Arbeitsort</label><input id="editLocation" maxlength="250"></div>
+      <div><label for="editSource">Quelle / Plattform *</label><input id="editSource" maxlength="120" required></div>
+      <div><label for="editPublished">Publikationsdatum</label><input id="editPublished" type="date"></div>
+      <div class="span-all"><label for="editUrl">Original-URL</label><input id="editUrl" type="url" placeholder="https://…"></div>
+      <div class="span-all"><label for="editCategories">Karriere-Kategorien (mit Komma trennen)</label><input id="editCategories" placeholder="Fernwärme, Projektleitung"></div>
+      <div><label for="editWorkloadMin">Pensum min. %</label><input id="editWorkloadMin" type="number" min="0" max="100" step="1"></div>
+      <div><label for="editWorkloadMax">Pensum max. %</label><input id="editWorkloadMax" type="number" min="0" max="100" step="1"></div>
+      <div><label for="editSalaryMin">Jahreslohn min. CHF</label><input id="editSalaryMin" type="number" min="0" step="1"></div>
+      <div><label for="editSalaryMax">Jahreslohn max. CHF</label><input id="editSalaryMax" type="number" min="0" step="1"></div>
+      <div><label for="editSalaryKind">Lohnangabe</label><select id="editSalaryKind"><option value="unknown">Nicht bekannt</option><option value="explicit">Im Inserat angegeben</option><option value="estimated">Schätzung</option></select></div>
+      <div><label for="editRemote">Arbeitsmodell</label><select id="editRemote"><option value="unknown">Unbekannt</option><option value="on_site">Vor Ort</option><option value="hybrid">Hybrid</option><option value="remote">Remote</option></select></div>
+      <div><label for="editContract">Vertragsart</label><select id="editContract"><option value="unknown">Unbekannt</option><option value="permanent">Unbefristet</option><option value="fixed_term">Befristet</option><option value="temporary">Temporär</option></select></div>
+      <div class="span-all"><label for="editDescription">Stellenbeschreibung</label><textarea id="editDescription" maxlength="30000"></textarea></div>
+    </div>
+  </details>
+  <p id="detailError" class="status-message" style="color:#a13232" role="alert"></p>
   <div class="dialog-actions"><button type="button" id="closeDetails" class="secondary">Abbrechen</button><button type="button" id="saveDetails">Änderungen übernehmen</button></div>
 </dialog>
 </main>
+<script src="./storage.js"></script>
 <script>
 "use strict";
 // Kein Browser-Dauerspeicher: private Status-/Notizdaten liegen nur im aktuellen Tab.
