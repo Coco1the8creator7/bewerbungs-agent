@@ -12,7 +12,7 @@
     if (!("indexedDB" in window)) return Promise.reject(new Error("IndexedDB wird von diesem Browser nicht unterstützt."));
     if (!opening) {
       opening = new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 1);
+        const request = window.indexedDB.open(DB_NAME, 1);
         request.onupgradeneeded = () => {
           const db = request.result;
           if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
