@@ -37,6 +37,17 @@ const fixture = [
   'setAnnotation("abc","open","");',
   'assert.equal(annotations.has("abc"),false);',
   'assert.throws(()=>setAnnotation("x","invalid",""));',
+  'manualOverrides.set("abc",{title:"Überarbeiteter Titel"});',
+  'const corrected=applyManualOverrides({id:"abc",title:"Original",matching:{status:"complete",score:90}});',
+  'assert.equal(corrected.title,"Überarbeiteter Titel");',
+  'assert.equal(corrected.matching.status,"not_run");',
+  'assert.equal(corrected.matching.score,null);',
+  'assert.equal(validateOverrides([{id:"abc",patch:{company:"Muster AG"}}]).get("abc").company,"Muster AG");',
+  'assert.throws(()=>validateOverrides([{id:"abc",patch:{unexpected:1}}]));',
+  'const backup=snapshot();',
+  'assert.equal(backup.type,"bewerbungs-agent-workspace");',
+  'assert.equal(backup.schema_version,"0.3.0");',
+  'assert.ok(backup.overrides.some(entry=>entry.id==="abc"));',
 ].join("\n");
-vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console});
+vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone});
 console.log("Dashboard logic checks passed");
