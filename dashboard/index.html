@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bewerbungs-Agent · Stellenübersicht</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#17243a;background:#f5f7fa}*{box-sizing:border-box}body{margin:0}main{max-width:1100px;margin:auto;padding:36px 20px 72px}
+header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}h1{margin:0 0 7px;font-size:2rem;letter-spacing:-.04em}h3{margin:0;font-size:1.14rem}.muted{color:#5d6b80}.sub{margin:0}
+button{border:0;border-radius:10px;background:#1e4f90;color:#fff;font:inherit;font-weight:600;padding:12px 16px;cursor:pointer}button:hover{background:#173d70}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}.stat,.panel,article{background:#fff;border:1px solid #dce2eb;border-radius:14px;padding:20px}.stat strong{display:block;font-size:1.6rem}
+.panel{margin-top:20px}.filters{display:grid;grid-template-columns:minmax(210px,2fr) repeat(3,minmax(120px,1fr));gap:12px}label{display:block;font-size:.84rem;font-weight:600;margin-bottom:6px;color:#46556d}
+input,select{width:100%;padding:11px 12px;border:1px solid #cad4e2;border-radius:9px;background:#fff;font:inherit;color:#17243a}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px;margin-top:16px}article{display:flex;flex-direction:column;gap:11px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{background:#edf2f9;color:#24456d;border-radius:30px;font-size:.76rem;padding:5px 9px}.meta{color:#5d6b80;font-size:.9rem;line-height:1.45}
+.footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding-top:8px}.footer a{color:#174a85;font-weight:600;text-decoration:none}.footer a:hover{text-decoration:underline}
+.empty{grid-column:1/-1;text-align:center;color:#5d6b80;padding:44px 14px;border:1px dashed #bac8db;border-radius:14px}.status{font-size:.78rem;padding:4px 8px;background:#fff4dc;border-radius:5px}
+#message{margin-top:14px;min-height:1.2em;font-size:.9rem}@media(max-width:760px){.filters{grid-template-columns:1fr 1fr}.filters>div:first-child{grid-column:1/-1}}@media(max-width:480px){.filters{grid-template-columns:1fr}.filters>div:first-child{grid-column:auto}.stat{padding:10px}.stat strong{font-size:1.3rem}}
+</style>
+</head>
+<body><main>
+<header><div><h1>Stellenübersicht</h1><p class="muted sub">Bewerbungs-Agent · lokaler Prototyp · noch ohne Matching</p></div>
+<div><input type="file" id="picker" accept=".json,application/json" hidden><button type="button" id="choose">JSON-Datei laden / aktualisieren</button></div></header>
+<div id="message" class="muted" role="status" aria-live="polite">Noch keine Datei geladen. Wähle später deine lokale data/jobs.json aus.</div>
+<section class="stats" aria-label="Statistik"><div class="stat"><span class="muted">Total Inserate</span><strong id="allCount">0</strong></div><div class="stat"><span class="muted">Sichtbar</span><strong id="shownCount">0</strong></div><div class="stat"><span class="muted">Zur Prüfung</span><strong id="reviewCount">0</strong></div></section>
+<section class="panel" aria-label="Filter"><div class="filters">
+<div><label for="query">Freitextsuche</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Ort …"></div>
+<div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
+<div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
+<div><label for="status">Importstatus</label><select id="status"><option value="">Alle Status</option><option value="new">Neu</option><option value="needs_review">Zur Prüfung</option><option value="processed">Verarbeitet</option><option value="excluded">Ausgeschlossen</option></select></div>
+</div></section>
+<section id="list" class="results" aria-label="Stelleninserate"></section>
+<p class="muted" style="margin-top:28px;font-size:.85rem">Alle Daten werden nur im Browser verarbeitet. Diese Seite ruft weder Gmail noch externe APIs ab und lädt nichts auf GitHub hoch.</p>
+</main><script>
+"use strict";
+const el=id=>document.getElementById(id);
+let jobs=[];
+const locale=new Intl.DateTimeFormat("de-CH",{year:"numeric",month:"short",day:"numeric"});
+const txt=v=>v==null?"":String(v);
+function unique(v){return [...new Set(v.filter(Boolean))].sort((a,b)=>a.localeCompare(b,"de-CH"));}
+function refill(s,values,label){const old=s.value;s.replaceChildren(new Option(label,""));for(const value of values)s.add(new Option(value,value));s.value=values.includes(old)?old:"";}
+function safeLink(value){try{const u=new URL(value);return ["https:","http:"].includes(u.protocol)?u.href:null;}catch{return null;}}
+function dateLabel(value){if(!value)return "";const d=new Date(value);return Number.isFinite(d.getTime())?locale.format(d):"";}
+function node(tag,value,klass){const e=document.createElement(tag);if(klass)e.className=klass;e.textContent=txt(value);return e;}
+function render(){
+ const needle=el("query").value.trim().toLocaleLowerCase("de-CH"),category=el("category").value,source=el("source").value,status=el("status").value;
+ const visible=jobs.filter(j=>{
+   const tags=Array.isArray(j.categories)?j.categories:[];
+   const hay=[j.title,j.company,j.location,j.source,...tags].map(txt).join(" ").toLocaleLowerCase("de-CH");
+   return (!needle||hay.includes(needle))&&(!category||tags.includes(category))&&(!source||j.source===source)&&(!status||j.processing?.state===status);
+ }).sort((a,b)=>txt(b.first_seen_at).localeCompare(txt(a.first_seen_at)));
+ el("allCount").textContent=jobs.length;el("shownCount").textContent=visible.length;
+ el("reviewCount").textContent=jobs.filter(j=>j.processing?.state==="needs_review").length;
+ const list=el("list");list.replaceChildren();
+ if(!visible.length){list.append(node("div",jobs.length?"Keine Inserate entsprechen diesen Filtern.":"Noch keine Stellen geladen.","empty"));return;}
+ for(const j of visible){
+  const card=document.createElement("article");card.append(node("div",j.source,"meta"),node("h3",j.title));
+  card.append(node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort nicht bekannt","meta"));
+  const tags=document.createElement("div");tags.className="tags";for(const tag of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",tag,"tag"));card.append(tags);
+  const salary=j.salary_chf_year_min!=null||j.salary_chf_year_max!=null
+    ?"CHF "+(j.salary_chf_year_min??"?")+"–"+(j.salary_chf_year_max??"?")+" / Jahr ("+(j.salary_kind==="estimated"?"Schätzung":"Angabe")+")"
+    :"Lohn nicht angegeben";
+  card.append(node("div",salary,"meta"));
+  const footer=document.createElement("div");footer.className="footer";const link=safeLink(j.url);
+  if(link){const a=document.createElement("a");a.href=link;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Originalinserat ↗";footer.append(a);}
+  else footer.append(node("span","Kein gültiger Link","muted"));
+  footer.append(j.processing?.state==="needs_review"?node("span","Prüfen","status"):node("small",dateLabel(j.published_at||j.first_seen_at),"muted"));
+  card.append(footer);list.append(card);
+ }
+}
+el("choose").addEventListener("click",()=>{el("picker").value="";el("picker").click();});
+el("picker").addEventListener("change",async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  const raw=JSON.parse(await file.text()),rows=Array.isArray(raw)?raw:raw?.jobs;
+  if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||!j.id||!j.title||!j.source))
+    throw new Error("Erwartet wird ein Array aus Inseraten mit id, title und source.");
+  jobs=rows;
+  refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
+  refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
+  el("message").textContent=jobs.length+" Inserate aus «"+file.name+"» geladen.";
+  render();
+ }catch(err){el("message").textContent="Die JSON-Datei konnte nicht geladen werden: "+err.message;}
+});
+["query","category","source","status"].forEach(id=>el(id).addEventListener("input",render));
+render();
+</script></body></html>
