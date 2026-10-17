@@ -1,36 +1,32 @@
-# Browser-Hosting – Bewerbungs-Agent (Cloudflare Pages)
+# Dashboard über GitHub Pages veröffentlichen
 
-## Ziel
+Der Bewerbungs-Agent erhält dieselbe Hosting-Technik wie das Projekt `was-ist-der-plan`: Ein GitHub-Actions-Workflow veröffentlicht den **Inhalt des Ordners `dashboard/`** als statische Website.
 
-Eine feste HTTPS-Adresse für die **statische** Benutzeroberfläche, ohne lokale Installation auf Schul-/Arbeitgeber-Geräten. Der Quellcode bleibt im **privaten** GitHub-Repository `Coco1the8creator7/bewerbungs-agent`. Das Dashboard selbst wird öffentlich erreichbar, bis optional eine Zugriffskontrolle eingerichtet wird.
+## Sicherheit vor der Umstellung auf ein öffentliches Repository
 
-Das Hosting stellt **keine** private Datenbank, kein Gmail-OAuth und keinen automatischen E-Mail-Import bereit. Das Dashboard liest nutzerseitig ausgewählte lokale JSON-Dateien und verarbeitet sie im Browser. Die eingebauten Demo-Stellen sind fiktiv.
+**Noch nicht ohne Prüfung öffentlich schalten!** Im vorhandenen Repository liegen persönliche Suchvorgaben, einschliesslich Gehaltszielen und Pendelpräferenzen, insbesondere unter `docs/suchvorgaben.md`. Zudem werden mit der Umstellung auf öffentlich auch frühere Commits, Issues und Actions-Protokolle sichtbar. Eine blosse Löschung auf `main` entfernt frühere Dateiversionen **nicht** aus der Git-Historie.
 
-## Einmaliges Einrichten im Browser
+Vor der Veröffentlichung daher den aktuellen Stand und die gesamte Git-Historie auf vertrauliche Informationen prüfen. Falls Informationen dauerhaft privat bleiben sollen, ist ein **neues, bereinigtes öffentliches Repository nur für das Dashboard** besser als eine Umstellung dieses Entwicklungs-Repositories. Keine persönlichen Bewerbungsdateien, Tokens, Rohmails, Zugangsdaten oder privaten Datensätze committen.
 
-1. Öffne https://dash.cloudflare.com/ und melde dich an (ggf. kostenloses Cloudflare-Konto erstellen).
-2. Navigiere zu **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**.
-3. Verbinde GitHub. Autorisiere **nur** das Repository `Coco1the8creator7/bewerbungs-agent` statt aller privaten Repositories.
-4. Wähle dieses Repository als Quelle, Produktionszweig **main**.
-5. Wähle **kein Framework** und konfiguriere:
-   - **Build command:** leer lassen
-   - **Build output directory:** `dashboard`
-   - **Root directory (advanced):** nicht ändern (Repository-Wurzel)
-6. Klicke **Save and Deploy**.
-7. Cloudflare zeigt nach erfolgreicher Veröffentlichung eine eigene URL der Form `https://<gewaehlter-projektname>.pages.dev/` an. Diese URL wird erst nach dem tatsächlichen Deployment bestätigt.
+## Einrichtung über GitHub.com (nach der Sicherheitsprüfung)
 
-Cloudflare erstellt bei neuen Commits auf `main` automatisch neue Versionen. Nur der Inhalt von `dashboard/` wird als Webverzeichnis veröffentlicht, nicht `docs/`, `data/`, `config/` oder `schemas/`.
+1. Öffne `https://github.com/Coco1the8creator7/bewerbungs-agent`.
+2. **Settings → General → Danger Zone → Change repository visibility → Make public**. Die GitHub-Sicherheitsabfrage selbst bestätigen. Der vorhandene Code und die komplette Historie werden dadurch öffentlich.
+3. Öffne **Settings → Pages**.
+4. Unter **Build and deployment → Source** wähle **GitHub Actions**.
+5. Öffne **Actions → Webseite veröffentlichen (GitHub Pages) → Run workflow** für `main`.
+6. Nach erfolgreichem Deployment bestätigt GitHub Pages eine URL. Für den aktuellen Eigentümer und Repository-Namen ist `https://coco1the8creator7.github.io/bewerbungs-agent/` die erwartete Form; die URL vor dem Deployment nicht als bereits erreichbar darstellen.
 
-## Datenschutz und Grenzen
+GitHub Actions führt das Deployment danach automatisch aus, wenn sich `dashboard/**` oder der Deployment-Workflow auf `main` ändert. Mit `workflow_dispatch` kann der Vorgang erneut manuell gestartet werden.
 
-- **Eine lange oder unbekannte URL ist kein Passwort.** Die Seite ist standardmässig im Internet erreichbar. `robots.txt` bittet Suchmaschinen, sie nicht zu indizieren, schützt aber nicht vor Aufrufen.
-- **Niemals** Lebensläufe, persönliche Dokumente, E-Mails, Inserat-Datenbanken, API-Schlüssel oder OAuth-Tokens in `dashboard/` committen.
-- Das Dashboard nutzt keine automatische Browser-Persistenz: Entscheidungen/Notizen gehen beim Neuladen verloren, falls sie nicht separat als Datei exportiert werden. Auf fremden Geräten keine privaten Bewerbungsnotizen erfassen.
-- Für die spätere produktive Nutzung mit personenbezogenen Daten: Login/Zugriffsschutz (z. B. Cloudflare Access), ein authentifiziertes Backend und eine private Datenhaltung planen. Static Pages alleine sind dafür nicht ausreichend.
-- Auf Geräten des Arbeitgebers gelten unabhängig davon dessen Nutzungs- und Sicherheitsrichtlinien.
+## Umfang der veröffentlichten Website
 
-## Warum nicht direkt dieselbe GitHub-Pages-Konfiguration wie beim Eventkalender?
+- **Öffentliche GitHub-Pages-Dateien:** nur `dashboard/`, z. B. `dashboard/index.html` als Website-Startseite.
+- **Öffentliche Repository-Dateien:** bei einem öffentlichen Repository sind dagegen **sämtliche nicht ignorierten Dateien und die Git-Historie** öffentlich einsehbar, auch `docs/`, `config/`, `schemas/` und `importer/`.
+- Das Dashboard enthält nur fiktive Demodaten. Reale Stellen lassen sich per Dateiauswahl lokal im Browser laden, ohne automatische Übertragung an GitHub.
+- Es gibt keinen serverseitigen Gmail-Importer, keine Anmeldung und keinen dauerhaft gespeicherten Bewerbungsstatus. Entscheidungen liegen nur temporär im Browser und können als JSON exportiert werden. Auf Schul-/Arbeitgebergeräten keine sensiblen Bewerbungsnotizen erfassen.
+- `robots.txt` ist nur ein Indizierungswunsch, **kein Zugangsschutz**. Eine öffentliche Pages-Website darf nicht als private Anwendung behandelt werden.
 
-`was-ist-der-plan` ist **öffentlich** und hat eine `deploy-pages.yml` für GitHub Pages. Das Bewerbungs-Repository ist bewusst **privat**. GitHub Pages unterstützt private Repositories nur auf berechtigten kostenpflichtigen GitHub-Plänen. Zudem ist eine daraus veröffentlichte GitHub-Pages-Site trotzdem öffentlich. Cloudflare Pages unterstützt die Git-Integration auch mit privaten Repositories, ohne diese öffentlich zu machen.
-
-Anleitung: https://developers.cloudflare.com/pages/get-started/git-integration/
+GitHub-Dokumentation:
+- https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+- https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/managing-repository-settings/setting-repository-visibility
