@@ -16,8 +16,11 @@ ROOT = Path(__file__).resolve().parents[1]
 class DashboardContractTests(unittest.TestCase):
     def test_dashboard_has_valid_javascript(self):
         html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
-        scripts = re.findall(r"<script(?:\s[^>]*)?>(.*?)</script>", html, flags=re.DOTALL | re.IGNORECASE)
-        self.assertEqual(len(scripts), 1, "Dashboard should remain a standalone HTML file")
+        scripts = re.findall(r"<script>(.*?)</script>", html, flags=re.DOTALL | re.IGNORECASE)
+        self.assertEqual(len(scripts), 1, "Expected one inline dashboard script")
+        self.assertIn('<script src="./storage.js"></script>', html)
+        stored = subprocess.run(["node", "--check", "dashboard/storage.js"], cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(stored.returncode, 0, stored.stderr)
         result = subprocess.run(["node", "--check", "-"], input=scripts[0], text=True, capture_output=True)
         self.assertEqual(result.returncode, 0, result.stderr)
 
@@ -35,6 +38,13 @@ class DashboardContractTests(unittest.TestCase):
         self.assertIn('id="exportDecisions"', html)
         self.assertIn('class="tools"', html)
         self.assertIn('stage_changed_at', html)
+        self.assertIn('id="persistEnabled"', html)
+        self.assertIn('id="exportWorkspace"', html)
+        self.assertIn('id="importWorkspace"', html)
+        self.assertIn('id="exportJobs"', html)
+        self.assertIn('id="editCategories"', html)
+        self.assertIn('id="addJob"', html)
+        self.assertIn('manualOverrides', html)
         self.assertIn('type:"bewerbungs-agent-decisions"', html)
         self.assertNotIn("localStorage", html)
 
