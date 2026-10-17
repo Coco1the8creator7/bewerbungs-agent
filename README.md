@@ -2,7 +2,7 @@
 
 Privates Entwicklungs-Repository für einen lokalen Stellen-Importer und ein interaktives HTML-Dashboard.
 
-**Projektstand: 17.10.2026 · Technische Basis v0.1**
+**Projektstand: 17.10.2026 · Dashboard-Prüfworkflow (Entwicklungsversion)**
 
 ## Ziel
 
@@ -10,7 +10,7 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 
 ## Verzeichnisstruktur
 
-- \`dashboard/index.html\` – erster **funktionaler lokaler HTML-Viewer**: JSON-Datei manuell einlesen, Suchtext/Quelle/Kategorie/Status filtern und Original-Inserate aufrufen.
+- \`dashboard/index.html\` – Offline-Dashboard: JSON-Datei laden, suchen, filtern, Details/Notizen bearbeiten, Entscheidungen separat importieren/exportieren und eingebaute Demo testen.
 - \`schemas/job.schema.json\` – Schema für **ein** normalisiertes Stelleninserat (v0.1.0). Die lokale Datei \`data/jobs.json\` enthält ein Array solcher Einträge.
 - \`config/job-alerts.json\` – Quellen und in Gmail nachgewiesene Job-Abo-Bestätigungen; keine Logins, Aktivierungslinks oder personenbezogenen Postfachdaten.
 - \`docs/suchvorgaben.md\` – technische Zusammenfassung relevanter Entscheidungen; **nicht** die vollständige Originaldatei des Pflichtenhefts v0.7.
@@ -19,14 +19,20 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 - \`examples/jobs.example.json\` – ausdrücklich fiktive Datensätze zum Testen der Anzeige.
 - \`data/\` – künftig lokale produktive Daten (**per .gitignore ausgeschlossen**).
 
-## Lokal testen (ohne Gmail)
+## Offline testen (ohne Gmail)
 
-1. Repository lokal klonen oder als ZIP herunterladen.
-2. Datei \`dashboard/index.html\` im Browser öffnen.
-3. Auf **«JSON-Datei laden / aktualisieren»** klicken und \`examples/jobs.example.json\` auswählen.
-4. Filter ausprobieren und die Kategorien prüfen. Die Beispiel-URLs führen absichtlich zu keiner echten Stellenanzeige.
+1. Repository als ZIP herunterladen oder später auf dem Mac klonen.
+2. Datei dashboard/index.html im Browser öffnen.
+3. Auf „Demo anzeigen“ klicken, um drei fiktive Jobs zu laden – **ohne Jobmails**.
+4. Filter ausprobieren, persönliche Entscheidungen treffen und in „Details / Notiz“ Notizen ergänzen.
+5. „Entscheidungen exportieren“ sichert eine eigenständige JSON-Datei mit Inserat-IDs, persönlichen Entscheidungen und Notizen.
+6. „Entscheidungen laden“ kann diese Daten wiederherstellen; „Stellen-JSON laden“ importiert echte Inserate aus einer separaten lokalen Datei.
 
-Die Seite benötigt keine Installation und keine Internetverbindung, um die gewählte JSON-Datei auszuwerten. Nach jeder lokalen Änderung der Datei diese über den Auswahldialog erneut einlesen.
+**Datentrennung:** processing.state bleibt der technische Importstatus. Persönliche Entscheidungen (Offen, Merkliste, Später prüfen, Nicht relevant, Beworben) verändern die Ursprungsjobs nicht und werden getrennt exportiert.
+
+**Schul-/Arbeitgebergerät:** Bewusst keine dauerhafte Browser-Speicherung. Beim Schliessen/Neuladen gehen nicht exportierte Entscheidungen verloren. Private Bewerbungsnotizen nicht auf verwalteten Geräten eingeben; Exporte mit personenbezogenen Inhalten nicht in GitHub laden.
+
+**Automatische Offline-Tests:** GitHub Actions validiert JavaScript-Syntax und die fiktiven Datensätze gegen das JSON-Schema. Lokal: Python mit jsonschema sowie Node.js installieren, dann: python -m unittest discover -s tests -v.
 
 ## Spätere produktive Nutzung
 
