@@ -1,0 +1,65 @@
+{
+  "schema_version": "0.1.0",
+  "checked_on": "2026-10-17",
+  "description": "Status nur anhand verifizierter Gmail-Meldungen; Aktivierung ist nicht gleich erster regulärer Job-Alert.",
+  "labels": {
+    "incoming": "BA - Job-Alerts",
+    "imported": "BA - Importiert",
+    "review": "BA - Zur Pruefung"
+  },
+  "sources": [
+    {
+      "platform": "jobs.ch",
+      "sender": "jobmail@jobs.ch",
+      "confirmation_status": "active_in_confirmation_email",
+      "alerts": [
+        {
+          "name": "Zürich + Umfeld",
+          "search_check": "review_keywords_vs_Fernwaerme"
+        },
+        {
+          "name": "Projektleiter Energie / thermische Netze"
+        },
+        {
+          "name": "Energiekonzept / Energieberatung"
+        },
+        {
+          "name": "Energielösungen / Vertrieb Netzlösungen"
+        },
+        {
+          "name": "Energiestadt / Förderprogramme / Klima"
+        }
+      ]
+    },
+    {
+      "platform": "publicjobs.ch",
+      "sender": "no-reply@publicjobs.ch",
+      "confirmation_status": "activation_email_received_confirmation_not_verified",
+      "alerts": []
+    },
+    {
+      "platform": "ewz",
+      "sender": "no-reply.ewz@solique.ch",
+      "confirmation_status": "activation_email_received_confirmation_not_verified",
+      "alerts": []
+    },
+    {
+      "platform": "energie360.ch",
+      "sender": "e-recruiting@energie360.ch",
+      "confirmation_status": "activation_email_received_confirmation_not_verified",
+      "alerts": []
+    },
+    {
+      "platform": "indeed",
+      "sender": null,
+      "confirmation_status": "not_verified",
+      "alerts": []
+    },
+    {
+      "platform": "linkedin",
+      "sender": null,
+      "confirmation_status": "not_verified",
+      "alerts": []
+    }
+  ]
+}
