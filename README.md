@@ -34,6 +34,12 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 
 **Automatische Offline-Tests:** GitHub Actions validiert JavaScript-Syntax und die fiktiven Datensätze gegen das JSON-Schema. Lokal: Python mit jsonschema sowie Node.js installieren, dann: python -m unittest discover -s tests -v.
 
+## Permanente Webadresse (ohne lokalen Rechner)
+
+Das statische Dashboard kann über **Cloudflare Pages** aus diesem privaten Repository als öffentliche HTTPS-Seite veröffentlicht werden. Einmalig ist eine GitHub-Autorisierung im Cloudflare-Dashboard erforderlich; anschliessend aktualisiert sich die Seite automatisch bei Änderungen an `main`. Die genaue Einrichtung (Build-Ausgabeordner `dashboard`) und die Datenschutzgrenzen stehen in [docs/hosting.md](docs/hosting.md).
+
+**Wichtig:** Eine veröffentlichte HTML-Seite ist kein geschütztes Benutzerkonto und enthält weiterhin keine persistente private Datenbank oder einen Gmail-Importer. Nur fiktive Beispieldaten im Code; reale Bewerbungsdaten niemals in den veröffentlichten Ordner committen.
+
 ## Spätere produktive Nutzung
 
 Der geplante Importer erzeugt/aktualisiert lokal \`data/jobs.json\`; dann kann diese Datei im Dashboard manuell eingelesen werden. Ein automatischer Gmail-Abruf, eine Datenbank, KI-Matching und Bewerbungsautomatisierung sind **noch nicht implementiert**.
