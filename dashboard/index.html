@@ -455,6 +455,7 @@ function loadDemo(){
   ["DEMO-INTERVIEW-1","interview",1],["DEMO-DECLINED-1","declined",3]
  ])annotations.set(id,{decision,note:"",stage_changed_at:isoAgo(days)});
  render();
+ saveChanges();
 }
 el("choose").addEventListener("click",()=>{el("picker").value="";el("picker").click();});
 el("picker").addEventListener("change",async e=>{
@@ -490,34 +491,103 @@ el("saveDetails").addEventListener("click",()=>{
 });
 el("closeDetails").addEventListener("click",()=>{el("details").close();currentJobId=null;});
 el("details").addEventListener("close",()=>{currentJobId=null;newJobMode=false;newJobDraft=null;});
+
 el("exportDecisions").addEventListener("click",()=>{
- const records=[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at}));
- const payload={schema_version:"0.2.0",type:"bewerbungs-agent-decisions",exported_at:new Date().toISOString(),annotations:records};
- const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
- const a=document.createElement("a");a.href=url;a.download="bewerbungs-status-"+new Date().toISOString().slice(0,10)+".json";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
- el("message").textContent=records.length+" Status-Einträge exportiert. Die Stellenliste ist nicht enthalten.";
+ const data=snapshot();
+ downloadJSON("bewerbungs-status-"+new Date().toISOString().slice(0,10)+".json",{
+  type:"bewerbungs-agent-decisions",schema_version:"0.2.0",
+  exported_at:data.exported_at,annotations:data.annotations
+ });
+ el("message").textContent="Statusdatei exportiert. Sie enthält keine Inseratdetails.";
 });
+el("exportJobs").addEventListener("click",()=>{
+ downloadJSON("jobs-"+new Date().toISOString().slice(0,10)+".json",jobs);
+ el("message").textContent=jobs.length+" Stellen als separates JSON exportiert.";
+});
+el("exportWorkspace").addEventListener("click",()=>{
+ downloadJSON("bewerbungs-agent-backup-"+new Date().toISOString().slice(0,10)+".json",snapshot());
+ el("message").textContent="Gesamtsicherung erstellt (Inserate, Status und Notizen). Datei privat aufbewahren.";
+});
+el("addJob").addEventListener("click",startNewJob);
 el("importDecisions").addEventListener("click",()=>{el("decisionsPicker").value="";el("decisionsPicker").click();});
 el("decisionsPicker").addEventListener("change",async e=>{
  const file=e.target.files?.[0];if(!file)return;
  try{
   if(file.size>2_000_000)throw Error("Datei ist grösser als 2 MB.");
   const data=JSON.parse(await file.text());
-  if(data?.type!=="bewerbungs-agent-decisions"||!["0.1.0","0.2.0"].includes(data.schema_version)||!Array.isArray(data.annotations))throw Error("Ungültige Statusdatei.");
-  const incoming=new Map();
-  for(const item of data.annotations){
-   if(!item||typeof item.id!=="string"||!item.id||!stageNames.has(item.decision)||typeof item.note!=="string"||item.note.length>2000||incoming.has(item.id))throw Error("Ungültiger oder doppelter Statuseintrag.");
-   if(item.stage_changed_at!=null&&validDate(item.stage_changed_at)===null)throw Error("Ungültiges Datum.");
-   incoming.set(item.id,{decision:item.decision,note:item.note,stage_changed_at:item.stage_changed_at||null});
-  }
+  if(data?.type!=="bewerbungs-agent-decisions"||!["0.1.0","0.2.0"].includes(data.schema_version))throw Error("Ungültige Statusdatei.");
+  const incoming=validateAnnotations(data.annotations);
   for(const [id,item] of incoming)annotations.set(id,item);
-  el("message").textContent=incoming.size+" Status-Einträge geladen; Änderungen vor dem Verlassen wieder exportieren.";
-  render();
+  el("message").textContent=incoming.size+" Status-Einträge importiert.";
+  render();saveChanges();
  }catch(err){el("message").textContent="Statusdatei konnte nicht geladen werden: "+err.message;}
 });
+function validateJobs(rows){
+ if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||Array.isArray(j)||typeof j.id!=="string"||!j.id.trim()||typeof j.title!=="string"||!j.title.trim()||typeof j.source!=="string"||!j.source.trim()))
+  throw Error("Ungültige Inseratdaten.");
+ if(new Set(rows.map(j=>j.id)).size!==rows.length)throw Error("Doppelte Inserat-IDs.");
+ return rows;
+}
+function applyWorkspace(data,name){
+ if(!data||data.type!=="bewerbungs-agent-workspace"||data.schema_version!=="0.3.0"||typeof data.demo_mode!=="boolean")
+  throw Error("Ungültige Gesamtsicherung v0.3.0.");
+ const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations);
+ isRestoring=true;
+ try{
+  loadJobs(structuredClone(rows),name,data.demo_mode);
+  annotations.clear();
+  for(const [id,item] of records)annotations.set(id,item);
+  render();
+ }finally{isRestoring=false;}
+ saveChanges();
+}
+el("importWorkspace").addEventListener("click",()=>{el("workspacePicker").value="";el("workspacePicker").click();});
+el("workspacePicker").addEventListener("change",async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  if(file.size>15_000_000)throw Error("Datei ist grösser als 15 MB.");
+  const data=JSON.parse(await file.text());
+  if(jobs.length&&!window.confirm("Gesamtsicherung laden? Die aktuellen Inserate und Statusdaten werden ersetzt. Vorher gegebenenfalls exportieren."))return;
+  applyWorkspace(data,file.name);
+  el("message").textContent="Gesamtsicherung geladen. Daten werden nur bei aktivierter Gerätespeicherung dauerhaft gespeichert.";
+ }catch(err){el("message").textContent="Gesamtsicherung konnte nicht geladen werden: "+err.message;}
+});
+el("persistEnabled").addEventListener("change",async e=>{
+ const enabled=e.target.checked;
+ if(enabled){
+  persistEnabled=true;
+  el("storageStatus").textContent="Speicherung wird eingerichtet …";
+  await saveChanges();
+ }else{
+  persistEnabled=false;
+  el("storageStatus").textContent="Lokale Speicherung wird entfernt …";
+  pendingSave=pendingSave.catch(()=>{}).then(()=>window.AgentStore.clear()).then(()=>{
+   el("storageStatus").textContent="Nur aktuelle Sitzung · gespeicherte Browserdaten gelöscht";
+  }).catch(err=>{
+   el("storageStatus").textContent="Entfernen fehlgeschlagen: "+err.message;
+  });
+  await pendingSave;
+ }
+});
+async function initialize(){
+ try{
+  const saved=await window.AgentStore.load();
+  if(saved!==undefined&&saved!==null){
+   applyWorkspace(saved,"lokal gespeicherter Arbeitsstand");
+   persistEnabled=true;
+   el("persistEnabled").checked=true;
+   el("storageStatus").textContent="Gespeicherter Arbeitsstand dieses Browsers wiederhergestellt";
+   el("message").textContent="Lokaler Arbeitsstand wiederhergestellt; keine GitHub- oder Cloud-Synchronisierung.";
+   return;
+  }
+ }catch(err){
+  el("storageStatus").textContent="Lokale Datenspeicherung nicht verfügbar: "+err.message;
+ }
+ loadDemo();
+}
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
 for(const [code,label] of stages)el("detailDecision").add(new Option(label,code));
-loadDemo();
+initialize();
 </script>
 </body>
 </html>
