@@ -183,6 +183,35 @@ const stages=[
 const stageNames=new Map(stages);
 const activeStages=new Set(["review","saved","later","preparing","applied","interview","offer"]);
 const annotations=new Map();
+const manualOverrides=new Map(); // Field-level corrections survive later imports by stable job ID.
+const editableKeys=["title","source","company","location","url","published_at","categories","description",
+ "workload_pct_min","workload_pct_max","salary_chf_year_min","salary_chf_year_max","salary_kind","remote_mode","contract_type"];
+function applyManualOverrides(job){
+ const patch=manualOverrides.get(job.id);
+ if(!patch)return job;
+ const edited={...job};
+ for(const key of editableKeys)if(Object.prototype.hasOwnProperty.call(patch,key))edited[key]=structuredClone(patch[key]);
+ if(job.matching?.status==="complete"){
+  edited.matching={status:"not_run",score:null,rationale:"Manuelle Korrekturen erfordern eine neue Fit-Bewertung.",evaluated_at:null};
+ }
+ return edited;
+}
+function validateOverrides(records){
+ if(records==null)return new Map();
+ if(!Array.isArray(records))throw Error("Korrekturen müssen eine Liste sein.");
+ const result=new Map();
+ for(const entry of records){
+  if(!entry||typeof entry.id!=="string"||!entry.id||!entry.patch||typeof entry.patch!=="object"||Array.isArray(entry.patch)||result.has(entry.id))
+   throw Error("Ungültige Korrektur.");
+  const patch={};
+  for(const key of Object.keys(entry.patch)){
+   if(!editableKeys.includes(key))throw Error("Unbekanntes Korrekturfeld: "+key);
+   patch[key]=entry.patch[key];
+  }
+  result.set(entry.id,patch);
+ }
+ return result;
+}
 let persistEnabled=false;
 let pendingSave=Promise.resolve();
 let isRestoring=false;
@@ -194,7 +223,8 @@ function snapshot(){
   exported_at:new Date().toISOString(),
   demo_mode:demoMode,
   jobs:structuredClone(jobs),
-  annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null}))
+  annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
+  overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
  };
 }
 function saveChanges(){
@@ -309,9 +339,7 @@ function applyJobEdits(old){
   const lo=next[prefix+"_min"],hi=next[prefix+"_max"];
   if(lo!==null&&hi!==null&&lo>hi)throw Error("Minimum darf nicht über dem Maximum liegen.");
  }
- const editable=["title","source","company","location","url","published_at","categories","description",
-  "workload_pct_min","workload_pct_max","salary_chf_year_min","salary_chf_year_max","salary_kind","remote_mode","contract_type"];
- if(editable.some(key=>JSON.stringify(next[key])!==JSON.stringify(old[key]))&&old.matching?.status==="complete"){
+ if(editableKeys.some(key=>JSON.stringify(next[key])!==JSON.stringify(old[key]))&&old.matching?.status==="complete"){
   next.matching={status:"not_run",score:null,rationale:"Nach manueller Änderung erneut bewerten.",evaluated_at:null};
  }
  return next;
@@ -431,11 +459,15 @@ function loadJobs(rows,name,asDemo=false){
  saveChanges();
 }
 function loadDemo(){
+ for(const id of [...manualOverrides.keys()])if(id.startsWith("DEMO-"))manualOverrides.delete(id);
  const isoAgo=d=>new Date(Date.now()-d*dayMs).toISOString();
  const job=(id,title,company,location,source,days,matching)=>({
   schema_version:"0.1.0",id:"DEMO-"+id,title:"DEMO – "+title,company,location,source,
   url:null,first_seen_at:isoAgo(days),categories:["Fernwärme","Projektleitung"],description:"Rein fiktives Inserat zum Testen des Bewerbungs-Dashboards.",
-  salary_chf_year_min:null,salary_chf_year_max:null,salary_kind:"unknown",processing:{state:"new",warnings:[]},
+  published_at:null,last_seen_at:null,remote_mode:"unknown",contract_type:"unknown",
+  workload_pct_min:null,workload_pct_max:null,
+  provenance:{source_message_id:null,source_received_at:null,alert_name:"DEMO"},
+  salary_chf_year_min:null,salary_chf_year_max:null,salary_kind:"unknown",processing:{state:"new",warnings:[],extraction_confidence:null},
   matching:matching==null?undefined:{status:"complete",score:matching,rationale:"Fiktives Score-Beispiel – das Matching ist noch nicht implementiert."}
  });
  const rows=[
@@ -462,7 +494,13 @@ el("picker").addEventListener("change",async e=>{
  const file=e.target.files?.[0];if(!file)return;
  try{
   if(file.size>10_000_000)throw Error("Datei ist grösser als 10 MB.");
-  const json=JSON.parse(await file.text());loadJobs(Array.isArray(json)?json:json?.jobs,file.name);
+  const json=JSON.parse(await file.text());
+  const rows=validateJobs(Array.isArray(json)?json:json?.jobs);
+  if(!demoMode&&jobs.length&&!window.confirm("Neue Importdaten zusammenführen? Bestehende manuelle Korrekturen und selbst erfasste Inserate bleiben erhalten."))return;
+  const incoming=rows.map(j=>applyManualOverrides(j));
+  const byId=new Map(incoming.map(j=>[j.id,j]));
+  for(const existing of jobs)if(existing.id.startsWith("MANUAL-")&&!byId.has(existing.id))byId.set(existing.id,existing);
+  loadJobs([...byId.values()],file.name);
  }catch(err){el("message").textContent="Datei konnte nicht geladen werden: "+err.message;}
 });
 el("demo").addEventListener("click",()=>{
@@ -481,6 +519,9 @@ el("saveDetails").addEventListener("click",()=>{
   }else{
    const index=jobs.findIndex(row=>row.id===currentJobId);
    jobs[index]=next;
+   const patch={...(manualOverrides.get(next.id)||{})};
+   for(const key of editableKeys)if(JSON.stringify(next[key])!==JSON.stringify(old[key]))patch[key]=structuredClone(next[key]);
+   if(Object.keys(patch).length)manualOverrides.set(next.id,patch);
   }
   refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
   refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
@@ -531,12 +572,14 @@ function validateJobs(rows){
 function applyWorkspace(data,name){
  if(!data||data.type!=="bewerbungs-agent-workspace"||data.schema_version!=="0.3.0"||typeof data.demo_mode!=="boolean")
   throw Error("Ungültige Gesamtsicherung v0.3.0.");
- const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations);
+ const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations),overrides=validateOverrides(data.overrides);
  isRestoring=true;
  try{
   loadJobs(structuredClone(rows),name,data.demo_mode);
   annotations.clear();
   for(const [id,item] of records)annotations.set(id,item);
+  manualOverrides.clear();
+  for(const [id,patch] of overrides)manualOverrides.set(id,patch);
   render();
  }finally{isRestoring=false;}
  saveChanges();
