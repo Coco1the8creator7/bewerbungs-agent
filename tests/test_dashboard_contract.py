@@ -52,6 +52,10 @@ class DashboardContractTests(unittest.TestCase):
         result = subprocess.run(["node", "tests/test_dashboard_logic.cjs"], cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_indexeddb_adapter_save_restore_and_clear(self):
+        result = subprocess.run(["node", "tests/test_storage_adapter.cjs"], cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_matching_schema_validates_score_state(self):
         schema = json.loads((ROOT / "schemas/job.schema.json").read_text(encoding="utf-8"))
         job = json.loads((ROOT / "examples/jobs.example.json").read_text(encoding="utf-8"))[0]
