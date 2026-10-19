@@ -615,15 +615,15 @@ el("persistEnabled").addEventListener("change",async e=>{
  }
 });
 async function initialize(){
+ let restored=false;
  try{
   const saved=await window.AgentStore.load();
   if(saved!==undefined&&saved!==null){
    applyWorkspace(saved,"lokal gespeicherter Arbeitsstand");
    persistEnabled=true;
+   restored=true;
    el("persistEnabled").checked=true;
    el("storageStatus").textContent="Gespeicherter Arbeitsstand dieses Browsers wiederhergestellt";
-   el("message").textContent="Lokaler Arbeitsstand wiederhergestellt; keine GitHub- oder Cloud-Synchronisierung.";
-   return;
   }
  }catch(err){
   el("storageStatus").textContent="Lokale Datenspeicherung nicht verfügbar: "+err.message;
@@ -633,15 +633,23 @@ async function initialize(){
   if(!response.ok)throw new Error("HTTP "+response.status);
   const incoming=validateJobs(await response.json());
   if(incoming.length){
-    loadJobs(incoming,"automatischer GitHub-Import");
-    el("dataContext").textContent="Automatischer Stellenimport · GitHub";
-    el("message").textContent=incoming.length+" Stellen automatisch aus dem GitHub-Feed geladen.";
-    return;
+   const byId=new Map(incoming.map(j=>[j.id,applyManualOverrides(j)]));
+   if(restored){
+    for(const j of jobs)if(j.id.startsWith("MANUAL-")&&!byId.has(j.id))byId.set(j.id,j);
+   }
+   loadJobs([...byId.values()],"automatischer GitHub-Import");
+   el("dataContext").textContent="Stellenimport · GitHub";
+   el("message").textContent=incoming.length+" Stellen automatisch geladen; bestehende persönliche Status und Korrekturen beibehalten.";
+   return;
   }
  }catch(err){
-  el("message").textContent="Automatischer Stellenimport nicht verfügbar: "+err.message+". Demo wird angezeigt.";
+  if(restored){
+   el("message").textContent="Lokaler Arbeitsstand geladen. GitHub-Feed derzeit nicht verfügbar: "+err.message;
+   return;
+  }
+  el("message").textContent="GitHub-Import nicht verfügbar: "+err.message+". Demo wird angezeigt.";
  }
- loadDemo();
+ if(!restored)loadDemo();
 }
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
 for(const [code,label] of stages)el("detailDecision").add(new Option(label,code));
