@@ -628,6 +628,19 @@ async function initialize(){
  }catch(err){
   el("storageStatus").textContent="Lokale Datenspeicherung nicht verfügbar: "+err.message;
  }
+ try {
+  const response=await fetch("./jobs.json",{cache:"no-store"});
+  if(!response.ok)throw new Error("HTTP "+response.status);
+  const incoming=validateJobs(await response.json());
+  if(incoming.length){
+    loadJobs(incoming,"automatischer GitHub-Import");
+    el("dataContext").textContent="Automatischer Stellenimport · GitHub";
+    el("message").textContent=incoming.length+" Stellen automatisch aus dem GitHub-Feed geladen.";
+    return;
+  }
+ }catch(err){
+  el("message").textContent="Automatischer Stellenimport nicht verfügbar: "+err.message+". Demo wird angezeigt.";
+ }
  loadDemo();
 }
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
