@@ -1,0 +1,85 @@
+name: Import Stellenmails
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: import-stellenmails
+  cancel-in-progress: false
+
+jobs:
+  import:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Parser-Tests
+        run: python -m unittest discover -s tests -p 'test_github_daily.py' -v
+      - name: Jobmails aus Gmail einlesen und öffentlichen JSON-Bestand aktualisieren
+        env:
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+        run: python -m importer.github_daily
+      - name: Schema und sensible Daten prüfen
+        run: |
+          python - <<'PY'
+          import json
+          rows=json.load(open('dashboard/jobs.json'))
+          assert isinstance(rows,list)
+          ids=set()
+          for job in rows:
+              assert job['id'] not in ids
+              ids.add(job['id'])
+              assert job['provenance']=={'source_message_id':None,'source_received_at':None,'alert_name':None}
+              assert 'uid=' not in (job.get('url') or '')
+              assert '@gmail.com' not in json.dumps(job)
+          print('Safe dashboard feed:',len(rows),'jobs')
+          PY
+      - name: JSON auf main aktualisieren
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dashboard/jobs.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data: refresh public jobmail feed"
+            git push
+          fi
+      - name: Dashboard-Feed als Prüfartefakt bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard-jobs-json
+          path: dashboard/jobs.json
+          retention-days: 7
+
+  deploy:
+    needs: import
+    if: ${{ github.event.repository.private == false }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard
+      - id: deployment
+        uses: actions/deploy-pages@v4
