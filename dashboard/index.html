@@ -148,6 +148,12 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
 @media(max-width:920px){.mission-grid{grid-template-columns:1fr}.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,1.8fr) minmax(105px,.8fr) minmax(165px,1.1fr)}}
 @media(max-width:650px){main{padding:22px 15px 55px}.mission-card{padding:16px}.route-map{min-height:133px;padding-left:0;padding-right:0}.route-planet{width:31px;height:31px;box-shadow:0 0 0 4px #1a2335}.route-node.current .route-planet,.route-node.reached .route-planet{box-shadow:0 0 0 4px #1a2335}.route-node small{font-size:.59rem}.ship svg{width:25px;height:25px}.pipeline-head{display:none}.pipeline-row{grid-template-columns:minmax(0,1fr) auto;gap:9px}.pipeline-row .action-cell{grid-column:2;grid-row:1/3;max-width:136px}.pipeline-row .changed{display:none}.followup-button{white-space:normal}.stat{padding:16px}}
 
+/* Separate review queue from completed ratings, only presentation state. */
+.review-tabs{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.review-tabs button{border:1px solid #45536d;border-radius:8px;background:#253148;color:#afbed3;padding:9px 13px;font-weight:650;font-size:.8rem}
+.review-tabs button:hover{background:#33445e}
+.review-tabs button[aria-pressed="true"]{background:#405775;color:#f1f6ff;border-color:#9ab1ca}
+button.review-next{justify-self:start;font-size:.72rem;padding:7px 11px}
 /* Reduced Pixel Galaxy relevance editor */
 .review-panel{border-top:1px solid #303c55;padding-top:12px;margin-top:3px;display:grid;gap:10px}
 .review-header,.review-scale{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -244,8 +250,9 @@ button:disabled{opacity:.52;cursor:not-allowed}
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
-  <div class="section-heading"><div><h2 id="newJobsTitle">Neue Inserate</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><div class="headline-actions"><span id="markedSummary" class="marked-summary">0 für Export markiert</span><button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button><button type="button" class="secondary" id="exportRelevance">Bewertungen exportieren</button></div></div>
-  <div class="panel filters" role="search" aria-label="Neue Inserate filtern">
+  <div class="section-heading"><div><h2 id="newJobsTitle">Inserate beurteilen</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><div class="headline-actions"><span id="markedSummary" class="marked-summary">0 für Export markiert</span><button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button><button type="button" class="secondary" id="exportRelevance">Bewertungen exportieren</button></div></div>
+  <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Unbewertet (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button></div>
+  <div class="panel filters" role="search" aria-label="Inserate filtern">
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
     <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
@@ -341,6 +348,7 @@ const aspectCodes=new Set(aspectOptions.map(([x])=>x));
 const fieldCodes=new Set(fieldOptions.map(([x])=>x));
 const seniorityCodes=new Set(seniorityOptions.map(([x])=>x));
 let detailDraftFeedback={aspects:{},field_relation:null,seniority_assessment:null};
+let reviewListView="unrated";
 
 const activityTypes=new Set(["screened","applied","follow_up"]);
 let activityLog=[]; // Personal data; only in local workspace / personal exports.
@@ -515,6 +523,9 @@ function refill(select,values,placeholder){const old=select.value;select.replace
 function node(tag,value,klass){const item=document.createElement(tag);if(klass)item.className=klass;item.textContent=text(value);return item;}
 function safeLink(value){try{const url=new URL(value);return ["https:","http:"].includes(url.protocol)?url.href:null;}catch{return null;}}
 function ratingOf(id){return relevanceRatings.get(id)||null;}
+function hasReviewFeedback(id){const r=ratingOf(id);return !!r&&(Number.isInteger(r.score)||storedReasons(r).length>0||!!r.note?.trim()||Object.keys(r.aspects||{}).length>0||!!r.field_relation||!!r.seniority_assessment);}
+function unratedJobs(){return jobs.filter(j=>stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
+function reviewedJobs(){return jobs.filter(j=>hasReviewFeedback(j.id));}
 function normalizeReasons(value){
  const items=typeof value==="string"?(value?[value]:[]):value??[];
  if(!Array.isArray(items)||items.some(code=>typeof code!=="string"||!reasonCodes.has(code)))throw Error("Ungültige Bewertungsgründe.");
@@ -716,6 +727,14 @@ function ratingPanel(j){
  note.setAttribute("aria-label","Bewertungszusatz für "+j.title);
  note.addEventListener("change",()=>{setRatingNote(j.id,note.value);el("message").textContent="Bewertungszusatz übernommen. Für die dauerhafte Sicherung lokale Speicherung aktivieren oder JSON exportieren.";});
  panel.append(top,input,scale,reasons,noteLabel,note);
+ if(reviewListView==="unrated"){
+  const next=node("button","✓ Fertig · nächste Stelle","secondary review-next");next.type="button";
+  next.addEventListener("click",()=>{
+   if(!hasReviewFeedback(j.id)){el("message").textContent="Bitte zuerst eine Relevanz oder ein Kriterium bewerten.";return;}
+   renderStats();renderNewJobs();
+  });
+  panel.append(next);
+ }
  return panel;
 }
 function stageOf(id){return annotations.get(id)?.decision||"open";}
@@ -841,7 +860,7 @@ function startNewJob(){
 let newJobDraft=null;
 function actionButton(job){const b=node("button","Details","secondary compact-button");b.type="button";b.addEventListener("click",()=>openDetails(job.id));return b;}
 function renderStats(){
- el("newCount").textContent=jobs.filter(j=>stageOf(j.id)==="open"&&recent(j.first_seen_at)).length;
+ el("newCount").textContent=unratedJobs().filter(j=>recent(j.first_seen_at)).length;
  el("reviewNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="review"&&recent(stageChangedAt(j.id))).length;
  el("reviewTotalCount").textContent=jobs.filter(j=>stageOf(j.id)==="review").length;
  el("declinedNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="declined"&&recent(stageChangedAt(j.id))).length;
@@ -877,17 +896,22 @@ function renderPipeline(){
 function renderNewJobs(){
  const query=el("query").value.trim().toLocaleLowerCase("de-CH");
  const category=el("category").value,source=el("source").value;
- const allNew=jobs.filter(j=>stageOf(j.id)==="open");
+ const unreviewed=unratedJobs(),reviewed=reviewedJobs();
+  el("viewUnrated").textContent="Unbewertet ("+unreviewed.length+")";
+  el("viewReviewed").textContent="Bearbeitet ("+reviewed.length+")";
+  el("viewUnrated").setAttribute("aria-pressed",String(reviewListView==="unrated"));
+  el("viewReviewed").setAttribute("aria-pressed",String(reviewListView==="reviewed"));
+  const allNew=reviewListView==="reviewed"?reviewed:unreviewed;
  const filtered=allNew.filter(j=>{
   const categories=Array.isArray(j.categories)?j.categories:[];
   const hay=[j.title,j.company,j.location,j.source,...categories].map(text).join(" ").toLocaleLowerCase("de-CH");
   return (!query||hay.includes(query))&&(!category||categories.includes(category))&&(!source||j.source===source);
  });
  filtered.sort((a,b)=>el("sort").value==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
- el("newSummary").textContent=allNew.length+" ungeprüfte Stellen · "+filtered.length+" angezeigt";
+ el("newSummary").textContent=(reviewListView==="reviewed"?"Bearbeitete Inserate: ":"Noch unbewertet: ")+allNew.length+" · "+filtered.length+" angezeigt";
  updateMarkedSummary();
  const target=el("newJobsList");target.replaceChildren();
- if(!filtered.length){target.append(node("div",allNew.length?"Keine passenden neuen Inserate.":"Momentan keine ungeprüften Inserate.","empty panel"));return;}
+ if(!filtered.length){target.append(node("div",allNew.length?"Keine Inserate mit diesen Filtern.":(reviewListView==="reviewed"?"Noch keine Inserate beurteilt.":"Alle neuen Inserate sind bearbeitet – oder befinden sich im Bewerbungsprozess."),"empty panel"));return;}
  for(const j of filtered){
   const card=document.createElement("article");card.className="card"+(selectedJobIds.has(j.id)?" export-marked":"");
   const top=document.createElement("div");top.className="card-top";
@@ -1131,6 +1155,7 @@ async function initialize(){
  }
  if(!restored)loadDemo();
 }
+for(const [id,view] of [["viewUnrated","unrated"],["viewReviewed","reviewed"]])el(id).addEventListener("click",()=>{reviewListView=view;renderNewJobs();});
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
 for(const [code,label] of stages)el("detailDecision").add(new Option(label,code));
 initialize();

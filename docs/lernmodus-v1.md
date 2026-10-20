@@ -40,6 +40,17 @@ Beispiel für einen **bewerteten** Export (`schema_version: 1.1.0`):
 
 Bestehende v0.3-Gesamtsicherungen und frühere Einzelgründe unter `reason` oder `reasons` bleiben lesbar; der Altbestand erscheint im Export zusätzlich als `legacy_reasons`. Alte pauschale Gründe werden **nicht** in neue Skalenwerte umgedeutet. Die Kriterien werden nur lokal bzw. in privaten Exporten gespeichert. Im Export ist `ratings` die Menge vollständig bewerteter Jobs, `unrated_feedback` enthält separat Eingaben ohne 1–100-Gesamtscore. Beide sind keine automatische Vorselektion.
 
+## Übersichtliche Bewertungsansicht
+
+Die Dashboard-Hauptliste besitzt zwei umschaltbare Reiter:
+
+- **Unbewertet (Standard):** offene Inserate ohne explizites Relevanzfeedback.
+- **Bearbeitet:** Inserate mit einer vergebenen 1–100-Relevanz oder bereits eingetragenen Kriterien-/Freitextbewertungen; unabhängig vom separaten Bewerbungsstatus.
+
+Nach dem Bewerten bleibt die aktuelle Karte zur Ergänzung von Kriterien und Notizen stehen. Der Button **«✓ Fertig · nächste Stelle»** entfernt sie aus der unbewerteten Liste, ohne den Datensatz zu löschen. Der Reiter «Bearbeitet» ermöglicht jederzeit weitere Korrekturen.
+
+Die Zugehörigkeit zu diesen Ansichten wird aus bereits vorhandenen lokalen Feedbackdaten berechnet, ohne ein neues öffentliches Statusfeld. Import, Dublettenerkennung und vollständiger Trainings-JSON-Export bleiben unverändert. Ein für den Inserateexport gesetztes Diskettensymbol allein gilt **nicht** als Relevanzbewertung.
+
 ## Datenschutz und Grenzen
 Das Repo und GitHub Pages sind öffentlich. Bewertungen und Bewerbungsnotizen werden nicht automatisch an GitHub gesendet. Sie dürfen niemals in `dashboard/jobs.json`, einem öffentlichen Commit oder PR landen. Der Bewertungs-JSON-Export ist privat aufzubewahren. Dies ist bewusst der kostenlose, einfach wartbare Übergang ohne Feedback-API.
 
