@@ -199,7 +199,7 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
-  <div class="section-heading"><h2 id="newJobsTitle">Neue Inserate</h2><p id="newSummary">0 ungeprüfte Stellen</p></div>
+  <div class="section-heading"><div><h2 id="newJobsTitle">Neue Inserate</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><button type="button" class="secondary" id="exportRelevance">Bewertungen exportieren</button></div>
   <div class="panel filters" role="search" aria-label="Neue Inserate filtern">
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
@@ -223,7 +223,6 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
       <button type="button" class="secondary" id="exportWorkspace">Gesamtsicherung exportieren</button>
       <button type="button" class="secondary" id="importWorkspace">Gesamtsicherung laden</button>
       <button type="button" class="secondary" id="addJob">Inserat manuell erfassen</button>
-       <button type="button" class="secondary" id="exportRelevance">Bewertungen für KI-Training exportieren</button>
     </div>
     <div class="persist-panel">
       <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
@@ -466,7 +465,7 @@ function setRating(id,score,reason=""){
  saveChanges();
 }
 function linkedTitle(j,tag="h3"){
- const h=document.createElement(tag),url=safeLink(j.url);
+ const h=document.createElement(tag),url=safeLink(j.url);if(tag==="div")h.className="job-title";
  if(url){const a=node("a",j.title);a.href=url;a.target="_blank";a.rel="noopener noreferrer";h.append(a);}
  else h.textContent=j.title;
  return h;
@@ -658,6 +657,7 @@ function renderNewJobs(){
   const footer=document.createElement("div");footer.className="card-footer";
   const actions=document.createElement("div");actions.className="card-actions";
   actions.append(ratingWidget(j),stageSelect(j),actionButton(j));footer.append(actions);
+   if(Number.isInteger(j.selection?.suggested_score))footer.append(node("span","Vorschlag "+j.selection.suggested_score+"/100","job-meta"));
   
   card.append(footer);target.append(card);
  }
