@@ -19,6 +19,27 @@ Stand: 20.10.2026. Keine automatische Ablehnung oder Ausblendung wegen Relevanz.
 - Die Markierung (`export_selection`) und die Bewertungsgründe (`relevance_ratings[].reasons`) werden nur in der optionalen gerätegebundenen IndexedDB-Speicherung und in privaten **Gesamtsicherungen v0.3** gehalten. Vorhandene v0.3-Sicherungen ohne diese optionalen Felder bleiben lesbar.
 - Diese Bewertungsdatei kann in einem separaten Chat zur Trainingsauswertung hochgeladen werden. **Es gibt noch kein automatisches serverseitiges Training, keine automatische Aussortierung und keine öffentliche Speicherung der Bewertungen.**
 
+## Kriterienfeedback v2 (20.10.2026)
+
+Die Hauptbewertung bleibt **1–100** und ist vollständig unabhängig vom Kriterienfeedback.
+
+- **Arbeitsweg** (`distance`), **Aufgaben** (`tasks`), **Arbeitgeber** (`employer`) und **Arbeitsbedingungen** (`conditions`): jeweils eine unmittelbar bedienbare Rot–Neutral–Grün-Farbfläche mit unsichtbarem Range-Eingabeelement. Die Richtung des Effekts und seine Stärke werden als ganzzahliger Wert von **−100** (sehr negativ) bis **+100** (sehr positiv) gespeichert. **0** ist eine bewusste neutrale Bewertung; *nicht angefasst* bedeutet **nicht bewertet** und bleibt ohne Schlüssel. Ein × neben der Farbfläche setzt nur diesen Teilwert zurück.
+- **Berufsfeld** (`field_relation`): genau eine von `unrelated` (keinerlei Berufsverwandtheit), `transferable` (erkennbare Erfahrung) oder `aligned` (richtiges Berufsfeld); Klick auf die aktive Auswahl hebt sie auf.
+- **Seniorität** (`seniority_assessment`): genau eine von `underchallenging` (unterfordernd), `too_early` (zu jung bzw. noch wenig Erfahrung, aber potenzielle Entwicklung), `good_chance` (gute Chance) oder `overwhelming` (absolute Überforderung). **Diese Labels sind Kategorien, keine automatische lineare Skala.**
+
+Beispiel für einen **bewerteten** Export (`schema_version: 1.1.0`):
+
+```json
+{
+  "user_score": 78,
+  "aspects": {"distance": -75, "tasks": 60, "employer": 20},
+  "field_relation": "aligned",
+  "seniority_assessment": "good_chance"
+}
+```
+
+Bestehende v0.3-Gesamtsicherungen und frühere Einzelgründe unter `reason` oder `reasons` bleiben lesbar; der Altbestand erscheint im Export zusätzlich als `legacy_reasons`. Alte pauschale Gründe werden **nicht** in neue Skalenwerte umgedeutet. Die Kriterien werden nur lokal bzw. in privaten Exporten gespeichert. Im Export ist `ratings` die Menge vollständig bewerteter Jobs, `unrated_feedback` enthält separat Eingaben ohne 1–100-Gesamtscore. Beide sind keine automatische Vorselektion.
+
 ## Datenschutz und Grenzen
 Das Repo und GitHub Pages sind öffentlich. Bewertungen und Bewerbungsnotizen werden nicht automatisch an GitHub gesendet. Sie dürfen niemals in `dashboard/jobs.json`, einem öffentlichen Commit oder PR landen. Der Bewertungs-JSON-Export ist privat aufzubewahren. Dies ist bewusst der kostenlose, einfach wartbare Übergang ohne Feedback-API.
 

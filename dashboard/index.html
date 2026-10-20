@@ -161,6 +161,26 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
 button.reason-button{font-size:.73rem;font-weight:550;line-height:1.25;padding:6px 9px;color:#b5c4da;background:#253148;border:1px solid #37465f;border-radius:6px}
 button.reason-button:hover{background:#34425b}
 button.reason-button[aria-pressed="true"]{color:#edf4fd;background:#3b4e62;border-color:#90a8ba}
+/* Compact criterion sliders: range input invisible, gradient itself is draggable. */
+.feedback-editor{display:grid;gap:9px;min-width:0}
+.feedback-hint,.feedback-legacy{font-size:.7rem;color:#a0afc3}
+.feedback-legacy{border-left:2px solid #72829d;padding:5px 9px}
+.feedback-spectra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.feedback-spectrum-row{display:flex;align-items:stretch;gap:5px;min-width:0}
+.feedback-spectrum{position:relative;min-width:0;flex:1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:3px 8px;min-height:39px;padding:6px 10px 9px;border-radius:7px;border:1px solid #49576b;background:linear-gradient(90deg,#76434b 0%,#72575c 25%,#414e62 50%,#426358 75%,#3e7157 100%);color:#f0f2f5;cursor:ew-resize;overflow:hidden}
+.feedback-spectrum:hover{border-color:#92a6b5}
+.feedback-spectrum:focus-within{outline:2px solid #bfd0e9;outline-offset:2px}
+.feedback-spectrum-name{position:relative;z-index:1;font-size:.73rem;font-weight:650;pointer-events:none;text-shadow:0 1px 2px #182133}
+.feedback-spectrum-state{position:relative;z-index:1;font-size:.65rem;white-space:nowrap;pointer-events:none;color:#e3e9ed;text-shadow:0 1px 2px #182133}
+.feedback-spectrum-marker{position:absolute;bottom:0;left:var(--impact-position,50%);width:5px;height:6px;transform:translateX(-50%);background:#eff7fd;border:1px solid #182538;border-radius:2px;pointer-events:none}
+.feedback-spectrum-marker[hidden]{display:none}
+.feedback-spectrum input[type=range]{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:ew-resize;z-index:2;touch-action:pan-y}
+button.feedback-spectrum-reset{padding:3px 5px;min-width:25px;font-size:1rem;font-weight:600;background:#253148;color:#e0e8f2;border:1px solid #44516a;border-radius:6px}
+button.feedback-spectrum-reset[hidden]{display:none}
+.feedback-choice-block{min-width:0}
+.feedback-choice-block .reason-choices{margin-top:5px}
+.feedback-choice-block button.reason-button{font-size:.71rem}
+@media(max-width:690px){.feedback-spectra{grid-template-columns:1fr}}
 .mark-button{display:grid;place-items:center;flex-shrink:0;width:39px;height:39px;padding:7px;background:#242f43!important;border:1px solid #48546b;border-radius:7px!important;color:#99a9c0!important}
 .mark-button:hover{background:#31405a!important}
 .mark-button svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
@@ -265,7 +285,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
   <div class="dialog-field"><strong>Beschreibung</strong><p id="detailDescription" class="muted"></p></div>
   <div class="dialog-field"><label for="detailDecision">Bearbeitungsstatus</label><select id="detailDecision"></select></div>
   <div class="dialog-field"><label for="detailScore">Relevanz (1–100)</label><input id="detailScore" type="number" min="1" max="100" step="1" placeholder="Unbewertet"></div>
-  <div class="dialog-field"><label>Bewertungsgründe (optional, mehrere möglich)</label><div id="detailReasons" class="reason-choices" role="group" aria-label="Bewertungsgründe"></div></div>
+  <div class="dialog-field"><label>Kriterienbewertung (optional)</label><div id="detailReasons" class="feedback-editor-host" role="group" aria-label="Kriterienbewertung"></div></div>
   <div class="dialog-field"><label for="detailRatingNote">Bewertungszusatz (optional, max. 1000 Zeichen)</label><textarea id="detailRatingNote" maxlength="1000" rows="3" placeholder="Warum ist diese Stelle für mich interessant oder ungeeignet?"></textarea></div>
   <div class="dialog-field"><label for="detailNote">Meine Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Anforderungen, offene Fragen, weitere Schritte …"></textarea></div>
   <details id="editFields">
@@ -313,7 +333,14 @@ const relevanceRatings=new Map();
 const selectedJobIds=new Set(); // Private Auswahl nur für einen späteren Export, kein Statuswechsel.
 const reasonOptions=[["field","Berufsfeld"],["distance","Arbeitsweg"],["seniority","Seniorität"],["tasks","Aufgaben"],["employer","Arbeitgeber"],["conditions","Arbeitsbedingungen"]];
 const reasonCodes=new Set(reasonOptions.map(([code])=>code));
-let detailDraftReasons=[];
+// Earlier boolean reasons stay readable; v2 adds rated dimensions and exclusive labels.
+const aspectOptions=[["distance","Arbeitsweg"],["tasks","Aufgaben"],["employer","Arbeitgeber"],["conditions","Arbeitsbedingungen"]];
+const fieldOptions=[["unrelated","Keinerlei Berufsverwandtheit"],["transferable","Erkennbare Erfahrung"],["aligned","Richtiges Berufsfeld"]];
+const seniorityOptions=[["underchallenging","Unterfordernd"],["too_early","Zu jung"],["good_chance","Gute Chance"],["overwhelming","Absolute Überforderung"]];
+const aspectCodes=new Set(aspectOptions.map(([x])=>x));
+const fieldCodes=new Set(fieldOptions.map(([x])=>x));
+const seniorityCodes=new Set(seniorityOptions.map(([x])=>x));
+let detailDraftFeedback={aspects:{},field_relation:null,seniority_assessment:null};
 
 const activityTypes=new Set(["screened","applied","follow_up"]);
 let activityLog=[]; // Personal data; only in local workspace / personal exports.
@@ -440,7 +467,7 @@ function snapshot(){
   demo_mode:demoMode,
   jobs:structuredClone(jobs),
   annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
-  relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value,reasons:[...(value.reasons||[])]})),
+  relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value,reasons:[...(value.reasons||[])],aspects:{...(value.aspects||{})}})),
   export_selection:[...selectedJobIds],
   activity_log:structuredClone(activityLog),
   overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
@@ -494,16 +521,37 @@ function normalizeReasons(value){
  return [...new Set(items)];
 }
 function storedReasons(item){return normalizeReasons(item?.reasons??item?.reason??[]);}
-function updateRating(id,score,reasons,note){
+function normalizeAspects(value){
+ if(value==null)return {};
+ if(typeof value!=="object"||Array.isArray(value))throw Error("Ungültige Kriterienwerte.");
+ const result={};
+ for(const [code,valueNumber] of Object.entries(value)){
+  if(!aspectCodes.has(code)||!Number.isInteger(valueNumber)||valueNumber < -100||valueNumber > 100)
+   throw Error("Kriterienbewertung muss eine ganze Zahl zwischen -100 und +100 sein.");
+  result[code]=valueNumber;
+ }
+ return result;
+}
+function normalizeReasonFeedback(value){
+ const entry=value||{};
+ const field=entry.field_relation??null,seniority=entry.seniority_assessment??null;
+ if(field!==null&&!fieldCodes.has(field))throw Error("Ungültige Berufsfeld-Einstufung.");
+ if(seniority!==null&&!seniorityCodes.has(seniority))throw Error("Ungültige Senioritäts-Einstufung.");
+ return {aspects:normalizeAspects(entry.aspects),field_relation:field,seniority_assessment:seniority};
+}
+function updateRating(id,score,reasons,note,feedback){
  const previous=ratingOf(id),nextReasons=normalizeReasons(reasons===undefined?storedReasons(previous):reasons);
  const nextScore=score===undefined?(previous?.score??null):score;
  const nextNote=note===undefined?(previous?.note??""):note;
+ const nextFeedback=normalizeReasonFeedback(feedback===undefined?previous:feedback);
  if(typeof nextNote!=="string"||nextNote.length>1000)throw Error("Bewertungszusatz darf höchstens 1000 Zeichen enthalten.");
  if(nextScore!==null&&(!Number.isInteger(nextScore)||nextScore<1||nextScore>100))throw Error("Ganze Zahl von 1 bis 100 erforderlich.");
- if(nextScore===null&&!nextReasons.length&&!nextNote.trim()){relevanceRatings.delete(id);saveChanges();return;}
+ const hasAspects=Object.keys(nextFeedback.aspects).length>0||nextFeedback.field_relation!==null||nextFeedback.seniority_assessment!==null;
+ if(nextScore===null&&!nextReasons.length&&!nextNote.trim()&&!hasAspects){relevanceRatings.delete(id);saveChanges();return;}
  const job=jobs.find(j=>j.id===id);
  relevanceRatings.set(id,{score:nextScore,reasons:nextReasons,reason:nextReasons[0]||"",note:nextNote,
-  updated_at:new Date().toISOString(),suggested_score_at_rating:previous?.suggested_score_at_rating??job?.selection?.suggested_score??null,
+  ...nextFeedback,updated_at:new Date().toISOString(),
+  suggested_score_at_rating:previous?.suggested_score_at_rating??job?.selection?.suggested_score??null,
   selector_version:previous?.selector_version??job?.selection?.version??null});
  saveChanges();
 }
@@ -514,6 +562,7 @@ function setRating(id,score,reasons){
 }
 function setReasons(id,reasons){updateRating(id,undefined,reasons);}
 function setRatingNote(id,note){updateRating(id,undefined,undefined,note);}
+function setFeedback(id,feedback){updateRating(id,undefined,undefined,undefined,feedback);}
 function validateRelevanceRatings(rows){
  if(rows==null)return new Map();
  if(!Array.isArray(rows))throw Error("Ungültige Relevanzbewertungen.");
@@ -522,11 +571,11 @@ function validateRelevanceRatings(rows){
   if(!item||typeof item.id!=="string"||!item.id||result.has(item.id))throw Error("Doppelte oder ungültige Bewertungs-ID.");
   const score=item.score??null;
   if(score!==null&&(!Number.isInteger(score)||score<1||score>100))throw Error("Ungültige Relevanzzahl.");
-  const reasons=storedReasons(item);
-  const note=item.note??"";
+  const reasons=storedReasons(item),note=item.note??"";
+  const feedback=normalizeReasonFeedback(item);
   if(typeof note!=="string"||note.length>1000)throw Error("Ungültiger Bewertungszusatz.");
-  if(score===null&&!reasons.length&&!note.trim())continue;
-  result.set(item.id,{score,reasons,reason:reasons[0]||"",note,updated_at:item.updated_at||null,
+  if(score===null&&!reasons.length&&!note.trim()&&Object.keys(feedback.aspects).length===0&&!feedback.field_relation&&!feedback.seniority_assessment)continue;
+  result.set(item.id,{score,reasons,reason:reasons[0]||"",note,...feedback,updated_at:item.updated_at||null,
    suggested_score_at_rating:item.suggested_score_at_rating??null,selector_version:item.selector_version??null});
  }
  return result;
@@ -551,36 +600,81 @@ function buildMarkedJobsPayload(){
  const chosen=markedJobs();
  return {type:"bewerbungs-agent-marked-jobs",schema_version:"1.0.0",exported_at:new Date().toISOString(),
   jobs:structuredClone(chosen),ratings:chosen.filter(j=>Number.isInteger(ratingOf(j.id)?.score)).map(j=>({
-   job_id:j.id,user_score:ratingOf(j.id).score,reasons:storedReasons(ratingOf(j.id)),note:ratingOf(j.id).note||"",rated_at:ratingOf(j.id).updated_at
+   job_id:j.id,user_score:ratingOf(j.id).score,reasons:storedReasons(ratingOf(j.id)),
+    ...normalizeReasonFeedback(ratingOf(j.id)),note:ratingOf(j.id).note||"",rated_at:ratingOf(j.id).updated_at
   }))};
 }
 function buildRelevancePayload(){
- return {type:"bewerbungs-agent-relevance-feedback",schema_version:"1.0.0",
+ return {type:"bewerbungs-agent-relevance-feedback",schema_version:"1.1.0",
   generated_at:new Date().toISOString(),selection_policy:"suggestion_only_no_exclusion",
+  unrated_feedback:[...relevanceRatings.entries()].filter(([id,r])=>!id.startsWith("DEMO-")&&r.score==null).map(([id,r])=>({
+   job_id:id,...normalizeReasonFeedback(r),legacy_reasons:storedReasons(r),note:r.note||"",updated_at:r.updated_at
+  })),
   ratings:[...relevanceRatings.entries()].filter(([id,r])=>!id.startsWith("DEMO-")&&Number.isInteger(r.score)&&r.score>=1&&r.score<=100).map(([id,r])=>{
    const j=jobs.find(x=>x.id===id),reasons=storedReasons(r);
-   return {job_id:id,user_score:r.score,reason:reasons[0]||null,reasons,note:r.note||"",rated_at:r.updated_at,
+   return {job_id:id,user_score:r.score,reason:reasons[0]||null,reasons,legacy_reasons:reasons,
+     ...normalizeReasonFeedback(r),note:r.note||"",rated_at:r.updated_at,
     suggested_score_at_rating:r.suggested_score_at_rating??j?.selection?.suggested_score??null,
     selector_version:r.selector_version??j?.selection?.version??null,
     job:j?{title:j.title,company:j.company,location:j.location,source:j.source,url:j.url,
      categories:j.categories,description:j.description}:null};
   })};
 }
+function impactLabel(v){
+ if(v==null)return "Noch nicht bewertet";
+ if(v===0)return "Neutral · 0";
+ const level=Math.abs(v)>=75?"stark ":Math.abs(v)>=35?"":"leicht ";
+ return level+(v<0?"negativ":"positiv")+" · "+(v>0?"+":"")+v;
+}
 function makeReasonButtons(initial,onChange){
- const group=document.createElement("div");group.className="reason-choices";group.setAttribute("role","group");group.setAttribute("aria-label","Gründe für die Relevanzbewertung");
- const selected=new Set(normalizeReasons(initial));
- for(const [code,label] of reasonOptions){
-  const button=node("button",label,"reason-button");button.type="button";button.dataset.reason=code;
-  button.setAttribute("aria-pressed",selected.has(code)?"true":"false");
-  button.addEventListener("click",()=>{
-   const enabled=button.getAttribute("aria-pressed")!=="true";
-   button.setAttribute("aria-pressed",String(enabled));
-   if(enabled)selected.add(code);else selected.delete(code);
-   onChange([...selected]);
-  });
-  group.append(button);
+ const value=normalizeReasonFeedback(initial);
+ const root=document.createElement("div");root.className="feedback-editor";
+ root.append(node("div","Farbskala: links negativ · Mitte neutral · rechts positiv","feedback-hint"));
+ const rows=document.createElement("div");rows.className="feedback-spectra";
+ const notify=()=>onChange({aspects:{...value.aspects},field_relation:value.field_relation,seniority_assessment:value.seniority_assessment});
+ for(const [code,title] of aspectOptions){
+  const row=document.createElement("div");row.className="feedback-spectrum-row";
+  const bar=document.createElement("label");bar.className="feedback-spectrum";
+  const name=node("span",title,"feedback-spectrum-name");
+  const state=node("span","","feedback-spectrum-state");
+  const marker=document.createElement("span");marker.className="feedback-spectrum-marker";marker.setAttribute("aria-hidden","true");
+  const slider=document.createElement("input");slider.type="range";slider.min="-100";slider.max="100";slider.step="1";
+  slider.setAttribute("aria-label",title+": von stark negativ bis stark positiv");
+  const reset=node("button","×","feedback-spectrum-reset");reset.type="button";reset.setAttribute("aria-label",title+"-Wertung zurücksetzen");
+  function paint(v){
+   const active=v!==null;
+   bar.classList.toggle("evaluated",active);state.textContent=active?impactLabel(v):"← negativ · positiv →";
+   bar.style.setProperty("--impact-position",((v??0)+100)/2+"%");
+   marker.hidden=!active;reset.hidden=!active;
+   slider.setAttribute("aria-valuetext",active?impactLabel(v):"Noch unbewertet");
+  }
+  slider.value=String(value.aspects[code]??0);
+  paint(value.aspects[code]??null);
+  slider.addEventListener("input",()=>paint(Number(slider.value)));
+  slider.addEventListener("change",()=>{value.aspects[code]=Number(slider.value);paint(value.aspects[code]);notify();});
+  reset.addEventListener("click",()=>{delete value.aspects[code];slider.value="0";paint(null);notify();});
+  bar.append(name,state,marker,slider);row.append(bar,reset);rows.append(row);
  }
- return group;
+ root.append(rows);
+ const choices=(title,options,key)=>{
+  const section=document.createElement("div");section.className="feedback-choice-block";
+  section.append(node("div",title,"review-reasons-label"));
+  const group=document.createElement("div");group.className="reason-choices";group.setAttribute("role","group");group.setAttribute("aria-label",title);
+  const buttons=[];
+  for(const [code,label] of options){
+   const b=node("button",label,"reason-button");b.type="button";b.dataset.choice=code;
+   b.setAttribute("aria-pressed",String(value[key]===code));
+   if(code==="too_early")b.title="Meine bisherige Erfahrung ist noch knapp, diese Aufgabe kann jedoch eine Entwicklungschance sein.";
+   if(code==="overwhelming")b.title="Das Erfahrungsniveau übersteigt meine Fähigkeiten aktuell deutlich.";
+   b.addEventListener("click",()=>{value[key]=value[key]===code?null:code;for(const x of buttons)x.setAttribute("aria-pressed",String(x.dataset.choice===value[key]));notify();});
+   buttons.push(b);group.append(b);
+  }
+  section.append(group);return section;
+ };
+ root.append(choices("Berufsfeld · eine Auswahl",fieldOptions,"field_relation"),choices("Seniorität · eine Auswahl",seniorityOptions,"seniority_assessment"));
+ const legacy=storedReasons(initial);
+ if(legacy.length)root.append(node("div","Frühere pauschale Gründe bleiben erhalten: "+legacy.map(x=>reasonOptions.find(([k])=>k===x)?.[1]||x).join(", "),"feedback-legacy"));
+ return root;
 }
 function linkedTitle(j,tag="h3"){
  const h=document.createElement(tag),url=safeLink(j.url);if(tag==="div")h.className="job-title";
@@ -614,8 +708,8 @@ function ratingPanel(j){
  input.addEventListener("change",()=>{setRating(j.id,input.value);el("message").textContent="Relevanz "+input.value+"/100 übernommen. Feedback-JSON für das Training separat exportieren.";});
  const scale=document.createElement("div");scale.className="review-scale";scale.append(node("span","1 · gering"),node("span","100 · hoch"));
  const reasons=document.createElement("div");
- reasons.append(node("div","Warum diese Bewertung? (Mehrfachauswahl)","review-reasons-label"),
-  makeReasonButtons(storedReasons(rating),values=>{setReasons(j.id,values);el("message").textContent="Bewertungsgründe aktualisiert.";}));
+ reasons.append(node("div","Wie beeinflussen einzelne Kriterien deine Bewertung?","review-reasons-label"),
+  makeReasonButtons(rating,feedback=>{setFeedback(j.id,feedback);el("message").textContent="Kriterienfeedback gespeichert.";}));
  const noteLabel=node("label","Bewertungszusatz (optional)","review-reasons-label");
  const note=document.createElement("textarea");note.maxLength=1000;note.rows=2;
  note.placeholder="Persönliche Einschätzung zur Stelle …";note.value=rating?.note||"";
@@ -714,9 +808,9 @@ function openDetails(id){
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
  el("detailDescription").textContent=j.description||"Keine Beschreibung vorhanden.";
  el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);el("detailScore").value=ratingOf(id)?.score??"";
- detailDraftReasons=storedReasons(ratingOf(id));
+ detailDraftFeedback=normalizeReasonFeedback(ratingOf(id));
  el("detailRatingNote").value=ratingOf(id)?.note||"";
- el("detailReasons").replaceChildren(makeReasonButtons(detailDraftReasons,values=>{detailDraftReasons=values;}));
+ el("detailReasons").replaceChildren(makeReasonButtons(detailDraftFeedback,value=>{detailDraftFeedback=value;}));
  el("details").showModal();
 }
 function startNewJob(){
@@ -737,8 +831,8 @@ function startNewJob(){
  el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
  el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
  el("detailDecision").value="open";el("detailNote").value="";el("detailScore").value="";
- detailDraftReasons=[];
- el("detailReasons").replaceChildren(makeReasonButtons([],values=>{detailDraftReasons=values;}));
+ detailDraftFeedback=normalizeReasonFeedback(null);
+ el("detailReasons").replaceChildren(makeReasonButtons(detailDraftFeedback,value=>{detailDraftFeedback=value;}));
  el("detailRatingNote").value="";
  el("detailError").textContent="";el("editFields").open=true;
  displayEditFields(j);
@@ -893,8 +987,8 @@ el("saveDetails").addEventListener("click",()=>{
   }
   refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
   refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
-  if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value,detailDraftReasons);
-   else setReasons(currentJobId,detailDraftReasons);
+  if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value);
+   setFeedback(currentJobId,detailDraftFeedback);
    setRatingNote(currentJobId,el("detailRatingNote").value);
    setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
   el("details").close();currentJobId=null;
