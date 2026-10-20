@@ -2,11 +2,12 @@
 import html
 from html.parser import HTMLParser
 import ipaddress
+import socket
 import json
 import re
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, urlopen
 
 MAX_BYTES = 2_000_000
 MAX_REDIRECTS = 5
@@ -22,9 +23,14 @@ def _public_address(url):
         ipaddress.ip_address(host)
         return False
     except ValueError:
-        return True
+        pass
+    try:
+        addresses = socket.getaddrinfo(host, None, type=socket.SOCK_STREAM)
+        return bool(addresses) and all(ipaddress.ip_address(a[4][0]).is_global for a in addresses)
+    except (socket.gaierror, ValueError):
+        return False
 
-class _SafeRedirect(__import__("urllib.request", fromlist=["HTTPRedirectHandler"]).HTTPRedirectHandler):
+class _SafeRedirect(HTTPRedirectHandler):
     def __init__(self):
         self.redirects = 0
     def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -152,7 +158,7 @@ def enrich_one(job, fetch=None):
     except (HTTPError, URLError, TimeoutError, OSError, ValueError, UnicodeError) as exc:
         return job, "http_error" if not isinstance(exc, ValueError) else "invalid_redirect"
 
-def enrich_jobs(jobs, max_jobs=120):
+def enrich_jobs(jobs, max_jobs=15):
     """Bounded retry; existing data and stable IDs remain untouched."""
     from collections import Counter
     outcomes = Counter()
