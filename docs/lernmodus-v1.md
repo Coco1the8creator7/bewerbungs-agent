@@ -10,12 +10,14 @@ Stand: 20.10.2026. Keine automatische Ablehnung oder Ausblendung wegen Relevanz.
 5. Das öffentliche `dashboard/jobs.json` wird aktualisiert und GitHub Pages veröffentlicht.
 
 ## Bewertung im Dashboard
-- Jede neue Inseratekarte bietet eine numerische Relevanz-Eingabe von **1–100**.
-- Über **Details** kann ein Grund ergänzt werden: `field`, `distance`, `seniority`, `tasks`, `employer`, `conditions`.
-- Der Inseratetitel öffnet direkt die Original-Stelle.
-- Der Knopf **Bewertungen exportieren** oberhalb der Inseratekarten erzeugt ein lokales JSON vom Typ `bewerbungs-agent-relevance-feedback` (Version 1.0.0). Es enthält nur bewusst abgegebene Scores, Gründe und Inseratkontext; keine privaten Notizen oder Bewerbungsstatus.
-- Diese Datei kann in einem separaten Chat zur Trainingsauswertung hochgeladen werden. **Es gibt noch kein automatisches serverseitiges Training.**
-- Für dauerhafte Speicherung zwischen Browser-Sitzungen muss im Footer **Daten & Entwicklung → Auf diesem Gerät dauerhaft speichern** aktiviert sein. Diese IndexedDB-Speicherung ist gerätegebunden. Vor Browserwechsel oder Gerätewechsel die Gesamtsicherung exportieren und auf dem anderen Gerät importieren.
+- Jede **neue Inseratekarte** zeigt einen Slider von **1–100**, dessen Zahl live sichtbar wird. Bis zur ersten aktiven Veränderung bleibt die Stelle ausdrücklich **unbewertet**; die mittige Sliderposition ist kein vergebener Score.
+- Direkt unter dem Slider stehen die sechs Bewertungsgründe als **Mehrfachauswahl-Buttons**: Berufsfeld (`field`), Arbeitsweg (`distance`), Seniorität (`seniority`), Aufgaben (`tasks`), Arbeitgeber (`employer`), Arbeitsbedingungen (`conditions`). Gründe ohne Zahl dürfen erfasst werden, gehen aber **nicht** als vollständiges Trainingsbeispiel in den Bewertungs-Export ein.
+- Das **Disketten-Symbol** rechts oben auf der Inseratekarte dient ausschliesslich als **Markierung für einen späteren selektiven Inserate-Export**. Die aktive Markierung wird zurückhaltend **grün** dargestellt. Sie ändert weder Bewerbungsstatus noch Relevanz noch den GitHub-Feed und speichert nichts im Repository.
+- **Markierte Inserate exportieren** erzeugt eine private Datei vom Typ `bewerbungs-agent-marked-jobs` v1.0.0 mit den aktuell vorhandenen markierten Stellen und – wenn vergeben – den zugehörigen Relevanzwerten und Gründen. Der bisherige Footer-Export **Inserate-JSON exportieren** exportiert weiterhin alle Inserate.
+- **Bewertungen exportieren** erzeugt weiterhin ein lokales JSON vom Typ `bewerbungs-agent-relevance-feedback` v1.0.0, unabhängig von der Diskettenmarkierung. Es enthält nur bewusst abgegebene numerische Scores, `reason` (erstes Label, kompatibel mit bisherigen Exporten), neu das Feld `reasons` (mehrere Codes) sowie Inseratkontext. Keine privaten Notizen oder Bewerbungsstatus.
+- Über **Details** lassen sich Zahl und die gleichen sechs Gründe bearbeiten. Die bestehenden älteren Einträge mit einem einzelnen `reason` werden beim Laden in die neue Mehrfachauswahl übernommen.
+- Die Markierung (`export_selection`) und die Bewertungsgründe (`relevance_ratings[].reasons`) werden nur in der optionalen gerätegebundenen IndexedDB-Speicherung und in privaten **Gesamtsicherungen v0.3** gehalten. Vorhandene v0.3-Sicherungen ohne diese optionalen Felder bleiben lesbar.
+- Diese Bewertungsdatei kann in einem separaten Chat zur Trainingsauswertung hochgeladen werden. **Es gibt noch kein automatisches serverseitiges Training, keine automatische Aussortierung und keine öffentliche Speicherung der Bewertungen.**
 
 ## Datenschutz und Grenzen
 Das Repo und GitHub Pages sind öffentlich. Bewertungen und Bewerbungsnotizen werden nicht automatisch an GitHub gesendet. Sie dürfen niemals in `dashboard/jobs.json`, einem öffentlichen Commit oder PR landen. Der Bewertungs-JSON-Export ist privat aufzubewahren. Dies ist bewusst der kostenlose, einfach wartbare Übergang ohne Feedback-API.
