@@ -333,6 +333,19 @@
           "const": false
         }
       }
+    },
+    "description_source": {
+      "enum": [
+        "jsonld_jobposting"
+      ]
+    },
+    "url_aliases": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
     }
   }
 }
