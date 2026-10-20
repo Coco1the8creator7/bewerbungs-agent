@@ -5,7 +5,7 @@ Das bestehende Dashboard bleibt die zentrale, ernsthaft nutzbare Bewerbungsoberf
 
 ## Umsetzung im Entwurfsbranch
 - Hauptblöcke **Statusübersicht → Mission Control → Bewerbungsprozess → neue Inserate**; technische Funktionen bleiben im Footer.
-- Karriere-Route mit **Radar → Prüfen → Bewerben → Gespräche → Angebot**. Das Raumschiff zeigt den *höchsten aktuellen, manuell vergebenen Bewerbungsstatus*, nicht ein statistisches Erfolgsversprechen. Archivierte Absagen gelten nicht als Rückschritt.
+- Karriere-Route mit **Radar → Prüfen → Bewerben → Gespräche → Angebot**. Das Raumschiff zeigt den *höchsten aktuellen, manuell vergebenen Bewerbungsstatus*, nicht ein statistisches Erfolgsversprechen. Absagen und selbst verworfene Stellen sind keine Meilensteine; ohne aktive Bewerbungen fällt die aktuelle Route wieder auf Radar zurück.
 - Drei datengestützte Wochenquests (Montag bis Sonntag, Geräte-Zeitzone):
   1. **3 Inserate beurteilen**: pro unterschiedlicher Stelle ein Wechsel vom persönlichen Status «Neu» zu einem anderen Status innerhalb der Woche.
   2. **1 Bewerbung als versendet erfassen**: Wechsel in den Status «Beworben» innerhalb der Woche.
