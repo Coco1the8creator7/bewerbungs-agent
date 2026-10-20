@@ -103,7 +103,7 @@ def fetch_message(token, item):
             if part.get_content_type()=="text/html":htmls.append(str(part.get_content()))
         except (UnicodeError,LookupError):continue
     received=datetime.fromtimestamp(int(raw["internalDate"])/1000,timezone.utc).isoformat()
-    return platform,str(msg.get("Subject","")), "\\n".join(texts), "\\n".join(htmls),received
+    return platform,str(msg.get("Subject","")), "\n".join(texts), "\n".join(htmls),received
 
 def gmail_messages(token, after=None):
     """Bounded pagination and up to five simultaneous raw-message requests."""
@@ -200,7 +200,7 @@ def merge(previous,incoming):
 
 def write_state(timestamp):
     STATE.parent.mkdir(parents=True,exist_ok=True)
-    STATE.write_text(json.dumps({"last_success_utc":timestamp.isoformat()},indent=2)+"\\n",encoding="utf-8")
+    STATE.write_text(json.dumps({"last_success_utc":timestamp.isoformat()},indent=2)+"\n",encoding="utf-8")
 
 def run():
     started=time.monotonic()
