@@ -1,0 +1,10 @@
+{
+  "request_id": "2026-10-20-activation-check",
+  "results": [
+    {
+      "index": 0,
+      "id": "job-b1d33d1c638d565c848fdbcd",
+      "status": "existing"
+    }
+  ]
+}
