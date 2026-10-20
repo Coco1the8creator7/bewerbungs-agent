@@ -333,6 +333,13 @@
           "const": false
         }
       }
+    },
+    "description_source": {
+      "type": "string",
+      "enum": [
+        "jsonld_jobposting"
+      ],
+      "description": "Method used to extract a validated public description."
     }
   }
 }
