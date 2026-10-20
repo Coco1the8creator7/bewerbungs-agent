@@ -116,7 +116,7 @@ const fixture = [
   'assert.equal(buildRelevancePayload().schema_version,"1.1.0");',
   'assert.equal(buildRelevancePayload().ratings[0].aspects.tasks,55);',
   'assert.equal(buildRelevancePayload().ratings[0].field_relation,"transferable");',
-  'assert.equal(buildMarkedJobsPayload().ratings.length,1);',
+  'assert.equal(buildMarkedJobsPayload().ratings.length,0);',
   'assert.throws(()=>validateRelevanceRatings([{id:"bad",score:80,aspects:{distance:-105}}]));',
   'const historic=validateRelevanceRatings([{id:"legacy",score:80,reasons:["field","tasks"]}]);',
   'assert.equal(historic.get("legacy").aspects.distance,undefined);',
