@@ -19,6 +19,7 @@ import sys
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
+from importer.enrich import enrich_jobs
 
 OUT = Path("dashboard/jobs.json")
 STATE = Path("importer/import-state.json")
@@ -289,6 +290,10 @@ def merge(previous,incoming):
             for key in ("company","location"):
                 if job[key] is None:job[key]=old.get(key)
             job["last_seen_at"]=max(job["last_seen_at"],old.get("last_seen_at") or old["first_seen_at"])
+            # Preserve enriched fields on repeat imports and previous public metadata.
+            for key in ("description", "description_source", "selection"):
+                if not job.get(key) and old.get(key):
+                    job[key] = old[key]
         by_id[job["id"]]=job
     return sorted(by_id.values(),key=lambda j:j["first_seen_at"],reverse=True)
 
@@ -312,6 +317,8 @@ def run():
         print(f"Quelle {record[0]}: {len(extracted)} Stellenlinks; Nachrichtentitel: {record[1][:70]}",flush=True)
         found.extend(extracted)
     combined=merge(previous,found)
+    combined, enrichment_stats = enrich_jobs(combined)
+    print("Anreicherung:", json.dumps(enrichment_stats, sort_keys=True), flush=True)
     # Avoid overwriting a useful list if transient Gmail query yields nothing.
     if not messages and not previous:raise RuntimeError("Keine Jobmails gefunden; Initialimport abgebrochen")
     OUT.parent.mkdir(parents=True,exist_ok=True)
