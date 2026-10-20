@@ -6,7 +6,7 @@ const vm = require("node:vm");
 const html = fs.readFileSync("dashboard/index.html", "utf8");
 assert.match(html, /id="exportMarkedJobs"/);
 assert.match(html, /type="range"/); // Created dynamically by ratingPanel
-const match = html.match(/<script>([\\s\\S]*?)<\\/script>/);
+const match = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(match, "expected inline script");
 const end = match[1].indexOf('el("choose").addEventListener');
 assert.ok(end > 0, "expected event handlers after function definitions");
