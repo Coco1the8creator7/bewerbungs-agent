@@ -11,7 +11,18 @@ rows = json.loads(Path("dashboard/jobs.json").read_text())
 snapshot = copy.deepcopy(rows)
 assert not any(j["url"] == NEW for j in rows), "Choose a fresh live fixture"
 known = next(j for j in rows if j["url"] == KNOWN)
-incoming = [listing(NEW), listing(KNOWN)]
+from importer.enrich import fetch_page, _Markup
+import re
+def diagnostic_fetch(url):
+    source, final = fetch_page(url)
+    parser = _Markup()
+    parser.feed(source)
+    print("PAGE_DIAGNOSTIC", json.dumps({"url": url, "bytes":len(source),
+          "title":re.findall(r"<title[^>]*>(.*?)</title>", source),
+          "scripts":re.findall(r"<script[^>]*>", source)[:20],
+          "jsonld":[block[:1200] for block in parser.blocks]}), flush=True)
+    return source, final
+incoming = [listing(NEW, diagnostic_fetch), listing(KNOWN, diagnostic_fetch)]
 combined, report = process(rows, incoming, enrich=False)
 print("LIVE_RESULTS", json.dumps(report))
 assert [r["status"] for r in report] == ["added", "existing"], report
