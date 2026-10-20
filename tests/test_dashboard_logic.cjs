@@ -87,7 +87,7 @@ const fixture = [
   'assert.equal(training.ratings[0].note,"Interessant wegen Netzplanung");',
   'assert.equal(training.ratings[0].reason,"distance");',
   'assert.equal(training.ratings[0].reasons.join(","),"distance,seniority");',
-  'assert.ok(!("note" in training.ratings[0]));',
+  'assert.equal(training.ratings[0].note,"Interessant wegen Netzplanung");',
   'toggleExportSelection("sample-1");',
   'assert.ok(selectedJobIds.has("sample-1"));',
   'assert.equal(buildMarkedJobsPayload().jobs.length,1);',
