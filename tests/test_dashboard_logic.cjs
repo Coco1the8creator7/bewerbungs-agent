@@ -44,10 +44,22 @@ const fixture = [
   'assert.equal(corrected.matching.score,null);',
   'assert.equal(validateOverrides([{id:"abc",patch:{company:"Muster AG"}}]).get("abc").company,"Muster AG");',
   'assert.throws(()=>validateOverrides([{id:"abc",patch:{unexpected:1}}]));',
+  'setAnnotation("quest-job","review","");',
+  'assert.ok(weekActivity("screened").has("quest-job"));',
+  'setAnnotation("quest-job","applied","");',
+  'assert.ok(weekActivity("applied").has("quest-job"));',
+  'toggleFollowUp("quest-job");',
+  'assert.ok(weekActivity("follow_up").has("quest-job"));',
+  'toggleFollowUp("quest-job");',
+  'assert.ok(!weekActivity("follow_up").has("quest-job"));',
+  'assert.throws(()=>validateActivityLog([{id:"bad",job_id:"quest-job",type:"nope",at:new Date().toISOString()}]));',
+  'assert.throws(()=>validateActivityLog([{id:"repeat",job_id:"x",type:"screened",at:new Date().toISOString()},{id:"repeat",job_id:"y",type:"applied",at:new Date().toISOString()}]));',
+  'assert.equal(validateActivityLog(null).length,0);',
   'const backup=snapshot();',
   'assert.equal(backup.type,"bewerbungs-agent-workspace");',
   'assert.equal(backup.schema_version,"0.3.0");',
+  'assert.ok(Array.isArray(backup.activity_log));',
   'assert.ok(backup.overrides.some(entry=>entry.id==="abc"));',
 ].join("\n");
-vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone});
+vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone,document:{getElementById:()=>({textContent:""})}});
 console.log("Dashboard logic checks passed");
