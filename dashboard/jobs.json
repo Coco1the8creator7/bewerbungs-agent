@@ -1,0 +1,503 @@
+[
+  {
+    "schema_version": "0.1.0",
+    "id": "job-00b15708b4b230021cc90cfd",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Heizwerkführer*in Kehrichtverwertungsanlage",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/pEFE1NPFXpVYqnLM",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T19:23:08+00:00",
+    "last_seen_at": "2026-10-19T19:23:08+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-4ba254507ba501e80964d2a0",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Swiss Public Services AG",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/cYmuhTqA2GtFLNVS",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T19:23:08+00:00",
+    "last_seen_at": "2026-10-19T19:23:08+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-5366913b16d95dec36fc5970",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Elektroinstallateur:in für temporäre Anschlüsse (100 %)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/rYQDeAyrbCqljPDt",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-60eca21e69d09cadfe0b6184",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Projektleiter:in Kraftwerke & Automatisierung",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/U7ZU9jY82rSpm3Dl",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-211697ef98a4a06a29ec6f89",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Werkstudent:in Energiesysteme mit Fokus Prozess-Digitalisierung",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/b9P8z27lUm0WZG6u",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [
+      "Energiekonzept",
+      "Fachbereich Energie"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7c78c060b6e456384b7ae3e4",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Service-Techniker:in für Ticketautomaten und Gebäudeunterhalt (100%)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/uHxG9KWdwsA9ySKR",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-838f7054ee3b515076195fae",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Elektroinstallateur:in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/XzK9V9FvImLxcK9g",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-764315fca1ffc087bac49818",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Umweltingenieur/in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/4ztpBNR23gaVag7c",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [
+      "Fachbereich Energie"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-75f98c7bfc678730b80e5d6c",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Verkehrsberater/in Gemeindestrassen mit Teamleitung Signalisation (60% - 100%)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/nYEu3wRuBSKynAEq",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 60,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-4a0c2c874896e3b40b199249",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Strassenbauer:in / Strassenbaupraktiker:in (100%)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/kQFdiNiWchS5bEBa",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-36b5dc8ab637ec846398a0c6",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Co-Teamleiter/in Abwasser (a)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/dKmQFOwlgTXeLjQe",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-2d78bd23f2c5a2fd9676b10f",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Baumpflegespezialist:in (60-100 %)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/RNop1ljeBN6AGglz",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-93426e6adef1764141855609",
+    "source": "publicjobs.ch",
+    "source_job_id": null,
+    "title": "Swiss Public Services AG",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "http://opn.publicjobs.ch/jmultn/4RmbhiSCkxqBm6Vv",
+    "published_at": null,
+    "first_seen_at": "2026-10-17T19:23:15+00:00",
+    "last_seen_at": "2026-10-17T19:23:15+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Extraktion; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    }
+  }
+]
