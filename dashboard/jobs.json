@@ -13,7 +13,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "Product Owner – B2B Digital Ecosystem Platform at ETH Space\nETH Zurich | Space’s mission is to boost space activities to establish ETH Zurich as the leading university in space research and Earth observation, education and entrepreneurship within Europe and beyond. ETH Zurich | Space encompasses overall five units: Education, Research, Entrepreneurship, the ETH Swiss GeoLab, and the space mission LIFE.\nPlease apply until 31.10.2026\nProject background\nIn support of our initiatives within the Entrepreneurship unit of ETH Zurich | Space, we are spearheading the creation of a highly secure, closed B2B digital platform in collaboration with ESA and their ESA Commercialization network. The ultimate objective of this ecosystem platform is to give the European space startup and industry ecosystem a boost, by facilitating more cross-border connections, commercial deals, and collaboration across Europe, to accelerate companies’ development overall.\nThe platform is designed to connect international institutional stakeholders, space and related industry partners, startup founders (e.g. from ESA Business Incubation Centers across Europe), and other important players. The platform will integrate data-driven insights and advanced matching capabilities (including via AI).\nWe are seeking a structured and driven Product Owner to take this initiative from its initial concept phase through finalized specification, vendor selection, and full-scale implementation. Rapid prototyping, beta testing and continuous learning are considered key in the development process.\nJob description\nIn this role, you will serve as the strategic bridge between a diverse network of high-profile international stakeholders (e.g. from ESA, space companies, ESA BIC managers), agile entrepreneurs (e.g. from the ESA BIC network), and software engineers. You will lead the requirements engineering process, translate ecosystem needs into clear technical specifications, select the right development partner, and take ultimate ownership of the project's timely delivery.\nKey responsibilities include:\nLead stakeholder scoping workshops: plan and facilitate targeted requirement workshops with diverse user groups – ranging from institutional managers and corporate partners to startup founders – to align expectations and unify the product vision.\nFinalize product specifications: evolve the current draft concept into a comprehensive, production-ready product specification package and structured backlog.\nVendor & partner management: lead the technical evaluation and onboarding process for the external software development partner.\nRoadmap ownership: manage the overarching project timeline, ensuring key milestones are met for a timely, high-quality deployment.\nOversee development & quality: supervise the external implementation partner throughout the development, testing, and deployment cycles, ensuring rigorous adherence to timelines and scope.\nEnsure technical & security excellence: Define and enforce robust platform governance, including strict role-based access management, secure third-party data integrations, high-standard data residency compliance, and system scalability.\nStakeholder management: beyond the scoping workshops, you are the principal person to interact with diverse stakeholders, to integrate their different perspectives, and to make sure that the project stays on track and delivers the promised results.\nProfile\nEducation: a university degree in computer science or a related field is expected. We are open to other degrees if you have significant, relevant work experience.\nExperience: you have a minimum of 5 years of relevant professional experience with a proven track record as a Product Owner or Product Manager leading the delivery of complex web-based B2B portals, collaboration networks, or enterprise-grade software applications.\nTechnical skills:\nStrong technical literacy: sound understanding of modern web application frameworks, API / webhook architecture, role-based access control, and modern AI / LLM deployment frameworks.\nData & AI savviness: experience defining requirements for smart matching engines, data-processing pipelines, or AI-driven user feeds is highly advantageous\nCompetencies & personality:\nStakeholder management: exceptional communication and stakeholder management skills with a demonstrated ability to navigate and build consensus within academic, (inter-) governmental (like ESA), corporate and startup environments.\nVendor management expertise: practical experience in coordinating external software development vendor, supervising agile sprints, and overseeing quality assurance/testing phases.\nIndependent approach and strong organizational skills\nProactive and reliable personality\nSolution-oriented and service-oriented working style\nEnjoy working with complex project structures\nStrong interpersonal skills and the ability to build bridges across teams and cultures\nLanguage proficiency: full professional fluency in English (written and spoken) is required, German is a plus.\nWe offer\nA high-impact management role at a world-class institution, directly driving innovation within the rapidly expanding space technology ecosystem.\nA vibrant, intellectually stimulating work environment at ETH Zurich I Space based in Zurich.\nThe opportunity to shape a long-term digital, cross-European infrastructure project from its foundational stages.\nA workplace in downtown Zurich.\nFixed-term contract for 3 years (possibly with option to extend).\nWorking, teaching and research at ETH Zurich\nWe value diversity and sustainability\nIn line with our values, ETH Zurich encourages an inclusive culture. We promote equality of opportunity, value diversity and nurture a working and learning environment in which the rights and dignity of all our staff and students are respected. Visit our Equal Opportunities and Diversity website to find out how we ensure a fair and open environment that allows everyone to grow and flourish. Sustainability is a core value for us – we are consistently working towards a climate-neutral future.\nCurious? So are we.\nWe look forward to receiving your online application with the following documents:\nYour CV\nDiplomas and work certificates\nA short motivation statement outlining your interest in ETH Space and this position\nA video (max 2 mins) about you and your motivation for this position.\nRegarding the video: we would like to get to know you! We therefore ask you to provide a short video. We do not expect a professional production; simply using your smartphone and being yourself is sufficient. Please upload the video to a platform of your choice (Dropbox, YouTube, Vimeo, Google Drive, etc.) and include the link in your letter of motivation.\nWe look forward to receiving your application!\nFurther information about ETH Zurich | Space can be found on our website. Questions regarding the position should be directed to Thomas Ackermann, at thomas.ackermann@space.ethz.ch (no applications).\nPlease note that we exclusively accept applications submitted through the ETH Zurich online application portal. Applications via email or postal services will not be considered.\nWe would like to point out that the pre-selection is carried out by the responsible recruiters and not by artificial intelligence.\nFor recruitment services the GTC of ETH Zurich apply.\nAbout ETH Zürich\nETH Zurich is one of the world’s leading universities specialising in\nscience and technology. We are renowned for our excellent education,\ncutting-edge fundamental research and direct transfer of new knowledge\ninto society. Over 30,000 people from more than 120 countries find our\nuniversity to be a place that promotes independent thinking and an\nenvironment that inspires excellence. Located in the heart of Europe,\nyet forging connections all over the world, we work together to\ndevelop solutions for the global challenges of today and tomorrow.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -42,7 +42,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -58,7 +59,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "Unsere Allergiestation am USZ Flughafen \"The Circle\" führt jährlich rund 2000 intravenöse und/oder orale Provokationen durch. Die Dermatologische Klinik mit dem Fachbereich Allergologie ist ein Referenzzentrum mit weltweiter Reputation - wir behandeln, testen, klären ab, forschen und vieles mehr.\nKein Tag gleicht dem anderen. Eines ist sicher: Du findest bei uns eine moderne, zukunftsorientierte Infrastruktur sowie eine einzigartige Aussicht auf den Flughafen.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nMPA / FaGe für die ambulante Allergologie 80 - 100%\nper 1. April 2027 oder nach Vereinbarung\nBrennst du dafür, den Trend der ambulanten Medizin mitzuprägen?\nDu empfängst und begleitest Patientinnen und Patienten während des Sprechstundentermins und führst selbstständig die verordneten Provokationen, Testungen, Lungenfunktionsprüfungen oder Blutentnahmen sowie Patienteninstruktionen durch. Eine lückenlose Leistungsverrechnung und die Übernahme administrativer Arbeiten gehören ebenfalls zu deinem Arbeitsgebiet.\nAls Medizinische Praxisassistentin / Medizinischer Praxisassistent oder Fachfrau Gesundheit / Fachmann Gesundheit hast du bereits Erfahrungen in einem Akutspital oder in einer grösseren Praxis gesammelt.\nDu verfügst über eine hohe Kommunikationsfähigkeit, ein ausgeprägtes Organisationsvermögen sowie ein stilsicheres Deutsch.\nDeine Arbeitszeiten liegen von Montag bis Freitag zwischen 07:30 Uhr und 16:45 Uhr.\nWir sind ein multikulturelles und interprofessionelles Team und legen Wert auf einen starken Teamzusammenhalt. Deine persönliche Entwicklung liegt uns am Herzen. Gerne unterstützen wir dich durch interne und externe Fort- und Weiterbildungen.\nUnsere Benefits\nUniversitätsspital Zürich\n8058 Zürich",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -87,7 +88,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -105,7 +107,7 @@
     "categories": [
       "Projektleitung"
     ],
-    "description": null,
+    "description": "Das Universitätsspital Zürich sucht eine:n Projektleiter:in im Bereich Bau-Entwicklungsplanung. Hier erwartet dich ein spannendes Umfeld mit großen Herausforderungen.\nAufgaben\nKoordination der strategischen Bauprojekte von der Planung bis zur Umsetzung.\nEntwicklung der Zielplanung und der zentralen strategischen Konzepte.\nErstellung von Analysen zur Leistungsentwicklung im Spital.\nFähigkeiten\nHochschulstudium mit betriebswirtschaftlichem Hintergrund, Erfahrung im Spitalbereich.\nAusgeprägte analytische Fähigkeiten und kreatives Denken.\nHohe Sozial- und Verhandlungskompetenz, teamorientiert.\nDas Universitätsspital Zürich erneuert und erweitert in den kommenden Jahrzehnten ihre bauliche Infrastruktur massgeblich, um den hohen Ansprüchen der modernen Spitzenmedizin, der Patientinnen und Patienten sowie der Mitarbeitenden entsprechen zu können.\nIn der Strategischen Bau-Entwicklungsplanung wird basierend auf Prognosen zur Leistungsentwicklung gemeinsam mit dem Kerngeschäft der zukünftige Ressourcenbedarf abgeleitet und die bauliche Zielplanung (Masterplanung) inkl. Etappierung erstellt.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nProjektleiter:in Bau-Entwicklungsplanung 80-100 %\nper sofort oder nach Vereinbarung\nIhre Hauptaufgaben\nAls Projektleiter:in Strategische Bau-Entwicklungsplanung konzipieren Sie zusammen mit Ihren Kolleginnen und Kollegen in der gleichnamigen Abteilung und mit USZ-internen und externen Fachexperten das Spital der Zukunft. Sie koordinieren sämtliche Tätigkeiten von der Ressourcenberechnung bis zum Start der Projektierung der anstehenden strategischen Bauprojekte.\nDas dreiköpfige Team rapportiert direkt an den Bereichsleiter Planung, Bau- und Flächenmanagement, arbeitet interdisziplinär, sehr selbständig und selbstorganisiert. Für folgende Aufgaben sind Sie im Team verantwortlich:\nÜberarbeitung und Weiterentwicklung der Zielplanung / Masterplanung für die (bauliche) Gesamterneuerung inklusive zugehöriger Etappen und Rochaden\nWeiterentwicklung der übergreifenden Prozesse des Spitals sowie der zentralen strategischen Konzepte als Grundlage für das Spital der Zukunft\nErstellung von Analysen sowie Prognosen zur Leistungsentwicklung (ambulante und stationäre Versorgung sowie Forschung & Lehre)\nAnalyse und Ermittlung des Ressourcenbedarfs des USZ über die Zeit für bspw. die Anzahl Untersuchungszimmer, Spitalbetten, OP-Säle und Arbeitsplätze\nErarbeitung von Betriebskonzepten und Begleitung ihrer Umsetzung (Schwerpunkt Medizin, Pflege und medizin-technischen und medizin-therapeutischen Berufe, Forschung und Lehre)\nErstellung von Nutzungskonzepten und Pflichtenheften in Vorbereitung für Wettbewerbe und Studienaufträge\nLeitung von und Mitarbeit in interdisziplinären/interprofessionellen Teams zur Erarbeitung von Strategien, Konzepten und Studien\nVorbereitung und Präsentation von Entscheidungsgrundlagen zuhanden der Spitaldirektion (GL),\nIhr Profil\nAbgeschlossenes Hochschulstudium mit betriebswirtschaftlichem Hintergrund\nFundierte Kenntnisse zu klinischen Strukturen und Abläufen sowie deren funktionalen Zusammenhänge im Spitalkomplex\nAusgeprägte analytische Fähigkeiten; vernetztes und interdisziplinäres Denken mit kreativen und innovativen Herangehensweisen an neue Themen\nErfahrung mit Szenarienplanungs-Methoden und -Prozessen.\nSehr hohe Sozial- und Verhandlungskompetenz, äusserst teamfähig\nAusgeprägte Kommunikations- und Präsentationsfähigkeit sowie Durchsetzungsvermögen\nKooperativ/konstruktiv und belastbar, ausgeprägte Can-do-attitude\nUnsere Benefits\nBei uns erwarten Sie spannende Herausforderungen in einer modernen Arbeitsumgebung - mitten in einem der grössten Spitäler der Schweiz. Ein motiviertes und engagiertes Team steht Ihnen jederzeit zur Seite und sorgt dafür, dass Sie Ihre Projekte erfolgreich umsetzen können.\nUniversitätsspital Zürich\n8091 Zürich",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -136,7 +138,8 @@
       ],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -152,7 +155,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "Werde Teil einer kulinarischen Erfolgsgeschichte!\nAls Team-Mitarbeiter*in Küche 100% bist du ab sofort oder nach Vereinbarung ein wertvoller Teil unserer 31-köpfigen Betrieb-Crew und arbeitest im 12-köpfigen Team.\nDie Wirtschaft Schönegg in Wädenswil bietet eine atemberaubende Sicht auf den Zürichsee. Sie ist ein Ausflugsrestaurant mit grosser Panoramaterrasse und gemütlichem Innenbereich mit Ofenstube, Stübli und Saal. Bei Familien sorgen Spielplatz, Kleintierzoo, Minigolfanlage und Spielzimmer für Begeisterung. Beliebt ist die Schönegg auch für Hochzeiten oder Feiern aller Art. Die Küche zaubert aus regionalen Zutaten modern und traditionell interpretierte Schweizer Spezialitäten.\nTeam-Mitarbeiter*in Küche\nDein Tag bei uns:\nInnovatives Kreieren und Zubereiten von vielfältigen Gerichten\nMise en Place\nEinhaltung der Arbeitsplatzhygiene\nAktive Beteiligung sowie Mitgestaltung der Arbeitsprozesse und Kochmethoden\nÜberprüfung und Vorbereitung für das Mittags- und Abendgeschäft\nQualitätskontrolle\nSo passt du zu uns:\nErfolgreicher Abschluss zum Koch EFZ\nErfahrung in sämtlichen Bereichen der à la carte-Küche\nProfessionelles, freundliches und serviceorientiertes Verhalten\nStark ausgeprägtes Bewusstsein für Qualität und Verantwortung\nLeidenschaft für die Gastronomie\nFreude an einem lebhaften Betrieb\nDarauf kannst du dich freuen:\nDie Wirtschaft Schönegg ist ein Betrieb der Remimag. Das kreative Familienunternehmen prägt seit über 40 Jahren die Welt der Gastronomie und Hotellerie. Hier trifft Genuss auf Leidenschaft und Innovation. Als Mitglied der Remimag-Familie bieten wir dir einmalige Vorteile:\n30% Rabatt auf Konsumationen in allen Remimag-Betrieben - für dich und bis zu drei Begleitpersonen\nVitalprämie: Zweimal jährlich belohnen wir Gesundheit und Engagement\nRemimagtage: Ab dem dritten Anstellungsjahr erhältst du sieben zusätzliche Loyalitätstage\n100% Unfall-Zusatzversicherung ab dem ersten Tag\nMach den nächsten Schritt:\nWachse mit uns und werde Teil unserer Erfolgsgeschichte. Bewirb dich jetzt und gestalte die Zukunft der Gastronomie aktiv mit - wir freuen uns auf dich!\nSarah Pinske +41 41 289 02 30",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -181,7 +184,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -197,7 +201,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "In unserem interdisziplinären Ambulatorium vereinen wir die Fachbereiche Kardiologie, Gefässchirurgie, Immunologie, Nephrologie, Traumatologie, Viszeralchirurgie, Plastische Chirurgie und Thoraxchirurgie. Wir arbeiten mit einer topmodernen und prozessorientierten Infrastruktur in einem äusserst dynamischen und innovativen Umfeld.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nGruppenleiter:in MPA / FaGe für das Ambulatorium am USZ Campus 80 - 100%\nper sofort oder nach Vereinbarung\nBist du bereit für eine Führungsrolle im ambulanten Bereich?\nAls Gruppenleiterin / Gruppenleiter arbeitest du eng mit dem Abteilungsleiter zusammen. Auf Augenhöhe unterstützt ihr euch gegenseitig und du übernimmst verschiedene Führungsaufgaben im Personalbereich (Rekrutierung, Personaleinsatzplanung, Begleitung neuer Mitarbeitenden, Förderung der Teamentwicklung).\nDamit auch dein Fachwissen aktuell bleibt, arbeitest du als Medizinische Praxisassistentin / Medizinischer Praxisassistent oder Fachfrau Gesundheit / Fachmann Gesundheit aktiv im Alltag unseres vielseitigen Ambulatoriums mit. Unsere Arbeitszeiten liegen zwischen Montag und Freitag von 07.30 bis 17.30 Uhr.\nHast du noch keine Führungserfahrung? Dann bist du trotzdem herzlich willkommen. Uns ist vor allem wichtig, dass du eine grosse Portion Motivation und Interesse mitbringst. Der erfahrene und fachlich versierte Abteilungsleiter begleitet dich gerne in der neuen Rolle.\nWir leben unsere USZ-Werte: Gemeinsam, verantwortlich und zum Wohle aller. Sagt dir das ebenfalls zu? Dann freuen wir uns sehr, dich kennenzulernen.\nAls herzliches und buntes 40-köpfiges Team, schätzen wir Selbstständigkeit als auch Teamwork für unsere spannenden Arbeiten. Mit grosser Überzeugung und Begeisterung bilden wir zudem sechs Lernende aus.\nUnsere Benefits\nUniversitätsspital Zürich\n8091 Zürich",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -226,7 +230,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -242,7 +247,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "Der Personalärztliche Dienst des USZ steht unseren Mitarbeitenden als zentrale Anlaufstelle für arbeitsmedizinische Betreuung zur Seite – direkt am Arbeitsplatz. Von Eintritts- und Austrittsuntersuchungen über Impf- und Tauglichkeitsberatungen bis hin zur Unterstützung bei psychosozialen Belastungen oder Unfällen: Wir sorgen dafür, dass Gesundheit und Wohlbefinden im Berufsalltag nicht zu kurz kommen.\nDas USZ braucht Alltagshelden wie dich!\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nMPA / FaGe für den Personalärztlichen Dienst 80 - 100%\nper sofort oder nach Vereinbarung\nBrennst du dafür, den Trend der ambulanten Medizin mitzuprägen?\nDu empfängst und begleitest Patientinnen und Patienten / Kundinnen und Kunden (ausschliesslich Mitarbeitende des USZ) während des Sprechstundentermins und führst verschiedene Medizinaltechnische Verrichtungen durch. Du machst Beratungen (vorallem Impfberatungen) und erledigst Administrative Arbeiten wie die Leistungserfassungskontrolle, Vergabe von Terminen, Beschwerdemanagement usw.\nAls Medizinische Praxisassistentin / Medizinischer Praxisassistent oder Fachfrau Gesundheit / Fachmann Gesundheit hast du bereits Erfahrungen in einem Akutspital oder in einer grösseren Praxis gesammelt.\nDu hast eine hohe Kundenorientierung, arbeitest gerne im Team und bringst Eigeninitiative mit. Stilsicheres Deutsch ist eine Voraussetzung, jede weitere Fremdsprache ist von Vorteil.\nAuf eine sorgfältige Einführung in das Fachgebiet legen wir grossen Wert. Zudem steht dir ein breites, internes Weiterbildungsangebot zur Verfügung.\nWir sind ein offenes, herzliches, 3-köpfiges Team und unterstützen uns im Arbeitsalltag. Unsere Arbeitszeiten liegen tagsüber zwischen Montag und Freitag.\nUnsere Benefits\nUniversitätsspital Zürich\n8091 Zürich",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -271,7 +276,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -287,7 +293,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "Du möchtest dein technisches Können im Fachbereich Lüftung einbringen und suchst eine neue Herausforderung? Als Servicemonteur:in am Universitätsspital Zürich erwarten dich vielseitige Aufgaben rund um unsere Lüftungsanlagen. Wir freuen uns darauf, dich kennenzulernen.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nServicemonteur:in HLK (Schwerpunkt Lüftung) 80-100%\nper 1. März 2027 oder nach Vereinbarung\nDeine Hauptaufgaben\nDu stellst die Versorgungssicherheit und den störungsfreien Betrieb der RLT-Anlagen sicher\nIn deinem Zuständigkeitsbereich planst und organisierst du alle Instandhaltungsmassnahmen nach Priorität und koordinierst die Einsätze externer Firmen\nIm Tagesgeschäft übernimmst du die anfallenden Instandhaltungsarbeiten und behebst Störungen an den RLT-Anlagen\nBei Umbau- und Erneuerungsprojekten bringst du dein Fachwissen ein und begleitest die Projekte bis zur Inbetriebnahme und Abnahme\nDu sorgst für die Einhaltung der geltenden Normen, gesetzlichen Vorschriften sowie der USZ-internen Richtlinien, Weisungen und Prozesse\nDie Anlagendokumentationen erstellst du und hältst sie aktuell\nNach einer gründlichen Einarbeitung übernimmst du auch Einsätze in unserer Pikettorganisation (Werkstattbereitschafts- und Einsatzdienst rund um die Uhr, an sieben Tagen pro Woche)\nDein Profil\nDu hast eine abgeschlossene Berufsausbildung im Bereich HLK. Eine Weiterbildung, beispielsweise als Instandhaltungsfachperson, ist von Vorteil\nIn der Anlageninstandhaltung, im Unterhalt, bei Energieoptimierungen und in der Gebäudeautomation (MSRL) bringst du fundierte Berufserfahrung mit, idealerweise aus dem Spitalumfeld oder einem vergleichbaren Betrieb mit 24/7-Betrieb\nDu verfügst über gute EDV-Kenntnisse (MS Office, Instandhaltungssoftware) sowie gute kommunikative und organisatorische Fähigkeiten\nDeine Arbeitsweise ist proaktiv, eigenverantwortlich, ziel- und kundenorientiert\nDu bist belastbar, arbeitest gerne im Team und überzeugst mit hoher Sozialkompetenz sowie einwandfreien Deutschkenntnissen in Wort und Schrift\nUnsere Benefits\nWir bieten dir eine abwechslungsreiche und interessante Tätigkeit in einer anspruchsvollen Umgebung. Deine bereits erworbenen Fähigkeiten und Kenntnisse kannst du in einem interdisziplinären Umfeld einsetzen und weiterentwickeln.\nUniversitätsspital Zürich\n8091 Zürich",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -311,12 +317,15 @@
       "score": null
     },
     "selection": {
-      "suggested_score": 45,
+      "suggested_score": 50,
       "version": "heuristic-v1",
-      "reason_codes": [],
+      "reason_codes": [
+        "energie"
+      ],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -332,7 +341,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "Für unseren Bereich ICT suchen wir eine engagierte Persönlichkeit, die unsere IT- und OT-Applikationen technisch betreut, deren Weiterentwicklung aktiv mitgestaltet und als Bindeglied zwischen IT, Fachbereichen und externen Partnern für einen stabilen, sicheren und zukunftsfähigen Betrieb sorgt – als\nApplikationsmanager:in IT und OT\nPensum 80-100%\nWir bieten dir u.a.:\nEin modernes Arbeitsumfeld mit viel Gestaltungsspielraum und Eigenverantwortung\nSpannende Digitalisierungsprojekte mit direktem Einfluss auf unser Unternehmen\nFlexible Arbeitszeiten und ein innovatives Arbeitsumfeld.\nMit #dabliibi ein innovatives Projekt für unsere Mitarbeitenden.\nDeine Aufgaben sind u.a.:\nTechnische Verantwortung für unsere IT- und OT-Applikationen sowie Koordination der Zusammenarbeit mit Applikationsverantwortlichen, Fachbereichen, Lieferanten und der internen ICT.\nPlanung und Begleitung von Systemanpassungen, Release und Change Management, Migrationen und technischen Erneuerungen – von der Vorbereitung bis zur Übergabe in den Betrieb.\nKoordination und Analyse bei systemübergreifenden Störungen und anderen Schnittstellenthemen.\nDen gesamten Lifecycle unserer Applikationen sowie eine adäquate Dokumentation behältst du im Blick und erkennst frühzeitig Erneuerungs- und Investitionsbedarf.\nBei der Umsetzung technischer Security-Anforderungen, bei Audits und Risikoanalysen sowie bei der Weiterentwicklung unserer Systemlandschaft wirkst du aktiv mit.\nDu bringst idealerweise folgendes Profil mit:\nAusbildung in Informatik oder Wirtschaftsinformatik (HF/FH) oder eine vergleichbare Qualifikation.\nMehrjährige Erfahrung im IT-Applikationsmanagement; Erfahrung mit OT, Leittechnik oder kritischen Infrastrukturen ist ein grosses Plus.\nGute Kenntnisse in Change-, Release- und Lifecycle-Management sowie ein solides Verständnis für ISMS, IT-Security und Schnittstellentechnologien.\nAnalytische, strukturierte und lösungsorientierte Arbeitsweise sowie Freude daran, Verantwortung zu übernehmen und Themen selbstständig voranzutreiben.\nKommunikationsstärke und die Fähigkeit, technische und fachliche Anforderungen zusammenzubringen.\nMöchtest du die IT- und OT-Landschaft der EW Höfe aktiv mitgestalten und weiterentwickeln? Dann freuen wir uns darauf, dich kennenzulernen. Reiche deine Unterlagen ganz einfach über unser Online-Bewerbungstool ein. Für Fragen zur Stelle steht dir Martin Graf, Bereichsleiter ICT, unter 055 415 31 72 gerne zur Verfügung.\nBitte keine Anrufe von Agenturen für Zeitungsinserate.\nEW Höfe AG\nFrau Karin Bühler\nGeschäftsbereichsleiterin Zentrale Services\n055 415 32 13\nE-Mail schreiben",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -361,7 +370,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -377,7 +387,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "Bewege die Schweiz mit uns als Techniker:in Sicherungsanlagen.\nAufgaben\nBau, Unterhalt und Instandhaltung von Sicherungsanlagen.\nDiagnostizieren von Störungen und grobmechanische Arbeiten.\nSelbstständige Montage/Demontage gemäß Projektvorgaben.\nFähigkeiten\nAbgeschlossene Berufslehre als Produktionsmechaniker:in oder ähnliches.\nBereitschaft zu Nacht- und Wochenendarbeit.\nGültiger Führerausweis der Kategorie B.\nBeweg die Schweiz mit uns.\nTechniker:in Sicherungsanlagen Aussen, Produktionsmechaniker:in, Polymechaniker:in, Schlosser:in\nZürich\nab sofort oder nach Vereinbarung\n60-100%\n102013\nDarauf kannst du dich freuen.\nAls Techniker:in für Sicherungsanlagen im Aussenbereich bist du verantwortlich für den Bau, den Unterhalt und die Instandhaltung der vielfältigen Sicherungsanlagen wie Weichen, Bahnübergangsanlagen, Signale oder Gleisfreimeldesysteme. Darüber hinaus diagnostizierst du Störungen und erledigst selbständig anspruchsvolle grobmechanische Arbeiten im Aussenbereich der Sicherungsanlagen. Wir suchen an diesen Standorten der Deutschschweiz Unterstützung: Sargans und Luzern. Attraktive Arbeitsbedingungen sind uns wichtig, auch bei unregelmässigen Arbeitszeiten. Dafür kannst du unter der Woche leere Schwimmbäder geniessen und deine Freizeit flexibler gestalten. Nacht- und Wochenendarbeiten werden bei uns zusätzlich vergütet - z.B. mit 16 Franken pro Stunde für Sonntagsarbeit. Zudem profitierst du Zeitzuschläge. Das heisst, du hast mehr Freizeit als Mitarbeitende ohne Nacht- und Wochenendeinsätze. Unsere weiteren Benefits wie Kinderzulagen, kostenloses 2. Klasse GA und vergünstigtes Reisen im Ausland - auch für die Familie - findest du auf unserer Website unter «Benefits». Weitere Einblicke in den Beruf als Sicherungsanlagentechniker:in Aussen erhältst du bei den Berufswelten der SBB oder direkt hier: Techniker:in Sicherungsanlagen Aussenbereich | SBB Interessiert, noch mehr über unsere Berufe zu erfahren? Wir freuen uns, dich vom 22. bis 24. Oktober 2026 in unserem SBB Berufswelten Café am Hauptbahnhof Zürich zu begrüssen. Alle Informationen findest du unter sbb.ch/berufsweltencafe.\nDas kannst du bewegen.\nDu führst selbstständig Arbeiten aus in der Montage/Demontage von Anlagen gemäss Projekt. Unterhaltstätigkeiten an den im Betrieb stehenden SA-Aussenanlagen (Weichen, Signale, Gleisfreimeldesysteme, Zugsbeeinflussung, ETCS, Weichenheizung) gehören ebenfalls zu deinem Aufgabengebiet.\nEntstörung von Bahnanlagen im Rahmen der Pikettorganisation führst du selbstständig durch.\nDu rapportierst mit den neuesten Systemen und Programmen die ausgeführten Arbeiten und arbeitest mit an der Nachführung der Dokumente.\nDas bringst du mit.\nDie Bereitschaft für Pikettdienst, Nachtarbeit und Wochenendarbeit sowie die Sicherheitsausbildungen zum Sicherheitschef:in RTE 20100.\nDu verfügst zwingend über eine abgeschlossene Berufslehre EFZ als Produktionsmechaniker:in, Schlosser:in, Polymechaniker:in oder in ähnlicher handwerklicher Richtung.\nBereitschaft zur Absolvierung der einjährigen berufsbegleitenden internen Ausbildung zur Techniker:in Sicherungsanlagen Aussenbereich. Die SBB übernimmt dafür vollständig Zeit und Kosten.\nGültiger Führerausweis der Kategorie B sowie sehr gute Deutschkenntnisse in Wort und Schrift auf mindestens B2-Niveau werden vorausgesetzt.\nDein Lohn und deine Benefits.\nWir haben ein faires und fortschrittliches Lohnsystem und setzen uns aktiv für Lohngleichheit ein. Deshalb sind weiterführende und detaillierte Informationen zum Lohnsystem bei der SBB transparent einsehbar. Diese Stelle befindet sich im Anforderungsniveau D, Regionalzulage Stufe 2. Mehr zu Lohn und Benefits.\nDamit gelingt der Einstieg.\nDass du mit uns die Schweiz bewegen willst, ist für uns die grösste Motivation. Darum verzichten wir bei dieser Stelle auf ein Motivationsschreiben. Falls du uns deine Motivation dennoch mitteilen möchtest, hast du in unserem Bewerbungstool nach wie vor die Möglichkeit dazu. Grosses machen ist einfacher per du. Das beginnt bereits bei deiner Bewerbung.\nFür diese Stelle nehmen wir keine Dossiers von Personalvermittlern entgegen.\nZur Stelle\nSidney Aeschbacher, Regionenvertreter Poolrekrutierung Mitte Telefon 051 285 19 90 Thomas Werle, Regionenvertreter Poolrekrutierung Ost Telefon 051 285 24 43",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -406,7 +416,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -424,7 +435,7 @@
     "categories": [
       "Fernwärme"
     ],
-    "description": null,
+    "description": "Für unseren Geschäftsbereich Fernwärme suchen wir eine durchsetzungsstarke und praxisorientierte Persönlichkeit, die unsere Leitungsbauprojekte direkt auf der Baustelle begleitet. Wir suchen eine Persönlichkeit als\nFachbauleiter:in Rohrleitungsbau Fernwärme\nPensum 80-100%\nWir bieten u.a.:\nEin dynamisches Umfeld und ein kollegiales Team, das sich auf dich freut.\nUnterstützung zur fachlichen Weiterbildung, um deine Kompetenzen weiterzuentwickeln.\nEin innovatives Arbeitsumfeld und flexible Arbeitszeiten.\nMit #dabliibi ein innovatives Projekt für unsere Mitarbeitenden.\nDeine Aufgaben sind u.a.:\nBegleitung und Überwachung des Rohrleitungsbaus auf unseren Fernwärmebaustellen inklusive Teilnahme an Bausitzungen\nKoordination der Schnittstellen zwischen Projektleitung, Bauleitung, Tiefbau, Lieferanten und ausführenden Unternehmen\nFachliche Begleitung und Kontrolle der ausführenden Unternehmen im Rohrbau sowie bei Muffen- und Isolationsarbeiten\nTechnische und organisatorische Herausforderungen vor Ort erkennen und pragmatisch lösen\nBegleitung von Abnahmen und Sicherstellung der technischen Dokumentation\nIdealerweise bringst du folgendes Profil mit:\nTechnische Grundausbildung, vorzugsweise im Rohrleitungs-, Anlagen-, Heizungs- oder Tiefbau\nMehrjährige praktische Baustellenerfahrung; Kenntnisse im Rohrleitungs- oder Fernwärmeleitungsbau sind von Vorteil\nGutes technisches Verständnis und die Fähigkeit, Pläne und technische Vorgaben sicher zu beurteilen\nStarkes Durchsetzungsvermögen, sicheres Auftreten und eine selbständige, pragmatische und lösungsorientierte Arbeitsweise\nFreude an der Zusammenarbeit mit unterschiedlichen internen und externen Partnern\nWillst du etwas bewegen? Dann nutze die Chance und reiche deine Bewerbungsunterlagen mit unserem Online-Bewerbungstool ein. Philipp Züger, Bereichsleiter Fernwärmenetzbau, gibt dir zur Stelle gerne weitere Auskünfte (Direktwahl 055 511 90 82). Wir freuen uns auf deine Bewerbung!\nBitte keine Anrufe von Agenturen für Zeitungsinserate.\nEW Höfe AG\nFrau Karin Bühler\nGeschäftsbereichsleiterin Zentrale Services\n055 415 32 13\nE-Mail schreiben",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -448,14 +459,17 @@
       "score": null
     },
     "selection": {
-      "suggested_score": 63,
+      "suggested_score": 93,
       "version": "heuristic-v1",
       "reason_codes": [
-        "fernwärme"
+        "fernwärme",
+        "wärmenetz",
+        "projektleit"
       ],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
