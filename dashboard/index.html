@@ -313,7 +313,14 @@ const relevanceRatings=new Map();
 const selectedJobIds=new Set(); // Private Auswahl nur für einen späteren Export, kein Statuswechsel.
 const reasonOptions=[["field","Berufsfeld"],["distance","Arbeitsweg"],["seniority","Seniorität"],["tasks","Aufgaben"],["employer","Arbeitgeber"],["conditions","Arbeitsbedingungen"]];
 const reasonCodes=new Set(reasonOptions.map(([code])=>code));
-let detailDraftReasons=[];
+// Earlier boolean reasons stay readable; v2 adds rated dimensions and exclusive labels.
+const aspectOptions=[["distance","Arbeitsweg"],["tasks","Aufgaben"],["employer","Arbeitgeber"],["conditions","Arbeitsbedingungen"]];
+const fieldOptions=[["unrelated","Keinerlei Berufsverwandtheit"],["transferable","Erkennbare Erfahrung"],["aligned","Richtiges Berufsfeld"]];
+const seniorityOptions=[["underchallenging","Unterfordernd"],["too_early","Zu jung"],["good_chance","Gute Chance"],["overwhelming","Absolute Überforderung"]];
+const aspectCodes=new Set(aspectOptions.map(([x])=>x));
+const fieldCodes=new Set(fieldOptions.map(([x])=>x));
+const seniorityCodes=new Set(seniorityOptions.map(([x])=>x));
+let detailDraftFeedback={aspects:{},field_relation:null,seniority_assessment:null};
 
 const activityTypes=new Set(["screened","applied","follow_up"]);
 let activityLog=[]; // Personal data; only in local workspace / personal exports.
@@ -440,7 +447,7 @@ function snapshot(){
   demo_mode:demoMode,
   jobs:structuredClone(jobs),
   annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
-  relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value,reasons:[...(value.reasons||[])]})),
+  relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value,reasons:[...(value.reasons||[])],aspects:{...(value.aspects||{})}})),
   export_selection:[...selectedJobIds],
   activity_log:structuredClone(activityLog),
   overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
@@ -494,16 +501,37 @@ function normalizeReasons(value){
  return [...new Set(items)];
 }
 function storedReasons(item){return normalizeReasons(item?.reasons??item?.reason??[]);}
-function updateRating(id,score,reasons,note){
+function normalizeAspects(value){
+ if(value==null)return {};
+ if(typeof value!=="object"||Array.isArray(value))throw Error("Ungültige Kriterienwerte.");
+ const result={};
+ for(const [code,valueNumber] of Object.entries(value)){
+  if(!aspectCodes.has(code)||!Number.isInteger(valueNumber)||valueNumber < -100||valueNumber > 100)
+   throw Error("Kriterienbewertung muss eine ganze Zahl zwischen -100 und +100 sein.");
+  result[code]=valueNumber;
+ }
+ return result;
+}
+function normalizeReasonFeedback(value){
+ const entry=value||{};
+ const field=entry.field_relation??null,seniority=entry.seniority_assessment??null;
+ if(field!==null&&!fieldCodes.has(field))throw Error("Ungültige Berufsfeld-Einstufung.");
+ if(seniority!==null&&!seniorityCodes.has(seniority))throw Error("Ungültige Senioritäts-Einstufung.");
+ return {aspects:normalizeAspects(entry.aspects),field_relation:field,seniority_assessment:seniority};
+}
+function updateRating(id,score,reasons,note,feedback){
  const previous=ratingOf(id),nextReasons=normalizeReasons(reasons===undefined?storedReasons(previous):reasons);
  const nextScore=score===undefined?(previous?.score??null):score;
  const nextNote=note===undefined?(previous?.note??""):note;
+ const nextFeedback=normalizeReasonFeedback(feedback===undefined?previous:feedback);
  if(typeof nextNote!=="string"||nextNote.length>1000)throw Error("Bewertungszusatz darf höchstens 1000 Zeichen enthalten.");
  if(nextScore!==null&&(!Number.isInteger(nextScore)||nextScore<1||nextScore>100))throw Error("Ganze Zahl von 1 bis 100 erforderlich.");
- if(nextScore===null&&!nextReasons.length&&!nextNote.trim()){relevanceRatings.delete(id);saveChanges();return;}
+ const hasAspects=Object.keys(nextFeedback.aspects).length>0||nextFeedback.field_relation!==null||nextFeedback.seniority_assessment!==null;
+ if(nextScore===null&&!nextReasons.length&&!nextNote.trim()&&!hasAspects){relevanceRatings.delete(id);saveChanges();return;}
  const job=jobs.find(j=>j.id===id);
  relevanceRatings.set(id,{score:nextScore,reasons:nextReasons,reason:nextReasons[0]||"",note:nextNote,
-  updated_at:new Date().toISOString(),suggested_score_at_rating:previous?.suggested_score_at_rating??job?.selection?.suggested_score??null,
+  ...nextFeedback,updated_at:new Date().toISOString(),
+  suggested_score_at_rating:previous?.suggested_score_at_rating??job?.selection?.suggested_score??null,
   selector_version:previous?.selector_version??job?.selection?.version??null});
  saveChanges();
 }
@@ -514,6 +542,7 @@ function setRating(id,score,reasons){
 }
 function setReasons(id,reasons){updateRating(id,undefined,reasons);}
 function setRatingNote(id,note){updateRating(id,undefined,undefined,note);}
+function setFeedback(id,feedback){updateRating(id,undefined,undefined,undefined,feedback);}
 function validateRelevanceRatings(rows){
  if(rows==null)return new Map();
  if(!Array.isArray(rows))throw Error("Ungültige Relevanzbewertungen.");
@@ -522,11 +551,11 @@ function validateRelevanceRatings(rows){
   if(!item||typeof item.id!=="string"||!item.id||result.has(item.id))throw Error("Doppelte oder ungültige Bewertungs-ID.");
   const score=item.score??null;
   if(score!==null&&(!Number.isInteger(score)||score<1||score>100))throw Error("Ungültige Relevanzzahl.");
-  const reasons=storedReasons(item);
-  const note=item.note??"";
+  const reasons=storedReasons(item),note=item.note??"";
+  const feedback=normalizeReasonFeedback(item);
   if(typeof note!=="string"||note.length>1000)throw Error("Ungültiger Bewertungszusatz.");
-  if(score===null&&!reasons.length&&!note.trim())continue;
-  result.set(item.id,{score,reasons,reason:reasons[0]||"",note,updated_at:item.updated_at||null,
+  if(score===null&&!reasons.length&&!note.trim()&&Object.keys(feedback.aspects).length===0&&!feedback.field_relation&&!feedback.seniority_assessment)continue;
+  result.set(item.id,{score,reasons,reason:reasons[0]||"",note,...feedback,updated_at:item.updated_at||null,
    suggested_score_at_rating:item.suggested_score_at_rating??null,selector_version:item.selector_version??null});
  }
  return result;
@@ -551,15 +580,17 @@ function buildMarkedJobsPayload(){
  const chosen=markedJobs();
  return {type:"bewerbungs-agent-marked-jobs",schema_version:"1.0.0",exported_at:new Date().toISOString(),
   jobs:structuredClone(chosen),ratings:chosen.filter(j=>Number.isInteger(ratingOf(j.id)?.score)).map(j=>({
-   job_id:j.id,user_score:ratingOf(j.id).score,reasons:storedReasons(ratingOf(j.id)),note:ratingOf(j.id).note||"",rated_at:ratingOf(j.id).updated_at
+   job_id:j.id,user_score:ratingOf(j.id).score,reasons:storedReasons(ratingOf(j.id)),
+    ...normalizeReasonFeedback(ratingOf(j.id)),note:ratingOf(j.id).note||"",rated_at:ratingOf(j.id).updated_at
   }))};
 }
 function buildRelevancePayload(){
- return {type:"bewerbungs-agent-relevance-feedback",schema_version:"1.0.0",
+ return {type:"bewerbungs-agent-relevance-feedback",schema_version:"1.1.0",
   generated_at:new Date().toISOString(),selection_policy:"suggestion_only_no_exclusion",
   ratings:[...relevanceRatings.entries()].filter(([id,r])=>!id.startsWith("DEMO-")&&Number.isInteger(r.score)&&r.score>=1&&r.score<=100).map(([id,r])=>{
    const j=jobs.find(x=>x.id===id),reasons=storedReasons(r);
-   return {job_id:id,user_score:r.score,reason:reasons[0]||null,reasons,note:r.note||"",rated_at:r.updated_at,
+   return {job_id:id,user_score:r.score,reason:reasons[0]||null,reasons,legacy_reasons:reasons,
+     ...normalizeReasonFeedback(r),note:r.note||"",rated_at:r.updated_at,
     suggested_score_at_rating:r.suggested_score_at_rating??j?.selection?.suggested_score??null,
     selector_version:r.selector_version??j?.selection?.version??null,
     job:j?{title:j.title,company:j.company,location:j.location,source:j.source,url:j.url,
