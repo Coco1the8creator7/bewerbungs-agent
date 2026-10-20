@@ -1,14 +1,1102 @@
 [
   {
     "schema_version": "0.1.0",
+    "id": "job-b1d33d1c638d565c848fdbcd",
+    "source": "jobs.ch",
+    "source_job_id": "5f663686-f185-481e-89b7-3a3453ce6ed7",
+    "title": "Product Owner – B2B Digital Ecosystem Platform at ETH Space",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5f663686-f185-481e-89b7-3a3453ce6ed7/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-256ed0a6b5084feb1f9879c8",
+    "source": "jobs.ch",
+    "source_job_id": "eeecdfc9-5f6a-40ba-ba4c-5f15fe5b38bf",
+    "title": "MPA / FaGe für die ambulante Allergologie 80 - 100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/eeecdfc9-5f6a-40ba-ba4c-5f15fe5b38bf/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-2065048b73e916195c4a770d",
+    "source": "jobs.ch",
+    "source_job_id": "b9f50f29-a6dd-4545-9ceb-79053497f78a",
+    "title": "Projektleiter:in Bau-Entwicklungsplanung 80-100 %",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/b9f50f29-a6dd-4545-9ceb-79053497f78a/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-12538b67ad12bffbd613bbfa",
+    "source": "jobs.ch",
+    "source_job_id": "6636f00e-5f06-480e-8683-8a2450e7c92b",
+    "title": "Team-Mitarbeiter*in Küche",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/6636f00e-5f06-480e-8683-8a2450e7c92b/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-f173a4b0997ddd865acb4476",
+    "source": "jobs.ch",
+    "source_job_id": "ee690431-294b-4db5-9ccc-a82b989de44c",
+    "title": "Gruppenleiter:in MPA / FaGe für das Ambulatorium am USZ Campus 80 - 100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ee690431-294b-4db5-9ccc-a82b989de44c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-967b5ce3a15407ff02416d92",
+    "source": "jobs.ch",
+    "source_job_id": "9280ad0c-ba85-497f-a0f5-818aa1692a54",
+    "title": "MPA / FaGe für den Personalärztlichen Dienst 80 - 100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/9280ad0c-ba85-497f-a0f5-818aa1692a54/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-10dff321f20f0c40ecf77f10",
+    "source": "jobs.ch",
+    "source_job_id": "191be58d-9642-4d1b-8d7a-83ca4c0f70e0",
+    "title": "Servicemonteur:in HLK (Schwerpunkt Lüftung) 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/191be58d-9642-4d1b-8d7a-83ca4c0f70e0/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-397f2bbbff037df18d1528c1",
+    "source": "jobs.ch",
+    "source_job_id": "fcef17b9-102c-44c1-b771-2ff82bfe42c8",
+    "title": "Applikationsmanager IT und OT Pensum 80-100% (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/fcef17b9-102c-44c1-b771-2ff82bfe42c8/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-fa3cffef144a57747d9a21f3",
+    "source": "jobs.ch",
+    "source_job_id": "9da062e8-4481-44c9-ad45-6d7c8a5e908c",
+    "title": "Techniker:in Sicherungsanlagen Aussen, Produktionsmechaniker:in, Polymechaniker:in, Schlosser:in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/9da062e8-4481-44c9-ad45-6d7c8a5e908c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-2826481b05e83d356d2d85e8",
+    "source": "jobs.ch",
+    "source_job_id": "edfe3f0c-70d8-4291-9765-5225afa23f42",
+    "title": "Fachbauleiter Rohrleitungsbau Fernwärme Pensum 80-100% (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/edfe3f0c-70d8-4291-9765-5225afa23f42/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [
+      "Fernwärme"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 63,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "fernwärme"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-961ea43f3eee62c3656be527",
+    "source": "jobs.ch",
+    "source_job_id": "73d2b5bd-0d85-46e5-9bcc-aa6ed4ae18d7",
+    "title": "Chefärzt*in Geriatrie",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/73d2b5bd-0d85-46e5-9bcc-aa6ed4ae18d7/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-e88e67c12c0ec3d767cd55db",
+    "source": "jobs.ch",
+    "source_job_id": "ba11e1eb-141e-4e1f-bfde-0a2fb478cec5",
+    "title": "Netzelektriker/in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ba11e1eb-141e-4e1f-bfde-0a2fb478cec5/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-2c7dd61c48b66b8cbaf82705",
+    "source": "jobs.ch",
+    "source_job_id": "82f8d1d1-c002-4515-90cf-d92a6e0e86e3",
+    "title": "Serviceberater (m/w/d) 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/82f8d1d1-c002-4515-90cf-d92a6e0e86e3/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-75bbcb6155d8457c0a3bc7ab",
+    "source": "jobs.ch",
+    "source_job_id": "d2c8d0c8-49e3-4aea-aa58-ab1f9f68c45e",
+    "title": "Private Customer Support Expert Real Estate (w/m/d) | 80–100% | Hybrid | Zürich",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/d2c8d0c8-49e3-4aea-aa58-ab1f9f68c45e/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-86afa20bacb6e29c46aa0c74",
+    "source": "jobs.ch",
+    "source_job_id": "e926e002-7e4c-4764-bfa8-8dc15a0b44c9",
+    "title": "(Senior) Bauleiter (w/m/d) 80 – 100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/e926e002-7e4c-4764-bfa8-8dc15a0b44c9/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-c4746df29f0cad7afd4605a5",
+    "source": "jobs.ch",
+    "source_job_id": "f5842e1a-5670-422e-b8fc-e5410304f53d",
+    "title": "Maschinenbauingenieur (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/f5842e1a-5670-422e-b8fc-e5410304f53d/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-a90527b078113d7539da69da",
+    "source": "jobs.ch",
+    "source_job_id": "56583bce-d50e-4eed-9140-3e7e7d86089f",
+    "title": "SAP Solution Architekt",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/56583bce-d50e-4eed-9140-3e7e7d86089f/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-33ac52738bda61da896d1276",
+    "source": "jobs.ch",
+    "source_job_id": "12bd140c-d587-43e4-a77c-073e8823c492",
+    "title": "Leitung Betreuung HPS",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/12bd140c-d587-43e4-a77c-073e8823c492/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-e4a7fb3ae84660a266618270",
+    "source": "jobs.ch",
+    "source_job_id": "94b78f25-ca1d-46da-9791-d31b013fd113",
+    "title": "Technische:r Hauswart:in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/94b78f25-ca1d-46da-9791-d31b013fd113/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-e813a22cb10f2bf9bf71fb4d",
+    "source": "jobs.ch",
+    "source_job_id": "de61bbd8-7bb7-405d-a70c-ae35de37a8a5",
+    "title": "Leiter:in Alarmzentrale und Betrieb (80%-100%)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/de61bbd8-7bb7-405d-a70c-ae35de37a8a5/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-83dccb1b0013624724a80d33",
+    "source": "jobs.ch",
+    "source_job_id": "c5483125-65fc-4a17-9c50-49d8f41f5a6c",
+    "title": "Prozessmanager*in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/c5483125-65fc-4a17-9c50-49d8f41f5a6c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7f9a5124d87b43ea53136dde",
+    "source": "jobs.ch",
+    "source_job_id": "6392d240-651d-4295-8f13-aacbed196859",
+    "title": "Arzt/Ärztin FMH für Allgemeine oder Innere Medizin für das Check Up Zentrum (a) 60-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/6392d240-651d-4295-8f13-aacbed196859/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-619607823d466eecf28b98a7",
+    "source": "jobs.ch",
+    "source_job_id": "be559901-9577-4f54-a191-02ca06102b73",
+    "title": "Polizeiaspirant/-in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/be559901-9577-4f54-a191-02ca06102b73/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-3d9dd88e72bfdb257c097dfb",
+    "source": "jobs.ch",
+    "source_job_id": "32ed8cea-b006-4cb9-a806-2e2d612a077b",
+    "title": "Köch*in, Standort Gehrenholz",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/32ed8cea-b006-4cb9-a806-2e2d612a077b/",
+    "published_at": null,
+    "first_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
     "id": "job-00b15708b4b230021cc90cfd",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "pEFE1NPFXpVYqnLM",
     "title": "Heizwerkführer*in Kehrichtverwertungsanlage",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/pEFE1NPFXpVYqnLM",
+    "url": "https://opn.publicjobs.ch/jmultn/pEFE1NPFXpVYqnLM",
     "published_at": null,
     "first_seen_at": "2026-10-19T19:23:08+00:00",
     "last_seen_at": "2026-10-19T19:23:08+00:00",
@@ -28,25 +1116,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-4ba254507ba501e80964d2a0",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "cYmuhTqA2GtFLNVS",
     "title": "Swiss Public Services AG",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/cYmuhTqA2GtFLNVS",
+    "url": "https://opn.publicjobs.ch/jmultn/cYmuhTqA2GtFLNVS",
     "published_at": null,
     "first_seen_at": "2026-10-19T19:23:08+00:00",
     "last_seen_at": "2026-10-19T19:23:08+00:00",
@@ -66,25 +1161,2199 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-40419b6af8b7064d53afd9ee",
+    "source": "jobs.ch",
+    "source_job_id": "eba1bee3-5ef8-4e83-a5cc-3c51b7d8a186",
+    "title": "FaGe für die Hepatologie, Gastroenterologie und Endokrinologie 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/eba1bee3-5ef8-4e83-a5cc-3c51b7d8a186/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-e3a7395c2ea4b07dc1fc61e1",
+    "source": "jobs.ch",
+    "source_job_id": "3188fcd6-91ac-479b-8194-31711e087d96",
+    "title": "Dipl. Pflegefachfrau / Dipl. Pflegefachmann für die Überwachungsstation (a) 90%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/3188fcd6-91ac-479b-8194-31711e087d96/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 90,
+    "workload_pct_max": 90,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-724966158fa7ddc3f0e6a185",
+    "source": "jobs.ch",
+    "source_job_id": "f46f2776-c738-426b-b38e-57e49422a1dc",
+    "title": "Dipl. Pflegefachfrau / Dipl. Pflegefachmann für die Überwachungsstation (a) 90%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/f46f2776-c738-426b-b38e-57e49422a1dc/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 90,
+    "workload_pct_max": 90,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-04a34ac256fca699979132ce",
+    "source": "jobs.ch",
+    "source_job_id": "f817ce2f-651c-4f44-b347-1b7931e92b6a",
+    "title": "INHABER / GESCHÄFTSFÜHRER im erweiterten Automobil-Umfeld (w/m)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/f817ce2f-651c-4f44-b347-1b7931e92b6a/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-a1c97efcf56992ff2e80ab2e",
+    "source": "jobs.ch",
+    "source_job_id": "4c8f087d-33e2-453a-aadf-5e0dea04ccd1",
+    "title": "PAYROLL-SPEZIALISTIN / SOZIALVERSICHERUNGS-PROFI 80 - 100 % (m/w)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/4c8f087d-33e2-453a-aadf-5e0dea04ccd1/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-fa9696ae0b3d95a75ea2165b",
+    "source": "jobs.ch",
+    "source_job_id": "55175eac-0957-4f60-8383-c44f981790fd",
+    "title": "Elektro-Spezialist als ABTEILUNGS-LEITER \"Elektro-Werkstatt\"",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/55175eac-0957-4f60-8383-c44f981790fd/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-1a349025fc7f24a129c4ac96",
+    "source": "jobs.ch",
+    "source_job_id": "6d27317e-2612-460f-afd2-3d7665928c69",
+    "title": "Oberarzt / Oberärztin Interdisziplinäres Notfallzentrum",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/6d27317e-2612-460f-afd2-3d7665928c69/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-8e5143621e799eab707cb459",
+    "source": "jobs.ch",
+    "source_job_id": "d93fa5b2-5520-4488-a4ec-c61f50cbb0ec",
+    "title": "Technischer Hauswart mit eidg. Fachausweis 100 % (m/w)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/d93fa5b2-5520-4488-a4ec-c61f50cbb0ec/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-ea7d1a3b56d377e3a0ef420d",
+    "source": "jobs.ch",
+    "source_job_id": "7adfb317-7ee3-4ac7-b9ac-d943763eb516",
+    "title": "Leiter/in Human Resources 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/7adfb317-7ee3-4ac7-b9ac-d943763eb516/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-8ee969c63d182c488bcfd184",
+    "source": "jobs.ch",
+    "source_job_id": "3db84581-08e4-40c2-94d6-b413528a7a1f",
+    "title": "Senior Security Infrastructure Engineer (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/3db84581-08e4-40c2-94d6-b413528a7a1f/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-d9ebe010ded738571f5f310c",
+    "source": "jobs.ch",
+    "source_job_id": "ef0b853b-2a77-4424-a731-dc518d8a07d3",
+    "title": "Finanzplaner (alle)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ef0b853b-2a77-4424-a731-dc518d8a07d3/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-af8e8061a5cff1de836c000f",
+    "source": "jobs.ch",
+    "source_job_id": "ee5f73c9-e950-456d-b28e-4ca5aa23c2a3",
+    "title": "Schichtverantwortliche:r AEMP 80 - 100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ee5f73c9-e950-456d-b28e-4ca5aa23c2a3/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-ed66527d6501543d9fe69e23",
+    "source": "jobs.ch",
+    "source_job_id": "9ebd3232-e3bc-4415-83f1-be741e7f3d33",
+    "title": "Sicherheitsmitarbeiter Revierdienst / Werkschutz Zürcher Oberland 40-100% (m/w/d) Securitas",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/9ebd3232-e3bc-4415-83f1-be741e7f3d33/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 40,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-491e18f1a180f22de008d48f",
+    "source": "jobs.ch",
+    "source_job_id": "1ec9d429-b811-42da-94c3-b46715965586",
+    "title": "Direktionsschadeninspektor / Fachverantwortlicher",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/1ec9d429-b811-42da-94c3-b46715965586/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b30e27082e0177e5058cbee0",
+    "source": "jobs.ch",
+    "source_job_id": "f551e33f-ecaa-4aec-95a0-10e5c009fb54",
+    "title": "Allrounder/in (80-100%)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/f551e33f-ecaa-4aec-95a0-10e5c009fb54/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-4f7e0f9db2d8e8c351f0a5b2",
+    "source": "jobs.ch",
+    "source_job_id": "32aee4d0-99d8-4010-9742-2d366c6ea587",
+    "title": "Sicherheitsmitarbeiter Alarm- und Einsatzzentrale 80-100% (m/w/d) Securitas Zürich",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/32aee4d0-99d8-4010-9742-2d366c6ea587/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-2145a413255ff68ae0e67648",
+    "source": "jobs.ch",
+    "source_job_id": "f1b7effa-351e-4e62-9629-5c953cfb6a76",
+    "title": "Application Manager - Firmenkunden",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/f1b7effa-351e-4e62-9629-5c953cfb6a76/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7817f630100c17ad183a5992",
+    "source": "jobs.ch",
+    "source_job_id": "b4970416-2c11-49dd-b57c-2e02a1103ddc",
+    "title": "Oberärztin / Oberarzt (w/m/d) Innere Medizin Schwerpunkt Geriatrie 50-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/b4970416-2c11-49dd-b57c-2e02a1103ddc/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 50,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-c607c6559fcec29219e2a9dd",
+    "source": "jobs.ch",
+    "source_job_id": "02cec7c0-888f-4ac3-a1b9-5171ec3eabbd",
+    "title": "Projektleiter:in Energiecontrolling & Nebenkosten (80-100%)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/02cec7c0-888f-4ac3-a1b9-5171ec3eabbd/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [
+      "Energiekonzept",
+      "Projektleitung",
+      "Fachbereich Energie"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 62,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit",
+        "energie"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-d8776faea2cb6f0ff718b0c9",
+    "source": "jobs.ch",
+    "source_job_id": "6a7b86df-c584-4c7d-98f2-2316799098c7",
+    "title": "Guest Experience Associate (Serviceangestellte) (a) 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/6a7b86df-c584-4c7d-98f2-2316799098c7/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-3e952715956fe37edafe2355",
+    "source": "jobs.ch",
+    "source_job_id": "89d33db9-908b-4db6-913b-96d58592b0c4",
+    "title": "Pflegefachperson (Study Nurse) für die Klinik für Infektionskrankheiten und Spitalhygiene 40%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/89d33db9-908b-4db6-913b-96d58592b0c4/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 40,
+    "workload_pct_max": 40,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-9d9d5692ca33e39b267fff30",
+    "source": "jobs.ch",
+    "source_job_id": "45aa7c18-fc9b-41cf-9c15-c32daa78bf78",
+    "title": "Koch / Köchin EFZ 80% befristet bis 31.10.2027",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/45aa7c18-fc9b-41cf-9c15-c32daa78bf78/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-c715cd0925b12f36b40e816e",
+    "source": "jobs.ch",
+    "source_job_id": "ff2276c6-f4d7-4722-9b17-08672e7c7fd5",
+    "title": "Junior Lichtdesigner/in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ff2276c6-f4d7-4722-9b17-08672e7c7fd5/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-563279fbdbb02dd79159821e",
+    "source": "jobs.ch",
+    "source_job_id": "dbdcbc46-07b3-4239-8f10-0b11866b1d27",
+    "title": "Leitende Ärztin / Leitender Arzt (w/m/d) mit Schwerpunkt komplexe Aortenchirurgie für die Klinik für",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/dbdcbc46-07b3-4239-8f10-0b11866b1d27/",
+    "published_at": null,
+    "first_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-a7e693a6fc0b6ed4c691991e",
+    "source": "jobs.ch",
+    "source_job_id": "59eacc8a-de0a-4e65-a814-4ee845babab5",
+    "title": "Pflegehelfer/in SRK 60-80%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/59eacc8a-de0a-4e65-a814-4ee845babab5/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-5c016dec2e69ef0ce27e2f0b",
+    "source": "jobs.ch",
+    "source_job_id": "55b3376c-cd07-4842-90ed-57bd42b2ab37",
+    "title": "Technischer Verkaufsberater Aussendienst Komfortlüftung & Hallenklima (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/55b3376c-cd07-4842-90ed-57bd42b2ab37/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-f31037f0b126e831c8c5f8a7",
+    "source": "jobs.ch",
+    "source_job_id": "7a4947dc-7412-4a5f-bb41-3055b92cec11",
+    "title": "Client Relations Manager 80-100% (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/7a4947dc-7412-4a5f-bb41-3055b92cec11/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-8e39df983094f5a8ff334695",
+    "source": "jobs.ch",
+    "source_job_id": "19b0a813-ffd3-40fa-9bcb-f9075930dc3f",
+    "title": "GRC Consultant / IT Auditor (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/19b0a813-ffd3-40fa-9bcb-f9075930dc3f/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-ca9e19c15b9c866d3255f7d0",
+    "source": "jobs.ch",
+    "source_job_id": "10dcbb03-ff4b-418a-8892-b7f9e03cc5e3",
+    "title": "Technical Security Consultant (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/10dcbb03-ff4b-418a-8892-b7f9e03cc5e3/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7743ec6bf2b7f9aceb5cc6f1",
+    "source": "jobs.ch",
+    "source_job_id": "ce4686a8-ef12-499d-9e26-8377eaa5d042",
+    "title": "Pflegeexpert:in Nurse Practitioner Tumorpfad Dermatoonkologie (w/m/d) 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ce4686a8-ef12-499d-9e26-8377eaa5d042/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-07ece42ff81d3246bb770ef9",
+    "source": "jobs.ch",
+    "source_job_id": "9d490503-5667-4a81-b80d-b05af5f281b1",
+    "title": "Senior Cloud Engineer / Architect (Azure) (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/9d490503-5667-4a81-b80d-b05af5f281b1/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-1c2269a25a54b0e7725bc82d",
+    "source": "jobs.ch",
+    "source_job_id": "0e43fbdf-89f1-4366-8cd1-3bae8e92ff2c",
+    "title": "Diätkoch 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/0e43fbdf-89f1-4366-8cd1-3bae8e92ff2c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-3942caafa20ab5a552336ff9",
+    "source": "jobs.ch",
+    "source_job_id": "70449c67-0a83-48ea-bf03-9a7c1a7ec830",
+    "title": "Kundenberater Aussendienst (w/m/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/70449c67-0a83-48ea-bf03-9a7c1a7ec830/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-0637549ce8d17d14343bbc33",
+    "source": "jobs.ch",
+    "source_job_id": "8a64aab5-c338-458e-91c9-33d274071d55",
+    "title": "Fachspezialist/in Einsprachen ALV - gestalte mit uns den Arbeitsmarkt von Zürich",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/8a64aab5-c338-458e-91c9-33d274071d55/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-1babb74049640f649a1f2a66",
+    "source": "jobs.ch",
+    "source_job_id": "c6d4fadd-79b3-4f89-881f-d52f4453aec1",
+    "title": "IT Sales Representative",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/c6d4fadd-79b3-4f89-881f-d52f4453aec1/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-9595fc0994eb005810c1c0a8",
+    "source": "jobs.ch",
+    "source_job_id": "af35bb98-c9dd-434c-8240-627a978a44a1",
+    "title": "Junior Sales Manager 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/af35bb98-c9dd-434c-8240-627a978a44a1/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-4d00999bad6be6c53f7e2e53",
+    "source": "jobs.ch",
+    "source_job_id": "3993ae83-2b7a-4d41-b498-184a5d3a9b20",
+    "title": "Office-Manager/-in unserer Anwaltskanzlei (50-70%)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/3993ae83-2b7a-4d41-b498-184a5d3a9b20/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 50,
+    "workload_pct_max": 70,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-09b627f320bf928929991aa2",
+    "source": "jobs.ch",
+    "source_job_id": "5cafbfbc-52e6-430a-b078-fde7d53645c1",
+    "title": "Junior Marketing (w/m) Kramer Gastronomie AG",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5cafbfbc-52e6-430a-b078-fde7d53645c1/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b99723f9c6d64a24ba2f50e5",
+    "source": "jobs.ch",
+    "source_job_id": "5bd831b3-e801-4c35-9702-cfe6817bbe08",
+    "title": "GESCHÄFTSFÜHRER/IN",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5bd831b3-e801-4c35-9702-cfe6817bbe08/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-64dd40a80e9e04a34e16458c",
+    "source": "jobs.ch",
+    "source_job_id": "47dff704-a2e0-4af4-8b3d-9d21585fd41a",
+    "title": "Mitarbeiter Audit Support 60-100% (w/m/d) per 1. Dezember 2026 oder nach Vereinbarung",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/47dff704-a2e0-4af4-8b3d-9d21585fd41a/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-15647ca9930eb71745f4baf8",
+    "source": "jobs.ch",
+    "source_job_id": "748bb34c-3daf-4788-b1e2-c41966bf589b",
+    "title": "Pflegefachperson für die Nephrologie 40-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/748bb34c-3daf-4788-b1e2-c41966bf589b/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 40,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-e8f5f92281517b8ffb2c825c",
+    "source": "jobs.ch",
+    "source_job_id": "5fe60b6f-79ce-49e5-8ee3-7c738002c846",
+    "title": "Hauptberufliche*r Berufsbildner*in, Standorte Witikon und Riesbach",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5fe60b6f-79ce-49e5-8ee3-7c738002c846/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-43348d467a1722a8747621f7",
+    "source": "jobs.ch",
+    "source_job_id": "46396196-3867-4f7e-b9df-c7633c916910",
+    "title": "Operative*r Asset Manager*in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/46396196-3867-4f7e-b9df-c7633c916910/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-8b77727fec4a15b7d5aa393d",
+    "source": "jobs.ch",
+    "source_job_id": "82cab86e-fba3-4913-9fc9-6faacc5f5c04",
+    "title": "Hauswart:in",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/82cab86e-fba3-4913-9fc9-6faacc5f5c04/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-53bbe9439b4d099b6ab473f7",
+    "source": "jobs.ch",
+    "source_job_id": "1dcecdea-1da9-4db8-85f9-62b6ac7ef228",
+    "title": "AOI Supporter (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/1dcecdea-1da9-4db8-85f9-62b6ac7ef228/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-37d9cd2fd61e124bbd4cf036",
+    "source": "jobs.ch",
+    "source_job_id": "5005956d-93dc-4984-8bda-174fb820218f",
+    "title": "Senior Projekt Manager Kollektivleben/BVG (m/w/d)",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5005956d-93dc-4984-8bda-174fb820218f/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-0cc0ce70211e1371630e356f",
+    "source": "jobs.ch",
+    "source_job_id": "46f71418-98a4-4b5b-9f0f-66e34f4d336c",
+    "title": "Diplomierte Pflegefachperson HF, Standort Klus Park",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/46f71418-98a4-4b5b-9f0f-66e34f4d336c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-f24527a536b0f32ca0883f66",
+    "source": "jobs.ch",
+    "source_job_id": "c3e43d47-c1bd-4310-8d14-5b06c8e1963c",
+    "title": "Sachbearbeiter Treuhand mit Entwicklungsperspektive (w/m/d) 80-100%",
+    "company": null,
+    "location": null,
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/c3e43d47-c1bd-4310-8d14-5b06c8e1963c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-18T05:04:34+00:00",
+    "last_seen_at": "2026-10-18T05:04:34+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-5366913b16d95dec36fc5970",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "rYQDeAyrbCqljPDt",
     "title": "Elektroinstallateur:in für temporäre Anschlüsse (100 %)",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/rYQDeAyrbCqljPDt",
+    "url": "https://opn.publicjobs.ch/jmultn/rYQDeAyrbCqljPDt",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -104,25 +3373,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-60eca21e69d09cadfe0b6184",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "U7ZU9jY82rSpm3Dl",
     "title": "Projektleiter:in Kraftwerke & Automatisierung",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/U7ZU9jY82rSpm3Dl",
+    "url": "https://opn.publicjobs.ch/jmultn/U7ZU9jY82rSpm3Dl",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -144,25 +3420,34 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-211697ef98a4a06a29ec6f89",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "b9P8z27lUm0WZG6u",
     "title": "Werkstudent:in Energiesysteme mit Fokus Prozess-Digitalisierung",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/b9P8z27lUm0WZG6u",
+    "url": "https://opn.publicjobs.ch/jmultn/b9P8z27lUm0WZG6u",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -185,25 +3470,34 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 50,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "energie"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-7c78c060b6e456384b7ae3e4",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "uHxG9KWdwsA9ySKR",
     "title": "Service-Techniker:in für Ticketautomaten und Gebäudeunterhalt (100%)",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/uHxG9KWdwsA9ySKR",
+    "url": "https://opn.publicjobs.ch/jmultn/uHxG9KWdwsA9ySKR",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -223,25 +3517,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-838f7054ee3b515076195fae",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "XzK9V9FvImLxcK9g",
     "title": "Elektroinstallateur:in",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/XzK9V9FvImLxcK9g",
+    "url": "https://opn.publicjobs.ch/jmultn/XzK9V9FvImLxcK9g",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -261,25 +3562,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-764315fca1ffc087bac49818",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "4ztpBNR23gaVag7c",
     "title": "Umweltingenieur/in",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/4ztpBNR23gaVag7c",
+    "url": "https://opn.publicjobs.ch/jmultn/4ztpBNR23gaVag7c",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -301,25 +3609,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-75f98c7bfc678730b80e5d6c",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "nYEu3wRuBSKynAEq",
     "title": "Verkehrsberater/in Gemeindestrassen mit Teamleitung Signalisation (60% - 100%)",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/nYEu3wRuBSKynAEq",
+    "url": "https://opn.publicjobs.ch/jmultn/nYEu3wRuBSKynAEq",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -339,25 +3654,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-4a0c2c874896e3b40b199249",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "kQFdiNiWchS5bEBa",
     "title": "Strassenbauer:in / Strassenbaupraktiker:in (100%)",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/kQFdiNiWchS5bEBa",
+    "url": "https://opn.publicjobs.ch/jmultn/kQFdiNiWchS5bEBa",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -377,25 +3699,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-36b5dc8ab637ec846398a0c6",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "dKmQFOwlgTXeLjQe",
     "title": "Co-Teamleiter/in Abwasser (a)",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/dKmQFOwlgTXeLjQe",
+    "url": "https://opn.publicjobs.ch/jmultn/dKmQFOwlgTXeLjQe",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -415,25 +3744,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-2d78bd23f2c5a2fd9676b10f",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "RNop1ljeBN6AGglz",
     "title": "Baumpflegespezialist:in (60-100 %)",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/RNop1ljeBN6AGglz",
+    "url": "https://opn.publicjobs.ch/jmultn/RNop1ljeBN6AGglz",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -453,25 +3789,32 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   },
   {
     "schema_version": "0.1.0",
     "id": "job-93426e6adef1764141855609",
     "source": "publicjobs.ch",
-    "source_job_id": null,
+    "source_job_id": "4RmbhiSCkxqBm6Vv",
     "title": "Swiss Public Services AG",
     "company": null,
     "location": null,
     "remote_mode": "unknown",
-    "url": "http://opn.publicjobs.ch/jmultn/4RmbhiSCkxqBm6Vv",
+    "url": "https://opn.publicjobs.ch/jmultn/4RmbhiSCkxqBm6Vv",
     "published_at": null,
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
@@ -491,13 +3834,20 @@
     "processing": {
       "state": "needs_review",
       "warnings": [
-        "Jobmail-Extraktion; Originalseite nicht validiert"
+        "Jobmail-Link; Originalseite nicht validiert"
       ],
       "extraction_confidence": null
     },
     "matching": {
       "status": "not_run",
       "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
     }
   }
 ]
