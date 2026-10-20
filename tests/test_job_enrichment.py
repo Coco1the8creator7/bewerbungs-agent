@@ -36,7 +36,8 @@ class EnrichmentTests(unittest.TestCase):
         self.assertEqual(result["description"],"Already researched")
 
     def test_enrich_keeps_id_and_preserves_on_merge(self):
-        updated,status=enrich_one(self.job,fetch=lambda url:self.markup())
+        with patch("importer.enrich._public_address",return_value=True):
+            updated,status=enrich_one(self.job,fetch=lambda url:self.markup())
         self.assertEqual(status,"enriched")
         self.assertEqual(updated["id"],self.job["id"])
         incoming=dict(self.job,first_seen_at="2026-10-20T00:00:00+00:00",last_seen_at="2026-10-20T00:00:00+00:00",company=None,location=None)
