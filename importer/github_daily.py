@@ -260,7 +260,8 @@ def listings(platform,subject,text,html,received):
     return results
 
 def merge(previous,incoming):
-    by_id={j["id"]:j for j in previous}
+    # Old parser accidentally imported vendor footer links. These are not job ads.
+    by_id={j["id"]:j for j in previous if not (j.get("source")=="publicjobs.ch" and j.get("title","").strip().casefold()=="swiss public services ag")}
     for job in incoming:
         if job["id"] in by_id:
             old=by_id[job["id"]]
