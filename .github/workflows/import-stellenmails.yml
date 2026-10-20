@@ -31,7 +31,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Parser-Tests
-        run: python -m unittest discover -s tests -p 'test_github_daily.py' -v && python -m unittest discover -s tests -p 'test_incremental_import.py' -v
+        run: python -m unittest discover -s tests -p 'test_github_daily.py' -v && python -m unittest discover -s tests -p 'test_incremental_import.py' -v && python -m unittest discover -s tests -p 'test_job_enrichment.py' -v
       - name: Jobmails aus Gmail einlesen und öffentlichen JSON-Bestand aktualisieren
         env:
           GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
