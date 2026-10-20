@@ -91,7 +91,7 @@ def main():
         for path in sorted(Path("importer/url-requests").glob("*.json")):
             if not (receipts_dir / path.name).exists():
                 requests.append((path.stem, json.loads(path.read_text())))
-    for key, payload in requests[:5]:
+    for key, payload in requests[:1]:
         if set(payload) != {"urls"}:
             raise ValueError("request_must_only_contain_urls")
         rows, results = import_urls(rows, payload["urls"])

@@ -64,3 +64,8 @@ konservativ zurückgehalten. publicjobs-Trackinglinks werden begrenzt aufgelöst
 Die neuen Tests prüfen auch Erhalt beliebiger künftiger Feedbackfelder.
 Live-Prüfungen laufen ohne Feed-Commit auf dem PR; Produktivdaten ändern sich erst
 durch den freigegebenen Import nach Merge.
+
+Pro Lauf wird höchstens ein Auftrag verarbeitet, damit Netzwerkfehler die Laufzeit begrenzen.
+Weitere Aufträge bleiben für den nächsten Push/manuellen oder täglichen Lauf offen.
+Die frühere automatische Löschung vermeintlicher Footer-Datensätze wurde entfernt;
+Bestandsbereinigung ist eine getrennte, ausdrücklich zu prüfende Migration.

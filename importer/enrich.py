@@ -112,20 +112,13 @@ def _identity_matches(job, posting):
     return len(expected & given) / max(1, min(len(expected), len(given))) >= 0.6
 
 def parse_jobposting(html_source, job):
-    parser = _Markup()
-    parser.feed(html_source)
-    for block in parser.blocks:
-        try:
-            data = json.loads(block)
-        except (ValueError, TypeError):
-            continue
-        for posting in _candidates(data):
-            if not _identity_matches(job, posting):
-                continue
-            description = clean_description(posting.get("description"))
-            if description:
-                return {"description": description, "method": "jsonld_jobposting"}
-    return None
+    try:
+        posting = single_posting(html_source)
+    except ValueError:
+        return None
+    if not _identity_matches(job, posting):
+        return None
+    return {"description": clean_description(posting["description"]), "method": "jsonld_jobposting"}
 
 def enrich_one(job, fetch=None):
     if job.get("description") or not job.get("url"):

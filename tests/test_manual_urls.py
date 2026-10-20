@@ -115,6 +115,10 @@ class ManualTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             _SafeRedirect().redirect_request(None,None,302,"",{},"http://127.0.0.1/")
 
+    def test_enrichment_rejects_multiple_postings(self):
+        from importer.enrich import parse_jobposting
+        self.assertIsNone(parse_jobposting(page()+page("Different job"), old_job()))
+
     def test_input_limit(self):
         with self.assertRaises(ValueError):
             import_urls([], [URL]*21)
