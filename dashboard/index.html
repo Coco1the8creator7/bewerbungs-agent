@@ -161,6 +161,26 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
 button.reason-button{font-size:.73rem;font-weight:550;line-height:1.25;padding:6px 9px;color:#b5c4da;background:#253148;border:1px solid #37465f;border-radius:6px}
 button.reason-button:hover{background:#34425b}
 button.reason-button[aria-pressed="true"]{color:#edf4fd;background:#3b4e62;border-color:#90a8ba}
+/* Compact criterion sliders: range input invisible, gradient itself is draggable. */
+.feedback-editor{display:grid;gap:9px;min-width:0}
+.feedback-hint,.feedback-legacy{font-size:.7rem;color:#a0afc3}
+.feedback-legacy{border-left:2px solid #72829d;padding:5px 9px}
+.feedback-spectra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.feedback-spectrum-row{display:flex;align-items:stretch;gap:5px;min-width:0}
+.feedback-spectrum{position:relative;min-width:0;flex:1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:3px 8px;min-height:39px;padding:6px 10px 9px;border-radius:7px;border:1px solid #49576b;background:linear-gradient(90deg,#76434b 0%,#72575c 25%,#414e62 50%,#426358 75%,#3e7157 100%);color:#f0f2f5;cursor:ew-resize;overflow:hidden}
+.feedback-spectrum:hover{border-color:#92a6b5}
+.feedback-spectrum:focus-within{outline:2px solid #bfd0e9;outline-offset:2px}
+.feedback-spectrum-name{position:relative;z-index:1;font-size:.73rem;font-weight:650;pointer-events:none;text-shadow:0 1px 2px #182133}
+.feedback-spectrum-state{position:relative;z-index:1;font-size:.65rem;white-space:nowrap;pointer-events:none;color:#e3e9ed;text-shadow:0 1px 2px #182133}
+.feedback-spectrum-marker{position:absolute;bottom:0;left:var(--impact-position,50%);width:5px;height:6px;transform:translateX(-50%);background:#eff7fd;border:1px solid #182538;border-radius:2px;pointer-events:none}
+.feedback-spectrum-marker[hidden]{display:none}
+.feedback-spectrum input[type=range]{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:ew-resize;z-index:2;touch-action:pan-y}
+button.feedback-spectrum-reset{padding:3px 5px;min-width:25px;font-size:1rem;font-weight:600;background:#253148;color:#e0e8f2;border:1px solid #44516a;border-radius:6px}
+button.feedback-spectrum-reset[hidden]{display:none}
+.feedback-choice-block{min-width:0}
+.feedback-choice-block .reason-choices{margin-top:5px}
+.feedback-choice-block button.reason-button{font-size:.71rem}
+@media(max-width:690px){.feedback-spectra{grid-template-columns:1fr}}
 .mark-button{display:grid;place-items:center;flex-shrink:0;width:39px;height:39px;padding:7px;background:#242f43!important;border:1px solid #48546b;border-radius:7px!important;color:#99a9c0!important}
 .mark-button:hover{background:#31405a!important}
 .mark-button svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
