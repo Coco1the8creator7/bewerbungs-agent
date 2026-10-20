@@ -3,6 +3,9 @@ Requires Gmail OAuth refresh-token secrets. No third-party packages.
 The output dashboard/jobs.json is PUBLIC if Pages/repository is public.
 """
 import base64
+from concurrent.futures import ThreadPoolExecutor
+from datetime import timedelta
+import time
 from datetime import datetime, timezone
 from email import policy
 from email.parser import BytesParser
@@ -18,6 +21,9 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
 OUT = Path("dashboard/jobs.json")
+STATE = Path("importer/import-state.json")
+MAX_WORKERS = 5
+MAX_MESSAGES = 500
 ADDRESSES = {"jobmail@jobs.ch": "jobs.ch", "no-reply@publicjobs.ch": "publicjobs.ch",
              "no-reply.ewz@solique.ch": "ewz", "e-recruiting@energie360.ch": "energie360.ch"}
 DETAIL = re.compile(r"https?://(?:www\.)?jobs\.ch/(?:de|fr|it)/stellenangebote/detail/([0-9a-f-]{36})/",re.I)
@@ -72,34 +78,55 @@ def access_token():
     if not result.get("access_token"): raise RuntimeError("OAuth: kein Zugriffstoken erhalten")
     return result["access_token"]
 
-def gmail_messages(token):
+def search_after():
+    """Use 48h overlap, not a complete 30d rescan; persist only UTC time."""
+    if not STATE.exists():
+        return (datetime.now(timezone.utc)-timedelta(days=30)).strftime("%Y/%m/%d")
+    data=json.loads(STATE.read_text(encoding="utf-8"))
+    stamp=datetime.fromisoformat(data["last_success_utc"])
+    if stamp.tzinfo is None:
+        raise ValueError("Import state needs timezone")
+    return (stamp.astimezone(timezone.utc)-timedelta(days=2)).strftime("%Y/%m/%d")
+
+def fetch_message(token, item):
+    raw=request_json("https://gmail.googleapis.com/gmail/v1/users/me/messages/"+item["id"]+"?format=raw",token=token)
+    msg=BytesParser(policy=policy.default).parsebytes(base64.urlsafe_b64decode(raw["raw"]+"="*(-len(raw["raw"])%4)))
+    from email.utils import parseaddr
+    platform=ADDRESSES.get(parseaddr(str(msg.get("From","")))[1].lower())
+    if not platform:
+        return None
+    texts=[];htmls=[]
+    for part in (msg.walk() if msg.is_multipart() else [msg]):
+        if part.get_content_disposition()=="attachment": continue
+        try:
+            if part.get_content_type()=="text/plain":texts.append(str(part.get_content()))
+            if part.get_content_type()=="text/html":htmls.append(str(part.get_content()))
+        except (UnicodeError,LookupError):continue
+    received=datetime.fromtimestamp(int(raw["internalDate"])/1000,timezone.utc).isoformat()
+    return platform,str(msg.get("Subject","")), "\\n".join(texts), "\\n".join(htmls),received
+
+def gmail_messages(token, after=None):
+    """Bounded pagination and up to five simultaneous raw-message requests."""
     page=None; count=0
-    # Scan trailing 30d on each run to catch missed runs; store previous jobs in JSON.
-    while True:
-        params={"q":"newer_than:30d (from:jobmail@jobs.ch OR from:no-reply@publicjobs.ch OR from:no-reply.ewz@solique.ch OR from:e-recruiting@energie360.ch)",
-                "maxResults":100}
-        if page: params["pageToken"]=page
-        result=request_json("https://gmail.googleapis.com/gmail/v1/users/me/messages?"+urlencode(params),token=token)
-        for item in result.get("messages",[]):
-            raw=request_json("https://gmail.googleapis.com/gmail/v1/users/me/messages/"+item["id"]+"?format=raw",token=token)
-            msg=BytesParser(policy=policy.default).parsebytes(base64.urlsafe_b64decode(raw["raw"]+"="*(-len(raw["raw"])%4)))
-            sender=str(msg.get("From","")).lower()
-            from email.utils import parseaddr
-            platform=ADDRESSES.get(parseaddr(sender)[1].lower())
-            if not platform: continue
-            texts=[];htmls=[]
-            for part in (msg.walk() if msg.is_multipart() else [msg]):
-                if part.get_content_disposition()=="attachment": continue
-                try:
-                    if part.get_content_type()=="text/plain": texts.append(str(part.get_content()))
-                    if part.get_content_type()=="text/html": htmls.append(str(part.get_content()))
-                except (UnicodeError,LookupError): continue
-            received=datetime.fromtimestamp(int(raw["internalDate"])/1000,timezone.utc).isoformat()
-            yield platform,str(msg.get("Subject","")), "\n".join(texts), "\n".join(htmls),received
-            count+=1
-            if count>=500: return
-        page=result.get("nextPageToken")
-        if not page: return
+    cutoff=after or search_after()
+    query="after:"+cutoff+" (from:jobmail@jobs.ch OR from:no-reply@publicjobs.ch OR from:no-reply.ewz@solique.ch OR from:e-recruiting@energie360.ch)"
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
+        while True:
+            params={"q":query,"maxResults":100}
+            if page:params["pageToken"]=page
+            result=request_json("https://gmail.googleapis.com/gmail/v1/users/me/messages?"+urlencode(params),token=token)
+            items=result.get("messages",[])
+            remaining=MAX_MESSAGES-count
+            if remaining<=0:
+                raise RuntimeError("Import exceeds safe maximum of 500 messages; increase limit or reduce scan period")
+            if len(items)>remaining:
+                raise RuntimeError("Import exceeds safe maximum of 500 messages; stop without advancing cursor")
+            count+=len(items)
+            print(f"Gmail: {count} message references discovered",flush=True)
+            for message in pool.map(lambda item: fetch_message(token,item),items):
+                if message is not None:yield message
+            page=result.get("nextPageToken")
+            if not page:return
 
 def listings(platform,subject,text,html,received):
     if re.search(r"aktivier|bestätig|confirm|anmeldung|passwort",subject,re.I): return []
@@ -171,12 +198,21 @@ def merge(previous,incoming):
         by_id[job["id"]]=job
     return sorted(by_id.values(),key=lambda j:j["first_seen_at"],reverse=True)
 
+def write_state(timestamp):
+    STATE.parent.mkdir(parents=True,exist_ok=True)
+    STATE.write_text(json.dumps({"last_success_utc":timestamp.isoformat()},indent=2)+"\\n",encoding="utf-8")
+
 def run():
+    started=time.monotonic()
+    # Capture before remote queries: no messages can be lost between scan and cursor.
+    started_utc=datetime.now(timezone.utc)
+    cutoff=search_after()
+    print("Gmail scan starting (after "+cutoff+"); concurrency "+str(MAX_WORKERS),flush=True)
     token=access_token()
     previous=json.loads(OUT.read_text(encoding="utf-8")) if OUT.exists() else []
     if not isinstance(previous,list):raise RuntimeError("Existing JSON is not a list")
     found=[];messages=0
-    for record in gmail_messages(token):
+    for record in gmail_messages(token,cutoff):
         messages+=1
         found.extend(listings(*record))
     combined=merge(previous,found)
@@ -184,7 +220,8 @@ def run():
     if not messages and not previous:raise RuntimeError("Keine Jobmails gefunden; Initialimport abgebrochen")
     OUT.parent.mkdir(parents=True,exist_ok=True)
     OUT.write_text(json.dumps(combined,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    print(f"Nachrichten gelesen: {messages}; Stellenlinks erkannt: {len(found)}; Dashboard-Datensätze: {len(combined)}")
+    write_state(started_utc)
+    print(f"Nachrichten gelesen: {messages}; Stellenlinks erkannt: {len(found)}; Dashboard-Datensätze: {len(combined)}; Laufzeit: {time.monotonic()-started:.1f}s",flush=True)
 if __name__=="__main__":
     try:run()
     except Exception as exc:
