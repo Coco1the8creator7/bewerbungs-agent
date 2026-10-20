@@ -1,33 +1,38 @@
-"""Non-excluding relevance suggestions. User scores are authoritative training feedback."""
-import json, re
+"""Unverbindlicher, deterministischer Relevanzvorschlag. Keine Ausschlüsse, keine API."""
+import json
 from pathlib import Path
 
-FEEDBACK=Path("dashboard/selection-feedback.json")
-JOBS=Path("dashboard/jobs.json")
-POS={"fernwärme":22,"wärmenetz":22,"thermische netze":25,"projektleit":16,"energieberat":17,"energiekonzept":17,"erneuerbar":12,"energiesystem":12,"energie":8,"dekarbonisierung":12,"energiestadt":14,"förderprogramm":12,"netzentwicklung":15,"wärmepumpe":10}
-NEG={"retail":-15,"fashion":-20,"pflegefach":-18,"gastronomie":-18}
+JOB_FILE = Path("dashboard/jobs.json")
+RULES = {
+    "fernwärme": 18, "wärmenetz": 18, "thermische netze": 20,
+    "projektleit": 12, "energieberat": 12, "energiekonzept": 12,
+    "erneuerbare energ": 10, "energie": 5, "wärmepumpe": 9,
+    "energiestadt": 12, "förderprogramm": 9, "energiewende": 9,
+    "dekarbonisierung": 9, "netzentwicklung": 14
+}
 
-def propose(job,feedback):
-    text=" ".join(str(job.get(k) or "") for k in ("title","description","company")).lower()
-    signals=[(term,points) for term,points in {**POS,**NEG}.items() if term in text]
-    # Only explicit scored jobs contribute; avoid training on openings or status.
-    examples=[(x,feedback.get(x["id"],{}).get("score")) for x in feedback.get("_jobs",[]) if isinstance(x,dict)]
-    scored=[(x,int(score)) for x,score in examples if isinstance(score,int) and 1<=score<=100]
-    baseline=50+sum(points for _,points in signals)
-    if scored:
-        comparable=[score for x,score in scored if any(term in (" ".join(str(x.get(k) or "") for k in ("title","description")).lower()) for term,_ in signals)]
-        if len(comparable)>=5: baseline=0.8*baseline+0.2*(sum(comparable)/len(comparable))
-    return {"suggested_score":max(1,min(100,round(baseline))),"mode":"suggestion_only","version":"0.1","reasons":[term for term,_ in signals],"final_decision":None}
+def suggest(job):
+    """A number is a ranking aid, not a confidence value or exclusion decision."""
+    title = str(job.get("title") or "").casefold()
+    text = (title + " " + str(job.get("description") or "").casefold())
+    matches = [(word, weight) for word, weight in RULES.items() if word in text]
+    score = max(1, min(100, 45 + sum(weight for _, weight in matches)))
+    return {"suggested_score": score,
+            "version": "heuristic-v1",
+            "reason_codes": [word for word, _ in matches],
+            "mode": "suggestion_only",
+            "exclusion": False}
+
+def apply(jobs):
+    for job in jobs:
+        job["selection"] = suggest(job)
+    return jobs
 
 def main():
-    rows=json.loads(JOBS.read_text())
-    feedback=json.loads(FEEDBACK.read_text()) if FEEDBACK.exists() else {}
-    # The feedback JSON is the authoritative source for explicit ratings, not job status.
-    for job in rows:
-        job["selection"]=propose(job,{"_jobs":[dict(x, id=x["id"]) for x in rows if x.get("id") in feedback],"scores":feedback} if False else {})
-        rating=feedback.get(job["id"])
-        if isinstance(rating,dict) and isinstance(rating.get("score"),int) and 1<=rating["score"]<=100:
-            job["selection"]["user_score"]=rating["score"]
-    JOBS.write_text(json.dumps(rows,ensure_ascii=False,indent=2)+"\n")
+    jobs = json.loads(JOB_FILE.read_text(encoding="utf-8"))
+    if not isinstance(jobs, list):
+        raise ValueError("Expected JSON array")
+    JOB_FILE.write_text(json.dumps(apply(jobs), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-if __name__=="__main__":main()
+if __name__ == "__main__":
+    main()
