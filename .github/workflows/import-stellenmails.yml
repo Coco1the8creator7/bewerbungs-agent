@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   import:
+    timeout-minutes: 5
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -24,7 +25,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Parser-Tests
-        run: python -m unittest discover -s tests -p 'test_github_daily.py' -v
+        run: python -m unittest discover -s tests -p 'test_github_daily.py' -v && python -m unittest discover -s tests -p 'test_incremental_import.py' -v
       - name: Jobmails aus Gmail einlesen und öffentlichen JSON-Bestand aktualisieren
         env:
           GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
@@ -50,7 +51,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dashboard/jobs.json
+          git add dashboard/jobs.json importer/import-state.json
           if ! git diff --cached --quiet; then
             git commit -m "data: refresh public jobmail feed"
             git push
