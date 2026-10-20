@@ -223,6 +223,7 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
       <button type="button" class="secondary" id="exportWorkspace">Gesamtsicherung exportieren</button>
       <button type="button" class="secondary" id="importWorkspace">Gesamtsicherung laden</button>
       <button type="button" class="secondary" id="addJob">Inserat manuell erfassen</button>
+       <button type="button" class="secondary" id="exportRelevance">Bewertungen für KI-Training exportieren</button>
     </div>
     <div class="persist-panel">
       <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
@@ -239,6 +240,8 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
   <h2 id="detailTitle">Inserat</h2><p id="detailMeta" class="muted"></p>
   <div class="dialog-field"><strong>Beschreibung</strong><p id="detailDescription" class="muted"></p></div>
   <div class="dialog-field"><label for="detailDecision">Bearbeitungsstatus</label><select id="detailDecision"></select></div>
+  <div class="dialog-field"><label for="detailScore">Relevanz (1–100)</label><input id="detailScore" type="number" min="1" max="100" step="1" placeholder="Unbewertet"></div>
+  <div class="dialog-field"><label for="detailReason">Bewertungsgrund (optional)</label><select id="detailReason"><option value="">Kein Grund</option><option value="field">Berufsfeld</option><option value="distance">Arbeitsweg</option><option value="seniority">Seniorität</option><option value="tasks">Aufgaben</option><option value="employer">Arbeitgeber</option><option value="conditions">Arbeitsbedingungen</option></select></div>
   <div class="dialog-field"><label for="detailNote">Meine Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Anforderungen, offene Fragen, weitere Schritte …"></textarea></div>
   <details id="editFields">
     <summary>Inseratdaten bearbeiten (wirkt auf das Inserate-JSON)</summary>
@@ -281,6 +284,7 @@ const stages=[
 const stageNames=new Map(stages);
 const activeStages=new Set(["review","saved","later","preparing","applied","interview","offer"]);
 const annotations=new Map();
+const relevanceRatings=new Map();
 
 const activityTypes=new Set(["screened","applied","follow_up"]);
 let activityLog=[]; // Personal data; only in local workspace / personal exports.
@@ -407,6 +411,7 @@ function snapshot(){
   demo_mode:demoMode,
   jobs:structuredClone(jobs),
   annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
+  relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value})),
   activity_log:structuredClone(activityLog),
   overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
  };
@@ -452,6 +457,33 @@ function unique(values){return [...new Set(values.filter(Boolean))].sort((a,b)=>
 function refill(select,values,placeholder){const old=select.value;select.replaceChildren(new Option(placeholder,""));for(const value of values)select.add(new Option(value,value));select.value=values.includes(old)?old:"";}
 function node(tag,value,klass){const item=document.createElement(tag);if(klass)item.className=klass;item.textContent=text(value);return item;}
 function safeLink(value){try{const url=new URL(value);return ["https:","http:"].includes(url.protocol)?url.href:null;}catch{return null;}}
+function ratingOf(id){return relevanceRatings.get(id)||null;}
+function setRating(id,score,reason=""){
+ const n=Number(score);
+ if(!Number.isInteger(n)||n<1||n>100)throw Error("Ganze Zahl von 1 bis 100 erforderlich.");
+ if(reason&&!["field","distance","seniority","tasks","employer","conditions"].includes(reason))throw Error("Ungültiger Grund.");
+ relevanceRatings.set(id,{score:n,reason,updated_at:new Date().toISOString()});
+ saveChanges();
+}
+function linkedTitle(j,tag="h3"){
+ const h=document.createElement(tag),url=safeLink(j.url);
+ if(url){const a=node("a",j.title);a.href=url;a.target="_blank";a.rel="noopener noreferrer";h.append(a);}
+ else h.textContent=j.title;
+ return h;
+}
+function ratingWidget(j){
+ const label=node("label","Relevanz ","job-meta");
+ const input=document.createElement("input");
+ input.type="number";input.min=1;input.max=100;input.step=1;input.placeholder="1–100";
+ input.style.width="84px";input.value=ratingOf(j.id)?.score??"";
+ input.setAttribute("aria-label","Relevanz für "+j.title);
+ input.addEventListener("change",()=>{
+  if(!input.value)return;
+  try{setRating(j.id,input.value,ratingOf(j.id)?.reason||"");el("message").textContent="Bewertung gespeichert. Für das Training bitte die Feedback-JSON exportieren.";}
+  catch(e){el("message").textContent=e.message;input.value=ratingOf(j.id)?.score??"";}
+ });
+ label.append(input);return label;
+}
 function stageOf(id){return annotations.get(id)?.decision||"open";}
 function noteOf(id){return annotations.get(id)?.note||"";}
 function stageChangedAt(id){return annotations.get(id)?.stage_changed_at||null;}
@@ -541,7 +573,7 @@ function openDetails(id){
  el("detailTitle").textContent=j.title;
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
  el("detailDescription").textContent=j.description||"Keine Beschreibung vorhanden.";
- el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);
+ el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);el("detailScore").value=ratingOf(id)?.score??"";el("detailReason").value=ratingOf(id)?.reason??"";
  el("details").showModal();
 }
 function startNewJob(){
@@ -561,7 +593,7 @@ function startNewJob(){
  el("detailTitle").textContent="Neues Inserat erfassen";
  el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
  el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
- el("detailDecision").value="open";el("detailNote").value="";
+ el("detailDecision").value="open";el("detailNote").value="";el("detailScore").value="";el("detailReason").value="";
  el("detailError").textContent="";el("editFields").open=true;
  displayEditFields(j);
  el("details").showModal();
@@ -569,7 +601,7 @@ function startNewJob(){
 let newJobDraft=null;
 function actionButton(job){const b=node("button","Details","secondary compact-button");b.type="button";b.addEventListener("click",()=>openDetails(job.id));return b;}
 function renderStats(){
- el("newCount").textContent=jobs.filter(j=>stageOf(j.id)==="open"&&j.processing?.state!=="excluded"&&recent(j.first_seen_at)).length;
+ el("newCount").textContent=jobs.filter(j=>stageOf(j.id)==="open"&&recent(j.first_seen_at)).length;
  el("reviewNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="review"&&recent(stageChangedAt(j.id))).length;
  el("reviewTotalCount").textContent=jobs.filter(j=>stageOf(j.id)==="review").length;
  el("declinedNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="declined"&&recent(stageChangedAt(j.id))).length;
@@ -581,7 +613,7 @@ function renderPipeline(){
  if(!active.length)target.append(node("div","Noch keine Inserate in Bearbeitung. Setze bei einer neuen Stelle den Status «In Prüfung».","empty"));
  for(const j of active){
   const row=document.createElement("div");row.className="pipeline-row";
-  const info=document.createElement("div");info.append(node("div",j.title,"job-title"),node("div",[j.company,j.location].filter(Boolean).join(" · ")||j.source,"job-meta"));
+  const info=document.createElement("div");info.append(linkedTitle(j,"div"),node("div",[j.company,j.location].filter(Boolean).join(" · ")||j.source,"job-meta"));
   const cell=document.createElement("div");cell.className="stage-cell";cell.append(node("span",stageNames.get(stageOf(j.id)),"stage "+stageOf(j.id)));
   const changed=node("div",dateLabel(stageChangedAt(j.id)),"job-meta changed");
   const action=document.createElement("div");action.className="action-cell";action.append(actionButton(j));
@@ -595,7 +627,7 @@ function renderPipeline(){
  if(!archived.length){archive.append(node("div","Noch keine abgeschlossenen Vorgänge.","empty"));return;}
  for(const j of archived){
   const row=document.createElement("div");row.className="pipeline-row";
-  const info=document.createElement("div");info.append(node("div",j.title,"job-title"),node("div",j.company||j.source,"job-meta"));
+  const info=document.createElement("div");info.append(linkedTitle(j,"div"),node("div",j.company||j.source,"job-meta"));
   const stage=document.createElement("div");stage.className="stage-cell";stage.append(node("span",stageNames.get(stageOf(j.id)),"stage "+stageOf(j.id)));
   const date=node("div",dateLabel(stageChangedAt(j.id)),"job-meta changed");
   const action=document.createElement("div");action.className="action-cell";action.append(actionButton(j));
@@ -605,7 +637,7 @@ function renderPipeline(){
 function renderNewJobs(){
  const query=el("query").value.trim().toLocaleLowerCase("de-CH");
  const category=el("category").value,source=el("source").value;
- const allNew=jobs.filter(j=>stageOf(j.id)==="open"&&j.processing?.state!=="excluded");
+ const allNew=jobs.filter(j=>stageOf(j.id)==="open");
  const filtered=allNew.filter(j=>{
   const categories=Array.isArray(j.categories)?j.categories:[];
   const hay=[j.title,j.company,j.location,j.source,...categories].map(text).join(" ").toLocaleLowerCase("de-CH");
@@ -618,15 +650,15 @@ function renderNewJobs(){
  for(const j of filtered){
   const card=document.createElement("article");card.className="card";
   const top=document.createElement("div");top.className="card-top";
-  const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),node("h3",j.title),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
+  const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),linkedTitle(j),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
   top.append(info);card.append(top);
   const tags=document.createElement("div");tags.className="tags";
   for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
   card.append(tags);
   const footer=document.createElement("div");footer.className="card-footer";
   const actions=document.createElement("div");actions.className="card-actions";
-  actions.append(stageSelect(j),actionButton(j));footer.append(actions);
-  const link=safeLink(j.url);if(link){const a=node("a","Inserat ↗");a.href=link;a.target="_blank";a.rel="noopener noreferrer";footer.append(a);}
+  actions.append(ratingWidget(j),stageSelect(j),actionButton(j));footer.append(actions);
+  
   card.append(footer);target.append(card);
  }
 }
@@ -713,7 +745,8 @@ el("saveDetails").addEventListener("click",()=>{
   }
   refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
   refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
-  setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
+  if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value,el("detailReason").value);
+   setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
   el("details").close();currentJobId=null;
   saveChanges();
  }catch(err){el("detailError").textContent=err.message;}
@@ -738,6 +771,18 @@ el("exportWorkspace").addEventListener("click",()=>{
  el("message").textContent="Gesamtsicherung erstellt (Inserate, Status und Notizen). Datei privat aufbewahren.";
 });
 el("addJob").addEventListener("click",startNewJob);
+el("exportRelevance").addEventListener("click",()=>{
+ const payload={type:"bewerbungs-agent-relevance-feedback",schema_version:"1.0.0",
+  generated_at:new Date().toISOString(),selection_policy:"suggestion_only_no_exclusion",
+  ratings:[...relevanceRatings.entries()].filter(([id])=>!id.startsWith("DEMO-")).map(([id,r])=>{
+   const j=jobs.find(x=>x.id===id);
+   return {job_id:id,user_score:r.score,reason:r.reason||null,rated_at:r.updated_at,
+    job:j?{title:j.title,company:j.company,location:j.location,source:j.source,url:j.url,
+     categories:j.categories,description:j.description}:null};
+  })};
+ downloadJSON("bewerbungs-agent-relevanz-"+new Date().toISOString().slice(0,10)+".json",payload);
+ el("message").textContent=payload.ratings.length+" Bewertungen als private Trainingsdatei exportiert.";
+});
 el("importDecisions").addEventListener("click",()=>{el("decisionsPicker").value="";el("decisionsPicker").click();});
 el("decisionsPicker").addEventListener("change",async e=>{
  const file=e.target.files?.[0];if(!file)return;
@@ -768,6 +813,7 @@ function applyWorkspace(data,name){
   loadJobs(structuredClone(rows),name,data.demo_mode);
   annotations.clear();
   for(const [id,item] of records)annotations.set(id,item);
+  relevanceRatings.clear();for(const x of data.relevance_ratings||[])if(x&&typeof x.id==="string"&&Number.isInteger(x.score)&&x.score>=1&&x.score<=100)relevanceRatings.set(x.id,{score:x.score,reason:x.reason||"",updated_at:x.updated_at||null});
   manualOverrides.clear();
   for(const [id,patch] of overrides)manualOverrides.set(id,patch);
   activityLog=activities;
