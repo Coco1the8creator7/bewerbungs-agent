@@ -530,7 +530,7 @@ function validateExportSelection(ids){
  if(!Array.isArray(ids)||ids.some(id=>typeof id!=="string"||!id.trim())||new Set(ids).size!==ids.length)throw Error("Ungültige Exportauswahl.");
  return new Set(ids);
 }
-function markedJobs(){return jobs.filter(j=>selectedJobIds.has(j.id)&&!j.id.startsWith("DEMO-"));}
+function markedJobs(){return jobs.filter(j=>selectedJobIds.has(j.id));}
 function updateMarkedSummary(){
  const count=markedJobs().length;
  el("markedSummary").textContent=count+" für Export markiert";
