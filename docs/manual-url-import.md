@@ -69,3 +69,11 @@ Pro Lauf wird höchstens ein Auftrag verarbeitet, damit Netzwerkfehler die Laufz
 Weitere Aufträge bleiben für den nächsten Push/manuellen oder täglichen Lauf offen.
 Die frühere automatische Löschung vermeintlicher Footer-Datensätze wurde entfernt;
 Bestandsbereinigung ist eine getrennte, ausdrücklich zu prüfende Migration.
+
+## Verifikation
+34 Offline-Tests und Live-Prüfung einer neuen jobs.ch-URL (fa2f1cae-3721-418f-8fd8-49a24629be31)
+sowie der bestehenden ETH-URL (5f663686-f185-481e-89b7-3a3453ce6ed7) erfolgreich.
+Neuimport, Bestandserhalt, wiederholter Import, Beschreibung und Scoring wurden im
+Runner geprüft; kein Produktivfeed geschrieben. Der Live-Workflow läuft auf diesem
+Feature-PR und später bei Bedarf manuell. Echte Stellen laufen ab; bei Wiederholung
+die neue Test-URL gegebenenfalls ersetzen. Queue/Produktiv-Deploy erst nach Merge nutzbar.

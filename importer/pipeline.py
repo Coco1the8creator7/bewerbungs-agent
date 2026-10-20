@@ -27,7 +27,7 @@ def canonical_url(url):
             raise ValueError("non_public_query")
         query.append((k, v))
     path = p.path.rstrip("/") or "/"
-    match = re.fullmatch(r"/(?:de|fr|it|en)/stellenangebote/detail/([a-f0-9-]{36})", path, re.I)
+    match = re.fullmatch(r"/(?:de/stellenangebote|fr/offres-emplois|en/vacancies|it/offerte-di-lavoro|(?:fr|it|en)/stellenangebote)/detail/([a-f0-9-]{36})", path, re.I)
     if host in ("jobs.ch", "www.jobs.ch") and match:
         return "https://www.jobs.ch/de/stellenangebote/detail/" + match[1].lower() + "/"
     return urlunsplit(("https", host, path, urlencode(sorted(query)), ""))

@@ -101,6 +101,8 @@ class ManualTests(unittest.TestCase):
 
     def test_url_identity_and_secrets(self):
         self.assertEqual(canonical_url(URL.replace("/de/", "/fr/")+"?utm_source=x#top"), URL)
+        self.assertEqual(canonical_url(URL.replace("/de/stellenangebote/", "/en/vacancies/")), URL)
+        self.assertEqual(canonical_url(URL.replace("/de/stellenangebote/", "/fr/offres-emplois/")), URL)
         self.assertNotEqual(canonical_url("https://example.org/Job/A"),
                             canonical_url("https://example.org/Job/a"))
         for bad in ("file:///etc/passwd", "https://user:pass@example.org/job",

@@ -1,5 +1,6 @@
 name: URL import live check
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'importer/**'
@@ -9,6 +10,7 @@ permissions:
   contents: read
 jobs:
   live:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'feat/manual-url-import'
     timeout-minutes: 3
     runs-on: ubuntu-latest
     steps:
