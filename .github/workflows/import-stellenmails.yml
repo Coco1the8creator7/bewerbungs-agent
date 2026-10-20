@@ -32,6 +32,8 @@ jobs:
           GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
           GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
         run: python -m importer.github_daily
+      - name: Unverbindliche Relevanz-Vorschläge berechnen (keine Ausschlüsse)
+        run: python -m selector.score
       - name: Schema und sensible Daten prüfen
         run: |
           python - <<'PY'
