@@ -15,6 +15,7 @@ import re
 import sys
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError
 
 OUT = Path("dashboard/jobs.json")
 ADDRESSES = {"jobmail@jobs.ch": "jobs.ch", "no-reply@publicjobs.ch": "publicjobs.ch",
@@ -45,8 +46,21 @@ class AnchorParser(HTMLParser):
 def request_json(url, method="GET", data=None, token=None):
     body=urlencode(data).encode() if data is not None else None
     req=Request(url,data=body,method=method,headers={"Accept":"application/json",**({"Authorization":"Bearer "+token} if token else {})})
-    with urlopen(req,timeout=35) as response:
-        return json.load(response)
+    try:
+        with urlopen(req,timeout=35) as response:
+            return json.load(response)
+    except HTTPError as exc:
+        if url.startswith("https://oauth2.googleapis.com/token"):
+            # Report Google's structured error code, never echo token or secret.
+            try:
+                data=json.loads(exc.read(4096).decode("utf-8"))
+                code=str(data.get("error","unknown_error"))
+                if code not in ("invalid_client","invalid_grant","unauthorized_client","invalid_request","access_denied"):
+                    code="oauth_error"
+            except (ValueError,UnicodeError):
+                code="oauth_error"
+            raise RuntimeError("Google OAuth Tokenfehler: "+code+" (HTTP "+str(exc.code)+")") from None
+        raise
 
 def access_token():
     keys=("GMAIL_CLIENT_ID","GMAIL_CLIENT_SECRET","GMAIL_REFRESH_TOKEN")
