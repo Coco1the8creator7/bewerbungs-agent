@@ -4,6 +4,8 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 const html = fs.readFileSync("dashboard/index.html", "utf8");
+assert.match(html, /id="exportMarkedJobs"/);
+assert.match(html, /type="range"/); // Created dynamically by ratingPanel
 const match = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(match, "expected inline script");
 const end = match[1].indexOf('el("choose").addEventListener');
@@ -55,11 +57,51 @@ const fixture = [
   'assert.throws(()=>validateActivityLog([{id:"bad",job_id:"quest-job",type:"nope",at:new Date().toISOString()}]));',
   'assert.throws(()=>validateActivityLog([{id:"repeat",job_id:"x",type:"screened",at:new Date().toISOString()},{id:"repeat",job_id:"y",type:"applied",at:new Date().toISOString()}]));',
   'assert.equal(validateActivityLog(null).length,0);',
+  'jobs=[{id:"sample-1",title:"Projektleitung Netze",company:"Test AG",location:"Zürich",source:"jobs.ch",url:null,categories:["Energie"],description:"Beschreibung",selection:{suggested_score:53,version:"heuristic-v1"}},{id:"sample-2",title:"Projektplanung",source:"jobs.ch"}];',
+  'assert.deepEqual(reasonOptions.map(([code])=>code).join(","),"field,distance,seniority,tasks,employer,conditions");',
+  'assert.throws(()=>setRating("sample-1",0));',
+  'assert.throws(()=>setRating("sample-1",101));',
+  'assert.throws(()=>setRating("sample-1",12.5));',
+  'setReasons("sample-1",["field","tasks"]);',
+  'assert.equal(ratingOf("sample-1").score,null);',
+  'assert.equal(buildRelevancePayload().ratings.length,0);',
+  'setRating("sample-1",72);',
+  'assert.equal(ratingOf("sample-1").score,72);',
+  'assert.equal(storedReasons(ratingOf("sample-1")).join(","),"field,tasks");',
+  'assert.equal(ratingOf("sample-1").suggested_score_at_rating,53);',
+  'setReasons("sample-1",["distance","seniority"]);',
+  'assert.equal(ratingOf("sample-1").score,72);',
+  'assert.equal(storedReasons(ratingOf("sample-1")).join(","),"distance,seniority");',
+  'assert.throws(()=>setReasons("sample-1",["bad-code"]));',
+  'const legacy=validateRelevanceRatings([{id:"old",score:62,reason:"employer"}]);',
+  'assert.equal(legacy.get("old").reasons.join(","),"employer");',
+  'assert.throws(()=>validateRelevanceRatings([{id:"bad",score:110,reason:"field"}]));',
+  'assert.throws(()=>validateExportSelection(["x","x"]));',
+  'const training=buildRelevancePayload();',
+  'assert.equal(training.type,"bewerbungs-agent-relevance-feedback");',
+  'assert.equal(training.ratings.length,1);',
+  'assert.equal(training.ratings[0].user_score,72);',
+  'assert.equal(training.ratings[0].reason,"distance");',
+  'assert.equal(training.ratings[0].reasons.join(","),"distance,seniority");',
+  'assert.ok(!("note" in training.ratings[0]));',
+  'toggleExportSelection("sample-1");',
+  'assert.ok(selectedJobIds.has("sample-1"));',
+  'assert.equal(buildMarkedJobsPayload().jobs.length,1);',
+  'assert.equal(buildMarkedJobsPayload().ratings[0].user_score,72);',
+  'assert.equal(buildMarkedJobsPayload().type,"bewerbungs-agent-marked-jobs");',
+  'toggleExportSelection("sample-1");',
+  'assert.ok(!selectedJobIds.has("sample-1"));',
+  'toggleExportSelection("sample-2");',
+  'assert.equal(buildMarkedJobsPayload().jobs[0].id,"sample-2");',
+  'assert.equal(buildMarkedJobsPayload().ratings.length,0);',
+  'assert.equal(validateExportSelection(["sample-2"]).size,1);',
   'const backup=snapshot();',
   'assert.equal(backup.type,"bewerbungs-agent-workspace");',
   'assert.equal(backup.schema_version,"0.3.0");',
   'assert.ok(Array.isArray(backup.activity_log));',
   'assert.ok(backup.overrides.some(entry=>entry.id==="abc"));',
+  'assert.equal(backup.export_selection.join(","),"sample-2");',
+  'assert.equal(backup.relevance_ratings[0].score,72);',
 ].join("\n");
 vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone,document:{getElementById:()=>({textContent:""})}});
 console.log("Dashboard logic checks passed");
