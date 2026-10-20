@@ -74,12 +74,87 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
 .archive summary{color:#63748a;cursor:pointer;font-size:.84rem;font-weight:650}
 .archive .pipeline-row{padding-left:0;padding-right:0}
 @media(max-width:650px){.dialog-grid{grid-template-columns:1fr}.dialog-grid .span-all{grid-column:1}}
+
+
+
+/* Pixel Galaxy / Calm Edition – visually quiet, no external assets. */
+:root{color-scheme:dark;color:#dfe5f3;background:#101727;--hud-border:#303c55;--hud-bg:#192235;--hud-dim:#9ba9bf;--hud-cyan:#91afcb;--hud-violet:#a7a0cf}
+body{background:radial-gradient(ellipse at 80% -25%,#242e46 0,transparent 55%),#101727;color:#dfe5f3;min-height:100vh}
+main{max-width:1360px;position:relative;isolation:isolate;padding-top:30px}
+main:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.13;background-image:radial-gradient(#c1cbe3 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(#000,transparent 78%)}
+header{align-items:center;padding-bottom:18px;border-bottom:1px solid var(--hud-border)}
+h1{font-size:clamp(1.65rem,3.2vw,2.45rem);font-weight:740;letter-spacing:-.04em}
+h2,h3{color:#e8eafa}
+h2{font-size:1.08rem}.section{margin-top:25px}
+.eyebrow,.mission-label{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.11em;color:#a6afd4}
+.sub,.muted,.section-heading p,.job-meta,.stat .name,.stat small,.archive summary,.tools summary,.disclaimer,.status-message{color:var(--hud-dim)}
+.context{background:#202b41;color:#c7d6e7;border-color:#394860}.context.demo{background:#302b2b;color:#dec9a7;border-color:#625746}
+.stat,.panel,.card,.mission-card{background:#1a2335;border:1px solid var(--hud-border);border-radius:12px;box-shadow:none}
+.stat{position:relative;overflow:hidden;padding:20px;min-height:119px}
+.stat:before{content:"";position:absolute;left:17px;right:17px;bottom:0;height:2px;background:#829bbb;opacity:.5}
+.stat:nth-child(2):before{background:#9891b9}.stat:nth-child(3):before{background:#b7a3a0}.stat:nth-child(4):before{background:#88a7a1}
+.stat strong{color:#eef0fa;font-size:1.95rem}
+.panel,.card{color:#dfe5f3}
+.pipeline-head{background:#1d273a;color:#aebad0;border-bottom-color:var(--hud-border)}
+.pipeline-row+.pipeline-row,.archive,.card-footer{border-color:var(--hud-border)}
+.pipeline-row{padding-top:13px;padding-bottom:13px}
+.job-title{color:#eef1fa}
+.stage{background:#293751;color:#c4d5e9}.stage.review{background:#343952;color:#cfcaed}
+.stage.applied,.stage.interview{background:#294542;color:#bfdbd3}.stage.declined{background:#49383e;color:#dfbec9}
+.filters{background:#1b2538}
+label{color:#bdc8da}
+input,select,textarea{background:#151e2e;color:#ecf0f7;border-color:#42516b}
+input::placeholder,textarea::placeholder{color:#929fb7}
+input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid #a6bbd9;outline-offset:3px}
+button{background:#728fb2;color:#101827;font-weight:700}button:hover{background:#90abc9}
+button.secondary{background:#2d3a53;color:#e4e9f4}button.secondary:hover{background:#394762}
+a{color:#b5c9e7}
+.card{transition:border-color .15s ease}.card:hover{border-color:#64748f}
+.tag{background:#2c3851;color:#c8d3e6}
+.bottom{border-color:var(--hud-border)}.persist-panel{background:#1a2537;border-color:var(--hud-border)}.persist-panel p{color:#a8b4c8}
+dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{background:#070d19c7}
+#editFields{border-color:var(--hud-border)}#editFields summary{color:#bfd0e9}
+.mission-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:14px}
+.mission-card{padding:20px;min-width:0}
+.mission-label{font-size:.69rem;font-weight:700}
+.mission-heading{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:9px}
+.mission-heading h3{font-size:1rem;margin-top:5px}
+.mission-heading p{color:var(--hud-dim);font-size:.78rem;margin:5px 0 0}
+.route-map{position:relative;min-height:150px;display:flex;align-items:center;justify-content:space-between;gap:5px;padding:22px 7px}
+.route-map:before{content:"";position:absolute;left:7%;right:7%;top:60px;height:2px;background:repeating-linear-gradient(90deg,#3d4b64 0 7px,transparent 7px 15px)}
+.route-line{position:absolute;left:7%;top:60px;height:2px;width:0;background:#829abf;transition:width .55s ease}
+.route-node{position:relative;z-index:1;text-align:center;flex:1;min-width:0}
+.route-planet{display:grid;place-items:center;margin:auto auto 12px;width:38px;height:38px;border:2px solid #56627d;border-radius:8px;background:#27344a;color:#a2adc2;font-family:ui-monospace,monospace;font-size:1rem;box-shadow:0 0 0 5px #1a2335}
+.route-node.reached .route-planet{border-color:#89a3bd;color:#d9e4f1;background:#354963}
+.route-node.current .route-planet{background:#565674;border-color:#b6b1d3;box-shadow:0 0 0 5px #1a2335}
+.route-node small{font-size:.7rem;color:#9daac1;line-height:1.3;display:block}
+.route-node.reached small{color:#d3deed}
+.ship{position:absolute;z-index:2;left:7%;top:7px;transform:translateX(-50%);transition:left .55s ease;filter:none}
+.ship svg{width:30px;height:30px;animation:floatship 4s ease-in-out infinite;opacity:.85}
+.route-caption{font-size:.8rem;margin:0;color:#aebcd2}.route-caption strong{color:#c1d3e9}
+.quest-list{display:grid;gap:9px}
+.quest{padding:10px 12px;background:#202a3e;border:1px solid #344159;border-radius:9px}
+.quest-top{display:flex;justify-content:space-between;gap:9px;align-items:baseline}
+.quest-title{font-size:.82rem;font-weight:650;color:#dce4f1}
+.quest-count{font-family:ui-monospace,monospace;font-size:.74rem;color:#b6c4da;white-space:nowrap}
+.quest-track{height:5px;border-radius:3px;background:#39445b;margin-top:9px;overflow:hidden}
+.quest-fill{height:100%;background:#849ec1;transition:width .25s ease}
+.quest.done{border-color:#647e80}.quest.done .quest-count{color:#a9cac0}
+.quest-foot{font-size:.71rem;line-height:1.45;color:var(--hud-dim);margin:10px 0 0}
+.followup-button{white-space:nowrap}
+.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,2fr) minmax(110px,.9fr) minmax(110px,.9fr) minmax(170px,1.05fr)}
+.action-cell{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@keyframes floatship{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media(max-width:920px){.mission-grid{grid-template-columns:1fr}.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,1.8fr) minmax(105px,.8fr) minmax(165px,1.1fr)}}
+@media(max-width:650px){main{padding:22px 15px 55px}.mission-card{padding:16px}.route-map{min-height:133px;padding-left:0;padding-right:0}.route-planet{width:31px;height:31px;box-shadow:0 0 0 4px #1a2335}.route-node.current .route-planet,.route-node.reached .route-planet{box-shadow:0 0 0 4px #1a2335}.route-node small{font-size:.59rem}.ship svg{width:25px;height:25px}.pipeline-head{display:none}.pipeline-row{grid-template-columns:minmax(0,1fr) auto;gap:9px}.pipeline-row .action-cell{grid-column:2;grid-row:1/3;max-width:136px}.pipeline-row .changed{display:none}.followup-button{white-space:normal}.stat{padding:16px}}
+@media(prefers-reduced-motion:reduce){.ship svg{animation:none}.route-line,.ship,.quest-fill,.card{transition:none}}
+
 </style>
 </head>
 <body>
 <main>
 <header>
-  <div><div class="eyebrow">Bewerbungs-Agent</div><h1>Meine Stellenübersicht</h1><p class="sub">Bewerbungen, Prüfungen und neue Chancen auf einen Blick.</p></div>
+  <div><div class="eyebrow">◈ BEWERBUNGS-AGENT / MISSION CONTROL</div><h1>Dein Karriere-Cockpit<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben.</p></div>
   <span id="dataContext" class="context demo">Demo · fiktive Inserate</span>
 </header>
 <section class="section" aria-labelledby="overviewTitle">
@@ -91,6 +166,30 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
     <div class="stat"><div class="name">Absagen neu</div><strong id="declinedNewCount">0</strong><small>In den letzten 7 Tagen erfasst</small></div>
   </div>
 </section>
+
+<section class="section" aria-labelledby="missionTitle">
+  <div class="section-heading"><h2 id="missionTitle">Mission Control</h2><p>Dein Weg und deine Wochenziele · nur echte Aktivitäten</p></div>
+  <div class="mission-grid">
+    <section class="mission-card" aria-labelledby="journeyTitle">
+      <div class="mission-heading"><div><span class="mission-label">◈ KARRIERE-ROUTE</span><h3 id="journeyTitle">Deine Reise durch den Bewerbungsprozess</h3><p>Meilensteine aus deinen tatsächlichen Bewerbungsstatus</p></div></div>
+      <div class="route-map" id="routeMap" role="progressbar" aria-label="Erreichter Bewerbungsmeilenstein" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0">
+        <div class="route-line" id="routeLine"></div>
+        <div class="ship" id="routeShip" aria-hidden="true"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 3 29 28 20 23 11 28Z" fill="#8feeff" stroke="#dff9ff" stroke-width="2"/><path d="M20 22 24 32 20 30 16 32Z" fill="#ffb971"/><path d="M19 9h2v8h-2z" fill="#21345f"/></svg></div>
+        <div class="route-node" data-milestone="0"><span class="route-planet">⌁</span><small>Radar</small></div>
+        <div class="route-node" data-milestone="1"><span class="route-planet">◇</span><small>Prüfen</small></div>
+        <div class="route-node" data-milestone="2"><span class="route-planet">➤</span><small>Bewerben</small></div>
+        <div class="route-node" data-milestone="3"><span class="route-planet">✧</span><small>Gespräche</small></div>
+        <div class="route-node" data-milestone="4"><span class="route-planet">★</span><small>Angebot</small></div>
+      </div>
+      <p class="route-caption" id="routeCaption">Radar aktiv · erste Stellen entdecken.</p>
+    </section>
+    <section class="mission-card" aria-labelledby="questsTitle">
+      <div class="mission-heading"><div><span class="mission-label">★ QUEST LOG</span><h3 id="questsTitle">Wochenmissionen</h3><p id="questWeek">Diese Woche</p></div></div>
+      <div id="questList" class="quest-list" aria-live="polite"></div>
+      <p class="quest-foot">Fortschritt durch dokumentierte Statuswechsel und Follow-ups. Aktionen zählen ab jetzt; keine erfundenen Erfolge oder Fit-Scores.</p>
+    </section>
+  </div>
+</section>
 <section class="section" aria-labelledby="pipelineTitle">
   <div class="section-heading"><h2 id="pipelineTitle">In Bearbeitung &amp; Bewerbungsprozess</h2><p id="pipelineSummary">0 aktive Vorgänge</p></div>
   <div class="panel">
@@ -100,12 +199,12 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
-  <div class="section-heading"><h2 id="newJobsTitle">Neue Inserate</h2><p id="newSummary">0 ungeprüfte Stellen · Fit-Score sofern vorhanden</p></div>
+  <div class="section-heading"><h2 id="newJobsTitle">Neue Inserate</h2><p id="newSummary">0 ungeprüfte Stellen</p></div>
   <div class="panel filters" role="search" aria-label="Neue Inserate filtern">
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
     <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
-    <div><label for="sort">Sortierung</label><select id="sort"><option value="date">Neueste zuerst</option><option value="score">Höchster Fit-Score</option></select></div>
+    <div><label for="sort">Sortierung</label><select id="sort"><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
   </div>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
 </section>
@@ -139,7 +238,6 @@ textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wra
 <dialog id="details" aria-labelledby="detailTitle">
   <h2 id="detailTitle">Inserat</h2><p id="detailMeta" class="muted"></p>
   <div class="dialog-field"><strong>Beschreibung</strong><p id="detailDescription" class="muted"></p></div>
-  <div class="dialog-field"><strong>Fit-Bewertung</strong><p id="detailScore" class="muted"></p></div>
   <div class="dialog-field"><label for="detailDecision">Bearbeitungsstatus</label><select id="detailDecision"></select></div>
   <div class="dialog-field"><label for="detailNote">Meine Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Anforderungen, offene Fragen, weitere Schritte …"></textarea></div>
   <details id="editFields">
@@ -183,6 +281,91 @@ const stages=[
 const stageNames=new Map(stages);
 const activeStages=new Set(["review","saved","later","preparing","applied","interview","offer"]);
 const annotations=new Map();
+
+const activityTypes=new Set(["screened","applied","follow_up"]);
+let activityLog=[]; // Personal data; only in local workspace / personal exports.
+function validateActivityLog(records){
+ if(records==null)return [];
+ if(!Array.isArray(records)||records.length>10000)throw Error("Ungültiges Aktivitätsprotokoll.");
+ const ids=new Set();
+ return records.map(entry=>{
+  if(!entry||typeof entry.id!=="string"||!entry.id||ids.has(entry.id)||typeof entry.job_id!=="string"||!entry.job_id||
+    !activityTypes.has(entry.type)||validDate(entry.at)===null)throw Error("Ungültiger Aktivitäts-Eintrag.");
+  ids.add(entry.id);
+  return {id:entry.id,job_id:entry.job_id,type:entry.type,at:entry.at};
+ });
+}
+function logActivity(type,jobId){
+ const id=globalThis.crypto?.randomUUID?.()||"ACT-"+Date.now()+"-"+Math.random().toString(36).slice(2);
+ activityLog.push({id,job_id:jobId,type,at:new Date().toISOString()});
+}
+function weekStart(){
+ const now=new Date();
+ return new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7)).getTime();
+}
+function weekActivity(type){
+ const since=weekStart(),until=new Date(since);
+ until.setDate(until.getDate()+7);
+ return new Set(activityLog.filter(e=>e.type===type&&validDate(e.at)>=since&&validDate(e.at)<until.getTime()&&(!demoMode||e.job_id.startsWith("DEMO-"))).map(e=>e.job_id));
+}
+function toggleFollowUp(jobId){
+ if(!["applied","interview"].includes(stageOf(jobId)))return;
+ const completed=weekActivity("follow_up").has(jobId);
+ if(completed){
+  const since=weekStart();
+  activityLog=activityLog.filter(e=>!(e.job_id===jobId&&e.type==="follow_up"&&validDate(e.at)>=since));
+  el("message").textContent="Follow-up für diese Woche zurückgenommen.";
+ }else{
+  logActivity("follow_up",jobId);
+  el("message").textContent="Follow-up für diese Stelle protokolliert (nur lokal).";
+ }
+ render();saveChanges();
+}
+function followUpButton(job){
+ if(!["applied","interview"].includes(stageOf(job.id)))return null;
+ const done=weekActivity("follow_up").has(job.id);
+ const button=node("button",done?"Follow-up ✓":"Follow-up +","secondary compact-button followup-button");
+ button.type="button";
+ button.setAttribute("aria-label",(done?"Follow-up dieser Woche zurücknehmen für ":"Follow-up dieser Woche erfassen für ")+job.title);
+ button.addEventListener("click",()=>toggleFollowUp(job.id));
+ return button;
+}
+function renderMission(){
+ const statusRanks={open:0,review:1,saved:1,later:1,preparing:2,applied:2,interview:3,offer:4,declined:0,rejected:0};
+ const level=Math.max(0,...jobs.map(j=>statusRanks[stageOf(j.id)]||0));
+ const names=["Radar aktiv · Chancen entdecken","Erkundung · Inserate prüfen","Kurs gesetzt · Bewerbung läuft","Kontakt hergestellt · Gesprächsphase","Neuer Planet · Angebot erreicht"];
+ const width=(level*86/4);
+ el("routeLine").style.width=width+"%";
+ el("routeShip").style.left=(7+width)+"%";
+ el("routeMap").setAttribute("aria-valuenow",String(level));
+ el("routeMap").setAttribute("aria-valuetext",names[level]);
+ el("routeCaption").textContent=names[level]+". Die Route zeigt den weitesten aktuellen Status, nicht die Wahrscheinlichkeit einer Zusage.";
+ for(const marker of document.querySelectorAll("[data-milestone]")){
+  const n=Number(marker.dataset.milestone);
+  marker.classList.toggle("reached",n<=level);
+  marker.classList.toggle("current",n===level);
+ }
+ const from=new Date(weekStart()),to=new Date(from);
+ to.setDate(to.getDate()+6);
+ el("questWeek").textContent=locale.format(from)+" – "+locale.format(to);
+ const quests=[
+  {type:"screened",title:"3 Inserate beurteilen",target:3},
+  {type:"applied",title:"1 Bewerbung als versendet erfassen",target:1},
+  {type:"follow_up",title:"5 Stellen nachfassen",target:5}
+ ];
+ const target=el("questList");target.replaceChildren();
+ for(const quest of quests){
+  const amount=Math.min(quest.target,weekActivity(quest.type).size);
+  const container=document.createElement("div");container.className="quest"+(amount===quest.target?" done":"");
+  const top=document.createElement("div");top.className="quest-top";
+  top.append(node("span",quest.title,"quest-title"),node("span",amount+" / "+quest.target+(amount===quest.target?" ✓":""),"quest-count"));
+  const track=document.createElement("div");track.className="quest-track";track.setAttribute("role","progressbar");
+  track.setAttribute("aria-label",quest.title);track.setAttribute("aria-valuemin","0");track.setAttribute("aria-valuemax",String(quest.target));track.setAttribute("aria-valuenow",String(amount));
+  const fill=document.createElement("div");fill.className="quest-fill";fill.style.width=(100*amount/quest.target)+"%";
+  track.append(fill);container.append(top,track);target.append(container);
+ }
+}
+
 const manualOverrides=new Map(); // Field-level corrections survive later imports by stable job ID.
 const editableKeys=["title","source","company","location","url","published_at","categories","description",
  "workload_pct_min","workload_pct_max","salary_chf_year_min","salary_chf_year_max","salary_kind","remote_mode","contract_type"];
@@ -224,6 +407,7 @@ function snapshot(){
   demo_mode:demoMode,
   jobs:structuredClone(jobs),
   annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
+  activity_log:structuredClone(activityLog),
   overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
  };
 }
@@ -278,6 +462,10 @@ function setAnnotation(id,decision,note){
  if(typeof note!=="string"||note.length>2000)throw Error("Ungültige Notiz");
  const existing=annotations.get(id);
  const stage_changed_at=existing?.decision===decision?(existing.stage_changed_at||null):new Date().toISOString();
+ if((existing?.decision||"open")!==decision){
+  if((existing?.decision||"open")==="open"&&decision!=="open")logActivity("screened",id);
+  if(decision==="applied")logActivity("applied",id);
+ }
  if(decision==="open"&&!note.trim())annotations.delete(id);
  else annotations.set(id,{decision,note,stage_changed_at});
  render();
@@ -353,8 +541,6 @@ function openDetails(id){
  el("detailTitle").textContent=j.title;
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
  el("detailDescription").textContent=j.description||"Keine Beschreibung vorhanden.";
- const reason=j.matching?.status==="complete"&&typeof j.matching.rationale==="string"?j.matching.rationale:"";
- el("detailScore").textContent=scoreLabel(j)+(reason?" · "+reason:"");
  el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);
  el("details").showModal();
 }
@@ -375,7 +561,6 @@ function startNewJob(){
  el("detailTitle").textContent="Neues Inserat erfassen";
  el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
  el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
- el("detailScore").textContent="Fit offen";
  el("detailDecision").value="open";el("detailNote").value="";
  el("detailError").textContent="";el("editFields").open=true;
  displayEditFields(j);
@@ -400,7 +585,9 @@ function renderPipeline(){
   const cell=document.createElement("div");cell.className="stage-cell";cell.append(node("span",stageNames.get(stageOf(j.id)),"stage "+stageOf(j.id)));
   const changed=node("div",dateLabel(stageChangedAt(j.id)),"job-meta changed");
   const action=document.createElement("div");action.className="action-cell";action.append(actionButton(j));
-  row.append(info,cell,changed,action);target.append(row);
+  row.append(info,cell,changed,action);
+  const follow=followUpButton(j);if(follow)action.append(follow);
+  target.append(row);
  }
  const archived=jobs.filter(j=>["declined","rejected"].includes(stageOf(j.id)));
  el("archiveLabel").textContent="Abgeschlossen / Archiv ("+archived.length+")";
@@ -424,7 +611,7 @@ function renderNewJobs(){
   const hay=[j.title,j.company,j.location,j.source,...categories].map(text).join(" ").toLocaleLowerCase("de-CH");
   return (!query||hay.includes(query))&&(!category||categories.includes(category))&&(!source||j.source===source);
  });
- filtered.sort((a,b)=>el("sort").value==="score"?(getScore(b)??-1)-(getScore(a)??-1)||((validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0)):(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
+ filtered.sort((a,b)=>el("sort").value==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
  el("newSummary").textContent=allNew.length+" ungeprüfte Stellen · "+filtered.length+" angezeigt";
  const target=el("newJobsList");target.replaceChildren();
  if(!filtered.length){target.append(node("div",allNew.length?"Keine passenden neuen Inserate.":"Momentan keine ungeprüften Inserate.","empty panel"));return;}
@@ -432,13 +619,10 @@ function renderNewJobs(){
   const card=document.createElement("article");card.className="card";
   const top=document.createElement("div");top.className="card-top";
   const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),node("h3",j.title),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
-  const score=document.createElement("div");const value=getScore(j);score.className="score"+(value===null?" pending":"");
-  score.append(node("strong",value===null?"–":Math.round(value)+" %"),node("span",value===null?"Fit offen":"Fit-Score"+(demoMode?" · Demo":"")));
-  top.append(info,score);card.append(top);
+  top.append(info);card.append(top);
   const tags=document.createElement("div");tags.className="tags";
   for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
   card.append(tags);
-  if(j.matching?.status==="complete"&&typeof j.matching.rationale==="string")card.append(node("div",j.matching.rationale,"job-meta"));
   const footer=document.createElement("div");footer.className="card-footer";
   const actions=document.createElement("div");actions.className="card-actions";
   actions.append(stageSelect(j),actionButton(j));footer.append(actions);
@@ -446,11 +630,12 @@ function renderNewJobs(){
   card.append(footer);target.append(card);
  }
 }
-function render(){renderStats();renderPipeline();renderNewJobs();}
+function render(){renderStats();renderMission();renderPipeline();renderNewJobs();}
 function loadJobs(rows,name,asDemo=false){
  if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||Array.isArray(j)||typeof j.id!=="string"||!j.id.trim()||typeof j.title!=="string"||!j.title.trim()||typeof j.source!=="string"||!j.source.trim()))throw Error("Erwartet wird ein Array aus Inseraten mit id, title und source.");
  if(new Set(rows.map(j=>j.id)).size!==rows.length)throw Error("Doppelte Inserat-IDs.");
  for(const key of [...annotations.keys()])if(key.startsWith("DEMO-"))annotations.delete(key);
+ if(!asDemo)activityLog=activityLog.filter(entry=>!entry.job_id.startsWith("DEMO-"));
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
  refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
@@ -461,26 +646,27 @@ function loadJobs(rows,name,asDemo=false){
  saveChanges();
 }
 function loadDemo(){
+ activityLog=activityLog.filter(item=>!item.job_id.startsWith("DEMO-"));
  for(const id of [...manualOverrides.keys()])if(id.startsWith("DEMO-"))manualOverrides.delete(id);
  const isoAgo=d=>new Date(Date.now()-d*dayMs).toISOString();
- const job=(id,title,company,location,source,days,matching)=>({
+ const job=(id,title,company,location,source,days)=>({
   schema_version:"0.1.0",id:"DEMO-"+id,title:"DEMO – "+title,company,location,source,
   url:null,first_seen_at:isoAgo(days),categories:["Fernwärme","Projektleitung"],description:"Rein fiktives Inserat zum Testen des Bewerbungs-Dashboards.",
   published_at:null,last_seen_at:null,remote_mode:"unknown",contract_type:"unknown",
   workload_pct_min:null,workload_pct_max:null,
   provenance:{source_message_id:null,source_received_at:null,alert_name:"DEMO"},
   salary_chf_year_min:null,salary_chf_year_max:null,salary_kind:"unknown",processing:{state:"new",warnings:[],extraction_confidence:null},
-  matching:matching==null?undefined:{status:"complete",score:matching,rationale:"Fiktives Score-Beispiel – das Matching ist noch nicht implementiert."}
+  matching:{status:"not_run",score:null,rationale:null,evaluated_at:null}
  });
  const rows=[
-  job("NEW-1","Projektleiter thermische Netze","Fiktive Energie AG","Zürich","jobs.ch",1,86),
-  job("NEW-2","Energieberaterin / Energieberater","Musterwerk AG","Winterthur","publicjobs.ch",3,null),
-  job("REVIEW-1","Projektleitung Fernwärme","Beispiel Infra AG","Zürich","jobs.ch",9,89),
-  job("REVIEW-2","Projektentwickler Energie","Demo Stadtwerke","Baden","ewz",12,null),
-  job("PREP-1","Fachprojektleitung Leitungsbau","Fiktiv Planer AG","Zug","jobs.ch",21,77),
-  job("APPLIED-1","Energieprojektleiter","Muster Gemeinde","Uster","publicjobs.ch",24,null),
-  job("INTERVIEW-1","Projektleiter Infrastruktur","Demo Engineering","Zürich","jobs.ch",16,null),
-  job("DECLINED-1","Fachplaner Wärme","Fiktive Wärme AG","Bülach","jobs.ch",35,null)
+  job("NEW-1","Projektleiter thermische Netze","Fiktive Energie AG","Zürich","jobs.ch",1),
+  job("NEW-2","Energieberaterin / Energieberater","Musterwerk AG","Winterthur","publicjobs.ch",3),
+  job("REVIEW-1","Projektleitung Fernwärme","Beispiel Infra AG","Zürich","jobs.ch",9),
+  job("REVIEW-2","Projektentwickler Energie","Demo Stadtwerke","Baden","ewz",12),
+  job("PREP-1","Fachprojektleitung Leitungsbau","Fiktiv Planer AG","Zug","jobs.ch",21),
+  job("APPLIED-1","Energieprojektleiter","Muster Gemeinde","Uster","publicjobs.ch",24),
+  job("INTERVIEW-1","Projektleiter Infrastruktur","Demo Engineering","Zürich","jobs.ch",16),
+  job("DECLINED-1","Fachplaner Wärme","Fiktive Wärme AG","Bülach","jobs.ch",35)
  ];
  loadJobs(rows,"integrierte Demo",true);
  for(const [id,decision,days] of [
@@ -539,7 +725,7 @@ el("exportDecisions").addEventListener("click",()=>{
  const data=snapshot();
  downloadJSON("bewerbungs-status-"+new Date().toISOString().slice(0,10)+".json",{
   type:"bewerbungs-agent-decisions",schema_version:"0.2.0",
-  exported_at:data.exported_at,annotations:data.annotations
+  exported_at:data.exported_at,annotations:data.annotations,activity_log:data.activity_log
  });
  el("message").textContent="Statusdatei exportiert. Sie enthält keine Inseratdetails.";
 });
@@ -559,9 +745,11 @@ el("decisionsPicker").addEventListener("change",async e=>{
   if(file.size>2_000_000)throw Error("Datei ist grösser als 2 MB.");
   const data=JSON.parse(await file.text());
   if(data?.type!=="bewerbungs-agent-decisions"||!["0.1.0","0.2.0"].includes(data.schema_version))throw Error("Ungültige Statusdatei.");
-  const incoming=validateAnnotations(data.annotations);
+  const incoming=validateAnnotations(data.annotations),activities=validateActivityLog(data.activity_log);
   for(const [id,item] of incoming)annotations.set(id,item);
-  el("message").textContent=incoming.size+" Status-Einträge importiert.";
+  const known=new Set(activityLog.map(e=>e.id));
+  for(const record of activities){if(!known.has(record.id)){activityLog.push(record);known.add(record.id);}}
+  el("message").textContent=incoming.size+" Status-Einträge und Aktivitäten importiert.";
   render();saveChanges();
  }catch(err){el("message").textContent="Statusdatei konnte nicht geladen werden: "+err.message;}
 });
@@ -574,7 +762,7 @@ function validateJobs(rows){
 function applyWorkspace(data,name){
  if(!data||data.type!=="bewerbungs-agent-workspace"||data.schema_version!=="0.3.0"||typeof data.demo_mode!=="boolean")
   throw Error("Ungültige Gesamtsicherung v0.3.0.");
- const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations),overrides=validateOverrides(data.overrides);
+ const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations),overrides=validateOverrides(data.overrides),activities=validateActivityLog(data.activity_log);
  isRestoring=true;
  try{
   loadJobs(structuredClone(rows),name,data.demo_mode);
@@ -582,6 +770,7 @@ function applyWorkspace(data,name){
   for(const [id,item] of records)annotations.set(id,item);
   manualOverrides.clear();
   for(const [id,patch] of overrides)manualOverrides.set(id,patch);
+  activityLog=activities;
   render();
  }finally{isRestoring=false;}
  saveChanges();
