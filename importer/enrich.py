@@ -137,13 +137,18 @@ def enrich_one(job, fetch=None):
         if fetch is not None:
             source = fetch(url)
         else:
-            source, _ = fetch_page(url)
+            source, final_url = fetch_page(url)
         parsed = parse_jobposting(source, job)
         if not parsed:
             return job, "no_matching_jobposting"
         updated = dict(job)
         updated["description"] = parsed["description"]
         updated["description_source"] = parsed["method"]
+        if fetch is None:
+            from importer.pipeline import canonical_url
+            final_url = canonical_url(final_url)
+            if final_url != canonical_url(url):
+                updated["url_aliases"] = sorted(set(job.get("url_aliases", [])) | {final_url})
         return updated, "enriched"
     except (HTTPError, URLError, TimeoutError, OSError, ValueError, UnicodeError) as exc:
         return job, "http_error" if not isinstance(exc, ValueError) else "invalid_redirect"

@@ -1,0 +1,23 @@
+name: URL import live check
+on:
+  pull_request:
+    paths:
+      - 'importer/**'
+      - 'tests/live_url_smoke.py'
+      - '.github/workflows/url-import-live-check.yml'
+permissions:
+  contents: read
+jobs:
+  live:
+    timeout-minutes: 3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'jsonschema>=4.23,<5'
+      - name: New and known public URL, no production writes
+        run: PYTHONPATH=. python tests/live_url_smoke.py

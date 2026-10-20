@@ -89,7 +89,7 @@ def merge_jobs(previous, incoming):
             continue
         rows.append(deepcopy(new))
         results.append({"id": new["id"], "status": "added"})
-    return sorted(rows, key=lambda j: j["first_seen_at"], reverse=True), results
+    return sorted(rows, key=lambda j: j.get("first_seen_at") or "", reverse=True), results
 
 def process(previous, incoming, enrich=True):
     from importer.enrich import enrich_jobs

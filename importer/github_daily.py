@@ -32,14 +32,6 @@ ADDRESSES = {"jobmail@jobs.ch": "jobs.ch", "no-reply@publicjobs.ch": "publicjobs
 DETAIL = re.compile(r"https?://(?:www\.)?jobs\.ch/(?:de|fr|it)/stellenangebote/detail/([0-9a-f-]{36})/",re.I)
 PUBLIC = re.compile(r"https?://opn\.publicjobs\.ch/jmultn/([a-zA-Z0-9]+)",re.I)
 MDLINK = re.compile(r"\[([^\]]+)\]\((https?://[^)]+)\)")
-CATEGORIES = {
-    "Fernwärme": ["fernwärme", "wärmenetz", "thermische netze", "nahwärme"],
-    "Energiekonzept": ["energiekonzept", "energiesystem", "energiecontrolling"],
-    "Projektleitung": ["projektleit", "projektmanager"],
-    "Energieberatung": ["energieberat"],
-    "Erneuerbare Energien": ["erneuerbar", "wärmepumpe", "energieingenieur"],
-    "Fachbereich Energie": ["energie", "umweltingenieur"],
-}
 class MailTextParser(HTMLParser):
     """Turn an HTML-only job alert into a link-preserving, line-based text view."""
     BLOCKS={"p","div","section","article","tr","td","li","br","h1","h2","h3"}
