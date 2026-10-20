@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'importer/github_daily.py'
+      - 'importer/*.py'
       - 'selector/score.py'
       - '.github/workflows/import-stellenmails.yml'
   schedule:
@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   import:
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -30,6 +30,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install schema validator
+        run: python -m pip install 'jsonschema>=4.23,<5'
       - name: Parser-Tests
         run: python -m unittest discover -s tests -p 'test_github_daily.py' -v && python -m unittest discover -s tests -p 'test_incremental_import.py' -v
       - name: Jobmails aus Gmail einlesen und öffentlichen JSON-Bestand aktualisieren
