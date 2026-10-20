@@ -147,6 +147,31 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
 @keyframes floatship{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @media(max-width:920px){.mission-grid{grid-template-columns:1fr}.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,1.8fr) minmax(105px,.8fr) minmax(165px,1.1fr)}}
 @media(max-width:650px){main{padding:22px 15px 55px}.mission-card{padding:16px}.route-map{min-height:133px;padding-left:0;padding-right:0}.route-planet{width:31px;height:31px;box-shadow:0 0 0 4px #1a2335}.route-node.current .route-planet,.route-node.reached .route-planet{box-shadow:0 0 0 4px #1a2335}.route-node small{font-size:.59rem}.ship svg{width:25px;height:25px}.pipeline-head{display:none}.pipeline-row{grid-template-columns:minmax(0,1fr) auto;gap:9px}.pipeline-row .action-cell{grid-column:2;grid-row:1/3;max-width:136px}.pipeline-row .changed{display:none}.followup-button{white-space:normal}.stat{padding:16px}}
+
+/* Reduced Pixel Galaxy relevance editor */
+.review-panel{border-top:1px solid #303c55;padding-top:12px;margin-top:3px;display:grid;gap:10px}
+.review-header,.review-scale{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.review-label{font-size:.76rem;font-weight:700;color:#b9c8db}
+.review-value{font:650 .83rem ui-monospace,SFMono-Regular,Consolas,monospace;color:#c1d3e8}
+.review-value.unrated{color:#8e9eb5;font-weight:500}
+.relevance-slider{width:100%;margin:5px 0 0;accent-color:#9ab3d0;cursor:pointer;min-height:24px}
+.review-scale{font-size:.7rem;color:#90a0b8;margin-top:-7px}
+.review-reasons-label{font-size:.73rem;color:#a3b2c9}
+.reason-choices{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+button.reason-button{font-size:.73rem;font-weight:550;line-height:1.25;padding:6px 9px;color:#b5c4da;background:#253148;border:1px solid #37465f;border-radius:6px}
+button.reason-button:hover{background:#34425b}
+button.reason-button[aria-pressed="true"]{color:#edf4fd;background:#3b4e62;border-color:#90a8ba}
+.mark-button{display:grid;place-items:center;flex-shrink:0;width:39px;height:39px;padding:7px;background:#242f43!important;border:1px solid #48546b;border-radius:7px!important;color:#99a9c0!important}
+.mark-button:hover{background:#31405a!important}
+.mark-button svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+.mark-button[aria-pressed="true"]{background:#214538!important;border-color:#51856b;color:#91dab0!important}
+.mark-button[aria-pressed="true"]:hover{background:#295844!important}
+.card.export-marked{border-color:#4f745f}
+.headline-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.marked-summary{color:#a6b6cd;font-size:.79rem}
+.headline-actions button{font-size:.81rem;padding:9px 12px}
+button:disabled{opacity:.52;cursor:not-allowed}
+@media(max-width:650px){.headline-actions{width:100%}.headline-actions button{flex:1 1 160px}}
 @media(prefers-reduced-motion:reduce){.ship svg{animation:none}.route-line,.ship,.quest-fill,.card{transition:none}}
 
 </style>
@@ -199,7 +224,7 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
-  <div class="section-heading"><div><h2 id="newJobsTitle">Neue Inserate</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><button type="button" class="secondary" id="exportRelevance">Bewertungen exportieren</button></div>
+  <div class="section-heading"><div><h2 id="newJobsTitle">Neue Inserate</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><div class="headline-actions"><span id="markedSummary" class="marked-summary">0 für Export markiert</span><button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button><button type="button" class="secondary" id="exportRelevance">Bewertungen exportieren</button></div></div>
   <div class="panel filters" role="search" aria-label="Neue Inserate filtern">
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
@@ -240,7 +265,7 @@ dialog{background:#1b2537;color:#e7ebf5;border-color:#4c5972}dialog::backdrop{ba
   <div class="dialog-field"><strong>Beschreibung</strong><p id="detailDescription" class="muted"></p></div>
   <div class="dialog-field"><label for="detailDecision">Bearbeitungsstatus</label><select id="detailDecision"></select></div>
   <div class="dialog-field"><label for="detailScore">Relevanz (1–100)</label><input id="detailScore" type="number" min="1" max="100" step="1" placeholder="Unbewertet"></div>
-  <div class="dialog-field"><label for="detailReason">Bewertungsgrund (optional)</label><select id="detailReason"><option value="">Kein Grund</option><option value="field">Berufsfeld</option><option value="distance">Arbeitsweg</option><option value="seniority">Seniorität</option><option value="tasks">Aufgaben</option><option value="employer">Arbeitgeber</option><option value="conditions">Arbeitsbedingungen</option></select></div>
+  <div class="dialog-field"><label>Bewertungsgründe (optional, mehrere möglich)</label><div id="detailReasons" class="reason-choices" role="group" aria-label="Bewertungsgründe"></div></div>
   <div class="dialog-field"><label for="detailNote">Meine Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Anforderungen, offene Fragen, weitere Schritte …"></textarea></div>
   <details id="editFields">
     <summary>Inseratdaten bearbeiten (wirkt auf das Inserate-JSON)</summary>
@@ -284,6 +309,10 @@ const stageNames=new Map(stages);
 const activeStages=new Set(["review","saved","later","preparing","applied","interview","offer"]);
 const annotations=new Map();
 const relevanceRatings=new Map();
+const selectedJobIds=new Set(); // Private Auswahl nur für einen späteren Export, kein Statuswechsel.
+const reasonOptions=[["field","Berufsfeld"],["distance","Arbeitsweg"],["seniority","Seniorität"],["tasks","Aufgaben"],["employer","Arbeitgeber"],["conditions","Arbeitsbedingungen"]];
+const reasonCodes=new Set(reasonOptions.map(([code])=>code));
+let detailDraftReasons=[];
 
 const activityTypes=new Set(["screened","applied","follow_up"]);
 let activityLog=[]; // Personal data; only in local workspace / personal exports.
@@ -410,7 +439,8 @@ function snapshot(){
   demo_mode:demoMode,
   jobs:structuredClone(jobs),
   annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
-  relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value})),
+  relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value,reasons:[...(value.reasons||[])]})),
+  export_selection:[...selectedJobIds],
   activity_log:structuredClone(activityLog),
   overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
  };
@@ -457,13 +487,94 @@ function refill(select,values,placeholder){const old=select.value;select.replace
 function node(tag,value,klass){const item=document.createElement(tag);if(klass)item.className=klass;item.textContent=text(value);return item;}
 function safeLink(value){try{const url=new URL(value);return ["https:","http:"].includes(url.protocol)?url.href:null;}catch{return null;}}
 function ratingOf(id){return relevanceRatings.get(id)||null;}
-function setRating(id,score,reason=""){
+function normalizeReasons(value){
+ const items=typeof value==="string"?(value?[value]:[]):value??[];
+ if(!Array.isArray(items)||items.some(code=>typeof code!=="string"||!reasonCodes.has(code)))throw Error("Ungültige Bewertungsgründe.");
+ return [...new Set(items)];
+}
+function storedReasons(item){return normalizeReasons(item?.reasons??item?.reason??[]);}
+function updateRating(id,score,reasons){
+ const previous=ratingOf(id),nextReasons=normalizeReasons(reasons===undefined?storedReasons(previous):reasons);
+ const nextScore=score===undefined?(previous?.score??null):score;
+ if(nextScore!==null&&(!Number.isInteger(nextScore)||nextScore<1||nextScore>100))throw Error("Ganze Zahl von 1 bis 100 erforderlich.");
+ if(nextScore===null&&!nextReasons.length){relevanceRatings.delete(id);saveChanges();return;}
+ const job=jobs.find(j=>j.id===id);
+ relevanceRatings.set(id,{score:nextScore,reasons:nextReasons,reason:nextReasons[0]||"",
+  updated_at:new Date().toISOString(),suggested_score_at_rating:previous?.suggested_score_at_rating??job?.selection?.suggested_score??null,
+  selector_version:previous?.selector_version??job?.selection?.version??null});
+ saveChanges();
+}
+function setRating(id,score,reasons){
  const n=Number(score);
  if(!Number.isInteger(n)||n<1||n>100)throw Error("Ganze Zahl von 1 bis 100 erforderlich.");
- if(reason&&!["field","distance","seniority","tasks","employer","conditions"].includes(reason))throw Error("Ungültiger Grund.");
- const job=jobs.find(j=>j.id===id);
- relevanceRatings.set(id,{score:n,reason,updated_at:new Date().toISOString(),suggested_score_at_rating:job?.selection?.suggested_score??null,selector_version:job?.selection?.version??null});
+ updateRating(id,n,reasons);
+}
+function setReasons(id,reasons){updateRating(id,undefined,reasons);}
+function validateRelevanceRatings(rows){
+ if(rows==null)return new Map();
+ if(!Array.isArray(rows))throw Error("Ungültige Relevanzbewertungen.");
+ const result=new Map();
+ for(const item of rows){
+  if(!item||typeof item.id!=="string"||!item.id||result.has(item.id))throw Error("Doppelte oder ungültige Bewertungs-ID.");
+  const score=item.score??null;
+  if(score!==null&&(!Number.isInteger(score)||score<1||score>100))throw Error("Ungültige Relevanzzahl.");
+  const reasons=storedReasons(item);
+  if(score===null&&!reasons.length)continue;
+  result.set(item.id,{score,reasons,reason:reasons[0]||"",updated_at:item.updated_at||null,
+   suggested_score_at_rating:item.suggested_score_at_rating??null,selector_version:item.selector_version??null});
+ }
+ return result;
+}
+function validateExportSelection(ids){
+ if(ids==null)return new Set();
+ if(!Array.isArray(ids)||ids.some(id=>typeof id!=="string"||!id.trim())||new Set(ids).size!==ids.length)throw Error("Ungültige Exportauswahl.");
+ return new Set(ids);
+}
+function markedJobs(){return jobs.filter(j=>selectedJobIds.has(j.id)&&!j.id.startsWith("DEMO-"));}
+function updateMarkedSummary(){
+ const count=markedJobs().length;
+ el("markedSummary").textContent=count+" für Export markiert";
+ el("exportMarkedJobs").disabled=count===0;
+}
+function toggleExportSelection(id){
+ if(selectedJobIds.has(id))selectedJobIds.delete(id);
+ else selectedJobIds.add(id);
  saveChanges();
+}
+function buildMarkedJobsPayload(){
+ const chosen=markedJobs();
+ return {type:"bewerbungs-agent-marked-jobs",schema_version:"1.0.0",exported_at:new Date().toISOString(),
+  jobs:structuredClone(chosen),ratings:chosen.filter(j=>Number.isInteger(ratingOf(j.id)?.score)).map(j=>({
+   job_id:j.id,user_score:ratingOf(j.id).score,reasons:storedReasons(ratingOf(j.id)),rated_at:ratingOf(j.id).updated_at
+  }))};
+}
+function buildRelevancePayload(){
+ return {type:"bewerbungs-agent-relevance-feedback",schema_version:"1.0.0",
+  generated_at:new Date().toISOString(),selection_policy:"suggestion_only_no_exclusion",
+  ratings:[...relevanceRatings.entries()].filter(([id,r])=>!id.startsWith("DEMO-")&&Number.isInteger(r.score)&&r.score>=1&&r.score<=100).map(([id,r])=>{
+   const j=jobs.find(x=>x.id===id),reasons=storedReasons(r);
+   return {job_id:id,user_score:r.score,reason:reasons[0]||null,reasons,rated_at:r.updated_at,
+    suggested_score_at_rating:r.suggested_score_at_rating??j?.selection?.suggested_score??null,
+    selector_version:r.selector_version??j?.selection?.version??null,
+    job:j?{title:j.title,company:j.company,location:j.location,source:j.source,url:j.url,
+     categories:j.categories,description:j.description}:null};
+  })};
+}
+function makeReasonButtons(initial,onChange){
+ const group=document.createElement("div");group.className="reason-choices";group.setAttribute("role","group");group.setAttribute("aria-label","Gründe für die Relevanzbewertung");
+ const selected=new Set(normalizeReasons(initial));
+ for(const [code,label] of reasonOptions){
+  const button=node("button",label,"reason-button");button.type="button";button.dataset.reason=code;
+  button.setAttribute("aria-pressed",selected.has(code)?"true":"false");
+  button.addEventListener("click",()=>{
+   const enabled=button.getAttribute("aria-pressed")!=="true";
+   button.setAttribute("aria-pressed",String(enabled));
+   if(enabled)selected.add(code);else selected.delete(code);
+   onChange([...selected]);
+  });
+  group.append(button);
+ }
+ return group;
 }
 function linkedTitle(j,tag="h3"){
  const h=document.createElement(tag),url=safeLink(j.url);if(tag==="div")h.className="job-title";
@@ -471,18 +582,36 @@ function linkedTitle(j,tag="h3"){
  else h.textContent=j.title;
  return h;
 }
-function ratingWidget(j){
- const label=node("label","Relevanz ","job-meta");
- const input=document.createElement("input");
- input.type="number";input.min=1;input.max=100;input.step=1;input.placeholder="1–100";
- input.style.width="84px";input.value=ratingOf(j.id)?.score??"";
- input.setAttribute("aria-label","Relevanz für "+j.title);
- input.addEventListener("change",()=>{
-  if(!input.value)return;
-  try{setRating(j.id,input.value,ratingOf(j.id)?.reason||"");el("message").textContent="Bewertung gespeichert. Für das Training bitte die Feedback-JSON exportieren.";}
-  catch(e){el("message").textContent=e.message;input.value=ratingOf(j.id)?.score??"";}
- });
- label.append(input);return label;
+function exportMarkButton(j){
+ const b=document.createElement("button");b.type="button";b.className="mark-button";
+ b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4z"/><path d="M8 3v6h8V3M7 21v-9h10v9M10 16h4"/></svg>';
+ const update=()=>{
+  const active=selectedJobIds.has(j.id);
+  b.setAttribute("aria-pressed",String(active));
+  b.setAttribute("aria-label",(active?"Exportmarkierung entfernen: ":"Für Export markieren: ")+j.title);
+  b.title=active?"Für Export ausgewählt (erneut klicken zum Entfernen)":"Für späteren Inserate-Export auswählen";
+ };
+ update();
+ b.addEventListener("click",()=>{toggleExportSelection(j.id);update();b.closest(".card")?.classList.toggle("export-marked",selectedJobIds.has(j.id));updateMarkedSummary();});
+ return b;
+}
+function ratingPanel(j){
+ const panel=document.createElement("div");panel.className="review-panel";
+ const top=document.createElement("div");top.className="review-header";
+ const rating=ratingOf(j.id);
+ const output=node("output",rating?.score!=null?rating.score+" / 100":"Noch unbewertet","review-value"+(rating?.score==null?" unrated":""));
+ top.append(node("span","MEINE RELEVANZ","review-label"),output);
+ const input=document.createElement("input");input.type="range";input.className="relevance-slider";input.min="1";input.max="100";input.step="1";
+ input.value=String(rating?.score??50);
+ input.setAttribute("aria-label","Relevanz 1 bis 100 für "+j.title);
+ input.addEventListener("input",()=>{output.textContent=input.value+" / 100";output.classList.remove("unrated");});
+ input.addEventListener("change",()=>{setRating(j.id,input.value);el("message").textContent="Relevanz "+input.value+"/100 übernommen. Feedback-JSON für das Training separat exportieren.";});
+ const scale=document.createElement("div");scale.className="review-scale";scale.append(node("span","1 · gering"),node("span","100 · hoch"));
+ const reasons=document.createElement("div");
+ reasons.append(node("div","Warum diese Bewertung? (Mehrfachauswahl)","review-reasons-label"),
+  makeReasonButtons(storedReasons(rating),values=>{setReasons(j.id,values);el("message").textContent="Bewertungsgründe aktualisiert.";}));
+ panel.append(top,input,scale,reasons);
+ return panel;
 }
 function stageOf(id){return annotations.get(id)?.decision||"open";}
 function noteOf(id){return annotations.get(id)?.note||"";}
@@ -573,7 +702,9 @@ function openDetails(id){
  el("detailTitle").textContent=j.title;
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
  el("detailDescription").textContent=j.description||"Keine Beschreibung vorhanden.";
- el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);el("detailScore").value=ratingOf(id)?.score??"";el("detailReason").value=ratingOf(id)?.reason??"";
+ el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);el("detailScore").value=ratingOf(id)?.score??"";
+ detailDraftReasons=storedReasons(ratingOf(id));
+ el("detailReasons").replaceChildren(makeReasonButtons(detailDraftReasons,values=>{detailDraftReasons=values;}));
  el("details").showModal();
 }
 function startNewJob(){
@@ -593,7 +724,9 @@ function startNewJob(){
  el("detailTitle").textContent="Neues Inserat erfassen";
  el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
  el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
- el("detailDecision").value="open";el("detailNote").value="";el("detailScore").value="";el("detailReason").value="";
+ el("detailDecision").value="open";el("detailNote").value="";el("detailScore").value="";
+ detailDraftReasons=[];
+ el("detailReasons").replaceChildren(makeReasonButtons([],values=>{detailDraftReasons=values;}));
  el("detailError").textContent="";el("editFields").open=true;
  displayEditFields(j);
  el("details").showModal();
@@ -645,19 +778,20 @@ function renderNewJobs(){
  });
  filtered.sort((a,b)=>el("sort").value==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
  el("newSummary").textContent=allNew.length+" ungeprüfte Stellen · "+filtered.length+" angezeigt";
+ updateMarkedSummary();
  const target=el("newJobsList");target.replaceChildren();
  if(!filtered.length){target.append(node("div",allNew.length?"Keine passenden neuen Inserate.":"Momentan keine ungeprüften Inserate.","empty panel"));return;}
  for(const j of filtered){
-  const card=document.createElement("article");card.className="card";
+  const card=document.createElement("article");card.className="card"+(selectedJobIds.has(j.id)?" export-marked":"");
   const top=document.createElement("div");top.className="card-top";
   const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),linkedTitle(j),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
-  top.append(info);card.append(top);
+  top.append(info,exportMarkButton(j));card.append(top);
   const tags=document.createElement("div");tags.className="tags";
   for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
-  card.append(tags);
+  card.append(tags,ratingPanel(j));
   const footer=document.createElement("div");footer.className="card-footer";
   const actions=document.createElement("div");actions.className="card-actions";
-  actions.append(ratingWidget(j),stageSelect(j),actionButton(j));footer.append(actions);
+  actions.append(stageSelect(j),actionButton(j));footer.append(actions);
    if(Number.isInteger(j.selection?.suggested_score))footer.append(node("span","Vorschlag "+j.selection.suggested_score+"/100","job-meta"));
   
   card.append(footer);target.append(card);
@@ -746,7 +880,8 @@ el("saveDetails").addEventListener("click",()=>{
   }
   refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
   refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
-  if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value,el("detailReason").value);
+  if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value,detailDraftReasons);
+   else setReasons(currentJobId,detailDraftReasons);
    setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
   el("details").close();currentJobId=null;
   saveChanges();
@@ -773,17 +908,15 @@ el("exportWorkspace").addEventListener("click",()=>{
 });
 el("addJob").addEventListener("click",startNewJob);
 el("exportRelevance").addEventListener("click",()=>{
- const payload={type:"bewerbungs-agent-relevance-feedback",schema_version:"1.0.0",
-  generated_at:new Date().toISOString(),selection_policy:"suggestion_only_no_exclusion",
-  ratings:[...relevanceRatings.entries()].filter(([id])=>!id.startsWith("DEMO-")).map(([id,r])=>{
-   const j=jobs.find(x=>x.id===id);
-   return {job_id:id,user_score:r.score,reason:r.reason||null,rated_at:r.updated_at,
-    suggested_score_at_rating:r.suggested_score_at_rating??j?.selection?.suggested_score??null,selector_version:r.selector_version??j?.selection?.version??null,
-    job:j?{title:j.title,company:j.company,location:j.location,source:j.source,url:j.url,
-     categories:j.categories,description:j.description}:null};
-  })};
+ const payload=buildRelevancePayload();
  downloadJSON("bewerbungs-agent-relevanz-"+new Date().toISOString().slice(0,10)+".json",payload);
- el("message").textContent=payload.ratings.length+" Bewertungen als private Trainingsdatei exportiert.";
+ el("message").textContent=payload.ratings.length+" vollständige Bewertungen als private Trainingsdatei exportiert (unbewertete Gründe nicht enthalten).";
+});
+el("exportMarkedJobs").addEventListener("click",()=>{
+ const payload=buildMarkedJobsPayload();
+ if(!payload.jobs.length){el("message").textContent="Noch keine Inserate für den Export markiert.";return;}
+ downloadJSON("bewerbungs-agent-markierte-inserate-"+new Date().toISOString().slice(0,10)+".json",payload);
+ el("message").textContent=payload.jobs.length+" markierte Inserate mit vorhandenen Bewertungen exportiert. Datei privat aufbewahren.";
 });
 el("importDecisions").addEventListener("click",()=>{el("decisionsPicker").value="";el("decisionsPicker").click();});
 el("decisionsPicker").addEventListener("change",async e=>{
@@ -809,13 +942,15 @@ function validateJobs(rows){
 function applyWorkspace(data,name){
  if(!data||data.type!=="bewerbungs-agent-workspace"||data.schema_version!=="0.3.0"||typeof data.demo_mode!=="boolean")
   throw Error("Ungültige Gesamtsicherung v0.3.0.");
- const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations),overrides=validateOverrides(data.overrides),activities=validateActivityLog(data.activity_log);
+ const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations),overrides=validateOverrides(data.overrides),activities=validateActivityLog(data.activity_log),
+  ratings=validateRelevanceRatings(data.relevance_ratings),exportSelection=validateExportSelection(data.export_selection);
  isRestoring=true;
  try{
   loadJobs(structuredClone(rows),name,data.demo_mode);
   annotations.clear();
   for(const [id,item] of records)annotations.set(id,item);
-  relevanceRatings.clear();for(const x of data.relevance_ratings||[])if(x&&typeof x.id==="string"&&Number.isInteger(x.score)&&x.score>=1&&x.score<=100)relevanceRatings.set(x.id,{score:x.score,reason:x.reason||"",updated_at:x.updated_at||null,suggested_score_at_rating:x.suggested_score_at_rating??null,selector_version:x.selector_version??null});
+  relevanceRatings.clear();for(const [id,entry] of ratings)relevanceRatings.set(id,entry);
+  selectedJobIds.clear();for(const id of exportSelection)selectedJobIds.add(id);
   manualOverrides.clear();
   for(const [id,patch] of overrides)manualOverrides.set(id,patch);
   activityLog=activities;
