@@ -24,6 +24,7 @@ OUT = Path("dashboard/jobs.json")
 STATE = Path("importer/import-state.json")
 MAX_WORKERS = 5
 MAX_MESSAGES = 500
+PARSER_VERSION = 2 # Bump when improved extraction requires historical reprocessing.
 ADDRESSES = {"jobmail@jobs.ch": "jobs.ch", "no-reply@publicjobs.ch": "publicjobs.ch",
              "no-reply.ewz@solique.ch": "ewz", "e-recruiting@energie360.ch": "energie360.ch"}
 DETAIL = re.compile(r"https?://(?:www\.)?jobs\.ch/(?:de|fr|it)/stellenangebote/detail/([0-9a-f-]{36})/",re.I)
@@ -104,6 +105,8 @@ def search_after():
     if not STATE.exists():
         return (datetime.now(timezone.utc)-timedelta(days=90)).strftime("%Y/%m/%d")
     data=json.loads(STATE.read_text(encoding="utf-8"))
+    if data.get("parser_version") != PARSER_VERSION:
+        return (datetime.now(timezone.utc)-timedelta(days=90)).strftime("%Y/%m/%d")
     stamp=datetime.fromisoformat(data["last_success_utc"])
     if stamp.tzinfo is None:
         raise ValueError("Import state needs timezone")
@@ -291,7 +294,7 @@ def merge(previous,incoming):
 
 def write_state(timestamp):
     STATE.parent.mkdir(parents=True,exist_ok=True)
-    STATE.write_text(json.dumps({"last_success_utc":timestamp.isoformat()},indent=2)+"\n",encoding="utf-8")
+    STATE.write_text(json.dumps({"last_success_utc":timestamp.isoformat(),"parser_version":PARSER_VERSION},indent=2)+"\n",encoding="utf-8")
 
 def run():
     started=time.monotonic()
