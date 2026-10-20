@@ -348,7 +348,7 @@ function renderMission(){
  el("questWeek").textContent=locale.format(from)+" – "+locale.format(to);
  const quests=[
   {type:"screened",title:"3 Inserate beurteilen",target:3},
-  {type:"applied",title:"1 Bewerbung versenden",target:1},
+  {type:"applied",title:"1 Bewerbung als versendet erfassen",target:1},
   {type:"follow_up",title:"5 Stellen nachfassen",target:5}
  ];
  const target=el("questList");target.replaceChildren();
@@ -633,6 +633,7 @@ function loadJobs(rows,name,asDemo=false){
  if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||Array.isArray(j)||typeof j.id!=="string"||!j.id.trim()||typeof j.title!=="string"||!j.title.trim()||typeof j.source!=="string"||!j.source.trim()))throw Error("Erwartet wird ein Array aus Inseraten mit id, title und source.");
  if(new Set(rows.map(j=>j.id)).size!==rows.length)throw Error("Doppelte Inserat-IDs.");
  for(const key of [...annotations.keys()])if(key.startsWith("DEMO-"))annotations.delete(key);
+ if(!asDemo)activityLog=activityLog.filter(entry=>!entry.job_id.startsWith("DEMO-"));
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
  refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
