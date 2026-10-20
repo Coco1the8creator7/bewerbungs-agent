@@ -40,6 +40,30 @@ Test AG, Zug
         self.assertNotIn("SECRET",str(rows))
         self.assertNotIn("uid=",str(rows))
 
+
+    def test_publicjobs_html_only_footer_removed_and_metadata(self):
+        html="""<html><body><p>Wir haben neue, passende Jobs für dich gefunden:</p>
+        <div><a href="http://opn.publicjobs.ch/jmultn/AAAA1234567890">Projektleiter Wärme</a></div>
+        <div>Kanton Zürich - Zürich</div>
+        <p>Wir wünschen dir viel Erfolg bei der Jobsuche</p>
+        <a href="http://opn.publicjobs.ch/jmultn/FOOTER123456789">Swiss Public Services AG</a>
+        </body></html>"""
+        rows=listings("publicjobs.ch","Jobmail","no markdown links",html,DATE)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["title"],"Projektleiter Wärme")
+        self.assertEqual(rows[0]["company"],"Kanton Zürich")
+        self.assertEqual(rows[0]["location"],"Zürich")
+
+    def test_jobs_ch_html_only_extracts_company(self):
+        html="""<html><body>
+        <table><tr><td><a href="https://www.jobs.ch/de/stellenangebote/detail/eba1bee3-5ef8-4e83-a5cc-3c51b7d8a186/?uid=secret">Projektleitung Wärme</a></td></tr>
+        <tr><td>Muster Energie AG, Baden</td></tr></table>
+        </body></html>"""
+        rows=listings("jobs.ch","Neue Jobs","",html,DATE)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["company"],"Muster Energie AG")
+        self.assertEqual(rows[0]["location"],"Baden")
+
     def test_repeated_import_keeps_identity_without_ghost_entries(self):
         original=listings("publicjobs.ch","alert","[Projektleiter](http://opn.publicjobs.ch/jmultn/J0B123456)\nTest AG - Bern","",DATE)
         previous=original+[{"id":"footer","title":"Swiss Public Services AG","source":"publicjobs.ch"}]
