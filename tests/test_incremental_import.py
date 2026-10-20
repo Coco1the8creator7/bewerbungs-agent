@@ -23,6 +23,15 @@ class IncrementalTests(unittest.TestCase):
                 self.assertEqual(daily.search_after(),"2026/10/18")
                 self.assertEqual(json.loads(state.read_text())["last_success_utc"],stamp.isoformat())
 
+    def test_parser_upgrade_forces_historical_rescan(self):
+        with tempfile.TemporaryDirectory() as temp:
+            state=Path(temp)/"state.json"
+            with patch.object(daily,"STATE",state):
+                state.write_text(json.dumps({"last_success_utc":"2026-10-20T05:00:00+00:00"}))
+                expected=datetime.now(timezone.utc)-timedelta(days=90)
+                actual=datetime.strptime(daily.search_after(),"%Y/%m/%d").date()
+                self.assertLessEqual(abs((actual-expected.date()).days),1)
+
     def test_message_fetch_parallel_and_bounded(self):
         class DummyPool:
             def __init__(self,max_workers):self.max_workers=max_workers
