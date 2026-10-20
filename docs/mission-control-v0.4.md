@@ -1,7 +1,7 @@
 # Mission Control – Gamification-Entwurf v0.4 (20.10.2026)
 
 ## Ziel
-Das bestehende Dashboard bleibt die zentrale, ernsthaft nutzbare Bewerbungsoberfläche. Darauf liegt eine zurückhaltende **Pixel-Space-Optik**: dunkler Hintergrund, dezente Sternpunkte, Statuskarten, kontrastreiche Typografie, kleine animierte Route und ein Wochen-Questboard. Keine fremden Grafiken, Tracking-Skripte oder externen Fonts.
+Das bestehende Dashboard bleibt die zentrale, ernsthaft nutzbare Bewerbungsoberfläche. Darauf liegt eine reduzierte **Pixel-Galaxy-Optik**: dunkles Schieferblau, gedämpfte Violett- und Blautöne, pixelige Meilensteinfelder, wenige Sternpunkte, dezente Statuskarten und ein ruhiges Wochen-Questboard. Neon-Glows und kräftige Farbverläufe werden bewusst vermieden. Keine fremden Grafiken, Tracking-Skripte oder externen Fonts.
 
 ## Umsetzung im Entwurfsbranch
 - Hauptblöcke **Statusübersicht → Mission Control → Bewerbungsprozess → neue Inserate**; technische Funktionen bleiben im Footer.
@@ -12,6 +12,9 @@ Das bestehende Dashboard bleibt die zentrale, ernsthaft nutzbare Bewerbungsoberf
   3. **5 Stellen nachfassen**: pro unterschiedlicher Stelle ein explizit dokumentiertes Follow-up innerhalb der Woche. Der Knopf ist nur für «Beworben» und «Vorstellungsgespräch» sichtbar; derselbe Knopf macht einen Eintrag dieser Woche rückgängig.
 - **Keine Fit-Scores**: Score-Karten, Sortierung und Dialogfeld sind ausgeblendet. Das Matching-Schema bleibt für eine spätere Projektphase bestehen.
 - CSS-Animationen pausieren bei `prefers-reduced-motion: reduce`; Progressbars tragen ARIA-Werte; bewegte Elemente sind rein dekorativ.
+
+## Gestaltungsentscheidung vom 20.10.2026
+Die visuelle Richtung wurde nach Rückmeldung auf **Calm Pixel Galaxy** angepasst. Retrogaming bleibt in den kantigen Planetenfeldern, der dezent schwebenden Rakete und Fortschrittsanzeigen erkennbar. Die Oberfläche ist kein pixelbuntes Spiel; Lesbarkeit und Übersicht stehen vor Dekoration. Die CSS-Änderung betrifft die Präsentation, nicht den Import oder die Statuslogik.
 
 ## Daten und Datenschutz
 `activity_log` speichert `{id, job_id, type, at}` mit den Typen `screened`, `applied` und `follow_up`. Alle Ereignisse sind **persönliche Daten**, nicht Bestandteil von `jobs.json`.
