@@ -5,7 +5,7 @@ The Gmail importer now attempts to read public job pages for existing or newly f
 ## Behaviour
 - No paid API, external Python package, browser automation, automatic exclusion, change in score weights, or private feedback handling.
 - The existing job ID and original URL remain stable. Merging an existing record preserves previously extracted descriptions.
-- Up to 120 missing descriptions are attempted per importer run; a request times out after 8 seconds. This is a best-effort bound, not a strict 5-minute total runtime guarantee.
+- Up to 15 missing descriptions are attempted per importer run; a request times out after 8 seconds. This is a best-effort bound, not a strict 5-minute total runtime guarantee.
 - Only verified matching JobPosting descriptions of 250–30000 characters are accepted. No HTML fallback is included yet.
 - Parser outcomes are logged by category (`enriched`, `no_matching_jobposting`, `http_error`, etc.).
 - `description_source: jsonld_jobposting` indicates the method. Unpublished salaries and conditions remain unknown.
