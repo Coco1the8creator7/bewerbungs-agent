@@ -37,17 +37,38 @@ CATEGORIES = {
     "Erneuerbare Energien": ["erneuerbar", "wärmepumpe", "energieingenieur"],
     "Fachbereich Energie": ["energie", "umweltingenieur"],
 }
-class AnchorParser(HTMLParser):
+class MailTextParser(HTMLParser):
+    """Turn an HTML-only job alert into a link-preserving, line-based text view."""
+    BLOCKS={"p","div","section","article","tr","td","li","br","h1","h2","h3"}
     def __init__(self):
-        super().__init__(); self.links=[]; self.href=None; self.buf=[]
-    def handle_starttag(self, tag, attrs):
-        if tag=="a": self.href=dict(attrs).get("href");self.buf=[]
-    def handle_data(self, data):
-        if self.href: self.buf.append(data)
-    def handle_endtag(self, tag):
-        if tag=="a" and self.href:
-            self.links.append((" ".join(" ".join(self.buf).split()),self.href))
-            self.href=None;self.buf=[]
+        super().__init__(convert_charrefs=True)
+        self.parts=[]
+        self.href=None
+        self.anchor=[]
+        self.ignored=0
+    def handle_starttag(self,tag,attrs):
+        if tag in ("style","script"): self.ignored+=1
+        if self.ignored: return
+        if tag in self.BLOCKS:self.parts.append("\n")
+        if tag=="a" and self.href is None:
+            self.href=dict(attrs).get("href")
+            self.anchor=[]
+    def handle_data(self,data):
+        if self.ignored:return
+        if self.href is not None:self.anchor.append(data)
+        else:self.parts.append(data)
+    def handle_endtag(self,tag):
+        if tag in ("style","script"):
+            self.ignored=max(0,self.ignored-1)
+            return
+        if self.ignored:return
+        if tag=="a" and self.href is not None:
+            label=" ".join(" ".join(self.anchor).split())
+            if label:self.parts.append("["+label+"]("+self.href+")")
+            self.href=None;self.anchor=[]
+        if tag in self.BLOCKS:self.parts.append("\n")
+    def text(self):
+        return "".join(self.parts)
 
 def request_json(url, method="GET", data=None, token=None):
     body=urlencode(data).encode() if data is not None else None
@@ -128,16 +149,16 @@ def gmail_messages(token, after=None):
             page=result.get("nextPageToken")
             if not page:return
 
-def _anchors(text, html):
-    """Read Markdown links (Gmail/plain part) or original HTML anchors."""
-    links = MDLINK.findall(text)
-    if links:
-        return links
+def _message_body(text, html):
+    # Gmail raw text/plain is not necessarily Markdown; the HTML part contains
+    # reliable title links and visual company/location lines.
+    if MDLINK.search(text):
+        return text
     if html:
-        parser = AnchorParser()
+        parser=MailTextParser()
         parser.feed(html)
-        return parser.links
-    return []
+        return parser.text()
+    return text
 
 def _publicjobs_body(text):
     """Ignore the marketing footer: it also uses /jmultn/ tracking links."""
@@ -204,14 +225,10 @@ def _generic_offer(platform, title, url):
 def listings(platform,subject,text,html,received):
     if re.search(r"aktivier|bestätig|confirm|anmeldung|passwort",subject,re.I):
         return []
-    if platform == "jobs.ch":
-        # Promotional recommendations are nevertheless genuine listings; keep them.
-        body = text
-    elif platform == "publicjobs.ch":
-        body = _publicjobs_body(text)
-    else:
-        body = text
-    links = _anchors(body,html)
+    body = _message_body(text,html)
+    if platform == "publicjobs.ch":
+        body = _publicjobs_body(body)
+    links = MDLINK.findall(body)
     # When HTML is present but the plain body isn't, restrict to real job links by URL.
     results = []
     seen = set()
