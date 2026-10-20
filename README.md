@@ -2,7 +2,9 @@
 
 Entwicklungs-Repository für einen lokalen Stellen-Importer und ein interaktives HTML-Dashboard. Vor der geplanten Veröffentlichung als öffentliches Repository ist die Git-Historie auf private Daten zu prüfen.
 
-**Projektstand: 17.10.2026 · Dashboard mit lokaler JSON-Persistenz v0.3**
+**Projektstand: 20.10.2026 · Produktiver Jobmail-Import + Lernmodus v1**
+
+**Aktueller Ablauf:** GitHub Actions importiert automatisch Stellenlinks, prüft Dubletten und berechnet unverbindliche Relevanzvorschläge. Der kalibrierte Feed enthält 83 Inserate. Keine automatischen Relevanzausschlüsse. Nutzerbewertungen von 1–100 lassen sich im Dashboard erfassen und als private JSON-Datei für das Training exportieren. Siehe [docs/lernmodus-v1.md](docs/lernmodus-v1.md).
 
 ## Ziel
 
@@ -15,7 +17,7 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 - \`config/job-alerts.json\` – Quellen und in Gmail nachgewiesene Job-Abo-Bestätigungen; keine Logins, Aktivierungslinks oder personenbezogenen Postfachdaten.
 - \`docs/suchvorgaben.md\` – technische Zusammenfassung relevanter Entscheidungen; **nicht** die vollständige Originaldatei des Pflichtenhefts v0.7.
 - \`docs/architektur.md\` – geplanter Datenfluss, Dublettenstrategie, Sicherheitsregeln und nächste Schritte.
-- \`importer/README.md\` – Spezifikation des **noch nicht implementierten** Importers.
+- `importer/github_daily.py` – produktiver inkrementeller Jobmail-Importer; `selector/score.py` – unverbindliche Vorschläge.
 - \`examples/jobs.example.json\` – ausdrücklich fiktive Datensätze zum Testen der Anzeige.
 - \`data/\` – künftig lokale produktive Daten (**per .gitignore ausgeschlossen**).
 
@@ -23,7 +25,7 @@ Job-Alerts aus einem separat angebundenen Gmail-Postfach auslesen, Stellenangebo
 
 Oben: **Neue Inserate**, **Seit letzter Woche in Prüfung**, **Total in Prüfung**, **Absagen neu** (rollierendes 7-Tage-Fenster). Darunter die **laufenden Bewerbungen** mit Status und die **noch ungeprüften neuen Stellen** mit optionalem Fit-Score. Im Footer: ausklappbarer Bereich **Daten & Entwicklung** mit Demo, JSON-Import und Status-Export. Details und KPI-Logik: [docs/dashboard-v0.2.md](docs/dashboard-v0.2.md).
 
-Auf GitHub Pages werden beim ersten Aufruf ausdrücklich **fiktive Demo-Daten** angezeigt. Die echte Gmail-Anbindung, ein geschütztes geräteübergreifendes Status-Backend und die Matching-Engine sind noch nicht vorhanden. Reale Scores werden deshalb nicht erfunden.
+GitHub Pages lädt bei Verfügbarkeit den echten importierten Stellenfeed; ansonsten werden Demo-Daten gezeigt. Relevanzvorschläge sind keine individuellen Fit-Scores. Persönliches Matching und geschützte Cloud-Synchronisierung bleiben späteren Phasen vorbehalten.
 
 ## Dauerhafte Bearbeitung & Sicherung (v0.3)
 
@@ -52,16 +54,16 @@ Im Detailfenster lassen sich Inseratdaten (Arbeitgeber, Ort, Kategorien, Pensum,
 
 Für die statische Website verwenden wir denselben Hosting-Ansatz wie bei `was-ist-der-plan`: `.github/workflows/deploy-pages.yml` veröffentlicht ausschliesslich den Ordner `dashboard/`.
 
-**Voraussetzungen:** Sicherheitsprüfung der vorhandenen Git-Historie, anschliessend Umstellung auf **öffentlich**, `Settings → Pages → Source: GitHub Actions` und einmaliger manueller Workflow-Start. Die erwartete URL lautet nach erfolgreicher Einrichtung `https://coco1the8creator7.github.io/bewerbungs-agent/` (noch nicht live bestätigt). Details unter [docs/hosting.md](docs/hosting.md).
+**Voraussetzungen:** Sicherheitsprüfung der vorhandenen Git-Historie, anschliessend Umstellung auf **öffentlich**, `Settings → Pages → Source: GitHub Actions` und einmaliger manueller Workflow-Start. Die erwartete URL lautet nach erfolgreicher Einrichtung `https://coco1the8creator7.github.io/bewerbungs-agent/` (GitHub-Pages-Deployments erfolgreich). Details unter [docs/hosting.md](docs/hosting.md).
 
 **Achtung:** Bei einem öffentlichen Repository wird **das gesamte Repository mitsamt Historie** sichtbar, nicht bloss `dashboard/`. Unter `docs/suchvorgaben.md` liegen derzeit persönliche Gehalts- und Pendelpräferenzen. Keine privaten Dateien oder Zugangsdaten veröffentlichen.
 
 ## Spätere produktive Nutzung
 
-Der geplante Importer erzeugt/aktualisiert lokal \`data/jobs.json\`; dann kann diese Datei im Dashboard manuell eingelesen werden. Ein automatischer Gmail-Abruf, eine Datenbank, KI-Matching und Bewerbungsautomatisierung sind **noch nicht implementiert**.
+Der produktive GitHub-Action-Importer aktualisiert `dashboard/jobs.json` täglich und nach Änderungen am Importcode. Nicht implementiert sind persönliches Bewerberprofil-Matching, automatisches Training aus privaten Bewertungen und Bewerbungsautomatisierung.
 
 **Sicherheit:** E-Mails, Inserate, OAuth-Tokens, persönliche Daten und Bewerbungsunterlagen niemals ins Repository committen. Auch in einem privaten Repository gilt dies als Grundregel. Es werden keine Bewerbungen ohne ausdrückliche Freigabe versendet.
 
 ## Nächster Schritt
 
-Reguläre Job-Alert-Mails in Gmail identifizieren (Aktivierungs- und Bestätigungsmails getrennt behandeln), daraus den ersten Parser entwickeln und mit dem JSON-Schema validieren.
+Weitere HTML-Layouts von ewz und Energie 360° bei Eingang ihrer ersten echten Jobmails kalibrieren und private Bewertungs-JSON-Exporte für das spätere Training auswerten.
