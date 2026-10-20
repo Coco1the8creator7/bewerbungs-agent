@@ -461,7 +461,8 @@ function setRating(id,score,reason=""){
  const n=Number(score);
  if(!Number.isInteger(n)||n<1||n>100)throw Error("Ganze Zahl von 1 bis 100 erforderlich.");
  if(reason&&!["field","distance","seniority","tasks","employer","conditions"].includes(reason))throw Error("Ungültiger Grund.");
- relevanceRatings.set(id,{score:n,reason,updated_at:new Date().toISOString()});
+ const job=jobs.find(j=>j.id===id);
+ relevanceRatings.set(id,{score:n,reason,updated_at:new Date().toISOString(),suggested_score_at_rating:job?.selection?.suggested_score??null,selector_version:job?.selection?.version??null});
  saveChanges();
 }
 function linkedTitle(j,tag="h3"){
@@ -777,6 +778,7 @@ el("exportRelevance").addEventListener("click",()=>{
   ratings:[...relevanceRatings.entries()].filter(([id])=>!id.startsWith("DEMO-")).map(([id,r])=>{
    const j=jobs.find(x=>x.id===id);
    return {job_id:id,user_score:r.score,reason:r.reason||null,rated_at:r.updated_at,
+    suggested_score_at_rating:r.suggested_score_at_rating??j?.selection?.suggested_score??null,selector_version:r.selector_version??j?.selection?.version??null,
     job:j?{title:j.title,company:j.company,location:j.location,source:j.source,url:j.url,
      categories:j.categories,description:j.description}:null};
   })};
@@ -813,7 +815,7 @@ function applyWorkspace(data,name){
   loadJobs(structuredClone(rows),name,data.demo_mode);
   annotations.clear();
   for(const [id,item] of records)annotations.set(id,item);
-  relevanceRatings.clear();for(const x of data.relevance_ratings||[])if(x&&typeof x.id==="string"&&Number.isInteger(x.score)&&x.score>=1&&x.score<=100)relevanceRatings.set(x.id,{score:x.score,reason:x.reason||"",updated_at:x.updated_at||null});
+  relevanceRatings.clear();for(const x of data.relevance_ratings||[])if(x&&typeof x.id==="string"&&Number.isInteger(x.score)&&x.score>=1&&x.score<=100)relevanceRatings.set(x.id,{score:x.score,reason:x.reason||"",updated_at:x.updated_at||null,suggested_score_at_rating:x.suggested_score_at_rating??null,selector_version:x.selector_version??null});
   manualOverrides.clear();
   for(const [id,patch] of overrides)manualOverrides.set(id,patch);
   activityLog=activities;
