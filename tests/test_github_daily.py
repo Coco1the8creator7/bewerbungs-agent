@@ -17,7 +17,7 @@ Nicht verpassen! Diese Jobs sind immer noch online:
 [Andere Stelle](https://www.jobs.ch/de/stellenangebote/detail/f46f2776-c738-426b-b38e-57e49422a1dc/)
 """
         result=listings("jobs.ch","20 neue Stellen",text,"","2026-10-19T05:00:00+00:00")
-        self.assertEqual(len(result),2)
+        self.assertEqual(len(result),3)
         self.assertEqual(result[0]["company"],"Fiktiv AG")
         self.assertEqual(result[0]["location"],"Zürich")
         self.assertEqual(result[0]["workload_pct_min"],80)

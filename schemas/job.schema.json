@@ -300,6 +300,39 @@
           }
         }
       ]
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "suggested_score",
+        "version",
+        "reason_codes",
+        "mode",
+        "exclusion"
+      ],
+      "properties": {
+        "suggested_score": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "version": {
+          "type": "string"
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mode": {
+          "const": "suggestion_only"
+        },
+        "exclusion": {
+          "const": false
+        }
+      }
     }
   }
 }
