@@ -1,5 +1,11 @@
 name: Import Stellenmails
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'importer/github_daily.py'
+      - 'selector/score.py'
+      - '.github/workflows/import-stellenmails.yml'
   schedule:
     - cron: '17 5 * * *'
   workflow_dispatch:
