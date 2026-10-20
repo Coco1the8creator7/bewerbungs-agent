@@ -20,8 +20,10 @@ def diagnostic_fetch(url):
     print("PAGE_DIAGNOSTIC", json.dumps({"url": url, "bytes":len(source),
           "title":re.findall(r"<title[^>]*>(.*?)</title>", source),
           "scripts":re.findall(r"<script[^>]*>", source)[:20],
+          "job_links":list(dict.fromkeys(re.findall(r"https://www.jobs.ch/de/stellenangebote/detail/[a-f0-9-]{36}/", source)))[:8],
           "jsonld":[block[:1200] for block in parser.blocks]}), flush=True)
     return source, final
+diagnostic_fetch(KNOWN)
 incoming = [listing(NEW, diagnostic_fetch), listing(KNOWN, diagnostic_fetch)]
 combined, report = process(rows, incoming, enrich=False)
 print("LIVE_RESULTS", json.dumps(report))
