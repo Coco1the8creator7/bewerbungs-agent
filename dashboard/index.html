@@ -202,7 +202,7 @@ dialog{background:#111d36;color:#eaf1ff;border-color:#4a5f87}dialog::backdrop{ba
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
     <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
-    <div><label for="sort">Sortierung</label><select id="sort"><option value="date">Neueste zuerst</option></select></div>
+    <div><label for="sort">Sortierung</label><select id="sort"><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
   </div>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
 </section>
@@ -304,7 +304,7 @@ function weekStart(){
 function weekActivity(type){
  const since=weekStart(),until=new Date(since);
  until.setDate(until.getDate()+7);
- return new Set(activityLog.filter(e=>e.type===type&&validDate(e.at)>=since&&validDate(e.at)<until.getTime()).map(e=>e.job_id));
+ return new Set(activityLog.filter(e=>e.type===type&&validDate(e.at)>=since&&validDate(e.at)<until.getTime()&&(!demoMode||e.job_id.startsWith("DEMO-"))).map(e=>e.job_id));
 }
 function toggleFollowUp(jobId){
  if(!["applied","interview"].includes(stageOf(jobId)))return;
@@ -609,7 +609,7 @@ function renderNewJobs(){
   const hay=[j.title,j.company,j.location,j.source,...categories].map(text).join(" ").toLocaleLowerCase("de-CH");
   return (!query||hay.includes(query))&&(!category||categories.includes(category))&&(!source||j.source===source);
  });
- filtered.sort((a,b)=>(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
+ filtered.sort((a,b)=>el("sort").value==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
  el("newSummary").textContent=allNew.length+" ungeprüfte Stellen · "+filtered.length+" angezeigt";
  const target=el("newJobsList");target.replaceChildren();
  if(!filtered.length){target.append(node("div",allNew.length?"Keine passenden neuen Inserate.":"Momentan keine ungeprüften Inserate.","empty panel"));return;}
@@ -742,10 +742,10 @@ el("decisionsPicker").addEventListener("change",async e=>{
   if(file.size>2_000_000)throw Error("Datei ist grösser als 2 MB.");
   const data=JSON.parse(await file.text());
   if(data?.type!=="bewerbungs-agent-decisions"||!["0.1.0","0.2.0"].includes(data.schema_version))throw Error("Ungültige Statusdatei.");
-  const incoming=validateAnnotations(data.annotations);
+  const incoming=validateAnnotations(data.annotations),activities=validateActivityLog(data.activity_log);
   for(const [id,item] of incoming)annotations.set(id,item);
   const known=new Set(activityLog.map(e=>e.id));
-  for(const record of validateActivityLog(data.activity_log)){if(!known.has(record.id)){activityLog.push(record);known.add(record.id);}}
+  for(const record of activities){if(!known.has(record.id)){activityLog.push(record);known.add(record.id);}}
   el("message").textContent=incoming.size+" Status-Einträge und Aktivitäten importiert.";
   render();saveChanges();
  }catch(err){el("message").textContent="Statusdatei konnte nicht geladen werden: "+err.message;}
