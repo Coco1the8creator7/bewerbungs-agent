@@ -141,6 +141,10 @@ dialog{background:#111d36;color:#eaf1ff;border-color:#4a5f87}dialog::backdrop{ba
 @keyframes floatship{0%,100%{transform:translateY(0) rotate(-9deg)}50%{transform:translateY(-6px) rotate(-5deg)}}
 @media(max-width:880px){.mission-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.mission-card{padding:17px}.route-map{min-height:145px;padding-left:0;padding-right:0}.route-planet{width:32px;height:32px;box-shadow:0 0 0 4px #14223a}.route-node.current .route-planet,.route-node.reached .route-planet{box-shadow:0 0 0 4px #14223a}.route-node small{font-size:.6rem}.ship svg{width:28px;height:28px}.card:hover{transform:none}.pipeline-row .followup-button{grid-column:1/-1;justify-self:start}}
+.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,2fr) minmax(110px,.9fr) minmax(110px,.9fr) minmax(170px,1.05fr)}
+.action-cell{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:920px){.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,1.8fr) minmax(105px,.8fr) minmax(165px,1.1fr)}}
+@media(max-width:650px){.pipeline-head{display:none}.pipeline-row{grid-template-columns:minmax(0,1fr) auto;gap:9px}.pipeline-row .action-cell{grid-column:2;grid-row:1/3;max-width:136px}.pipeline-row .changed{display:none}.followup-button{white-space:normal}}
 @media(prefers-reduced-motion:reduce){.ship svg{animation:none}.route-line,.ship,.quest-fill,.card{transition:none}.card:hover{transform:none}}
 
 </style>
@@ -605,7 +609,7 @@ function renderNewJobs(){
   const hay=[j.title,j.company,j.location,j.source,...categories].map(text).join(" ").toLocaleLowerCase("de-CH");
   return (!query||hay.includes(query))&&(!category||categories.includes(category))&&(!source||j.source===source);
  });
- filtered.sort((a,b)=>el("sort").value==="score"?(getScore(b)??-1)-(getScore(a)??-1)||((validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0)):(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
+ filtered.sort((a,b)=>(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
  el("newSummary").textContent=allNew.length+" ungeprüfte Stellen · "+filtered.length+" angezeigt";
  const target=el("newJobsList");target.replaceChildren();
  if(!filtered.length){target.append(node("div",allNew.length?"Keine passenden neuen Inserate.":"Momentan keine ungeprüften Inserate.","empty panel"));return;}
@@ -659,7 +663,7 @@ function loadDemo(){
   job("PREP-1","Fachprojektleitung Leitungsbau","Fiktiv Planer AG","Zug","jobs.ch",21),
   job("APPLIED-1","Energieprojektleiter","Muster Gemeinde","Uster","publicjobs.ch",24),
   job("INTERVIEW-1","Projektleiter Infrastruktur","Demo Engineering","Zürich","jobs.ch",16),
-  job("DECLINED-1","Fachplaner Wärme","Fiktive Wärme AG","Bülach","jobs.ch",35,null)
+  job("DECLINED-1","Fachplaner Wärme","Fiktive Wärme AG","Bülach","jobs.ch",35)
  ];
  loadJobs(rows,"integrierte Demo",true);
  for(const [id,decision,days] of [
