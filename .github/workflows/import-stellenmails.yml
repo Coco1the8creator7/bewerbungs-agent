@@ -13,6 +13,7 @@ concurrency:
 
 jobs:
   import:
+    timeout-minutes: 5
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -50,7 +51,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dashboard/jobs.json
+          git add dashboard/jobs.json importer/import-state.json
           if ! git diff --cached --quiet; then
             git commit -m "data: refresh public jobmail feed"
             git push
