@@ -607,6 +607,9 @@ function buildMarkedJobsPayload(){
 function buildRelevancePayload(){
  return {type:"bewerbungs-agent-relevance-feedback",schema_version:"1.1.0",
   generated_at:new Date().toISOString(),selection_policy:"suggestion_only_no_exclusion",
+  unrated_feedback:[...relevanceRatings.entries()].filter(([id,r])=>!id.startsWith("DEMO-")&&r.score==null).map(([id,r])=>({
+   job_id:id,...normalizeReasonFeedback(r),legacy_reasons:storedReasons(r),note:r.note||"",updated_at:r.updated_at
+  })),
   ratings:[...relevanceRatings.entries()].filter(([id,r])=>!id.startsWith("DEMO-")&&Number.isInteger(r.score)&&r.score>=1&&r.score<=100).map(([id,r])=>{
    const j=jobs.find(x=>x.id===id),reasons=storedReasons(r);
    return {job_id:id,user_score:r.score,reason:reasons[0]||null,reasons,legacy_reasons:reasons,
