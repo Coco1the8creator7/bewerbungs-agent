@@ -250,7 +250,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
-  <div class="section-heading"><div><h2 id="newJobsTitle">Inserate beurteilen</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><div class="headline-actions"><span id="markedSummary" class="marked-summary">0 für Export markiert</span><button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button><button type="button" class="secondary" id="exportRelevance">Bewertungen exportieren</button></div></div>
+  <div class="section-heading"><div><h2 id="newJobsTitle">Inserate beurteilen</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><div class="headline-actions"><span id="markedSummary" class="marked-summary">0 für Export markiert</span><button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button><button type="button" id="saveGithubFeedback">💾 Bewertungen speichern</button></div></div>
   <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Unbewertet (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button></div>
   <div class="panel filters" role="search" aria-label="Inserate filtern">
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
@@ -276,6 +276,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
       <button type="button" class="secondary" id="importWorkspace">Gesamtsicherung laden</button>
       <button type="button" class="secondary" id="addJob">Inserat manuell erfassen</button>
     </div>
+    <div class="persist-panel"><strong>GitHub-Synchronisation</strong><p>Fine-grained Token mit Zugriff nur auf dieses Repository (Contents: Read and write). Der Token bleibt auf diesem Gerät im Browser gespeichert. Nie auf gemeinsam genutzten Geräten einrichten.</p><label for="githubToken">GitHub-Token</label><input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_…" style="margin:8px 0"><div class="buttons"><button type="button" id="connectGithub">Token auf diesem Gerät speichern</button><button type="button" class="secondary" id="disconnectGithub">Token entfernen</button></div><div class="data-state" id="githubStatus" role="status" aria-live="polite">Nicht verbunden</div></div>
     <div class="persist-panel">
       <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
         <span><strong>Auf diesem Gerät dauerhaft speichern</strong> (Browser-Datenbank, freiwillig)</span>
@@ -285,7 +286,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
     </div>
     <p id="message" role="status" aria-live="polite" class="status-message">Demo-Daten geladen. Kein Zugriff auf Gmail oder ein Backend.</p>
   </details>
-  <p class="disclaimer">Der Prototyp verarbeitet Dateien ausschliesslich im Browser. Mit deiner ausdrücklichen Zustimmung können Änderungen ausschliesslich auf diesem Gerät gespeichert werden. Ohne Aktivierung bitte JSON-Dateien exportieren; keine geräteübergreifende Synchronisierung. Auf fremden Geräten keine sensiblen Notizen erfassen.</p>
+  <p class="disclaimer">Stellen und gespeicherte Bewertungen sind öffentlich im GitHub-Repository sichtbar. GitHub-Speichern erfordert einen persönlichen Token; dieser wird nur in deinem Browser gespeichert. Auf fremden Geräten keinen Token hinterlegen.</p>
 </footer>
 <dialog id="details" aria-labelledby="detailTitle">
   <h2 id="detailTitle">Inserat</h2><p id="detailMeta" class="muted"></p>
@@ -321,6 +322,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
 </dialog>
 </main>
 <script src="./storage.js"></script>
+<script src="./github-sync.js"></script>
 <script>
 "use strict";
 // Kein Browser-Dauerspeicher: private Status-/Notizdaten liegen nur im aktuellen Tab.
@@ -495,6 +497,32 @@ function saveChanges(){
   el("message").textContent="ACHTUNG: Änderungen sind nicht dauerhaft gesichert. Gesamtsicherung exportieren.";
  });
  return pendingSave;
+}
+function feedbackSnapshot(){
+ const state=snapshot();
+ return {type:"bewerbungs-agent-feedback",schema_version:"1.0.0",updated_at:new Date().toISOString(),
+  annotations:state.annotations,relevance_ratings:state.relevance_ratings,export_selection:state.export_selection,
+  activity_log:state.activity_log,overrides:state.overrides,
+  manual_jobs:state.jobs.filter(j=>j.id.startsWith("MANUAL-"))};
+}
+function applyCloudFeedback(data){
+ if(!data||data.type!=="bewerbungs-agent-feedback"||data.schema_version!=="1.0.0")throw Error("Unbekanntes Feedbackformat");
+ const a=validateAnnotations(data.annotations),r=validateRelevanceRatings(data.relevance_ratings),
+  sel=validateExportSelection(data.export_selection),ov=validateOverrides(data.overrides),
+  activities=validateActivityLog(data.activity_log),manual=validateJobs(data.manual_jobs||[]);
+ isRestoring=true;
+ try{
+  annotations.clear();for(const [id,v] of a)annotations.set(id,v);
+  relevanceRatings.clear();for(const [id,v] of r)relevanceRatings.set(id,v);
+  selectedJobIds.clear();for(const id of sel)selectedJobIds.add(id);
+  manualOverrides.clear();for(const [id,v] of ov)manualOverrides.set(id,v);
+  activityLog=activities;
+  const byId=new Map(jobs.map(j=>[j.id,j]));
+  for(const j of manual)if(j.id.startsWith("MANUAL-"))byId.set(j.id,j);
+  loadJobs([...byId.values()],"GitHub-Feedback");
+  render();
+ }finally{isRestoring=false;}
+ saveChanges();
 }
 function downloadJSON(filename,payload){
  const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"}));
@@ -1039,6 +1067,28 @@ el("exportWorkspace").addEventListener("click",()=>{
  el("message").textContent="Gesamtsicherung erstellt (Inserate, Status und Notizen). Datei privat aufbewahren.";
 });
 el("addJob").addEventListener("click",startNewJob);
+const githubStatus=message=>{el("githubStatus").textContent=message;};
+el("githubToken").value=window.GithubFeedback.getToken()?"••••••••":"";
+githubStatus(window.GithubFeedback.getToken()?"Token auf diesem Gerät vorhanden":"Nicht verbunden");
+el("connectGithub").addEventListener("click",()=>{
+ const value=el("githubToken").value.trim();
+ if(value==="••••••••"){githubStatus("Token bereits gespeichert");return;}
+ try{window.GithubFeedback.setToken(value);el("githubToken").value="••••••••";githubStatus("Token lokal gespeichert. GitHub-Zugriff wird beim Speichern geprüft.");}
+ catch(e){githubStatus(e.message);}
+});
+el("disconnectGithub").addEventListener("click",()=>{window.GithubFeedback.clearToken();el("githubToken").value="";githubStatus("Token entfernt");});
+el("saveGithubFeedback").addEventListener("click",async()=>{
+ const button=el("saveGithubFeedback");button.disabled=true;
+ try{
+  if(demoMode)throw Error("Demo-Daten dürfen nicht ins Repository gespeichert werden.");
+  if(!window.GithubFeedback.getToken())throw Error("Bitte zuerst den GitHub-Token unten unter Daten & Entwicklung hinterlegen.");
+  githubStatus("Prüfe GitHub-Daten und speichere …");
+  const result=await window.GithubFeedback.save(feedbackSnapshot());
+  githubStatus("Gespeichert · Commit "+result.slice(0,7));
+  el("message").textContent="Bewertungen erfolgreich in GitHub gespeichert.";
+ }catch(e){githubStatus("Nicht gespeichert: "+e.message);el("message").textContent="GitHub-Speicherung fehlgeschlagen: "+e.message;}
+ finally{button.disabled=false;}
+});
 el("exportRelevance").addEventListener("click",()=>{
  const payload=buildRelevancePayload();
  downloadJSON("bewerbungs-agent-relevanz-"+new Date().toISOString().slice(0,10)+".json",payload);
@@ -1142,6 +1192,14 @@ async function initialize(){
     for(const j of jobs)if(j.id.startsWith("MANUAL-")&&!byId.has(j.id))byId.set(j.id,j);
    }
    loadJobs([...byId.values()],"automatischer GitHub-Import");
+   if(!restored){
+    try{
+     const remote=await window.GithubFeedback.loadPublic();
+     if(remote){applyCloudFeedback(remote);githubStatus("GitHub-Bewertungen geladen");}
+    }catch(e){githubStatus("Feedback konnte nicht geladen werden: "+e.message);}
+   }else{
+    githubStatus("Lokaler Arbeitsstand vorhanden. Automatisches Überschreiben durch GitHub unterdrückt.");
+   }
    el("dataContext").textContent="Stellenimport · GitHub";
    el("message").textContent=incoming.length+" Stellen automatisch geladen; bestehende persönliche Status und Korrekturen beibehalten.";
    return;
