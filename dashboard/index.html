@@ -952,6 +952,21 @@ function observeMobileJobs(){
  },{rootMargin:"0px 0px 80px 0px"});
  mobileJobObserver.observe(sentinel);
 }
+function jobTaskPreview(description){
+ const lines=String(description||"").replace(/<[^>]*>/g," ").split(/\n+/).map(x=>x.replace(/\s+/g," ").trim()).filter(Boolean);
+ const start=lines.findIndex(x=>/^(aufgaben|deine aufgaben|ihre aufgaben|das erwartet dich|dein aufgabengebiet|tätigkeiten|was du bewegst)\s*:?$/i.test(x));
+ const candidates=(start>=0?lines.slice(start+1):lines).filter(x=>x.length>35&&!/^(profil|anforderungen|benefits|wir bieten|bewerbung|kontakt)/i.test(x));
+ const summary=candidates.slice(0,3).join(" ").slice(0,360);
+ return summary||"Aufgabenbereich im Inserat nicht näher beschrieben.";
+}
+function jobSalaryLabel(j){
+ const min=Number(j.salary_chf_year_min),max=Number(j.salary_chf_year_max);
+ const validMin=j.salary_chf_year_min!=null&&min>0,validMax=j.salary_chf_year_max!=null&&max>0;
+ if(!validMin&&!validMax)return "Lohn-Range: Keine Lohn-Range angegeben";
+ const fmt=n=>"CHF "+Math.round(n).toLocaleString("de-CH");
+ const value=validMin&&validMax?fmt(min)+"–"+fmt(max):validMin?"ab "+fmt(min):"bis "+fmt(max);
+ return "Lohn-Range: "+value+"/Jahr"+(j.salary_kind==="estimated"?" (Schätzung)":j.salary_kind==="explicit"?" (Inserat)":" (Quelle ungeklärt)");
+}
 function renderNewJobs(){
  const query=el("query").value.trim().toLocaleLowerCase("de-CH");
  const category=el("category").value,source=el("source").value;
@@ -978,12 +993,13 @@ function renderNewJobs(){
   const top=document.createElement("div");top.className="card-top";
   const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),linkedTitle(j),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
   top.append(info,exportMarkButton(j));card.append(top);
+  card.append(node("p",jobTaskPreview(j.description),"job-meta"),node("div",jobSalaryLabel(j),"job-meta"));
   const tags=document.createElement("div");tags.className="tags";
   for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
   card.append(tags,ratingPanel(j));
   const footer=document.createElement("div");footer.className="card-footer";
   const actions=document.createElement("div");actions.className="card-actions";
-  actions.append(stageSelect(j),actionButton(j));footer.append(actions);
+  actions.append(actionButton(j));footer.append(actions);
    if(Number.isInteger(j.selection?.suggested_score))footer.append(node("span","Vorschlag "+j.selection.suggested_score+"/100","job-meta"));
   
   card.append(footer);if(mobileJobQuery.matches&&target.children.length>=mobileJobLimit)card.hidden=true;target.append(card);
