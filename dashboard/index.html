@@ -429,13 +429,15 @@ function followUpButton(job){
 }
 function renderMission(){
  const statusRanks={open:0,review:1,saved:1,later:1,preparing:2,applied:2,interview:3,interview2:3,offer:4,accepted:4,declined:0,rejected:0};
- const level=Math.max(0,...jobs.map(j=>statusRanks[stageOf(j.id)]||0));
+ const eventRanks={screened:1,preparing:2,applied:2,interview:3,interview2:3,offer:4,accepted:4};
+ const history=activityLog.filter(e=>demoMode?e.job_id.startsWith("DEMO-"):!e.job_id.startsWith("DEMO-"));
+ const level=Math.max(0,...jobs.map(j=>statusRanks[stageOf(j.id)]||0),...history.map(e=>eventRanks[e.type]||0));
  const names=["Radar aktiv · Chancen entdecken","Erkundung · Inserate prüfen","Kurs gesetzt · Bewerbung läuft","Kontakt hergestellt · Gesprächsphase","Neuer Planet · Angebot erreicht"];
  const width=(level*86/4);
  el("routeLine").style.width=width+"%";
  el("routeShip").style.left=(7+width)+"%";
  el("routeMap").setAttribute("aria-label","Agency World öffnen · "+names[level]);
- el("routeCaption").textContent=names[level]+". Die Route zeigt den weitesten aktuellen Status, nicht die Wahrscheinlichkeit einer Zusage.";
+ el("routeCaption").textContent=(level===4&&(history.some(e=>e.type==="accepted")||jobs.some(j=>stageOf(j.id)==="accepted"))?"Zusage bestätigt ✦":names[level])+". Die Route zeigt deinen weitesten dokumentierten Meilenstein, nicht die Wahrscheinlichkeit einer Zusage. Tippe auf die Karte für deine Inselwelt.";
  for(const marker of document.querySelectorAll("[data-milestone]")){
   const n=Number(marker.dataset.milestone);
   marker.classList.toggle("reached",n<=level);
