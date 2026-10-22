@@ -77,3 +77,18 @@ Neuimport, Bestandserhalt, wiederholter Import, Beschreibung und Scoring wurden 
 Runner geprüft; kein Produktivfeed geschrieben. Der Live-Workflow läuft auf diesem
 Feature-PR und später bei Bedarf manuell. Echte Stellen laufen ab; bei Wiederholung
 die neue Test-URL gegebenenfalls ersetzen. Queue/Produktiv-Deploy erst nach Merge nutzbar.
+
+## Inseratetexte im Pop-up (Erweiterung 22.10.2026)
+- Dashboard-Pop-up liest `description` aus `dashboard/jobs.json`; der verlinkte Titel öffnet das Original.
+- Manueller URL-Import speichert JobPosting-Beschreibungen unmittelbar. Gmail-Import probiert pro Lauf bis zu 10 eingehende URLs.
+- Zusätzlich bearbeitet Gmail bis zu 8 Bestandsinserate ohne `description`, rotiert nach Job-ID
+  und speichert seinen Fortschritt in `importer/import-state.json` als `description_backfill_cursor`.
+  Unzugängliche Inserate bleiben unverändert und kommen in einer späteren Runde wieder.
+- Eine Beschreibung wird nur übernommen, wenn sie zur Stelle gehört. Kein erfundener Text,
+  keine Übernahme von Cookie-Bannern oder fremden Stellenanzeigen. Ohne geeignete JSON-LD-Daten
+  wird im Pop-up weiterhin ein Hinweis angezeigt.
+- Nach jeder erfolgreichen Anreicherung werden die unverbindlichen Relevanzvorschläge neu
+  berechnet, ohne manuelle Bewertungen anzutasten. Weder ID noch URL noch bestehender Text
+  werden ersetzt. Der Backfill benötigt einen funktionierenden Gmail-Importlauf.
+- Die Abdeckung muss am echten Produktivbestand und in den Actions-Logs geprüft werden;
+  100 % lassen sich bei gelöschten, gesperrten oder JavaScript-only Inseraten nicht garantieren.
