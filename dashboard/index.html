@@ -207,7 +207,6 @@ button:disabled{opacity:.52;cursor:not-allowed}
 <main>
 <header>
   <div><div class="eyebrow">◈ BEWERBUNGS-AGENT / MISSION CONTROL</div><h1>Dein Karriere-Cockpit<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben.</p></div>
-  <span id="dataContext" class="context demo">Demo · fiktive Inserate</span>
 </header>
 <section class="section" aria-labelledby="overviewTitle">
   <div class="section-heading"><h2 id="overviewTitle">Statusübersicht</h2><p>Aktueller Stand · Zeitfenster 7 Tage</p></div>
@@ -1040,8 +1039,6 @@ function loadJobs(rows,name,asDemo=false){
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
  refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
- el("dataContext").textContent=asDemo?"Demo · fiktive Inserate":"Geladene JSON-Daten · kein Live-Import";
- el("dataContext").className="context"+(asDemo?" demo":"");
  el("message").textContent=jobs.length+" Inserate aus «"+name+"» geladen. Änderungen bei Bedarf exportieren.";
  render();
  saveChanges();
@@ -1284,7 +1281,6 @@ async function initialize(){
    }else{
     githubStatus("Lokaler Arbeitsstand vorhanden. Automatisches Überschreiben durch GitHub unterdrückt.");
    }
-   el("dataContext").textContent="Stellenimport · GitHub";
    el("message").textContent=incoming.length+" Stellen automatisch geladen; bestehende persönliche Status und Korrekturen beibehalten.";
    return;
   }
