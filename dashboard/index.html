@@ -276,7 +276,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
       <button type="button" class="secondary" id="importWorkspace">Gesamtsicherung laden</button>
       <button type="button" class="secondary" id="addJob">Inserat manuell erfassen</button>
     </div>
-    <div class="persist-panel"><strong>GitHub-Synchronisation</strong><p>Fine-grained Token mit Zugriff nur auf dieses Repository (Contents: Read and write). Der Token bleibt auf diesem Gerät im Browser gespeichert. Nie auf gemeinsam genutzten Geräten einrichten.</p><label for="githubToken">GitHub-Token</label><input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_…" style="margin:8px 0"><div class="buttons"><button type="button" id="connectGithub">Token auf diesem Gerät speichern</button><button type="button" class="secondary" id="disconnectGithub">Token entfernen</button></div><div class="data-state" id="githubStatus" role="status" aria-live="polite">Nicht verbunden</div></div>
+    <div class="persist-panel"><strong>GitHub-Synchronisation</strong><p>Fine-grained Token mit Zugriff nur auf dieses Repository (Contents: Read and write). Der Token bleibt auf diesem Gerät im Browser gespeichert. Nie auf gemeinsam genutzten Geräten einrichten.</p><label for="githubToken">GitHub-Token</label><input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_…" style="margin:8px 0"><div class="buttons"><button type="button" id="connectGithub">Token auf diesem Gerät speichern</button><button type="button" class="secondary" id="loadGithubFeedback">GitHub-Bewertungen laden</button><button type="button" class="secondary" id="disconnectGithub">Token entfernen</button></div><div class="data-state" id="githubStatus" role="status" aria-live="polite">Nicht verbunden</div></div>
     <div class="persist-panel">
       <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
         <span><strong>Auf diesem Gerät dauerhaft speichern</strong> (Browser-Datenbank, freiwillig)</span>
@@ -1077,6 +1077,15 @@ el("connectGithub").addEventListener("click",()=>{
  catch(e){githubStatus(e.message);}
 });
 el("disconnectGithub").addEventListener("click",()=>{window.GithubFeedback.clearToken();el("githubToken").value="";githubStatus("Token entfernt");});
+el("loadGithubFeedback").addEventListener("click",async()=>{
+ if(!window.confirm("GitHub-Bewertungen laden? Nicht synchronisierte lokale Bewertungen könnten ersetzt werden. Bitte vorher eine Gesamtsicherung exportieren."))return;
+ try{
+  const remote=await window.GithubFeedback.loadPublic();
+  if(!remote)throw Error("Noch keine feedback.json auf GitHub vorhanden.");
+  applyCloudFeedback(remote);
+  githubStatus("GitHub-Bewertungen geladen");
+ }catch(e){githubStatus("Laden fehlgeschlagen: "+e.message);}
+});
 el("saveGithubFeedback").addEventListener("click",async()=>{
  const button=el("saveGithubFeedback");button.disabled=true;
  try{
