@@ -86,9 +86,9 @@ class IncrementalTests(unittest.TestCase):
             def fake_enrich(job):
                 return dict(job, description=original_description,
                             description_source="jsonld_jobposting"), "enriched"
-            with patch.object(daily, "OUT", out), patch.object(daily, "STATE", state), \\
-                    patch.object(daily, "access_token", return_value="dummy"), \\
-                    patch.object(daily, "gmail_messages", return_value=[]), \\
+            with patch.object(daily, "OUT", out), patch.object(daily, "STATE", state), \
+                    patch.object(daily, "access_token", return_value="dummy"), \
+                    patch.object(daily, "gmail_messages", return_value=[]), \
                     patch("importer.enrich.enrich_one", side_effect=fake_enrich) as enriched:
                 daily.run()
                 new_rows = json.loads(out.read_text())
