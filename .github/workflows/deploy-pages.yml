@@ -32,6 +32,10 @@ jobs:
           test ! -e dashboard/.env
           test ! -e dashboard/credentials.json
           test ! -e dashboard/token.json
+      - name: Teste Agency-Level und Ereigniszähler
+        run: |
+          node --check dashboard/agency-world.js
+          node --test tests/agency-world.test.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
