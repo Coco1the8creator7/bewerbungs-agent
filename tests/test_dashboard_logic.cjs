@@ -145,5 +145,16 @@ const fixture = [
   'assert.equal(backup.export_selection.join(","),"sample-2");',
   'assert.equal(backup.relevance_ratings[0].score,72);',
 ].join("\n");
-vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone,window:{matchMedia:()=>({matches:false})},document:{getElementById:()=>({textContent:""})}});
+// The dashboard now updates mission widgets during rating changes. Use a minimal
+// DOM fixture to exercise business logic without executing any browser or network IO.
+function fakeElement(){
+  return {textContent:"",style:{},dataset:{},classList:{toggle(){}},
+    setAttribute(){},replaceChildren(){},append(){}};
+}
+const document = {
+  getElementById:fakeElement,
+  querySelectorAll:()=>[],
+  createElement:fakeElement
+};
+vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone,window:{matchMedia:()=>({matches:false})},document});
 console.log("Dashboard logic checks passed");
