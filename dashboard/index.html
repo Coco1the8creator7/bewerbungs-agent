@@ -200,6 +200,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
 @media(max-width:650px){.headline-actions{width:100%}.headline-actions button{flex:1 1 160px}}
 @media(prefers-reduced-motion:reduce){.ship svg{animation:none}.route-line,.ship,.quest-fill,.card{transition:none}}
 
+.mobile-load{display:none;text-align:center;padding:20px;color:#aab8ca;font-size:.85rem}.mobile-load button{display:block;margin:10px auto} .card[hidden]{display:none!important}@media(max-width:650px){.mobile-load:not([hidden]){display:block}}
 </style>
 </head>
 <body>
@@ -259,6 +260,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
     <div><label for="sort">Sortierung</label><select id="sort"><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
   </div>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
+  <div id="mobileJobSentinel" class="mobile-load" hidden><span id="mobileJobCount"></span><button type="button" class="secondary" onclick="appendJobBatch();observeMobileJobs()">Weitere 5 anzeigen</button></div>
 </section>
 <footer class="bottom">
   <details class="tools">
@@ -927,6 +929,29 @@ function renderPipeline(){
   row.append(info,stage,date,action);archive.append(row);
  }
 }
+const mobileJobQuery=window.matchMedia("(max-width:650px)");
+let mobileJobLimit=5;
+let mobileJobSignature="";
+let mobileJobObserver=null;
+function appendJobBatch(){
+ const sentinel=el("mobileJobSentinel");
+ if(!sentinel||!mobileJobQuery.matches)return;
+ const cards=[...el("newJobsList").children];
+ const next=Math.min(cards.length,mobileJobLimit+5);
+ for(let i=mobileJobLimit;i<next;i++)cards[i].hidden=false;
+ mobileJobLimit=next;
+ sentinel.hidden=mobileJobLimit>=cards.length;
+ el("mobileJobCount").textContent=mobileJobLimit+" von "+cards.length+" Inseraten";
+}
+function observeMobileJobs(){
+ mobileJobObserver?.disconnect();
+ const sentinel=el("mobileJobSentinel");
+ if(!sentinel||sentinel.hidden||!mobileJobQuery.matches)return;
+ mobileJobObserver=new IntersectionObserver(entries=>{
+  if(entries.some(e=>e.isIntersecting))appendJobBatch();
+ },{rootMargin:"0px 0px 80px 0px"});
+ mobileJobObserver.observe(sentinel);
+}
 function renderNewJobs(){
  const query=el("query").value.trim().toLocaleLowerCase("de-CH");
  const category=el("category").value,source=el("source").value;
@@ -944,6 +969,8 @@ function renderNewJobs(){
  filtered.sort((a,b)=>el("sort").value==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
  el("newSummary").textContent=(reviewListView==="reviewed"?"Bearbeitete Inserate: ":"Noch unbewertet: ")+allNew.length+" · "+filtered.length+" angezeigt";
  updateMarkedSummary();
+ const signature=JSON.stringify([reviewListView,query,category,source,el("sort").value,filtered.map(j=>j.id)]);
+ if(signature!==mobileJobSignature){mobileJobLimit=5;mobileJobSignature=signature;}
  const target=el("newJobsList");target.replaceChildren();
  if(!filtered.length){target.append(node("div",allNew.length?"Keine Inserate mit diesen Filtern.":(reviewListView==="reviewed"?"Noch keine Inserate beurteilt.":"Alle neuen Inserate sind bearbeitet – oder befinden sich im Bewerbungsprozess."),"empty panel"));return;}
  for(const j of filtered){
@@ -959,8 +986,11 @@ function renderNewJobs(){
   actions.append(stageSelect(j),actionButton(j));footer.append(actions);
    if(Number.isInteger(j.selection?.suggested_score))footer.append(node("span","Vorschlag "+j.selection.suggested_score+"/100","job-meta"));
   
-  card.append(footer);target.append(card);
+  card.append(footer);if(mobileJobQuery.matches&&target.children.length>=mobileJobLimit)card.hidden=true;target.append(card);
  }
+ const sentinel=el("mobileJobSentinel");sentinel.hidden=!mobileJobQuery.matches||mobileJobLimit>=filtered.length;
+ el("mobileJobCount").textContent=Math.min(mobileJobLimit,filtered.length)+" von "+filtered.length+" Inseraten";
+ observeMobileJobs();
 }
 function render(){renderStats();renderMission();renderPipeline();renderNewJobs();}
 function loadJobs(rows,name,asDemo=false){
@@ -1225,6 +1255,7 @@ async function initialize(){
  if(!restored)loadDemo();
 }
 for(const [id,view] of [["viewUnrated","unrated"],["viewReviewed","reviewed"]])el(id).addEventListener("click",()=>{reviewListView=view;renderNewJobs();});
+mobileJobQuery.addEventListener("change",()=>{mobileJobLimit=5;mobileJobSignature="";renderNewJobs();});
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
 for(const [code,label] of stages)el("detailDecision").add(new Option(label,code));
 initialize();
