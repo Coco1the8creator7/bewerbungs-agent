@@ -55,3 +55,33 @@ Die Zugehörigkeit zu diesen Ansichten wird aus bereits vorhandenen lokalen Feed
 Das Repo und GitHub Pages sind öffentlich. Bewertungen und Bewerbungsnotizen werden nicht automatisch an GitHub gesendet. Sie dürfen niemals in `dashboard/jobs.json`, einem öffentlichen Commit oder PR landen. Der Bewertungs-JSON-Export ist privat aufzubewahren. Dies ist bewusst der kostenlose, einfach wartbare Übergang ohne Feedback-API.
 
 **Wichtig:** Der GitHub-Importer kann Daten nur aus Joblinks gewinnen, die in einer tatsächlichen Mail enthalten sind. Eine Betreffzeile mit hunderten Treffern bedeutet nicht hunderte exportierte Inserate. Die Quellenabdeckung muss bei neuen Job-Abos weiter kalibriert werden.
+
+
+## Verbindliche Trainingsregel: Nur explizit bearbeitete Werte (22.10.2026)
+
+Für das Offline-Training zählt **jedes Feld nur dann als Nutzerlabel, wenn es explizit erfasst wurde**.
+Eine vorhandene Gesamtrelevanz (1–100) ist ein eigenes Label und darf ohne weitere
+Kriterienwerte verwendet werden. Umgekehrt dürfen einzeln bearbeitete Kriterien
+ohne Gesamtscore als Teilfeedback genutzt werden, nicht jedoch als Gesamtrating.
+
+- Fehlende Kriterien in `aspects` sind **unbekannt** und dürfen niemals mit `0`,
+  einem Mittelwert oder einem aus dem Gesamtscore abgeleiteten Wert aufgefüllt werden.
+- Ein ausdrücklich gespeicherter Aspektwert `0` bedeutet dagegen **bewusst neutral**
+  und ist ein gültiges Label.
+- `field_relation: null` und `seniority_assessment: null` sind **unbewertet**,
+  nicht gleichbedeutend mit `unrelated`, `overwhelming` oder einer anderen Kategorie.
+- Nicht bearbeitete UI-Standardpositionen, KI-Vorschläge, Metadaten und alte
+  `reason`/`reasons`-Labels dürfen nicht in neue numerische Kriterienwerte
+  umgedeutet werden. Freitext ist zusätzlicher Kontext, kein numerischer Ersatz.
+- Wenn ein Gesamtscore vergeben und nur «Aufgaben» geändert wurde, trainieren
+  wir den Gesamtscore und **nur** Aufgaben, nicht die fünf anderen Kriterien.
+- Veraltete JSON-Exporte v1.0.0 bleiben Gesamtscore-Trainingsmaterial,
+  auch wenn sie keine neuen Kriterienwerte enthalten.
+
+Die Umsetzung für zukünftige, explizit ausgelöste Offline-Analysen liegt in
+`selector/training_feedback.py`, mit synthetischen Tests in
+`tests/test_training_feedback.py`. Diese Dateien verändern weder
+`selector/score.py` noch den produktiven Import oder das Dashboard.
+Sie starten **kein** automatisches Training und schreiben keine persönlichen
+Bewertungen in GitHub zurück. Trainingsdateien bleiben ausserhalb
+des öffentlichen Repositorys.
