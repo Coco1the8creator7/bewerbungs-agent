@@ -52,10 +52,10 @@ input:focus-visible,select:focus-visible,button:focus-visible,textarea:focus-vis
 .tools .buttons{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
 .tools button{font-size:.8rem;padding:8px 11px}.status-message{font-size:.79rem;margin:10px 0;color:#6b798b}
 .disclaimer{font-size:.78rem;max-width:900px;margin:16px 0 0;color:#8190a0}
-dialog{border:1px solid #d1dae5;border-radius:15px;box-shadow:0 18px 70px #17243a55;padding:25px;color:#1b293b;width:min(630px,calc(100vw - 28px))}
+dialog{border:1px solid #d1dae5;border-radius:15px;box-shadow:0 18px 70px #17243a55;padding:25px;color:#1b293b;width:min(880px,calc(100vw - 28px));max-height:91dvh;overflow-y:auto;overscroll-behavior:contain}
 dialog::backdrop{background:#152c467d}
 dialog h2{margin:0 0 6px}.dialog-field{margin-top:17px}
-textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wrap;max-height:195px;overflow:auto}
+textarea{min-height:110px;resize:vertical}#detailDescription{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-size:.92rem;color:#d6deeb}#detailReviewHost{border-top:1px solid var(--hud-border);padding-top:14px;margin-top:24px}#detailReviewHost .review-panel{border-top:0}.detail-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.detail-top h2{font-size:1.25rem;line-height:1.35}#detailTitle a{color:#f0f5ff}#detailTitle a::after{content:"↗";font-size:.75em;margin-left:8px;color:#9fb8d4}.job-title-button{background:none!important;color:#b5c9e7!important;border:0;padding:0;text-align:left;font:inherit;font-weight:inherit;border-radius:2px}.job-title-button:hover{text-decoration:underline!important}.card{cursor:pointer}.card :is(input,textarea,select,button){cursor:auto}.card .relevance-slider,.card .feedback-spectrum input[type=range]{cursor:ew-resize}.card button{cursor:pointer}.card:focus-visible{outline:2px solid #a6bbd9;outline-offset:3px}
 .dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
 @media(max-width:920px){.pipeline-head,.pipeline-row{grid-template-columns:minmax(0,2fr) minmax(105px,1fr) 82px}.pipeline-head .changed,.pipeline-row .changed{display:none}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{gap:9px}.stat{padding:18px 13px;min-height:120px}}
 @media(max-width:650px){main{padding:26px 15px 55px}header{display:block}.context{display:inline-block;margin-top:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:1fr}.filters{grid-template-columns:1fr}.pipeline-head{display:none}.pipeline-row{grid-template-columns:1fr auto;gap:7px 10px;padding:15px}.pipeline-row .stage-cell{grid-column:1;grid-row:2}.pipeline-row .action-cell{grid-column:2;grid-row:1/3;text-align:right}.stat strong{font-size:1.9rem}.section{margin-top:27px}}
@@ -291,12 +291,15 @@ button:disabled{opacity:.52;cursor:not-allowed}
   <p class="disclaimer">Stellen und gespeicherte Bewertungen sind öffentlich im GitHub-Repository sichtbar. GitHub-Speichern erfordert einen persönlichen Token; dieser wird nur in deinem Browser gespeichert. Auf fremden Geräten keinen Token hinterlegen.</p>
 </footer>
 <dialog id="details" aria-labelledby="detailTitle">
-  <h2 id="detailTitle">Inserat</h2><p id="detailMeta" class="muted"></p>
-  <div class="dialog-field"><strong>Beschreibung</strong><p id="detailDescription" class="muted"></p></div>
+  <div class="detail-top"><h2 id="detailTitle">Inserat</h2><button type="button" id="dismissDetails" class="secondary compact-button" aria-label="Detailansicht schliessen">✕</button></div><p id="detailMeta" class="muted"></p>
+  <section class="dialog-field" aria-label="Stellenbeschreibung"><div id="detailDescription"></div></section>
+  <section id="detailReviewHost" class="dialog-field" aria-label="Relevanzbewertung"></section>
+  <div id="detailLegacyRating">
   <div class="dialog-field"><label for="detailDecision">Bearbeitungsstatus</label><select id="detailDecision"></select></div>
   <div class="dialog-field"><label for="detailScore">Relevanz (1–100)</label><input id="detailScore" type="number" min="1" max="100" step="1" placeholder="Unbewertet"></div>
   <div class="dialog-field"><label>Kriterienbewertung (optional)</label><div id="detailReasons" class="feedback-editor-host" role="group" aria-label="Kriterienbewertung"></div></div>
   <div class="dialog-field"><label for="detailRatingNote">Bewertungszusatz (optional, max. 1000 Zeichen)</label><textarea id="detailRatingNote" maxlength="1000" rows="3" placeholder="Warum ist diese Stelle für mich interessant oder ungeeignet?"></textarea></div>
+  </div>
   <div class="dialog-field"><label for="detailNote">Meine Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Anforderungen, offene Fragen, weitere Schritte …"></textarea></div>
   <details id="editFields">
     <summary>Inseratdaten bearbeiten (wirkt auf das Inserate-JSON)</summary>
@@ -724,10 +727,11 @@ function makeReasonButtons(initial,onChange){
  return root;
 }
 function linkedTitle(j,tag="h3"){
- const h=document.createElement(tag),url=safeLink(j.url);if(tag==="div")h.className="job-title";
- if(url){const a=node("a",j.title);a.href=url;a.target="_blank";a.rel="noopener noreferrer";h.append(a);}
- else h.textContent=j.title;
- return h;
+ const h=document.createElement(tag);if(tag==="div")h.className="job-title";
+ const button=node("button",j.title,"job-title-button");button.type="button";
+ button.setAttribute("aria-label","Stelleninserat öffnen: "+j.title);
+ button.addEventListener("click",()=>openDetails(j.id));
+ h.append(button);return h;
 }
 function exportMarkButton(j){
  const b=document.createElement("button");b.type="button";b.className="mark-button";
@@ -847,18 +851,34 @@ function applyJobEdits(old){
  }
  return next;
 }
+function cleanDescription(value){
+ if(typeof value!=="string"||!value.trim())return "Kein Inserattext gespeichert. Der Originaltext ist gegebenenfalls über den verlinkten Stellentitel abrufbar.";
+ // Entfernt nur eindeutig fremde Seitenelemente; Aufgaben und Kontaktangaben bleiben erhalten.
+ const discard=/^(?:Jetzt bewerben|Mehr erfahren|E-Mail schreiben|Stelleninserat als PDF|Telefonnummer|Zur Stelle|Für Personaldienstleister)$/i;
+ return value.replace(/\r\n?/g,"\n").split("\n").map(s=>s.trim()).filter(s=>s&&!discard.test(s)).join("\n");
+}
 function openDetails(id){
  const j=jobs.find(row=>row.id===id);if(!j)return;currentJobId=id;newJobMode=false;
  el("editFields").open=false;el("detailError").textContent="";
  displayEditFields(j);
- el("detailTitle").textContent=j.title;
+ const title=el("detailTitle"),url=safeLink(j.url);
+ title.replaceChildren();
+ if(url){
+  const link=node("a",j.title);link.href=url;link.target="_blank";link.rel="noopener noreferrer";
+  link.setAttribute("aria-label","Originalinserat in neuem Tab öffnen: "+j.title);
+  title.append(link);
+ }else title.textContent=j.title;
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
- el("detailDescription").textContent=j.description||"Keine Beschreibung vorhanden.";
- el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);el("detailScore").value=ratingOf(id)?.score??"";
+ el("detailDescription").textContent=cleanDescription(j.description);
+ el("detailReviewHost").hidden=false;el("detailReviewHost").replaceChildren(ratingPanel(j));
+ el("detailLegacyRating").hidden=true;
+ el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);
+ el("detailScore").value=ratingOf(id)?.score??"";
  detailDraftFeedback=normalizeReasonFeedback(ratingOf(id));
  el("detailRatingNote").value=ratingOf(id)?.note||"";
  el("detailReasons").replaceChildren(makeReasonButtons(detailDraftFeedback,value=>{detailDraftFeedback=value;}));
- el("details").showModal();
+ el("closeDetails").textContent="Schliessen";
+ el("details").showModal();el("details").scrollTop=0;
 }
 function startNewJob(){
  newJobMode=true;
@@ -875,6 +895,8 @@ function startNewJob(){
  };
  newJobDraft=j;
  el("detailTitle").textContent="Neues Inserat erfassen";
+ el("detailReviewHost").hidden=true;el("detailReviewHost").replaceChildren();el("detailLegacyRating").hidden=false;
+ el("closeDetails").textContent="Abbrechen";
  el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
  el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
  el("detailDecision").value="open";el("detailNote").value="";el("detailScore").value="";
@@ -982,6 +1004,15 @@ function renderNewJobs(){
  if(!filtered.length){target.append(node("div",allNew.length?"Keine Inserate mit diesen Filtern.":(reviewListView==="reviewed"?"Noch keine Inserate beurteilt.":"Alle neuen Inserate sind bearbeitet – oder befinden sich im Bewerbungsprozess."),"empty panel"));return;}
  for(const j of filtered){
   const card=document.createElement("article");card.className="card"+(selectedJobIds.has(j.id)?" export-marked":"");
+  card.tabIndex=0;card.setAttribute("aria-label","Details öffnen: "+j.title);
+  card.addEventListener("click",event=>{
+   if(event.target.closest("button,a,input,textarea,select,label,summary,[contenteditable]"))return;
+   openDetails(j.id);
+  });
+  card.addEventListener("keydown",event=>{
+   if(event.target!==card||!["Enter"," "].includes(event.key))return;
+   event.preventDefault();openDetails(j.id);
+  });
   const top=document.createElement("div");top.className="card-top";
   const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),linkedTitle(j),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
   top.append(info,exportMarkButton(j));card.append(top);
@@ -1068,6 +1099,7 @@ el("demo").addEventListener("click",()=>{
 });
 el("saveDetails").addEventListener("click",()=>{
  try{
+  const wasNewJob=newJobMode;
   const old=newJobMode?newJobDraft:jobs.find(row=>row.id===currentJobId);
   if(!old)throw Error("Datensatz nicht gefunden.");
   const next=applyJobEdits(old);
@@ -1083,16 +1115,19 @@ el("saveDetails").addEventListener("click",()=>{
   }
   refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
   refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
-  if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value);
+  if(wasNewJob){
+   if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value);
    setFeedback(currentJobId,detailDraftFeedback);
    setRatingNote(currentJobId,el("detailRatingNote").value);
-   setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
+  }
+  setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
   el("details").close();currentJobId=null;
   saveChanges();
  }catch(err){el("detailError").textContent=err.message;}
 });
-el("closeDetails").addEventListener("click",()=>{el("details").close();currentJobId=null;});
-el("details").addEventListener("close",()=>{currentJobId=null;newJobMode=false;newJobDraft=null;});
+el("closeDetails").addEventListener("click",()=>el("details").close());
+el("dismissDetails").addEventListener("click",()=>el("details").close());
+el("details").addEventListener("close",()=>{currentJobId=null;newJobMode=false;newJobDraft=null;render();});
 
 el("exportDecisions").addEventListener("click",()=>{
  const data=snapshot();
