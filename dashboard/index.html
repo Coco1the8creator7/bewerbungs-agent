@@ -100,7 +100,7 @@ h2{font-size:1.08rem}.section{margin-top:25px}
 .pipeline-row{padding-top:13px;padding-bottom:13px}
 .job-title{color:#eef1fa}
 .stage{background:#293751;color:#c4d5e9}.stage.review{background:#343952;color:#cfcaed}
-.stage.applied,.stage.interview{background:#294542;color:#bfdbd3}.stage.declined{background:#49383e;color:#dfbec9}
+.stage.applied,.stage.interview{background:#294542;color:#bfdbd3}.stage.declined{background:#49383e;color:#dfbec9}.stage.accepted{background:#3b503c;color:#d4ead0}
 .filters{background:#1b2538}
 label{color:#bdc8da}
 input,select,textarea{background:#151e2e;color:#ecf0f7;border-color:#42516b}
@@ -202,6 +202,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
 
 .mobile-load{display:none;text-align:center;padding:20px;color:#aab8ca;font-size:.85rem}.mobile-load button{display:block;margin:10px auto} .card[hidden]{display:none!important}@media(max-width:650px){.mobile-load:not([hidden]){display:block}}
 </style>
+<link rel="stylesheet" href="./agency-world.css">
 </head>
 <body>
 <main>
@@ -222,8 +223,8 @@ button:disabled{opacity:.52;cursor:not-allowed}
   <div class="section-heading"><h2 id="missionTitle">Mission Control</h2><p>Dein Weg und deine Wochenziele · nur echte Aktivitäten</p></div>
   <div class="mission-grid">
     <section class="mission-card" aria-labelledby="journeyTitle">
-      <div class="mission-heading"><div><span class="mission-label">◈ KARRIERE-ROUTE</span><h3 id="journeyTitle">Deine Reise durch den Bewerbungsprozess</h3><p>Meilensteine aus deinen tatsächlichen Bewerbungsstatus</p></div></div>
-      <div class="route-map" id="routeMap" role="progressbar" aria-label="Erreichter Bewerbungsmeilenstein" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0">
+      <div class="mission-heading"><div><span class="mission-label">◈ KARRIERE-ROUTE</span><h3 id="journeyTitle">Deine Reise durch den Bewerbungsprozess</h3><p>Meilensteine aus deinen tatsächlichen Bewerbungsstatus</p></div><button class="agency-entry" id="openAgency" type="button" aria-controls="agencyWorld">AGENCY WORLD ↗</button></div>
+      <div class="route-map" id="routeMap" role="button" tabindex="0" aria-controls="agencyWorld" aria-label="Agency World und Fortschrittsinseln öffnen">
         <div class="route-line" id="routeLine"></div>
         <div class="ship" id="routeShip" aria-hidden="true"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 3 29 28 20 23 11 28Z" fill="#8feeff" stroke="#dff9ff" stroke-width="2"/><path d="M20 22 24 32 20 30 16 32Z" fill="#ffb971"/><path d="M19 9h2v8h-2z" fill="#21345f"/></svg></div>
         <div class="route-node" data-milestone="0"><span class="route-planet">⌁</span><small>Radar</small></div>
@@ -324,8 +325,30 @@ button:disabled{opacity:.52;cursor:not-allowed}
   <p id="detailError" class="status-message" style="color:#a13232" role="alert"></p>
   <div class="dialog-actions"><button type="button" id="closeDetails" class="secondary">Abbrechen</button><button type="button" id="saveDetails">Änderungen übernehmen</button></div>
 </dialog>
+<dialog class="agency-world" id="agencyWorld" aria-labelledby="agencyTitle">
+ <header class="agency-world-top">
+  <div><div class="agency-kicker">THE AGENCY / OPERATIONS ARCHIPELAGO</div><h2 id="agencyTitle">Deine lebendige Operationskarte</h2></div>
+  <button type="button" id="closeAgency" class="agency-close">Schliessen ×</button>
+ </header>
+ <div class="agency-world-content">
+  <p class="agency-world-intro"><span>Eine Insel je Bewerbungsphase · Fortschritte aus echten CRM-Aktivitäten</span><span id="agencySummary"></span></p>
+  <div class="agency-celebration" id="agencyCelebration" hidden role="status">
+   <div class="agency-kicker">SPECIAL EVENT · MISSION ACCOMPLISHED</div>
+   <h3>✦ ZUSAGE BESTÄTIGT ✦</h3>
+   <p>Ein grosser Schritt: Deine Agency feiert diesen Erfolg!</p>
+  </div>
+  <div class="agency-map-scroll" role="region" aria-label="Horizontal scrollbare Inselwelt" tabindex="0">
+   <div id="agencyMap" class="agency-map"></div>
+  </div>
+  <section class="agency-inspector" id="agencyInspector" aria-live="polite"></section>
+  <h3>AGENTEN-AUSZEICHNUNGEN</h3>
+  <div id="agencyAwards" class="agency-awards"></div>
+  <p class="agency-disclaimer">Die Inselwelt speichert keine eigenen persönlichen Daten. Die Analysis-Insel zählt nur deine gespeicherten manuellen Relevanzbewertungen, keine KI-Scores. Andere Level-Schwellen sind vorläufig; ältere Statusverläufe können unvollständig sein.</p>
+ </div>
+</dialog>
 </main>
 <script src="./storage.js"></script>
+<script src="./agency-world.js"></script>
 <script src="./github-sync.js"></script>
 <script>
 "use strict";
@@ -336,11 +359,11 @@ const text=v=>v==null?"":String(v);
 const locale=new Intl.DateTimeFormat("de-CH",{day:"numeric",month:"short",year:"numeric"});
 const stages=[
  ["open","Neu"],["review","In Prüfung"],["saved","Vorgemerkt"],["later","Später prüfen"],
- ["preparing","Bewerbung vorbereiten"],["applied","Beworben"],["interview","Vorstellungsgespräch"],
- ["offer","Angebot erhalten"],["declined","Absage erhalten"],["rejected","Nicht weiterverfolgt"]
+ ["preparing","Bewerbung vorbereiten"],["applied","Beworben"],["interview","Erstes Vorstellungsgespräch"],
+ ["interview2","Weitere Gesprächsrunde"],["offer","Angebot erhalten"],["accepted","Zusage bestätigt"],["declined","Absage erhalten"],["rejected","Nicht weiterverfolgt"]
 ];
 const stageNames=new Map(stages);
-const activeStages=new Set(["review","saved","later","preparing","applied","interview","offer"]);
+const activeStages=new Set(["review","saved","later","preparing","applied","interview","interview2","offer"]);
 const annotations=new Map();
 const relevanceRatings=new Map();
 const selectedJobIds=new Set(); // Private Auswahl nur für einen späteren Export, kein Statuswechsel.
@@ -356,7 +379,7 @@ const seniorityCodes=new Set(seniorityOptions.map(([x])=>x));
 let detailDraftFeedback={aspects:{},field_relation:null,seniority_assessment:null};
 let reviewListView="unrated";
 
-const activityTypes=new Set(["screened","applied","follow_up"]);
+const activityTypes=new Set(["screened","preparing","applied","follow_up","interview","interview2","offer","accepted"]);
 let activityLog=[]; // Personal data; only in local workspace / personal exports.
 function validateActivityLog(records){
  if(records==null)return [];
@@ -383,7 +406,7 @@ function weekActivity(type){
  return new Set(activityLog.filter(e=>e.type===type&&validDate(e.at)>=since&&validDate(e.at)<until.getTime()&&(!demoMode||e.job_id.startsWith("DEMO-"))).map(e=>e.job_id));
 }
 function toggleFollowUp(jobId){
- if(!["applied","interview"].includes(stageOf(jobId)))return;
+ if(!["applied","interview","interview2"].includes(stageOf(jobId)))return;
  const completed=weekActivity("follow_up").has(jobId);
  if(completed){
   const since=weekStart();
@@ -396,7 +419,7 @@ function toggleFollowUp(jobId){
  render();saveChanges();
 }
 function followUpButton(job){
- if(!["applied","interview"].includes(stageOf(job.id)))return null;
+ if(!["applied","interview","interview2"].includes(stageOf(job.id)))return null;
  const done=weekActivity("follow_up").has(job.id);
  const button=node("button",done?"Follow-up ✓":"Follow-up +","secondary compact-button followup-button");
  button.type="button";
@@ -405,15 +428,16 @@ function followUpButton(job){
  return button;
 }
 function renderMission(){
- const statusRanks={open:0,review:1,saved:1,later:1,preparing:2,applied:2,interview:3,offer:4,declined:0,rejected:0};
- const level=Math.max(0,...jobs.map(j=>statusRanks[stageOf(j.id)]||0));
+ const statusRanks={open:0,review:1,saved:1,later:1,preparing:2,applied:2,interview:3,interview2:3,offer:4,accepted:4,declined:0,rejected:0};
+ const eventRanks={screened:1,preparing:2,applied:2,interview:3,interview2:3,offer:4,accepted:4};
+ const history=activityLog.filter(e=>demoMode?e.job_id.startsWith("DEMO-"):!e.job_id.startsWith("DEMO-"));
+ const level=Math.max(0,...jobs.map(j=>statusRanks[stageOf(j.id)]||0),...history.map(e=>eventRanks[e.type]||0));
  const names=["Radar aktiv · Chancen entdecken","Erkundung · Inserate prüfen","Kurs gesetzt · Bewerbung läuft","Kontakt hergestellt · Gesprächsphase","Neuer Planet · Angebot erreicht"];
  const width=(level*86/4);
  el("routeLine").style.width=width+"%";
  el("routeShip").style.left=(7+width)+"%";
- el("routeMap").setAttribute("aria-valuenow",String(level));
- el("routeMap").setAttribute("aria-valuetext",names[level]);
- el("routeCaption").textContent=names[level]+". Die Route zeigt den weitesten aktuellen Status, nicht die Wahrscheinlichkeit einer Zusage.";
+ el("routeMap").setAttribute("aria-label","Agency World öffnen · "+names[level]);
+ el("routeCaption").textContent=(level===4&&(history.some(e=>e.type==="accepted")||jobs.some(j=>stageOf(j.id)==="accepted"))?"Zusage bestätigt ✦":names[level])+". Die Route zeigt deinen weitesten dokumentierten Meilenstein, nicht die Wahrscheinlichkeit einer Zusage. Tippe auf die Karte für deine Inselwelt.";
  for(const marker of document.querySelectorAll("[data-milestone]")){
   const n=Number(marker.dataset.milestone);
   marker.classList.toggle("reached",n<=level);
@@ -440,6 +464,21 @@ function renderMission(){
  }
 }
 
+function agencyData(){
+ return {
+  jobs,
+  ratings:[...relevanceRatings.entries()].map(([id,r])=>({id,score:r.score})),
+  annotations:[...annotations.entries()].map(([id,a])=>({id,decision:a.decision})),
+  activityLog,
+  demoMode
+ };
+}
+function openAgencyWorld(celebrate=false){window.AgentAgency.open(el("agencyWorld"),agencyData(),{celebrate});}
+el("openAgency").addEventListener("click",()=>openAgencyWorld());
+el("routeMap").addEventListener("click",()=>openAgencyWorld());
+el("routeMap").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openAgencyWorld();}});
+el("closeAgency").addEventListener("click",()=>el("agencyWorld").close());
+el("agencyWorld").addEventListener("click",e=>{if(e.target===el("agencyWorld"))el("agencyWorld").close();});
 const manualOverrides=new Map(); // Field-level corrections survive later imports by stable job ID.
 const editableKeys=["title","source","company","location","url","published_at","categories","description",
  "workload_pct_min","workload_pct_max","salary_chf_year_min","salary_chf_year_max","salary_kind","remote_mode","contract_type"];
@@ -777,15 +816,19 @@ function setAnnotation(id,decision,note){
  if(!stageNames.has(decision))throw Error("Unbekannter Bewerbungsstatus");
  if(typeof note!=="string"||note.length>2000)throw Error("Ungültige Notiz");
  const existing=annotations.get(id);
- const stage_changed_at=existing?.decision===decision?(existing.stage_changed_at||null):new Date().toISOString();
- if((existing?.decision||"open")!==decision){
-  if((existing?.decision||"open")==="open"&&decision!=="open")logActivity("screened",id);
-  if(decision==="applied")logActivity("applied",id);
+ const previous=existing?.decision||"open",changed=previous!==decision;
+ const stage_changed_at=changed?new Date().toISOString():(existing?.stage_changed_at||null);
+ if(changed){
+  if(previous==="open"&&decision!=="open"&&!activityLog.some(e=>e.type==="screened"&&e.job_id===id))logActivity("screened",id);
+  // Durable milestone per job and stage. Switching back and forth earns no duplicates.
+  if(["preparing","applied","interview","interview2","offer","accepted"].includes(decision)&&
+     !activityLog.some(e=>e.type===decision&&e.job_id===id))logActivity(decision,id);
  }
  if(decision==="open"&&!note.trim())annotations.delete(id);
  else annotations.set(id,{decision,note,stage_changed_at});
  render();
  saveChanges();
+ if(changed&&decision==="accepted")setTimeout(()=>openAgencyWorld(true),0);
 }
 function stageSelect(job){
  const s=document.createElement("select");
@@ -929,7 +972,7 @@ function renderPipeline(){
   const follow=followUpButton(j);if(follow)action.append(follow);
   target.append(row);
  }
- const archived=jobs.filter(j=>["declined","rejected"].includes(stageOf(j.id)));
+ const archived=jobs.filter(j=>["declined","rejected","accepted"].includes(stageOf(j.id)));
  el("archiveLabel").textContent="Abgeschlossen / Archiv ("+archived.length+")";
  const archive=el("archiveList");archive.replaceChildren();
  if(!archived.length){archive.append(node("div","Noch keine abgeschlossenen Vorgänge.","empty"));return;}
@@ -1030,7 +1073,7 @@ function renderNewJobs(){
  el("mobileJobCount").textContent=Math.min(mobileJobLimit,filtered.length)+" von "+filtered.length+" Inseraten";
  observeMobileJobs();
 }
-function render(){renderStats();renderMission();renderPipeline();renderNewJobs();}
+function render(){renderStats();renderMission();renderPipeline();renderNewJobs();if(el("agencyWorld").open)window.AgentAgency.render(el("agencyWorld"),agencyData());}
 function loadJobs(rows,name,asDemo=false){
  if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||Array.isArray(j)||typeof j.id!=="string"||!j.id.trim()||typeof j.title!=="string"||!j.title.trim()||typeof j.source!=="string"||!j.source.trim()))throw Error("Erwartet wird ein Array aus Inseraten mit id, title und source.");
  if(new Set(rows.map(j=>j.id)).size!==rows.length)throw Error("Doppelte Inserat-IDs.");
