@@ -27,7 +27,7 @@
    dossier:reached("preparing",["preparing"]),
    dispatch:reached("applied",["applied","interview","interview2","offer","accepted"]),
    comms:activities.filter(e=>e.type==="follow_up").length,
-   interview:reached("interview",["interview","interview2","offer","accepted"]),
+   interview:reached("interview",["interview","interview2"]),
    advanced:reached("interview2",["interview2"]),
    finale:reached("offer",["offer","accepted"])
   };
