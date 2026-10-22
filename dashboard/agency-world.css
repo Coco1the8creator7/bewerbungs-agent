@@ -6,7 +6,7 @@
 .route-map[role=button]:focus-visible{outline:2px solid #b1c8ed;outline-offset:2px}
 .agency-world{width:min(1270px,calc(100vw - 20px));max-width:none;max-height:92dvh;overflow:auto;background:#0c1526;color:#e2ecf6;border:1px solid #516880;border-radius:16px;padding:0;box-shadow:0 20px 100px #020817d9}
 .agency-world::backdrop{background:#060a17db;backdrop-filter:blur(6px)}
-.agency-world-top{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;background:#131f33ee;border-bottom:1px solid #30465e;backdrop-filter:blur(8px)}
+.agency-world-top{margin-bottom:0;position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;background:#131f33ee;border-bottom:1px solid #30465e;backdrop-filter:blur(8px)}
 .agency-world h2{margin:0;color:#eaf3fd;font-size:1.3rem;letter-spacing:.025em}
 .agency-world .agency-kicker{color:#8ba9c7;font:700 .66rem ui-monospace,monospace;letter-spacing:.14em}
 .agency-world .agency-close{background:#263c52;color:#e8efff;font-size:.78rem}
