@@ -1,0 +1,290 @@
+{
+  "type": "bewerbungs-agent-feedback",
+  "schema_version": "1.0.0",
+  "updated_at": "2026-10-22T10:12:17.051Z",
+  "annotations": [],
+  "relevance_ratings": [
+    {
+      "id": "job-cc1d41ab554d1e3973011bfc",
+      "score": 30,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "tasks": -26,
+        "distance": 10,
+        "employer": 29,
+        "conditions": 65
+      },
+      "field_relation": "transferable",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-22T10:09:26.612Z",
+      "suggested_score_at_rating": 57,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-7c77b7ffecbbffca346b69e0",
+      "score": 40,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "tasks": -29,
+        "distance": 66,
+        "employer": -4,
+        "conditions": -10
+      },
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:09:44.426Z",
+      "suggested_score_at_rating": 62,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-82e18edbaeb2e8565c8761f3",
+      "score": 4,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "distance": 100,
+        "tasks": -100
+      },
+      "field_relation": "unrelated",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-22T10:09:56.552Z",
+      "suggested_score_at_rating": 50,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-f9eafd2a9b0439e94fd1768a",
+      "score": 63,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "tasks": 32,
+        "distance": 100,
+        "employer": 66,
+        "conditions": 60
+      },
+      "field_relation": "transferable",
+      "seniority_assessment": "underchallenging",
+      "updated_at": "2026-10-22T10:10:14.564Z",
+      "suggested_score_at_rating": 57,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-0a099d988511ef6bff479c80",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:10:21.403Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-65a89a500b2a17a72792fc92",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:10:24.837Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-ec570cf47a3787abe6b22cc9",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "distance": 100
+      },
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:10:37.519Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-62365e4527e524f3aebcb87f",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:10:39.543Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-bc9b2b67d7a2b604e5d95421",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:10:44.981Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-6df65724415cab23c9ee8209",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:10:48.753Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-af0cd41dac1cef4a14869e99",
+      "score": 54,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "distance": -100
+      },
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:10:55.419Z",
+      "suggested_score_at_rating": 57,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-cfbb5f498353094d03cf2e45",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:11:01.404Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-18c9d3d3eed05b35f8c7fd97",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:11:16.532Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-1e5e160c2af1c319e8fb1b89",
+      "score": 66,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "distance": 100,
+        "tasks": 70,
+        "conditions": 100,
+        "employer": 100
+      },
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:11:29.881Z",
+      "suggested_score_at_rating": 83,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-d6535ab8842199ce2725bebb",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "distance": 8
+      },
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:11:37.798Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-32b57d6ac57fb84b8cb0f677",
+      "score": 52,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "transferable",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-22T10:11:48.152Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-2b605be60e7b285af085343e",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "distance": -100
+      },
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:11:53.464Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-b30e01eb086122c5a244d5ae",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-22T10:11:59.168Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-b28d5d9775ba4b970deb2881",
+      "score": 53,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "transferable",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-22T10:12:07.282Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    }
+  ],
+  "export_selection": [],
+  "activity_log": [],
+  "overrides": [],
+  "manual_jobs": []
+}
