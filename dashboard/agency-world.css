@@ -36,17 +36,18 @@
 .agency-sky{position:absolute;inset:3px 4px 0;background:radial-gradient(ellipse at 55% 63%,#4b88a019,transparent 60%)}
 .agency-ground{position:absolute;bottom:13px;left:4px;width:137px;height:75px;background:linear-gradient(150deg,#476477 15%,#2d4858 53%,#243f51 54%,#213548 76%);clip-path:polygon(50% 0%,100% 37%,100% 62%,50% 100%,0% 62%,0% 37%);box-shadow:0 6px 0 #1b2b3b}
 .agency-ground:before{content:"";position:absolute;inset:2px;background:linear-gradient(120deg,#7194a055,#3a647155);clip-path:polygon(50% 0%,100% 36%,50% 73%,0 36%)}
+.agency-structures{position:absolute;inset:0;pointer-events:none}
 .agency-building,.agency-tower{position:absolute;z-index:1;background:linear-gradient(90deg,#435975 0 18%,#25344c 18% 70%,#344d67 70%);border:2px solid #91a9bf;box-shadow:3px 4px 0 #112539;animation:agency-building-on .65s both}
 .agency-building:after,.agency-tower:after{content:"";position:absolute;inset:5px 3px;background:repeating-linear-gradient(0deg,transparent 0 9px,var(--accent) 9px 12px,transparent 12px 17px);opacity:.8;animation:agency-flicker 3.6s steps(2,end) infinite}
-.agency-building-a{left:54px;bottom:29px;width:28px;height:43px}
-.agency-building-b{left:19px;bottom:22px;width:24px;height:34px;animation-delay:.12s}
-.agency-building-c{left:97px;bottom:22px;width:23px;height:47px;animation-delay:.24s}
-.agency-tower{left:76px;bottom:38px;height:64px;width:19px;animation-delay:.32s}
-.agency-antenna{position:absolute;z-index:2;left:64px;bottom:70px;width:3px;height:29px;background:#a4cee0}
+.agency-building-a{left:54px;bottom:42px;width:28px;height:43px}
+.agency-building-b{left:19px;bottom:35px;width:24px;height:34px;animation-delay:.12s}
+.agency-building-c{left:97px;bottom:35px;width:23px;height:47px;animation-delay:.24s}
+.agency-tower{left:76px;bottom:51px;height:64px;width:19px;animation-delay:.32s}
+.agency-antenna{position:absolute;z-index:2;left:64px;bottom:83px;width:3px;height:29px;background:#a4cee0}
 .agency-antenna:before{content:"";position:absolute;left:-6px;top:-3px;width:15px;height:8px;border:2px solid var(--accent);border-radius:2px;animation:agency-pulse 2.4s infinite}
 .agency-light{position:absolute;z-index:4;width:6px;height:6px;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:agency-flicker 2s steps(2,end) infinite}
-.agency-light-a{left:13px;bottom:28px}.agency-light-b{left:120px;bottom:39px}
-.agency-person{position:absolute;z-index:5;bottom:20px;width:4px;height:11px;background:#a8d1cf;box-shadow:0 -4px 0 #e8d1bb;animation:agency-patrol 3s ease-in-out infinite alternate}
+.agency-light-a{left:13px;bottom:41px}.agency-light-b{left:120px;bottom:52px}
+.agency-person{position:absolute;z-index:5;bottom:33px;width:4px;height:11px;background:#a8d1cf;box-shadow:0 -4px 0 #e8d1bb;animation:agency-patrol 3s ease-in-out infinite alternate}
 .agency-person-a{left:47px}.agency-person-b{left:85px;animation-delay:1s}.agency-person-c{left:109px;animation-delay:1.8s}
 .agency-inspector{margin:15px 0 19px;border:1px solid #344e66;border-radius:10px;padding:13px 16px;background:#16253a;min-height:100px}
 .agency-inspector-heading{display:flex;justify-content:space-between;gap:10px;color:#e6f0fb}
