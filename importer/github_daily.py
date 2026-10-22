@@ -261,9 +261,22 @@ def merge(previous, incoming):
     from importer.pipeline import merge_jobs
     return merge_jobs(previous, incoming)[0]
 
-def write_state(timestamp):
+def read_description_cursor():
+    """Backfill progress is independent of Gmail's incremental message cursor."""
+    if not STATE.exists():
+        return None
+    try:
+        value = json.loads(STATE.read_text(encoding="utf-8")).get("description_backfill_cursor")
+        return value if isinstance(value, str) else None
+    except (ValueError, OSError, TypeError):
+        return None
+
+def write_state(timestamp, description_cursor=None):
     STATE.parent.mkdir(parents=True,exist_ok=True)
-    STATE.write_text(json.dumps({"last_success_utc":timestamp.isoformat(),"parser_version":PARSER_VERSION},indent=2)+"\n",encoding="utf-8")
+    data = {"last_success_utc": timestamp.isoformat(), "parser_version": PARSER_VERSION}
+    if description_cursor:
+        data["description_backfill_cursor"] = description_cursor
+    STATE.write_text(json.dumps(data, indent=2)+"\n",encoding="utf-8")
 
 def run():
     started=time.monotonic()
@@ -282,13 +295,22 @@ def run():
         found.extend(extracted)
     from importer.pipeline import process, validate_public
     combined, outcomes = process(previous, found)
+    # New Gmail offers are enriched first (max. 10), then older missing descriptions
+    # get an independent, round-robin slot. Do not fetch the same offer twice in a run.
+    from importer.enrich import backfill_descriptions
+    from selector.score import apply
+    attempted_new = [j["id"] for j in found if j.get("url") and not j.get("description")][:10]
+    combined, description_cursor, backfill_stats = backfill_descriptions(
+        combined, read_description_cursor(), max_jobs=8, skip_ids=attempted_new)
+    apply(combined)  # descriptions affect the transparent, non-excluding suggestions
     validate_public(combined)
     print("Pipeline:", json.dumps(outcomes), flush=True)
+    print("Beschreibungs-Nachimport:", json.dumps(backfill_stats, sort_keys=True), flush=True)
     # Avoid overwriting a useful list if transient Gmail query yields nothing.
     if not messages and not previous:raise RuntimeError("Keine Jobmails gefunden; Initialimport abgebrochen")
     OUT.parent.mkdir(parents=True,exist_ok=True)
     OUT.write_text(json.dumps(combined,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    write_state(started_utc)
+    write_state(started_utc, description_cursor)
     print(f"Nachrichten gelesen: {messages}; Stellenlinks erkannt: {len(found)}; Dashboard-Datensätze: {len(combined)}; Laufzeit: {time.monotonic()-started:.1f}s",flush=True)
 if __name__=="__main__":
     try:run()
