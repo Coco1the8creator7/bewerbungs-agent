@@ -1,6 +1,1355 @@
 [
   {
     "schema_version": "0.1.0",
+    "id": "job-cc1d41ab554d1e3973011bfc",
+    "source": "jobs.ch",
+    "source_job_id": "2b08793a-8c4e-43f4-8bc2-48cadc9eee1f",
+    "title": "Bau- und Projektleiter 100%",
+    "company": "Dorian Huber Interiors AG",
+    "location": "Herrliberg",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/2b08793a-8c4e-43f4-8bc2-48cadc9eee1f/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": "Bau-Projektleiter für Umbau\nStart: nach Vereinbarung\nÜber uns\nDorian Huber Interiors ist ein familiengeführtes Innenarchitekturbüro mit Sitz in Herrliberg am Zürichsee. Seit über 40 Jahren planen und realisieren wir hochwertige Umbauten, Anbauten und Aufstockungen im Privatbereich. Wir begleiten unsere Kundschaft von der ersten Idee bis zur Fertigstellung – persönlich, kompetent und mit viel Liebe zum Detail.\nDeine Aufgaben\nDu leitest Umbau-, Anbau- und Aufstockungsprojekte eigenverantwortlich, von der Planung bis zur Abnahme.\nDu erstellst Kostenschätzungen, Kostenvoranschläge und Terminpläne und behältst Budget und Termine im Griff.\nDu bist die zentrale Ansprechperson für unsere Bauherrschaften und berätst sie kompetent und mit Fingerspitzengefühl.\nDu koordinierst und führst Handwerker, Fachplaner und weitere Projektbeteiligte auf der Baustelle.\nDu stellst sicher, dass jedes Projekt unseren hohen Ansprüchen an Qualität und Ausführung gerecht wird.\nDas bringst du mit\nAbgeschlossenes Innenarchitektur- oder Architekturstudium (FH/ETH) oder Hochbauzeichner mit Weiterbildung als eidgenössisch dipl. Bauleiter oder Techniker TS Erfahrung\nMehrjährige Erfahrung in der Planung und Bauleitung von Umbauprojekten\nFundierte Kenntnisse in Kostenplanung und Bauadministration\nStilsicherheit und ein gutes Gespür für Details im Privatbereich\nStrukturierte, selbstständige Arbeitsweise sowie Freude an Kundenkontakt\nFliessende Deutschkenntnisse, sehr gute Englischkenntnisse\nDas erwartet dich bei uns\nAbwechslungsreiche Projekte im hochwertigen Privatbereich\nEngagiertes, familiäres Team mit kurzen Entscheidungswegen\nViel Eigenverantwortung und Raum für persönliche Entwicklung\nEin schöner Arbeitsort in Herrliberg, nahe am See und gut erreichbar von Zürich\nInteressiert?\nWir freuen uns auf deine vollständige Bewerbung mit Lebenslauf, Zeugnissen und Portfolio.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7c77b7ffecbbffca346b69e0",
+    "source": "jobs.ch",
+    "source_job_id": "768892a6-8e8c-44dc-8a08-44b5b4bf4211",
+    "title": "Brandschutzingenieur 80-100% (a), Zürich",
+    "company": "Freestar-People AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/768892a6-8e8c-44dc-8a08-44b5b4bf4211/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": "Quereinsteiger:innen aus Architektur, Bauingenieurwesen und Immobilien willkommen\nFür unseren Mandanten in Zürich, ein etabliertes und fachlich spezialisiertes Unternehmen im Bereich Brandschutz, suchen wir eine engagierte Persönlichkeit als Brandschutzingenieur:in 80-100%.\nGesucht wird dabei nicht nur eine bereits ausgebildete Brandschutzfachperson. Auch Architekt:innen, Bauingenieur:innen und Fachpersonen aus dem Bau- oder Immobilienumfeld erhalten hier die Möglichkeit, sich gezielt im Brandschutz weiterzuentwickeln.\nBrandschutzingenieur 80-100% (a), Zürich\nWas Sie bei unserem Mandanten bewirken:\nSie arbeiten an anspruchsvollen Neu- und Umbauten sowie komplexen Bestandsgebäuden und entwickeln gemeinsam mit erfahrenen Projektleitenden und Fachspezialist:innen praxisnahe Brandschutzlösungen.\nMitwirkung bei Brandschutz- und Entrauchungskonzepten\nErstellen und Bearbeiten von Brandschutzplänen, CAD-Zeichnungen und Dokumentationen\nBegleitung von Qualitätskontrollen auf Baustellen sowie Terminen mit Behörden und Projektbeteiligten\nBegleitung der Umsetzung von Brandschutzmassnahmen bis zur Inbetriebnahme\nUnterstützung bei Koordination und Projektmanagement\nMöglichkeit zur fachlichen Vertiefung, z. B. in Entrauchung, Simulationen, ingenieurmässigen Nachweisen oder Integralen Tests\nMit zunehmender Erfahrung Übernahme eigener Projekte und Verantwortungsbereiche\nWas Sie mitbringen:\nAusbildung/Studium HF, FH, ETH oder Universität in Architektur, Bauingenieurwesen, Gebäudetechnik, Security & Safety Engineering oder vergleichbar\nBrandschutzfachmann/-frau VKF oder Bereitschaft, sich in diese Richtung weiterzuentwickeln\nGutes technisches und planerisches Verständnis\nStrukturierte, selbstständige und qualitätsbewusste Arbeitsweise\nFreude an Teamarbeit und Kundenkontakt\nSehr gute Deutschkenntnisse in Wort und Schrift\nAuch Quereinsteiger:innen aus Architektur, Bauingenieurwesen, Gebäudetechnik oder Immobilien sind ausdrücklich willkommen. Entscheidend sind technisches Verständnis, Lernbereitschaft und Interesse am Brandschutz.\nIhre Entwicklung im Brandschutz\nUnser Mandant verfügt über eine eigene Academy und unterstützt Sie gezielt bei Ihrer fachlichen Entwicklung. Sie sammeln von Beginn an praktische Erfahrung in anspruchsvollen Projekten und werden von erfahrenen Fachpersonen begleitet.\nDie entsprechenden Zertifizierungsprüfungen sind im aktuellen Ausbildungsweg ab 2028 wieder möglich; für 2027 ist keine Prüfung vorgesehen. Ihre fachliche Entwicklung und praktische Tätigkeit im Brandschutz beginnt jedoch bereits mit Ihrem Einstieg.\nWas unser Mandant bietet\nAnspruchsvolle und vielseitige Bauprojekte\nIndividuelle Entwicklungsmöglichkeiten im Brandschutz\nInterne Academy und gezielte Weiterbildung\nBegleitung durch erfahrene Brandschutzexpert:innen\nInterdisziplinäres Team aus Brandschutz, Sicherheit, Energie und Nachhaltigkeit\nFlexible Arbeitsmodelle und Home Office\nModerne Arbeitsmittel\nFünf Wochen Ferien und attraktive Sozialleistungen\nKönnen wir Sie begeistern, in einem etablierten Unternehmen eine entscheidende Rolle einzunehmen? Sind Sie motiviert interessante Aufgaben anzugehen? Dann senden Sie bitte Ihre vollständigen Bewerbungsunterlagen inkl. Foto per E-Mail an die untenstehende Adresse. Für weitere Auskünfte steht Ihnen Herr Mike Altorfer gerne zur Verfügung.\nMike Altorfer",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 62,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit",
+        "energie"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-f9eafd2a9b0439e94fd1768a",
+    "source": "jobs.ch",
+    "source_job_id": "ffc2566b-0f00-42d0-ace8-7830d6e513c3",
+    "title": "Mitarbeiter Bauadministration / Projektassistenz Bau (80–100%)",
+    "company": "Penzel Valier AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ffc2566b-0f00-42d0-ace8-7830d6e513c3/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": "Du kennst die Baubranche – und hast Freude daran, wenn im Hintergrund alles zusammenläuft?\nBei Penzel Valier entstehen anspruchsvolle Architektur- und Ingenieurprojekte. Damit diese Projekte nicht nur planerisch, sondern auch organisatorisch und wirtschaftlich gut funktionieren, braucht es Menschen, die den Überblick behalten, Informationen zusammenführen und die Projektleitung im Tagesgeschäft unterstützen.\nFür unseren Kompetenzkreis Leitung + Prozesse suchen wir eine engagierte Persönlichkeit für die Bauadministration und Projektassistenz.\nDabei musst du nicht bereits alles können. Viel wichtiger sind dein Interesse an der Baubranche, deine strukturierte Arbeitsweise und deine Bereitschaft, dich fachlich weiterzuentwickeln.\nDeine Aufgaben\nDu unterstützt unsere Gesamt- und Projektleitungen bei der organisatorischen und administrativen Abwicklung unserer Bauprojekte.\nDazu gehören unter anderem:\nUnterstützung bei der Bauadministration und Projektorganisation\nAufbereitung und Pflege von Kosten- und Projektdaten\nUnterstützung bei Baukostenkontrolle, Kostenprognosen und Auswertungen\nMithilfe bei der Erstellung und Bearbeitung von Submissionen und Ausschreibungsunterlagen\nEinholen, Aufbereiten und Vergleichen von Unternehmerofferten\nUnterstützung bei Vergaben, Werkverträgen und Bestellungen\nPflege von Termin-, Projekt- und Dokumentenstrukturen\nUnterstützung bei Rechnungsprüfung und Baubuchhaltung\nNachführen von Projektinformationen und Dokumentationen\nVorbereitung von Sitzungen, Besprechungen und Entscheidungsgrundlagen\nKoordination und Nachverfolgung von offenen Punkten\nUnterstützung der Projektleitung bei organisatorischen und administrativen Themen\nZusammenarbeit mit Architekt:innen, Ingenieur:innen, Bauleitungen, Unternehmern und weiteren Projektbeteiligten\nMit zunehmender Erfahrung übernimmst du selbstständig anspruchsvollere Aufgaben in den Bereichen Kosten, Submission und Bauadministration.\nDas bringst du mit\nDu hast eine kaufmännische oder vergleichbare Ausbildung und idealerweise bereits Erfahrung in der Baubranche.\nBesonders gut passt du zu uns, wenn du beispielsweise als:\nProjektassistent:in\nProjektadministration\nSachbearbeiter:in Bau\nKaufmännische:r Mitarbeiter:in eines Bauunternehmens\nAssistent:in Bauleitung / Projektleitung\nSachbearbeiter:in Architektur oder Ingenieurwesen\nMitarbeiter:in GU/TU\nImmobilien-Sachbearbeiter:in mit Bezug zu Bauprojekten\ngearbeitet hast.\nWir suchen keine reine Assistenzpersönlichkeit. Du solltest Interesse daran haben, hinter die Projekte zu schauen und zu verstehen, wie Kosten, Termine, Ausschreibungen und Bauabläufe zusammenhängen.\nDas ist uns wichtig\nKaufmännische Ausbildung oder vergleichbare Qualifikation\nErste Berufserfahrung, idealerweise im Bau-, Architektur-, Ingenieur- oder Immobilienumfeld\nInteresse an Bauprojekten und wirtschaftlichen Zusammenhängen\nSicherer Umgang mit MS Office, insbesondere Excel und Outlook\nSehr gute Deutschkenntnisse\nSelbstständige, strukturierte und zuverlässige Arbeitsweise\nFreude daran, Informationen zu koordinieren und den Überblick zu behalten\nKlare und verbindliche Kommunikation\nBereitschaft, dich fachlich weiterzuentwickeln\nErfahrung mit Messerli, Bauadministrationssoftware, Submissionen oder Baubuchhaltung ist ein Plus – aber keine Voraussetzung.\nWas dich bei uns erwartet\nBei uns bist du nicht einfach „die Administration“.\nDu arbeitest direkt an unseren Projekten mit und erhältst die Möglichkeit, dir Schritt für Schritt Fachwissen in Bauadministration, Kostenmanagement und Submission aufzubauen.\nDu arbeitest eng mit unseren Gesamtleitungen, Projektleitungen, Architekt:innen und Fachplaner:innen zusammen und bekommst dadurch einen umfassenden Einblick in die Entstehung komplexer Bauprojekte.\nWir bieten dir:\nanspruchsvolle und abwechslungsreiche Bauprojekte\neine vielseitige Schnittstellenfunktion zwischen Administration und Projektarbeit\ndie Möglichkeit, Verantwortung zu übernehmen und dich fachlich weiterzuentwickeln\nkurze Entscheidungswege und ein interdisziplinäres Umfeld\nmoderne Arbeitsmittel und digitale Prozesse\nein kollegiales Umfeld mit direkter Kommunikation\nein Pensum von 80–100 %\nInteresse?\nDann freuen wir uns auf deine Bewerbung.\nBitte sende uns deinen Lebenslauf und relevante Arbeitszeugnisse.\nWir freuen uns, dich kennenzulernen.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-82e18edbaeb2e8565c8761f3",
+    "source": "jobs.ch",
+    "source_job_id": "c76dd2f1-4a61-4ec2-a330-50463d972e73",
+    "title": "SAP Cloud Integration Developer",
+    "company": "ewz",
+    "location": "Zürich Oerlikon",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/c76dd2f1-4a61-4ec2-a330-50463d972e73/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": "Werde SAP Cloud Integration Developer bei ewz in Zürich. Entwickle innovative Lösungen für die Zukunft.\nAufgaben\nEntwickle End-to-End-Integrationen auf der SAP BTP.\nSorge für zuverlässigen Datenaustausch zwischen Systemen.\nÜberführe bestehende Schnittstellen in die moderne Landschaft.\nFähigkeiten\nErfahrung in Softwareentwicklung und Interesse an SAP und Cloud.\nKenntnisse in APIs, REST, OData und Messaging.\nVerständnis für Clean Code und automatisierte Tests.\newz ist seit über 130 Jahren täglich dynamisch und visionär unterwegs. Ob nachhaltige Energieproduktion, smarte Energielösung oder innovative Vernetzungstechnologie: Entwickle mit uns heute, was morgen wichtig ist.\nDafür setzt du deine Energie ein\nDu entwickelst End-to-End-Integrationen – vom ABAP-Backend bis zum iFlow auf der SAP BTP.\nDu entwickelst Schnittstellen und APIs in unseren SAP-Systemen und stellst sie für Integrationen bereit.\nMit SAP Cloud Integration sorgst du für einen zuverlässigen Datenaustausch zwischen SAP-, Cloud- und Drittsystemen.\nDu überführst bestehende PI/PO-Schnittstellen Schritt für Schritt in unsere moderne Integrationslandschaft.\nGemeinsam mit dem Team bringst du neue Technologien, Patterns und Standards in die Praxis.\nDas bringst du mit\nDu hast Erfahrung in der Softwareentwicklung und Interesse an SAP, Cloud und Integration. ABAP-Kenntnisse sind ein Plus – den Rest lernst du bei uns.\nDu hast Freude an der Entwicklung und daran, wenn unterschiedliche Systeme am Ende dieselbe Sprache sprechen.\nAPIs, REST, OData, Events und Messaging sind dir nicht völlig fremd.\nClean Code, automatisierte Tests und Git gehören für dich zu moderner Softwareentwicklung dazu.\nDu weisst, dass 200 OK zwar schön ist, aber noch lange nicht bedeutet, dass wirklich alles OK ist.\nVielfalt bereichert und bringt uns weiter. Wir begrüssen Bewerbende aus verschiedenen Kulturen, Generationen, mit unterschiedlichen Werten und Einstellungen und setzen uns für Chancengleichheit jeden Geschlechts sowie jeder sexuellen Orientierung ein.\nDein Arbeitsort\nTramstrasse 35\n8050 Zürich\nFür Personaldienstleister\nFür diese Stelle nehmen wir keine Dossiers von Personaldienstleister entgegen.\nDas hast du dir verdient\nMehr Energie für dein Leben:\nDurch mobiles Arbeiten, flexible Arbeitsmodelle und Teilzeitmöglichkeiten kannst du deine Arbeitszeit aktiv mitgestalten und sie so einteilen, wie sie am besten zu deinem Leben passt. Du kannst beispielsweise bis zu 2 Wochen zusätzliche Ferien einkaufen und auf allen Stufen Teilzeit arbeiten. Auch Jobsharing/-splitting und unbezahlter Urlaub sind bei uns natürlich möglich.\nEine Investition in deine Zukunft:\nWir legen nicht nur Wert darauf, faire und transparente Löhne zu zahlen, sondern stellen auch sicher, dass dir von deinem Lohn mehr übrigbleibt. Wir übernehmen 60% der Sparbeiträge und bieten zusätzlich einen überobligatorischen Zins auf das angesparte Kapital.\nNachhaltig und vergünstigt reisen:\nMit dem Mobilitätsbeitrag von bis zu 600 Franken im Jahr reist du günstig und nachhaltig – egal, ob du mit dem Velo durch Zürich radeln oder mit dem Zug die Schweiz erkunden willst.\nEin Energieschub für deine Freizeit:\nWir zahlen dir monatlich 100 Franken auf deine Lunch-Check Karte ein. Zudem profitierst du jährlich von weiteren Fringe Benefits im Wert von 150 Franken und von attraktiven Handyabos.\nEntwicklung und Weiterbildung:\nMit unserem Talentmanagement fördern wir deine Entwicklung gezielt – durch vielfältige interne und externe Weiterbildungsangebote sowie spannende Entwicklungsmöglichkeiten.\nSinnhafte Arbeit:\nNachhaltigkeit und sinnstiftende Arbeit sind bei uns nicht nur Worte: Gestalte bei uns Zürich und die Zukunft mit. Setze gemeinsam mit uns Energie für ein gutes Morgen frei.\nMehr zu unseren Vorteilen\nMit deiner Power setzt du neue Energie für ein gutes Morgen frei – das belohnen wir mit spannenden Vorteilen!\nMehr erfahren\nSo lernen wir uns kennen\nBewerbung\nVirtuelles Erstgespräch\nPersönliches Zweitgespräch\nFinaler Entscheid\nHast du Fragen zum Bewerbungsprozess oder zur Stelle? Kontaktiere uns\nAlexandra Bänninger\nHR Business Partner\nTelefonnummer\n+41 58 319 41 33\nGiovanni Cettuzzi\nLeiter SAP Analytics & Technology\nTelefonnummer\n+41 58 319 46 55\nJetzt bewerben",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 50,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "energie"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-65a89a500b2a17a72792fc92",
+    "source": "jobs.ch",
+    "source_job_id": "4bc438c0-418b-4079-bd91-affa22488c7f",
+    "title": "Systems Engineering / Storage Engineer",
+    "company": "ETH Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/4bc438c0-418b-4079-bd91-affa22488c7f/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": "Systems Engineering / Storage Engineer\nThe Swiss National Supercomputing Centre (CSCS) develops and operates cutting-edge, High-Performance Computing (HPC) systems as an essential service facility for science. The centre enables world-class research through its scientific user lab, which is available to domestic and international researchers in academia, industry, and the business sector. The centre is operated by ETH Zurich and has offices in Lugano (headquarter) and Zurich.\nProject background\nWith the convergence of HPC and cloud technology, supercomputing service providers like CSCS strive to improve our service portfolios that focus on large, complex, and diverse scientific and engineering applications. Effectively providing performant and capable storage systems supporting the needs of HPC platforms running on a multi-tenant infrastructure is complex and challenging engineering work.\nTo support these efforts, CSCS is seeking a Storage Engineer (Systems Engineering) to join our team in Lugano. The position is initially offered on a two-year contract, with the possibility of extension. This position is funded by a project that will enable scientists to benefit from large scale climate and earth observation data, and will involve collaboration with partners such as the ETHZ Geolab and C2SM, as well as international partners such as ECMWF, NASA and NOAA.\nJob description\nThe main goal of this position is to implement and operate HPC storage services in a multi-tenant infrastructure. As a Storage Engineer you will directly contribute to the designing, implementation, maintenance, and documentation of storage services for HPC.\nYour contributions will directly impact the development and enhancement of HPC systems, thereby enhancing overall system functionality and efficiency.\nProfile\nYou have a sound knowledge of\nLinux administration skills\nGeneric filesystem aspects and functions (data, metadata, block-size etc.)\nStorage redundancy technologies (RAID, D-RAID, EC etc.)\nBackup solutions (DMF, TSM, Veeam) and backup concepts\nObject Storage concepts and S3 service usage/implementation\nAutomation tools and framework, including CI/CD processes and ecosystem (e.g., Gitlab CI, HashiCorp Vault)\nExperience with the following is preferred, though there will be ample opportunities to learn and gain more experience with all of these skills on the job:\nExperience with parallel file systems (GPFS, Lustre)\nExperience with Ceph Storage Clusters\nExperience with versioning systems and CI/CD workflows such as ArgoCD\nExperience with physical servers automated installation systems such as OpenCHAMI, MAAS, or Foreman\nExperience with developing Ansible configurations\nExperience developing services on top of Kubernetes\nYou should have a bachelor’s or higher degree in Computer Engineering, Computer Science, relevant technical field, or equivalent practical experience.\nWe offer\nIn an organization that values autonomy, ownership and continuous learning, the successful candidate will have the opportunity to gain specialized hands-on experience through activities characterized by the challenging aspects typical of the HPC field.\nOur core values as guiding principles:\nCuriosity: You enjoy learning, exploring new ideas, and understanding problems deeply.\nOpenness: You listen, collaborate, and are receptive to different perspectives.\nCourage: You tackle challenging or ambiguous problems and are willing to take initiative.\nSupportiveness: You help colleagues and users succeed and contribute to a positive team culture.\nIntegrity: You act honestly, ethically, and reliably in your work.\nOur culture and benefits:\nWe are committed to building a diverse and inclusive engineering team and particularly encourage applications from from groups underrepresented in tech. If you are technically strong, curious, and eager to grow, we want to hear from you.\nAt CSCS, being family-friendly is much more than a label. We provide flexible and supportive working conditions that help employees manage both their careers and family responsibilities. For example, one of our Lugano buildings hosts a childcare facility, and we financially support up to three weeks of summer camp for primary school children. If your child is sick and you need assistance, we will even cover the cost of in-home childcare for our Lugano based employees. We are proud to be a genuinely family-friendly employer and are committed to supporting our employees when they need it most.\nYou can look forward to an exciting working environment, cultural diversity and attractive offers and benefits.\nYour job with impact: Become part of ETH Zurich, which not only supports your professional development, but also actively contributes to positive change in society\nWorking, teaching and research at ETH Zurich\nWe value diversity and sustainability\nIn line with our values, ETH Zurich encourages an inclusive culture. We promote equality of opportunity, value diversity and nurture a working and learning environment in which the rights and dignity of all our staff and students are respected. Visit our Equal Opportunities and Diversity website to find out how we ensure a fair and open environment that allows everyone to grow and flourish. Sustainability is a core value for us – we are consistently working towards a climate-neutral future.\nCurious? So are we.\nWe look forward to receiving your online application with the following documents:\nMotivation letter in pdf\nCV in pdf\nRelevant certificates and diplomas in pdf format\nWe look forward to receiving your online application. Please address your application to Mrs Stephanie Frequente, CSCS Human Resources, Via Trevano 131, 6900 Lugano.\nFurther information about CSCS can be found on our website. Questions regarding the position should be directed to Mark Klein, klein@cscs.ch (no applications).\nPlease note that we exclusively accept applications submitted through our online application portal. Applications via email or postal services will not be considered.\nWe would like to point out that the pre-selection is carried out by the responsible recruiters and not by artificial intelligence.\nFor recruitment services, the GTC of ETH Zurich apply.\nAbout ETH Zürich\nETH Zurich is one of the world’s leading universities specialising in\nscience and technology. We are renowned for our excellent education,\ncutting-edge fundamental research and direct transfer of new knowledge\ninto society. Over 30,000 people from more than 120 countries find our\nuniversity to be a place that promotes independent thinking and an\nenvironment that inspires excellence. Located in the heart of Europe,\nyet forging connections all over the world, we work together to\ndevelop solutions for the global challenges of today and tomorrow.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-0a099d988511ef6bff479c80",
+    "source": "jobs.ch",
+    "source_job_id": "8d02ab20-41cb-48a6-8f5d-0dce6157ab11",
+    "title": "Oberärztin / Oberarzt 80-100%",
+    "company": "Kinderspital Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/8d02ab20-41cb-48a6-8f5d-0dce6157ab11/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": "Einsatzbereich Psychosomatisch Psychiatrische Therapiestation sowie Kinder- und Jugendpsychiater:in im Liaison- und Konsiliardienst\nArbeitgeber Kinderspital Zürich\nDas Kinderspital Zürich ist mit rund 3'000 Mitarbeitenden das grösste Universitäts-Kinderspital der Schweiz und eines der führenden Zentren für Kinder- und Jugendmedizin in Europa. Das Grösste am \"Kispi\" aber sind die Kleinen: Bis zu 100'000 Patientinnen und Patienten werden jährlich versorgt, in 47 Fachbereichen tun wir alles zu ihrem Wohl. Nicht nur modernste Geräte und höchste Qualität in der Behandlung werden am Kispi gross geschrieben, sondern auch ein gutes Gespür für Zwischenmenschliches. Neben dem gesamten kindermedizinischen und kinder-chirurgischen Spektrum bietet das Kinderspital auch ein einzigartiges Rehabilitationszentrum und ein Forschungszentrum.\nDeine Aufgaben\nDie oberärztliche Leitung der Psychosomatisch Psychiatrischen Therapiestation ist deine Hauptaufgabe.\nIm Konsiliar- und Liaisondienst im Akutspital führst du Kinder- und Jugendpsychiatrische Abklärungen, Beratungen und Behandlungen von Patienten und Patientinnen (0 - 18 Jahre) mit psychosomatischen und somatopsychischen Fragestellungen durch (stationär und ambulant)\nBei der Sicherstellung der ganzheitlichen Behandlung der Patientinnen und Patienten im interdisziplinären Team bist du für die psychiatrischen und psychotherapeutischen Fragestellungen zuständig.\nDu übernimmst (bei Interesse) die Fallführung eigener Patientenfälle.\nDie Unterstützung im psychiatrischen Pikettdienst ist Teil deines Aufgabenbereichs.\nDu beteiligst dich an der Weiterentwicklung der interdisziplinären Zusammenarbeit, an Konzeptentwicklungen und an internen und externen Weiterbildungen\nZusätzlich hast du bei Interesse die Möglichkeit in begrenztem Umfang auch wissenschaftliche Tätigkeiten zu übernehmen.\nDein Profil\nFacharzttitel in Kinder- und Jugendpsychiatrie und Psychotherapie (oder fortgeschrittener Weiterbildung)\nDu hast grosses Interesse an der psychosomatischen Medizin\nAusgeprägte Kommunikations- und Integrationsfähigkeit und Freude an der interdisziplinären Zusammenarbeit\nHohe Belastbarkeit verbunden mit einer flexiblen und offenen Arbeitsweise und einer grossen Einsatzbereitschaft\nSehr gute Deutschkenntnisse in Wort und Schrift\nDr. med. Monika Strauss\nLeitende Ärztin\n+41 44 249 69 03\nKinderspital Zürich\nLenggstrasse 30\n8008 Zürich",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-ec570cf47a3787abe6b22cc9",
+    "source": "jobs.ch",
+    "source_job_id": "5fe255aa-a43e-478c-8623-c6d9d6b1a668",
+    "title": "Techn. Sterilisationsassisten:in 80 - 100%",
+    "company": "Universitätsspital Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5fe255aa-a43e-478c-8623-c6d9d6b1a668/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": "Das Universitätsspital Zürich sucht technische Sterilisationsassistenten. Hier erwartet dich ein spannender Arbeitsplatz in einem motivierten Team.\nAufgaben\nAufbereitung von Medizinprodukten nach Normen und Richtlinien.\nBedienung und Überwachung von Reinigungs- und Desinfektionsgeräten.\nDokumentation im Rückverfolgbarkeitssystem und Einhaltung von Standards.\nFähigkeiten\nAbgeschlossene Ausbildung als Fachperson für Medizinprodukteaufbereitung.\nSorgfältige, strukturierte und verantwortungsbewusste Arbeitsweise.\nGute Deutschkenntnisse, teamfähig und belastbar.\nEs interessiert dich, wie ein Spital hinter den Kulissen funktioniert? In der Aufbereitungseinheit für Medizinprodukte (AEMP) suchen wir tatkräftige Unterstützung als technische Sterilisationsassistenten. Unsere breit gefächerten Medizinprodukte werden zu deinem spannenden Arbeitsinhalt.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nTechn. Sterilisationsassisten:in 80 - 100%\nper sofort oder nach Vereinbarung\nDeine Hauptaufgaben\nSach- und fachgerechte Aufbereitung von Medizinprodukten nach geltenden Normen und internen Richtlinien\nBedienung und Überwachung von Reinigungs- und Desinfektionsgeräten\nKontrolle und Verpackung der Instrumentensiebe\nDokumentation aller Arbeitsschritte im Rückverfolgbarkeitssystem (z. B. Instacount)\nEinhaltung der Hygiene-, Sicherheits- und Qualitätsstandards\nDein Profil\nAbgeschlossene Ausbildung als Fachperson für Medizinprodukteaufbereitung (Fachkundekurs I)\nErfahrung in der Instrumentenaufbereitung von Vorteil\nSorgfältige, strukturierte und verantwortungsbewusste Arbeitsweise\nGute Deutschkenntnisse (mind. B1), teamfähig und belastbar\nUnsere Benefits\nEine strukturierte Einarbeitung in einem motivierten Team\nEinen modernen Arbeitsplatz mit klaren Abläufen\nEntwicklungsmöglichkeiten bei entsprechender Eignung (z. B. Fachkundekurs II, Schichtleitung)\nUniversitätsspital Zürich\n8052 Zürich",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-62365e4527e524f3aebcb87f",
+    "source": "jobs.ch",
+    "source_job_id": "fcc36994-1f9b-4567-b9d8-4f9979b0be21",
+    "title": "Assistenzärztin / Assistenzarzt (w/m/d) ambulante Rheumatologie 80-100%",
+    "company": "Universitätsspital Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/fcc36994-1f9b-4567-b9d8-4f9979b0be21/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": "Das Universitätsspital Zürich sucht eine Assistenzärztin / einen Assistenzarzt (w/m/d) im Bereich Rheumatologie. Eine moderne Arbeitsumgebung ermöglicht individuelle und berufliche Weiterentwicklung.\nAufgaben\nDiagnostik und Behandlung rheumatologischer Erkrankungen.\nDurchführung diagnostischer und therapeutischer Maßnahmen.\nAktive Teilnahme an interdisziplinären Teamsitzungen und Fallbesprechungen.\nFähigkeiten\nZwei Jahre Erfahrung in Allgemeiner Innerer Medizin erforderlich.\nHohe Fachkompetenz und Teamfähigkeit sind wichtig.\nSehr gute Deutschkenntnisse in Wort und Schrift.\nUnsere Klinik ist eine führende Einrichtung im Fachbereich der Rheumatologie. Wir bieten eine moderne, fortschrittliche und kollegiale Arbeitsumgebung, die sowohl die individuelle als auch die berufliche Weiterentwicklung unserer Mitarbeitenden fördert. Wir bieten Ihnen die Möglichkeit, Ihre medizinischen Fähigkeiten auf höchstem Niveau auszubauen und sich in einem interdisziplinären Team zu integrieren.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nAssistenzärztin / Assistenzarzt (w/m/d) ambulante Rheumatologie 80-100%\nStart ab 2028 oder nach Vereinbarung\nIhre Hauptaufgaben\nDiagnostik und Behandlung von Patientinnen und Patienten mit entzündlichen und degenerativen rheumatologischen Erkrankungen im stationären und ambulanten Setting\nDurchführung von diagnostischen und therapeutischen Massnahmen\nAktive Teilnahme an interdisziplinären Teamsitzungen und Fallbesprechungen\nMedizinische Berichterstattung und Durchführung administrativer Tätigkeiten\nUnterstützung bei wissenschaftlichen Projekten und klinischen Studien im Bereich Rheumatologie\nInterdisziplinäre Zusammenarbeit mit anderen Fachdisziplinen am USZ\nAktive Teilnahme an klinisch-wissenschaftlichen Weiterbildungen\nIhr Profil\nZwei Jahre Erfahrung in Allgemeiner Innerer Medizin an einer vom SIWF zertifizierten Weiterbildungsstätte der Kategorie A\nHohe Fachkompetenz, Teamfähigkeit und Engagement\nRespektvoller Umgang mit Patienten, Patientinnen und Mitarbeitenden ist für Sie selbstverständlich\nSehr gute Deutschkenntnisse in Wort und Schrift\nUnsere Benefits\nEine abwechslungsreiche Tätigkeit in einer universitär-innovativen Umgebung\nNeben der Teilnahme an externen Kursen und Kongressen bieten wir eine umfassende Weiterbildung gemäss dem Weiterbildungsprogramm des SIWF\nEin engagiertes und motiviertes Team unterstützt Sie in allen Belangen\nAttraktive Anstellungskonditionen\nModerne Infrastruktur am USZ Flughafen\nUniversitätsspital Zürich\n8091 Zürich",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-6df65724415cab23c9ee8209",
+    "source": "jobs.ch",
+    "source_job_id": "035402ac-a6e4-49b3-8127-59328c98c993",
+    "title": "Fachperson Gesundheit (FaGe) (FaGe) 80-100% - Temporär",
+    "company": "Vokus Personal AG",
+    "location": "Kanton Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/035402ac-a6e4-49b3-8127-59328c98c993/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-bc9b2b67d7a2b604e5d95421",
+    "source": "jobs.ch",
+    "source_job_id": "2628d33d-9293-4cce-b500-fd2d6eff688b",
+    "title": "Dipl. Pflegefachmann/-frau HF NDK IMC / ÜWP, Dipl. Experte/-in Intensivpflege NDS HF- IMC / Interdisziplinär 80-100% - Temporär",
+    "company": "Vokus Personal AG",
+    "location": "Kanton Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/2628d33d-9293-4cce-b500-fd2d6eff688b/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-cfbb5f498353094d03cf2e45",
+    "source": "jobs.ch",
+    "source_job_id": "2157f834-2f6a-440d-a678-b12b39a5bc8e",
+    "title": "Tierpfleger/-in EFZ oder FBA",
+    "company": "Citydogs GmbH",
+    "location": "Küsnacht ZH",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/2157f834-2f6a-440d-a678-b12b39a5bc8e/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-af0cd41dac1cef4a14869e99",
+    "source": "jobs.ch",
+    "source_job_id": "020c3441-4efe-4656-a96e-a6184fe2db83",
+    "title": "Projektleiter Baumanagement (w | m | d) | 80% - 100%",
+    "company": "Proplaning AG",
+    "location": "Basel",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/020c3441-4efe-4656-a96e-a6184fe2db83/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-18c9d3d3eed05b35f8c7fd97",
+    "source": "jobs.ch",
+    "source_job_id": "87ec2e24-c586-4b61-82a9-5c8b84c90061",
+    "title": "Pädagogische Co-Leitung in der Langzeitbetreuung",
+    "company": "Kinderheim Grünau",
+    "location": "Au ZH",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/87ec2e24-c586-4b61-82a9-5c8b84c90061/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7cc13413264b70c5b7218707",
+    "source": "jobs.ch",
+    "source_job_id": "0aa1c764-f4ef-4f18-a26f-a31608666322",
+    "title": "Projekt- und Servicekoordinator (m/w/d) Schweiz (100%)",
+    "company": "Kompan GmbH",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/0aa1c764-f4ef-4f18-a26f-a31608666322/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-d6535ab8842199ce2725bebb",
+    "source": "jobs.ch",
+    "source_job_id": "6d31eb1d-1fa8-4bea-899e-48f6d6f3d0ba",
+    "title": "Praktikant*in Medizinische Therapien, Standort Käferberg",
+    "company": "Stadt Zürich Gesundheitszentren für das Alter",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/6d31eb1d-1fa8-4bea-899e-48f6d6f3d0ba/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-1e5e160c2af1c319e8fb1b89",
+    "source": "jobs.ch",
+    "source_job_id": "02b19614-bb5b-460d-ab33-ca07497b3656",
+    "title": "Verkaufsberater*in thermische Netze (Fernwärme)",
+    "company": "ewz",
+    "location": "Zürich City",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/02b19614-bb5b-460d-ab33-ca07497b3656/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [
+      "Fernwärme"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 83,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "fernwärme",
+        "thermische netze"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-2b605be60e7b285af085343e",
+    "source": "jobs.ch",
+    "source_job_id": "ad70d67a-fe09-4676-80e1-4c9d8e12f665",
+    "title": "Mandatsleiterin Treuhand (w/m/d) mit nationalen & internationalen Mandanten 70-100%, Ref. 7145S",
+    "company": "Wetzel Personalberatung AG",
+    "location": "Stadt Luzern",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ad70d67a-fe09-4676-80e1-4c9d8e12f665/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 70,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-32b57d6ac57fb84b8cb0f677",
+    "source": "jobs.ch",
+    "source_job_id": "bcb728fe-cb78-48f1-8a9b-fb974e63c35b",
+    "title": "Fachspezialist*in Netzinformationssysteme (GIS, CAD)",
+    "company": "ewz",
+    "location": "Zürich Oerlikon",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/bcb728fe-cb78-48f1-8a9b-fb974e63c35b/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b30e01eb086122c5a244d5ae",
+    "source": "jobs.ch",
+    "source_job_id": "2ef63e03-e275-4456-be5b-109f03fdbdd9",
+    "title": "Carrosseriespengler/-in EFZ",
+    "company": "Emil Frey AG",
+    "location": "Samstagern",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/2ef63e03-e275-4456-be5b-109f03fdbdd9/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b28d5d9775ba4b970deb2881",
+    "source": "jobs.ch",
+    "source_job_id": "4fd13d09-9795-400d-ad7b-575c385e833e",
+    "title": "Teamleiter*in Betrieb HLK",
+    "company": "ewz",
+    "location": "Zürich City",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/4fd13d09-9795-400d-ad7b-575c385e833e/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-9c17ab621f4e75406fb3aeea",
+    "source": "jobs.ch",
+    "source_job_id": "2871b2cd-2fd9-4eca-834e-97939eddf6c8",
+    "title": "Sachbearbeiter:in Bauprojektadministration / Project Office",
+    "company": "ISS Schweiz AG",
+    "location": "Zürich Altstetten",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/2871b2cd-2fd9-4eca-834e-97939eddf6c8/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-2fe830bbd6bf5bce95fd5851",
+    "source": "jobs.ch",
+    "source_job_id": "50d2cf45-fae5-4ac9-98ce-1aaf1df8870a",
+    "title": "Projektleiter:in Akustik und Bauphysik (m/w/d) 60 - 100%",
+    "company": "Spotted",
+    "location": "Zurich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/50d2cf45-fae5-4ac9-98ce-1aaf1df8870a/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-d29812787edc5429327dae53",
+    "source": "jobs.ch",
+    "source_job_id": "bc0df569-de0f-4e71-a113-30048de505ff",
+    "title": "Senior Developer C# & React mit KI-gestützte Entwicklung 80–100 % (m/w/d)",
+    "company": "Idea Creation GmbH",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/bc0df569-de0f-4e71-a113-30048de505ff/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-29a0088116c476f431b2949d",
+    "source": "jobs.ch",
+    "source_job_id": "5a12c642-bc6c-493f-a81f-72f462146172",
+    "title": "Projektleiter/in Bauphysik und Akustik",
+    "company": "EBP Schweiz AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5a12c642-bc6c-493f-a81f-72f462146172/",
+    "published_at": null,
+    "first_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b7d8458978f15043daf66133",
+    "source": "publicjobs.ch",
+    "source_job_id": "zQp2kIFfyuuY02MT",
+    "title": "Gärtner:in Gartenunterhalt (100 %)",
+    "company": "Stadt Winterthur",
+    "location": "Winterthur",
+    "remote_mode": "unknown",
+    "url": "https://opn.publicjobs.ch/jmultn/zQp2kIFfyuuY02MT",
+    "published_at": null,
+    "first_seen_at": "2026-10-21T19:21:41+00:00",
+    "last_seen_at": "2026-10-21T19:21:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-02bf6c5b1a69d3636ea38a8f",
+    "source": "publicjobs.ch",
+    "source_job_id": "Q5tOzZxDeqZ6xanu",
+    "title": "Projektleiterin / Projektleiter Klima und Mobilität, m/w/d, 80%",
+    "company": "Stadt Kloten",
+    "location": "Kloten",
+    "remote_mode": "unknown",
+    "url": "https://opn.publicjobs.ch/jmultn/Q5tOzZxDeqZ6xanu",
+    "published_at": null,
+    "first_seen_at": "2026-10-21T19:21:41+00:00",
+    "last_seen_at": "2026-10-21T19:21:41+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-36b3e6a5e11dd5a20771d783",
+    "source": "publicjobs.ch",
+    "source_job_id": "bMRLu23h6dQOr0g7",
+    "title": "Projektleiterin / Projektleiter Verkehrstechnik Schwerpunkt Veloinfrastruktur (80 - 100 %)",
+    "company": "Kanton Zug",
+    "location": "Zug",
+    "remote_mode": "unknown",
+    "url": "https://opn.publicjobs.ch/jmultn/bMRLu23h6dQOr0g7",
+    "published_at": null,
+    "first_seen_at": "2026-10-21T19:21:41+00:00",
+    "last_seen_at": "2026-10-21T19:21:41+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-a9dedea12c1fa43f5fe66165",
+    "source": "publicjobs.ch",
+    "source_job_id": "1HyhrBKArSobODyE",
+    "title": "Sachbearbeiter/in Brandschutz & Feuerwehr (80 %)",
+    "company": "Einwohnergemeinde Sarnen",
+    "location": "Sarnen",
+    "remote_mode": "unknown",
+    "url": "https://opn.publicjobs.ch/jmultn/1HyhrBKArSobODyE",
+    "published_at": null,
+    "first_seen_at": "2026-10-21T19:21:41+00:00",
+    "last_seen_at": "2026-10-21T19:21:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-172abf013212d49184f14d3c",
+    "source": "publicjobs.ch",
+    "source_job_id": "8Cnv8hxgyqT5R6IK",
+    "title": "Technikerin / Techniker Elektrotechnik und Automation (80 - 100 %)",
+    "company": "Kanton Zug",
+    "location": "Zug",
+    "remote_mode": "unknown",
+    "url": "https://opn.publicjobs.ch/jmultn/8Cnv8hxgyqT5R6IK",
+    "published_at": null,
+    "first_seen_at": "2026-10-21T19:21:41+00:00",
+    "last_seen_at": "2026-10-21T19:21:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
     "id": "job-0aac1c5416422cec6bd5ccec",
     "source": "jobs.ch",
     "source_job_id": "ecaeae08-0119-4b14-9505-df4c912ba9dd",
