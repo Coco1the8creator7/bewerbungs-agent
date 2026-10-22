@@ -145,5 +145,5 @@ const fixture = [
   'assert.equal(backup.export_selection.join(","),"sample-2");',
   'assert.equal(backup.relevance_ratings[0].score,72);',
 ].join("\n");
-vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone,document:{getElementById:()=>({textContent:""})}});
+vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone,window:{matchMedia:()=>({matches:false})},document:{getElementById:()=>({textContent:""})}});
 console.log("Dashboard logic checks passed");
