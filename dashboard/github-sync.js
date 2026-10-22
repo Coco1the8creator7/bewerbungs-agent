@@ -8,7 +8,7 @@
  function clearToken(){localStorage.removeItem(key);}
  async function request(url,options={}){
   const response=await fetch(url,{...options,headers:{"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28",...(getToken()?{"Authorization":"Bearer "+getToken()}:{}),...(options.headers||{})},cache:"no-store"});
-  if(!response.ok){let message="HTTP "+response.status;try{message+=(await response.json()).message?": "+(await response.clone().json()).message:"";}catch{}throw Error(message);}
+  if(!response.ok){let message="HTTP "+response.status;try{const payload=await response.json();if(payload.message)message+=": "+payload.message;}catch{}throw Error(message);}
   return response.json();
  }
  function decode(content){const binary=atob(content.replace(/\s/g,""));return JSON.parse(new TextDecoder().decode(Uint8Array.from(binary,c=>c.charCodeAt(0))));}
