@@ -1,0 +1,75 @@
+/* The Agency MVP: lightweight pixel-art environment; game visuals remain isolated from CRM. */
+.agency-entry{background:#283c56!important;border:1px solid #59708e!important;color:#c8def0!important;padding:7px 10px!important;font-size:.73rem!important;white-space:nowrap}
+.agency-entry:hover{background:#354e6b!important}
+.route-map[role=button]{cursor:pointer;border-radius:9px}
+.route-map[role=button]:hover{background:#ffffff07}
+.route-map[role=button]:focus-visible{outline:2px solid #b1c8ed;outline-offset:2px}
+.agency-world{width:min(1270px,calc(100vw - 20px));max-width:none;max-height:92dvh;overflow:auto;background:#0c1526;color:#e2ecf6;border:1px solid #516880;border-radius:16px;padding:0;box-shadow:0 20px 100px #020817d9}
+.agency-world::backdrop{background:#060a17db;backdrop-filter:blur(6px)}
+.agency-world-top{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;background:#131f33ee;border-bottom:1px solid #30465e;backdrop-filter:blur(8px)}
+.agency-world h2{margin:0;color:#eaf3fd;font-size:1.3rem;letter-spacing:.025em}
+.agency-world .agency-kicker{color:#8ba9c7;font:700 .66rem ui-monospace,monospace;letter-spacing:.14em}
+.agency-world .agency-close{background:#263c52;color:#e8efff;font-size:.78rem}
+.agency-world-content{padding:20px 24px 26px}
+.agency-world-intro{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;color:#a8bdd3;font-size:.83rem;margin:0 0 16px}
+.agency-map-scroll{overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-color:#546982 #142136;border:1px solid #263b52;border-radius:12px;background:radial-gradient(ellipse at 40% 100%,#1c3546aa 0,transparent 65%),repeating-linear-gradient(90deg,#20324844 0 1px,transparent 1px 50px),#101d30}
+.agency-map{display:flex;gap:6px;align-items:stretch;min-width:max-content;padding:13px}
+.agency-island{flex:0 0 157px;width:157px;min-height:257px;padding:10px 7px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;background:transparent;color:#d9e9f7;border:1px solid transparent;border-radius:9px;scroll-snap-align:start;font-weight:normal}
+.agency-island:hover{background:#ffffff07;border-color:#435b74}
+.agency-island[aria-pressed=true]{background:#a4c5eb12;border-color:#7896ba}
+.agency-island:focus-visible{outline:2px solid #c3e3f6;outline-offset:1px}
+.agency-island-number{align-self:flex-start;color:#6f8dac;font:.7rem ui-monospace,monospace}
+.agency-island-title{font:700 .73rem ui-monospace,monospace;letter-spacing:.07em}
+.agency-island-sub{font-size:.73rem;color:#a1b9cf;font-weight:450;min-height:22px}
+.agency-island-stat{font:.62rem ui-monospace,monospace;color:#89b7cf}
+.agency-level-pips{display:flex;justify-content:center;gap:4px;height:8px;padding-top:3px}
+.agency-level-pips i{display:block;width:14px;height:4px;background:#34475d;border-radius:1px}
+.agency-level-pips i.is-active{background:#8bc1d9;box-shadow:0 0 5px #81c7d488}
+.agency-scene{position:relative;width:145px;height:148px;overflow:hidden;image-rendering:pixelated;--accent:#8ccbd0}
+.agency-island[data-theme=analysis] .agency-scene{--accent:#a69bda}
+.agency-island[data-theme=dossier] .agency-scene{--accent:#b1a9d2}
+.agency-island[data-theme=dispatch] .agency-scene{--accent:#92c5b8}
+.agency-island[data-theme=comms] .agency-scene{--accent:#82bcd5}
+.agency-island[data-theme=interview] .agency-scene{--accent:#c0aed0}
+.agency-island[data-theme=advanced] .agency-scene{--accent:#abc0d9}
+.agency-island[data-theme=finale] .agency-scene{--accent:#e4c38b}
+.agency-sky{position:absolute;inset:3px 4px 0;background:radial-gradient(ellipse at 55% 63%,#4b88a019,transparent 60%)}
+.agency-ground{position:absolute;bottom:13px;left:4px;width:137px;height:75px;background:linear-gradient(150deg,#476477 15%,#2d4858 53%,#243f51 54%,#213548 76%);clip-path:polygon(50% 0%,100% 37%,100% 62%,50% 100%,0% 62%,0% 37%);box-shadow:0 6px 0 #1b2b3b}
+.agency-ground:before{content:"";position:absolute;inset:2px;background:linear-gradient(120deg,#7194a055,#3a647155);clip-path:polygon(50% 0%,100% 36%,50% 73%,0 36%)}
+.agency-building,.agency-tower{position:absolute;z-index:1;background:linear-gradient(90deg,#435975 0 18%,#25344c 18% 70%,#344d67 70%);border:2px solid #91a9bf;box-shadow:3px 4px 0 #112539;animation:agency-building-on .65s both}
+.agency-building:after,.agency-tower:after{content:"";position:absolute;inset:5px 3px;background:repeating-linear-gradient(0deg,transparent 0 9px,var(--accent) 9px 12px,transparent 12px 17px);opacity:.8;animation:agency-flicker 3.6s steps(2,end) infinite}
+.agency-building-a{left:54px;bottom:29px;width:28px;height:43px}
+.agency-building-b{left:19px;bottom:22px;width:24px;height:34px;animation-delay:.12s}
+.agency-building-c{left:97px;bottom:22px;width:23px;height:47px;animation-delay:.24s}
+.agency-tower{left:76px;bottom:38px;height:64px;width:19px;animation-delay:.32s}
+.agency-antenna{position:absolute;z-index:2;left:64px;bottom:70px;width:3px;height:29px;background:#a4cee0}
+.agency-antenna:before{content:"";position:absolute;left:-6px;top:-3px;width:15px;height:8px;border:2px solid var(--accent);border-radius:2px;animation:agency-pulse 2.4s infinite}
+.agency-light{position:absolute;z-index:4;width:6px;height:6px;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:agency-flicker 2s steps(2,end) infinite}
+.agency-light-a{left:13px;bottom:28px}.agency-light-b{left:120px;bottom:39px}
+.agency-person{position:absolute;z-index:5;bottom:20px;width:4px;height:11px;background:#a8d1cf;box-shadow:0 -4px 0 #e8d1bb;animation:agency-patrol 3s ease-in-out infinite alternate}
+.agency-person-a{left:47px}.agency-person-b{left:85px;animation-delay:1s}.agency-person-c{left:109px;animation-delay:1.8s}
+.agency-inspector{margin:15px 0 19px;border:1px solid #344e66;border-radius:10px;padding:13px 16px;background:#16253a;min-height:100px}
+.agency-inspector-heading{display:flex;justify-content:space-between;gap:10px;color:#e6f0fb}
+.agency-inspector-heading span{color:#95b8d5;font-size:.76rem}
+.agency-inspector p{color:#afc0d4;font-size:.81rem;line-height:1.5;margin:8px 0}
+.agency-meter{height:5px;background:#2c3e53;border-radius:3px;overflow:hidden}
+.agency-meter span{display:block;height:100%;background:#86b8cf;transition:width .3s ease}
+.agency-world h3{font-size:.86rem;letter-spacing:.06em;color:#d2e0f0;margin:0 0 12px}
+.agency-awards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.agency-award{display:flex;gap:9px;align-items:center;border:1px solid #304258;background:#152339;border-radius:9px;padding:10px;opacity:.52;min-height:62px}
+.agency-award.earned{opacity:1;border-color:#5d768c;background:#20344a}
+.agency-award-glyph{font-size:1.5rem;color:#83a5c2}
+.agency-award.earned .agency-award-glyph{color:#e4c58e;text-shadow:0 0 10px #e7bf7877}
+.agency-award-copy{display:grid;gap:3px;min-width:0}
+.agency-award-copy strong{font-size:.75rem}.agency-award-copy small{font-size:.67rem;color:#a6b9cb;line-height:1.25}
+.agency-disclaimer{color:#839bb3;font-size:.72rem;margin:17px 0 0}
+.agency-celebration{border:1px solid #d3ad67;border-radius:10px;background:radial-gradient(ellipse at 40% 60%,#55422299,#182637 70%);padding:15px 20px;text-align:center;margin-bottom:16px;animation:agency-building-on .7s ease-out}
+.agency-celebration h3{color:#f5dba8;font-size:1rem;margin:4px 0}.agency-celebration p{color:#eddab8;font-size:.82rem;margin:0}
+.agency-celebration[hidden]{display:none}
+@keyframes agency-building-on{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes agency-flicker{0%,80%,100%{opacity:.78}84%,94%{opacity:.3}}
+@keyframes agency-pulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes agency-patrol{from{transform:translateX(-6px)}to{transform:translateX(9px)}}
+@media(max-width:760px){.agency-world-content{padding:13px}.agency-world-top{padding:14px}.agency-awards{grid-template-columns:repeat(2,minmax(0,1fr))}.agency-island{flex-basis:144px;width:144px}.agency-map{padding:8px 5px}.agency-world h2{font-size:1.08rem}}
+@media(max-width:400px){.agency-awards{grid-template-columns:1fr}.agency-inspector-heading{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.agency-scene *, .agency-celebration{animation:none!important}.agency-meter span{transition:none!important}}
