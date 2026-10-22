@@ -1098,11 +1098,6 @@ el("saveGithubFeedback").addEventListener("click",async()=>{
  }catch(e){githubStatus("Nicht gespeichert: "+e.message);el("message").textContent="GitHub-Speicherung fehlgeschlagen: "+e.message;}
  finally{button.disabled=false;}
 });
-el("exportRelevance").addEventListener("click",()=>{
- const payload=buildRelevancePayload();
- downloadJSON("bewerbungs-agent-relevanz-"+new Date().toISOString().slice(0,10)+".json",payload);
- el("message").textContent=payload.ratings.length+" vollständige Bewertungen als private Trainingsdatei exportiert (unbewertete Gründe nicht enthalten).";
-});
 el("exportMarkedJobs").addEventListener("click",()=>{
  const payload=buildMarkedJobsPayload();
  if(!payload.jobs.length){el("message").textContent="Noch keine Inserate für den Export markiert.";return;}
