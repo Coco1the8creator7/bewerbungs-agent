@@ -588,10 +588,16 @@ function updateRating(id,score,reasons,note,feedback){
  const hasAspects=Object.keys(nextFeedback.aspects).length>0||nextFeedback.field_relation!==null||nextFeedback.seniority_assessment!==null;
  if(nextScore===null&&!nextReasons.length&&!nextNote.trim()&&!hasAspects){relevanceRatings.delete(id);saveChanges();return;}
  const job=jobs.find(j=>j.id===id);
+ // Eine erstmalig vergebene Relevanzzahl zählt als abgeschlossene Beurteilung.
+ // Keine erneuten Punkte bei Anpassungen derselben Stelle oder erneutem Speichern.
+ if(previous?.score==null&&nextScore!==null&&!activityLog.some(e=>e.type==="screened"&&e.job_id===id)){
+  logActivity("screened",id);
+ }
  relevanceRatings.set(id,{score:nextScore,reasons:nextReasons,reason:nextReasons[0]||"",note:nextNote,
   ...nextFeedback,updated_at:new Date().toISOString(),
   suggested_score_at_rating:previous?.suggested_score_at_rating??job?.selection?.suggested_score??null,
   selector_version:previous?.selector_version??job?.selection?.version??null});
+ renderMission();
  saveChanges();
 }
 function setRating(id,score,reasons){
@@ -1094,6 +1100,7 @@ el("saveGithubFeedback").addEventListener("click",async()=>{
   githubStatus("Prüfe GitHub-Daten und speichere …");
   const result=await window.GithubFeedback.save(feedbackSnapshot());
   githubStatus("Gespeichert · Commit "+result.slice(0,7));
+  renderMission();
   el("message").textContent="Bewertungen erfolgreich in GitHub gespeichert.";
  }catch(e){githubStatus("Nicht gespeichert: "+e.message);el("message").textContent="GitHub-Speicherung fehlgeschlagen: "+e.message;}
  finally{button.disabled=false;}
