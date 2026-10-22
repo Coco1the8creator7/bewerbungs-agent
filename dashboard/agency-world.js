@@ -56,10 +56,11 @@
   const level=Math.max(phase.level,phase.id==="radar"&&phase.count>0?1:0);
   const sky=make("div","agency-sky");panel.append(sky);
   const ground=make("div","agency-ground");panel.append(ground);
-  if(level>=1){ground.append(make("div","agency-building agency-building-a"));ground.append(make("div","agency-antenna"));}
-  if(level>=2){ground.append(make("div","agency-building agency-building-b"));ground.append(make("div","agency-light agency-light-a"));}
-  if(level>=3){ground.append(make("div","agency-building agency-building-c"));ground.append(make("div","agency-person agency-person-a"));ground.append(make("div","agency-person agency-person-b"));}
-  if(level>=4){ground.append(make("div","agency-tower"));ground.append(make("div","agency-person agency-person-c"));ground.append(make("div","agency-light agency-light-b"));}
+  const structures=make("div","agency-structures");panel.append(structures);
+  if(level>=1){structures.append(make("div","agency-building agency-building-a"));structures.append(make("div","agency-antenna"));}
+  if(level>=2){structures.append(make("div","agency-building agency-building-b"));structures.append(make("div","agency-light agency-light-a"));}
+  if(level>=3){structures.append(make("div","agency-building agency-building-c"));structures.append(make("div","agency-person agency-person-a"));structures.append(make("div","agency-person agency-person-b"));}
+  if(level>=4){structures.append(make("div","agency-tower"));structures.append(make("div","agency-person agency-person-c"));structures.append(make("div","agency-light agency-light-b"));}
   return panel;
  }
  function render(root,input){
