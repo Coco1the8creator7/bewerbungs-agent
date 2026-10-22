@@ -763,14 +763,6 @@ function ratingPanel(j){
  note.setAttribute("aria-label","Bewertungszusatz für "+j.title);
  note.addEventListener("change",()=>{setRatingNote(j.id,note.value);el("message").textContent="Bewertungszusatz übernommen. Für die dauerhafte Sicherung lokale Speicherung aktivieren oder JSON exportieren.";});
  panel.append(top,input,scale,reasons,noteLabel,note);
- if(reviewListView==="unrated"){
-  const next=node("button","✓ Fertig · nächste Stelle","secondary review-next");next.type="button";
-  next.addEventListener("click",()=>{
-   if(!hasReviewFeedback(j.id)){el("message").textContent="Bitte zuerst eine Relevanz oder ein Kriterium bewerten.";return;}
-   renderStats();renderNewJobs();
-  });
-  panel.append(next);
- }
  return panel;
 }
 function stageOf(id){return annotations.get(id)?.decision||"open";}
