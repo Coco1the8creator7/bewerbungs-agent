@@ -200,3 +200,34 @@ def single_posting(source):
     if not clean_description(posting.get("description")):
         raise ValueError("missing_description")
     return posting
+
+def backfill_descriptions(jobs, cursor=None, max_jobs=8, skip_ids=()):
+    """Retry previously imported jobs in stable round-robin order, without dropping user state.
+
+    Each run visits a different bounded segment of missing descriptions. The cursor
+    is an ID rather than a row offset so new jobs do not restart the backlog.
+    """
+    from bisect import bisect_right
+    from collections import Counter
+
+    if max_jobs < 0:
+        raise ValueError("negative_backfill_limit")
+    excluded = set(skip_ids)
+    candidates = sorted((job["id"], index) for index, job in enumerate(jobs)
+                        if job.get("url") and not job.get("description") and job["id"] not in excluded)
+    if not candidates or max_jobs == 0:
+        return jobs, cursor, {"attempted": 0, "enriched": 0, "outcomes": {}}
+
+    keys = [job_id for job_id, _ in candidates]
+    start = bisect_right(keys, cursor or "")
+    batch = (candidates[start:] + candidates[:start])[:max_jobs]
+    result = list(jobs)
+    counts = Counter()
+    for job_id, index in batch:
+        result[index], outcome = enrich_one(result[index])
+        counts[outcome] += 1
+    return result, batch[-1][0], {
+        "attempted": len(batch),
+        "enriched": counts.pop("enriched", 0),
+        "outcomes": dict(counts)
+    }
