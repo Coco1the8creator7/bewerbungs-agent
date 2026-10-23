@@ -33,7 +33,7 @@ class DashboardContractTests(unittest.TestCase):
         self.assertLess(overview, pipeline)
         self.assertLess(pipeline, new_jobs)
         self.assertLess(new_jobs, tools)
-        for marker in ('id="newCount"', 'id="reviewNewCount"', 'id="reviewTotalCount"', 'id="declinedNewCount"'):
+        for marker in ('id="newCount"', 'id="unratedCount"', 'id="reviewTotalCount"', 'id="declinedNewCount"'):
             self.assertIn(marker, html)
         self.assertIn('id="exportDecisions"', html)
         self.assertIn('class="tools"', html)
@@ -44,6 +44,9 @@ class DashboardContractTests(unittest.TestCase):
         self.assertIn('id="exportJobs"', html)
         self.assertIn('id="editCategories"', html)
         self.assertIn('id="addJob"', html)
+        self.assertIn('el("unratedCount").textContent=unratedJobs().length;', html)
+        self.assertIn('countNewArrivals(jobs,incomingWindow.cutoff)', html)
+        self.assertNotIn('id="reviewNewCount"', html)
         self.assertIn('manualOverrides', html)
         self.assertIn('type:"bewerbungs-agent-decisions"', html)
         self.assertNotIn("localStorage", html)
