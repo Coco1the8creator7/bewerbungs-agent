@@ -116,6 +116,22 @@
    fill.style.width=(p.next===null?100:Math.min(100,Math.max(0,100*(p.count-p.previous)/Math.max(span,1))))+"%";
    track.append(fill);target.append(track);
   }
+  if(p.id==="analysis"&&window.AgentAgencyArt){
+   const gallery=make("details","agency-evolution");
+   gallery.append(make("summary","","Alle fünf Ausbaustufen ansehen"));
+   const strip=make("div","agency-evolution-strip");
+   const thresholds=[0,...p.thresholds];
+   for(let level=0;level<=4;level++){
+    const tile=make("div","agency-evolution-stage");
+    tile.dataset.current=String(level===p.level);
+    tile.append(window.AgentAgencyArt.createScene({...p,level}));
+    tile.append(make("strong","","LEVEL "+level));
+    tile.append(make("small","",level?"Ab "+thresholds[level]+" Bewertungen":"0–49 Bewertungen"));
+    strip.append(tile);
+   }
+   gallery.append(strip);
+   target.append(gallery);
+  }
  }
  function open(root,input,{celebrate=false}={}){
   const model=render(root,input);
