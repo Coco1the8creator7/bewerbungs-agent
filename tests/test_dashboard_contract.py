@@ -54,37 +54,52 @@ class DashboardContractTests(unittest.TestCase):
     def test_earth_palette_covers_dashboard_and_agency(self):
         html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
         agency = (ROOT / "dashboard/agency-world.css").read_text(encoding="utf-8")
-        self.assertIn("--earth-bg:#f1e7d8", html)
+        light = (ROOT / "dashboard/light-earth.css").read_text(encoding="utf-8")
         self.assertIn("--world-design-background:#f1e7d8", html)
         self.assertIn("body{background:var(--earth-bg);color:var(--earth-page-text)}", html)
-        self.assertIn("header h1,header .eyebrow,header .sub", html)
-        self.assertIn("--earth-surface:#2b251f", html)
-        self.assertIn("--earth-sage:#b2c49f", html)
-        self.assertIn("--earth-clay:#d6a087", html)
-        self.assertIn("background:var(--earth-surface);border-color:var(--earth-border)", html)
-        self.assertIn(".agency-world{", agency)
-        self.assertIn("background:#211b16;color:#eee4d5", agency)
-        self.assertNotIn("#101727", html, "Legacy dark-blue page background must not return")
-        self.assertNotIn("#0c1526", agency, "Legacy dark-blue world background must not return")
+        self.assertIn('href="./agency-world.css"', html)
+        self.assertIn('href="./light-earth.css"', html)
+        self.assertLess(html.index('href="./agency-world.css"'), html.index('href="./light-earth.css"'))
+        self.assertIn("color-scheme: light", light)
+        self.assertIn("--earth-surface: #f8f1e7", light)
+        self.assertIn("--earth-raised: #fdf7ee", light)
+        self.assertIn("--earth-border: #d8c7b1", light)
+        self.assertIn("background: var(--earth-surface)", light)
+        self.assertIn(".stat, .panel, .card, .mission-card", light)
+        self.assertIn(".feedback-spectrum", light)
+        self.assertIn(".floating-save", light)
+        self.assertIn(".agency-world {", light)
+        self.assertIn(".agency-ground", light)
+        self.assertIn(".agency-building, .agency-tower", light)
+        self.assertIn(".agency-world{", agency)  # Pixel-art layout retained.
+        self.assertNotIn("#101727", light, "Legacy dark-blue page background must not return")
+        self.assertNotIn("#201b17", light, "Legacy espresso surfaces must not return")
+
+        def luminance(hex_color):
+            channels = [int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+            r, g, b = [(x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4) for x in channels]
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
         def contrast(foreground, background):
-            def luminance(hex_color):
-                channels = [int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
-                r, g, b = [(x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4) for x in channels]
-                return 0.2126 * r + 0.7152 * g + 0.0722 * b
             a, b = sorted([luminance(foreground), luminance(background)])
             return (b + 0.05) / (a + 0.05)
 
-        for fg, bg in (
-            ("#eee4d5", "#2b251f"),  # Card body text
-            ("#b8a992", "#2b251f"),  # Muted text
-            ("#241c15", "#c5a27b"),  # Primary button label
-            ("#eee4d5", "#514334"),  # Secondary button label
-            ("#aa9b88", "#241f19"),  # Placeholder text
-            ("#4f3c2b", "#f1e7d8"),  # Page headings on pale World Design beige
-            ("#675341", "#f1e7d8"),  # Page metadata on pale background
+        # Surfaces are intentionally close in lightness, not dark islands on beige.
+        self.assertLess(contrast("#f1e7d8", "#f8f1e7"), 1.2)
+        self.assertLess(contrast("#f1e7d8", "#fdf7ee"), 1.3)
+        # Text, buttons, statuses and hints retain WCAG AA minimum contrast.
+        for foreground, background in (
+            ("#49392b", "#f8f1e7"),  # Card text
+            ("#6b5845", "#f8f1e7"),  # Small metadata
+            ("#49392b", "#fdf7ee"),  # Modal text
+            ("#fff9f1", "#795a40"),  # Save button text
+            ("#4e3b2c", "#e8dbc9"),  # Secondary button label
+            ("#36553c", "#e0e9d8"),  # Positive status
+            ("#7c4535", "#f1e0d5"),  # Negative status
+            ("#6b5845", "#f1e7d8"),  # Section text on beige
         ):
-            self.assertGreaterEqual(contrast(fg, bg), 4.5, f"Insufficient contrast: {fg} on {bg}")
+            self.assertGreaterEqual(contrast(foreground, background), 4.5,
+                                    f"Insufficient contrast: {foreground} on {background}")
 
     def test_floating_rating_save_reuses_existing_github_action(self):
         html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
