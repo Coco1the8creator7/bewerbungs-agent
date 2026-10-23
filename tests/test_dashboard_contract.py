@@ -45,7 +45,7 @@ class DashboardContractTests(unittest.TestCase):
         self.assertIn('id="editCategories"', html)
         self.assertIn('id="addJob"', html)
         self.assertIn('el("unratedCount").textContent=unratedJobs().length;', html)
-        self.assertIn('countNewArrivals(jobs,incomingWindow.cutoff)', html)
+        self.assertIn('countNewArrivals(visibleJobs(),incomingWindow.cutoff)', html)
         self.assertNotIn('id="reviewNewCount"', html)
         self.assertIn('manualOverrides', html)
         self.assertIn('type:"bewerbungs-agent-decisions"', html)
