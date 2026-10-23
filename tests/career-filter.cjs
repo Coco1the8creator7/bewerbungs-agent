@@ -46,6 +46,9 @@ for(const [title,company] of visible)
 assert.equal(isVisible({title:"Bauleiter:in Hochbau",company:"Universitätsspital Zürich",description:"Patientenversorgung Klinik"}),true);
 assert.equal(isVisible({title:"SAP Administrator",company:"Universitätsspital Zürich"}),false);
 assert.equal(isVisible({title:"Projektleiter Energiekonzept",company:"Spital GmbH"}),true);
-assert.equal(isVisible({title:"Unbekannte Stelle",company:"Pflegeheim AG"}),true,"Employer alone is not a job classification");
+assert.equal(isVisible({title:"Unbekannte Stelle",company:"Pflegeheim AG"}),false,"Healthcare-sector roles without technical evidence should be hidden");
+assert.equal(isVisible({title:"Technischer Hauswart",company:"Universitätsspital Zürich"}),true);
+assert.equal(isVisible({title:"Diätkoch 80-100%",company:"Universitätsspital Zürich"}),false);
+assert.equal(isVisible({title:"Schichtverantwortliche:r AEMP 80-100%",company:"Universitätsspital Zürich"}),false);
 assert.equal(isVisible({title:"Senior Software Developer (KI-gestützte Programmierung)",company:"Muster AG"}),false);
 console.log("Career filter: "+hidden.length+" exclusions and "+visible.length+" allowed roles validated");
