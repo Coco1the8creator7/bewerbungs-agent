@@ -31,7 +31,7 @@
   // A hospital is not itself a reason for exclusion. Technical construction
   // and facility/infrastructure roles in hospitals must remain visible.
   const hospitalContext = /\b(?:\w*(?:spital|klinik)\w*|krankenhaus\w*|hospital\w*|hirslanden|usz|gesundheitszent(?:rum|ren)\w*|pflegeheim\w*|alterszentrum\w*)\b/;
-  const hospitalEngineering = /\b(?:bauleiter\w*|bauprojekt\w*|bauingenieur\w*|hochbau|tiefbau|baumanagement|bauentwicklungsplanung|bau[- ]?entwicklungsplanung|bauherrenvertret\w*|gebaeudetechnik|haustechnik|technisch\w* hauswart|hauswart\w*|facility\w*|hlk|hlks|tga|heizung\w*|lueftung\w*|kaelte\w*|energieversorgung\w*|energieprojekt\w*|betriebstechnik|betriebsingenieur\w*|versorgungstechnik|facility management|technisch\w* dienst|medizintechnik|medizin[- ]?technik)\b/;
+  const hospitalEngineering = /\b(?:bauleiter\w*|bauprojekt\w*|bauingenieur\w*|hochbau|tiefbau|baumanagement|bauentwicklungsplanung|bau[- ]?entwicklungsplanung|bauherrenvertret\w*|gebaeudetechnik|haustechnik|technisch\w* hauswart|hauswart\w*|facility\w*|hlk|hlks|tga|heizung\w*|lueftung\w*|kaelte\w*|energieversorgung\w*|energiekonzept\w*|energieberatung\w*|energieplanung\w*|energieprojekt\w*|betriebstechnik|betriebsingenieur\w*|versorgungstechnik|facility management|technisch\w* dienst|medizintechnik|medizin[- ]?technik)\b/;
   const fold = v => String(v || "").toLocaleLowerCase("de").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[\u0300-\u036f]/g,"").replace(/[\s_]+/g," ").trim();
   const matches = (patterns, title) => patterns.some(re => re.test(title));
   function classify(job) {
