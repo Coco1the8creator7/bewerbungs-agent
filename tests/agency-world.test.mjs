@@ -77,7 +77,7 @@ test("Agency artwork remains data-free and all known islands reuse one renderer"
   const svg=renderSVG(1,theme);
   assert.match(svg,/<svg /);
   assert.match(svg,new RegExp('data-theme="'+theme+'"'));
-  assert.doesNotMatch(svg,/<script|onload=|http:/i);
+  assert.doesNotMatch(svg,/<script|onload=|<foreignObject/i);
  }
 });
 test("Warm beige styling loads after the legacy theme and has reduced-motion safeguards",()=>{
