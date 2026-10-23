@@ -163,7 +163,7 @@ const fixture = [
 // DOM fixture to exercise business logic without executing any browser or network IO.
 function fakeElement(){
   return {textContent:"",style:{},dataset:{},classList:{toggle(){}},
-    setAttribute(){},replaceChildren(){},append(){}};
+    setAttribute(){},replaceChildren(){},append(){},addEventListener(){}};
 }
 const document = {
   getElementById:fakeElement,
