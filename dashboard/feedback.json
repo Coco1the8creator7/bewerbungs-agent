@@ -1,7 +1,7 @@
 {
   "type": "bewerbungs-agent-feedback",
   "schema_version": "1.0.0",
-  "updated_at": "2026-10-23T12:48:41.452Z",
+  "updated_at": "2026-10-23T12:50:10.529Z",
   "annotations": [],
   "relevance_ratings": [
     {
@@ -1343,6 +1343,94 @@
       "updated_at": "2026-10-23T12:48:37.493Z",
       "suggested_score_at_rating": 45,
       "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-18d51a65d3ab53ae002b5e35",
+      "score": 43,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "tasks": 7
+      },
+      "field_relation": "transferable",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-23T12:49:25.887Z",
+      "suggested_score_at_rating": 57,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-7846ad715d8c97fcb8ffcb44",
+      "score": 8,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-23T12:49:33.799Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-6afa424c31f76db3b5d17be8",
+      "score": 28,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "tasks": 5
+      },
+      "field_relation": "transferable",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-23T12:49:42.957Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-4a301550095c5a52baf338dd",
+      "score": 5,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "conditions": -99
+      },
+      "field_relation": "unrelated",
+      "seniority_assessment": "underchallenging",
+      "updated_at": "2026-10-23T12:49:50.944Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-300ae1647dbc8054c59316b1",
+      "score": 59,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "tasks": 14
+      },
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-23T12:49:57.868Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-b537481e4becf25ba77df5ed",
+      "score": 13,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "conditions": -97
+      },
+      "field_relation": "unrelated",
+      "seniority_assessment": "underchallenging",
+      "updated_at": "2026-10-23T12:50:05.796Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
     }
   ],
   "export_selection": [],
@@ -1736,6 +1824,42 @@
       "job_id": "job-97de7daa4b0073f13250cb1d",
       "type": "screened",
       "at": "2026-10-23T12:48:36.058Z"
+    },
+    {
+      "id": "bf15a169-c607-458a-a4c8-5b6efe14f606",
+      "job_id": "job-18d51a65d3ab53ae002b5e35",
+      "type": "screened",
+      "at": "2026-10-23T12:49:23.664Z"
+    },
+    {
+      "id": "aa5a12fb-c672-44f1-a808-35a8fcc4e612",
+      "job_id": "job-7846ad715d8c97fcb8ffcb44",
+      "type": "screened",
+      "at": "2026-10-23T12:49:32.300Z"
+    },
+    {
+      "id": "e58d08a0-e830-488a-b055-10804073ac05",
+      "job_id": "job-6afa424c31f76db3b5d17be8",
+      "type": "screened",
+      "at": "2026-10-23T12:49:39.233Z"
+    },
+    {
+      "id": "0c4afe9f-af22-46db-9f60-b471b62cfc60",
+      "job_id": "job-4a301550095c5a52baf338dd",
+      "type": "screened",
+      "at": "2026-10-23T12:49:46.372Z"
+    },
+    {
+      "id": "3fe7998a-6c77-4d74-b5fc-c81823e869d9",
+      "job_id": "job-300ae1647dbc8054c59316b1",
+      "type": "screened",
+      "at": "2026-10-23T12:49:55.993Z"
+    },
+    {
+      "id": "078a5c66-d8d5-46c2-83df-a384f7480f38",
+      "job_id": "job-b537481e4becf25ba77df5ed",
+      "type": "screened",
+      "at": "2026-10-23T12:50:02.528Z"
     }
   ],
   "overrides": [],
