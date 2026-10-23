@@ -4,7 +4,7 @@
   "use strict";
   const clinical = [
     /\b(?:ober|chef|assistenz|fach|haus|kinder|notfall|leitend[ea]n?)?aerz(?:t|te|tin)\b/,
-    /\barzt\b/, /\bpflege(?:fach|helfer|expert|personal|dienst|leitung|kraft|beruf|assistent|person|mann|frau)?\w*\b/,
+    /\b(?:ober|chef|assistenz|fach|haus|kinder|notfall|leitend\w*)?arzt\w*\b/, /\bpflege(?:fach|helfer|expert|personal|dienst|leitung|kraft|beruf|assistent|person|mann|frau)?\w*\b/,
     /\bfage\b/, /\b(?:fachperson|fachfrau|fachmann) gesundheit\b/,
     /\b(?:medizinisch\w*|clinical|klinisch\w*|patient\w*|nurse|nursing|hebamme|midwife|mpa)\b/,
     /\b(?:physiotherap\w*|ergotherap\w*|psychotherap\w*|psycholog\w*|rheumatolog\w*|geriatr\w*|nephrolog\w*|radiolog\w*|onkolog\w*|chirurg\w*|intensivmedizin\w*)\b/,
@@ -15,7 +15,7 @@
   const classicalIT = [
     /\b(?:it|ict|informatik|informatiker\w*|wirtschaftsinformatik\w*|edv)\b/,
     /\b(?:software\w*|webentwickl\w*|webdevelop\w*|frontend|backend|full[ -]?stack|devops|developer\w*|programmierer\w*|coding)\b/,
-    /\b(?:cloud\w*|azure|aws|kubernetes|sap|erp|cyber\w*|security engineer|information security|it security|informationstechnolog\w*)\b/,
+    /\b(?:cloud\w*|azure|aws|kubernetes|sap|erp|cyber\w*|security engineer|information security|security infrastructure engineer|security consultant|it security|informationstechnolog\w*)\b/,
     /\b(?:applikations\w*|datenbank\w*|data scientist|data engineer|data analyst|systemadministrat\w*|system engineer|systemarchitekt\w*|network engineer|netzwerkadministrat\w*)\b/,
     /\b(?:solution architekt\w*|solution architect\w*|softwarearchitekt\w*|product owner|digital ecosystem|digital platform|digital product|it auditor|grc consultant)\b/,
     /\b(?:c#|c\+\+|react|java developer|python developer|sql developer)\b/
