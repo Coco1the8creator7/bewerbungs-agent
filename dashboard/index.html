@@ -350,6 +350,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
 <script src="./storage.js"></script>
 <script src="./agency-world.js"></script>
 <script src="./github-sync.js"></script>
+<script src="./career-filter.js"></script>
 <script>
 "use strict";
 // Kein Browser-Dauerspeicher: private Status-/Notizdaten liegen nur im aktuellen Tab.
@@ -431,13 +432,13 @@ function renderMission(){
  const statusRanks={open:0,review:1,saved:1,later:1,preparing:2,applied:2,interview:3,interview2:3,offer:4,accepted:4,declined:0,rejected:0};
  const eventRanks={screened:1,preparing:2,applied:2,interview:3,interview2:3,offer:4,accepted:4};
  const history=activityLog.filter(e=>demoMode?e.job_id.startsWith("DEMO-"):!e.job_id.startsWith("DEMO-"));
- const level=Math.max(0,...jobs.map(j=>statusRanks[stageOf(j.id)]||0),...history.map(e=>eventRanks[e.type]||0));
+ const level=Math.max(0,...visibleJobs().map(j=>statusRanks[stageOf(j.id)]||0),...history.map(e=>eventRanks[e.type]||0));
  const names=["Radar aktiv · Chancen entdecken","Erkundung · Inserate prüfen","Kurs gesetzt · Bewerbung läuft","Kontakt hergestellt · Gesprächsphase","Neuer Planet · Angebot erreicht"];
  const width=(level*86/4);
  el("routeLine").style.width=width+"%";
  el("routeShip").style.left=(7+width)+"%";
  el("routeMap").setAttribute("aria-label","Agency World öffnen · "+names[level]);
- el("routeCaption").textContent=(level===4&&(history.some(e=>e.type==="accepted")||jobs.some(j=>stageOf(j.id)==="accepted"))?"Zusage bestätigt ✦":names[level])+". Die Route zeigt deinen weitesten dokumentierten Meilenstein, nicht die Wahrscheinlichkeit einer Zusage. Tippe auf die Karte für deine Inselwelt.";
+ el("routeCaption").textContent=(level===4&&(history.some(e=>e.type==="accepted")||visibleJobs().some(j=>stageOf(j.id)==="accepted"))?"Zusage bestätigt ✦":names[level])+". Die Route zeigt deinen weitesten dokumentierten Meilenstein, nicht die Wahrscheinlichkeit einer Zusage. Tippe auf die Karte für deine Inselwelt.";
  for(const marker of document.querySelectorAll("[data-milestone]")){
   const n=Number(marker.dataset.milestone);
   marker.classList.toggle("reached",n<=level);
@@ -466,7 +467,7 @@ function renderMission(){
 
 function agencyData(){
  return {
-  jobs,
+  jobs:visibleJobs(),
   ratings:[...relevanceRatings.entries()].map(([id,r])=>({id,score:r.score})),
   annotations:[...annotations.entries()].map(([id,a])=>({id,decision:a.decision})),
   activityLog,
@@ -622,8 +623,9 @@ function node(tag,value,klass){const item=document.createElement(tag);if(klass)i
 function safeLink(value){try{const url=new URL(value);return ["https:","http:"].includes(url.protocol)?url.href:null;}catch{return null;}}
 function ratingOf(id){return relevanceRatings.get(id)||null;}
 function hasReviewFeedback(id){const r=ratingOf(id);return !!r&&(Number.isInteger(r.score)||storedReasons(r).length>0||!!r.note?.trim()||Object.keys(r.aspects||{}).length>0||!!r.field_relation||!!r.seniority_assessment);}
-function unratedJobs(){return jobs.filter(j=>stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
-function reviewedJobs(){return jobs.filter(j=>hasReviewFeedback(j.id));}
+function visibleJobs(){return jobs.filter(j=>!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j));}
+function unratedJobs(){return visibleJobs().filter(j=>stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
+function reviewedJobs(){return visibleJobs().filter(j=>hasReviewFeedback(j.id));}
 function normalizeReasons(value){
  const items=typeof value==="string"?(value?[value]:[]):value??[];
  if(!Array.isArray(items)||items.some(code=>typeof code!=="string"||!reasonCodes.has(code)))throw Error("Ungültige Bewertungsgründe.");
@@ -700,7 +702,7 @@ function validateExportSelection(ids){
  if(!Array.isArray(ids)||ids.some(id=>typeof id!=="string"||!id.trim())||new Set(ids).size!==ids.length)throw Error("Ungültige Exportauswahl.");
  return new Set(ids);
 }
-function markedJobs(){return jobs.filter(j=>selectedJobIds.has(j.id));}
+function markedJobs(){return visibleJobs().filter(j=>selectedJobIds.has(j.id));}
 function updateMarkedSummary(){
  const count=markedJobs().length;
  el("markedSummary").textContent=count+" für Export markiert";
@@ -979,13 +981,13 @@ function startNewJob(){
 let newJobDraft=null;
 function actionButton(job){const b=node("button","Details","secondary compact-button");b.type="button";b.addEventListener("click",()=>openDetails(job.id));return b;}
 function renderStats(){
- el("newCount").textContent=countNewArrivals(jobs,incomingWindow.cutoff);
+ el("newCount").textContent=countNewArrivals(visibleJobs(),incomingWindow.cutoff);
  el("unratedCount").textContent=unratedJobs().length;
- el("reviewTotalCount").textContent=jobs.filter(j=>stageOf(j.id)==="review").length;
- el("declinedNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="declined"&&recent(stageChangedAt(j.id))).length;
+ el("reviewTotalCount").textContent=visibleJobs().filter(j=>stageOf(j.id)==="review").length;
+ el("declinedNewCount").textContent=visibleJobs().filter(j=>stageOf(j.id)==="declined"&&recent(stageChangedAt(j.id))).length;
 }
 function renderPipeline(){
- const active=jobs.filter(j=>activeStages.has(stageOf(j.id))).sort((a,b)=>(validDate(stageChangedAt(b.id))||0)-(validDate(stageChangedAt(a.id))||0));
+ const active=visibleJobs().filter(j=>activeStages.has(stageOf(j.id))).sort((a,b)=>(validDate(stageChangedAt(b.id))||0)-(validDate(stageChangedAt(a.id))||0));
  el("pipelineSummary").textContent=active.length+" aktive Vorgänge";
  const target=el("pipelineList");target.replaceChildren();
  if(!active.length)target.append(node("div","Noch keine Inserate in Bearbeitung. Setze bei einer neuen Stelle den Status «In Prüfung».","empty"));
@@ -999,7 +1001,7 @@ function renderPipeline(){
   const follow=followUpButton(j);if(follow)action.append(follow);
   target.append(row);
  }
- const archived=jobs.filter(j=>["declined","rejected","accepted"].includes(stageOf(j.id)));
+ const archived=visibleJobs().filter(j=>["declined","rejected","accepted"].includes(stageOf(j.id)));
  el("archiveLabel").textContent="Abgeschlossen / Archiv ("+archived.length+")";
  const archive=el("archiveList");archive.replaceChildren();
  if(!archived.length){archive.append(node("div","Noch keine abgeschlossenen Vorgänge.","empty"));return;}
@@ -1107,9 +1109,9 @@ function loadJobs(rows,name,asDemo=false){
  for(const key of [...annotations.keys()])if(key.startsWith("DEMO-"))annotations.delete(key);
  if(!asDemo)activityLog=activityLog.filter(entry=>!entry.job_id.startsWith("DEMO-"));
  jobs=rows;demoMode=asDemo;
- refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
- refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
- el("message").textContent=jobs.length+" Inserate aus «"+name+"» geladen. Änderungen bei Bedarf exportieren.";
+ refill(el("category"),unique(visibleJobs().flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
+ refill(el("source"),unique(visibleJobs().map(j=>j.source)),"Alle Quellen");
+ el("message").textContent=visibleJobs().length+" Inserate sichtbar ("+(jobs.length-visibleJobs().length)+" nach deiner Gesundheits-/IT-Regel ausgeblendet). Die Originaldaten und Bewertungen bleiben erhalten.";
  render();
  saveChanges();
 }
@@ -1180,8 +1182,8 @@ el("saveDetails").addEventListener("click",()=>{
    for(const key of editableKeys)if(JSON.stringify(next[key])!==JSON.stringify(old[key]))patch[key]=structuredClone(next[key]);
    if(Object.keys(patch).length)manualOverrides.set(next.id,patch);
   }
-  refill(el("category"),unique(jobs.flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
-  refill(el("source"),unique(jobs.map(j=>j.source)),"Alle Quellen");
+  refill(el("category"),unique(visibleJobs().flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
+  refill(el("source"),unique(visibleJobs().map(j=>j.source)),"Alle Quellen");
   if(wasNewJob){
    if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value);
    setFeedback(currentJobId,detailDraftFeedback);
@@ -1352,7 +1354,7 @@ async function initialize(){
    }else{
     githubStatus("Lokaler Arbeitsstand vorhanden. Automatisches Überschreiben durch GitHub unterdrückt.");
    }
-   el("message").textContent=incoming.length+" Stellen automatisch geladen; bestehende persönliche Status und Korrekturen beibehalten.";
+   el("message").textContent=visibleJobs().length+" passende Inserate sichtbar; "+(jobs.length-visibleJobs().length)+" ausgeblendet. Persönliche Bewertungen und Inseratdaten bleiben erhalten.";
    return;
   }
  }catch(err){
