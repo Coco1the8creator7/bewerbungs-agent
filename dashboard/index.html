@@ -205,7 +205,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
 /* Earth palette: shared semantic tokens for the full dashboard, cards and overlays. */
 :root{
  color-scheme:dark;
- --earth-bg:#201b17;
+ --earth-bg:#f1e7d8;
  --earth-surface:#2b251f;
  --earth-raised:#342b23;
  --earth-border:#514538;
@@ -267,6 +267,70 @@ button.reason-button[aria-pressed="true"]{background:#5a4d38;color:#f7e7d2;borde
 #detailTitle a{color:#f4dfbd}
 #detailDescription{color:#e4d7c5}
 dialog::backdrop{background:#100c09c7}
+
+
+/* World-Design brightness: very light, warm beige instead of the dark espresso page.
+   The final reference image has no machine-readable swatch; keep one editable token. */
+:root{--world-design-background:#f1e7d8;--earth-bg:var(--world-design-background);--earth-page-text:#4f3c2b}
+body{background:var(--earth-bg);color:var(--earth-page-text)}
+main:before{background-image:radial-gradient(#8f755a 1px,transparent 1px);opacity:.09}
+header{border-bottom-color:#cabbab}
+header h1,header .eyebrow,header .sub,
+.section-heading h2,.section-heading p{color:var(--earth-page-text)}
+header .sub,.section-heading p{color:#6b5744}
+.stat,.panel,.card,.mission-card,.filters,.persist-panel,dialog{color:var(--earth-text)}
+.headline-actions .marked-summary{color:#675341}
+.bottom{border-color:#ccb9a3;color:var(--earth-page-text)}
+.bottom .tools summary,.bottom .disclaimer,.bottom .status-message{color:#675341}
+.bottom .persist-panel,.bottom .persist-panel p{color:var(--earth-text)}
+.mobile-load{color:#6b5744}
+
+/* Small fixed save action while the original action is out of view. */
+.floating-save{
+ position:fixed;
+ right:max(16px,env(safe-area-inset-right));
+ bottom:max(16px,calc(env(safe-area-inset-bottom) + 16px));
+ z-index:30;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:8px;
+ max-width:calc(100vw - 32px);
+ padding:13px 18px;
+ border:1px solid #b89973;
+ border-radius:999px;
+ background:#493b2d;
+ color:#fff2dc;
+ box-shadow:0 8px 24px #35271955;
+ font-size:.89rem;
+ font-weight:700;
+ line-height:1.3;
+ cursor:pointer
+}
+.floating-save:hover{background:#5d4936}
+.floating-save:focus-visible{outline:3px solid #a17a4f;outline-offset:3px}
+.floating-save:disabled{opacity:.75;cursor:wait}
+.floating-save[hidden],.floating-save-status[hidden]{display:none!important}
+.floating-save-status{
+ position:fixed;
+ right:max(16px,env(safe-area-inset-right));
+ bottom:max(79px,calc(env(safe-area-inset-bottom) + 79px));
+ z-index:30;
+ width:max-content;
+ max-width:min(310px,calc(100vw - 32px));
+ padding:10px 14px;
+ border:1px solid #99866d;
+ border-radius:11px;
+ background:#302920;
+ color:#f6ecdb;
+ box-shadow:0 8px 24px #35271944;
+ font-size:.82rem
+}
+.floating-save-status.is-error{border-color:#ad7257}
+@media(max-width:650px){
+ .floating-save{padding:12px 15px;font-size:.82rem}
+ .floating-save-status{bottom:max(74px,calc(env(safe-area-inset-bottom) + 74px))}
+}
 
 </style>
 <link rel="stylesheet" href="./agency-world.css">
@@ -414,6 +478,8 @@ dialog::backdrop{background:#100c09c7}
  </div>
 </dialog>
 </main>
+<button id="floatingSaveGithubFeedback" type="button" class="floating-save" aria-label="Inseratebewertungen in GitHub speichern" hidden>💾 Bewertungen speichern</button>
+<div id="floatingSaveStatus" class="floating-save-status" role="status" aria-live="polite" hidden></div>
 <script src="./storage.js"></script>
 <script src="./agency-world.js"></script>
 <script src="./github-sync.js"></script>
@@ -1301,8 +1367,33 @@ el("loadGithubFeedback").addEventListener("click",async()=>{
   githubStatus("GitHub-Bewertungen geladen");
  }catch(e){githubStatus("Laden fehlgeschlagen: "+e.message);}
 });
+
+// A single underlying GitHub action serves both save buttons.
+function shouldShowFloatingSave(scrollY,rect,viewportHeight,dialogOpen){
+ return scrollY>180&&!!rect&&(rect.bottom<=0||rect.top>=viewportHeight)&&!dialogOpen;
+}
+function updateFloatingSaveVisibility(){
+ const main=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback");
+ if(!main||!floating||typeof main.getBoundingClientRect!=="function")return;
+ const rect=main.getBoundingClientRect();
+ floating.hidden=!shouldShowFloatingSave(window.scrollY||0,rect,window.innerHeight||0,!!document.querySelector("dialog[open]"));
+ if(floating.hidden)el("floatingSaveStatus").hidden=true;
+}
+let floatingSaveStatusTimeout=null;
+function showFloatingSaveFeedback(message,isError=false){
+ const floating=el("floatingSaveGithubFeedback");
+ if(floating.hidden)return;
+ const status=el("floatingSaveStatus");
+ status.textContent=message;
+ status.classList.toggle("is-error",isError);
+ status.hidden=false;
+ if(floatingSaveStatusTimeout!==null)clearTimeout(floatingSaveStatusTimeout);
+ floatingSaveStatusTimeout=setTimeout(()=>{status.hidden=true;floatingSaveStatusTimeout=null;},6000);
+}
+el("floatingSaveGithubFeedback").addEventListener("click",()=>el("saveGithubFeedback").click());
 el("saveGithubFeedback").addEventListener("click",async()=>{
- const button=el("saveGithubFeedback");button.disabled=true;
+ const button=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback");
+ button.disabled=true;floating.disabled=true;floating.textContent="Speichert …";
  try{
   if(demoMode)throw Error("Demo-Daten dürfen nicht ins Repository gespeichert werden.");
   if(!window.GithubFeedback.getToken())throw Error("Bitte zuerst den GitHub-Token unten unter Daten & Entwicklung hinterlegen.");
@@ -1311,8 +1402,13 @@ el("saveGithubFeedback").addEventListener("click",async()=>{
   githubStatus("Gespeichert · Commit "+result.slice(0,7));
   renderMission();
   el("message").textContent="Bewertungen erfolgreich in GitHub gespeichert.";
- }catch(e){githubStatus("Nicht gespeichert: "+e.message);el("message").textContent="GitHub-Speicherung fehlgeschlagen: "+e.message;}
- finally{button.disabled=false;}
+  showFloatingSaveFeedback("Bewertungen gespeichert ✓");
+ }catch(e){
+  githubStatus("Nicht gespeichert: "+e.message);
+  el("message").textContent="GitHub-Speicherung fehlgeschlagen: "+e.message;
+  showFloatingSaveFeedback("Speichern fehlgeschlagen: "+e.message,true);
+ }
+ finally{button.disabled=false;floating.disabled=false;floating.textContent="💾 Bewertungen speichern";}
 });
 el("exportMarkedJobs").addEventListener("click",()=>{
  const payload=buildMarkedJobsPayload();
@@ -1437,6 +1533,10 @@ for(const [id,view] of [["viewUnrated","unrated"],["viewReviewed","reviewed"]])e
 mobileJobQuery.addEventListener("change",()=>{mobileJobLimit=5;mobileJobSignature="";renderNewJobs();});
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
 for(const [code,label] of stages)el("detailDecision").add(new Option(label,code));
+window.addEventListener("scroll",updateFloatingSaveVisibility,{passive:true});
+window.addEventListener("resize",updateFloatingSaveVisibility);
+document.addEventListener("close",updateFloatingSaveVisibility,true);
+updateFloatingSaveVisibility();
 initialize();
 </script>
 </body>
