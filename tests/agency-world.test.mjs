@@ -58,3 +58,33 @@ test("Demo events do not affect real profile and real events do not affect demo"
  assert.equal(island(build(args),"analysis").count,1);
  assert.equal(island(build({...args,demoMode:true}),"analysis").count,1);
 });
+
+const artSource=readFileSync(new URL("../dashboard/agency-art.js",import.meta.url),"utf8");
+runInNewContext(artSource,context,{filename:"agency-art.js"});
+const renderSVG=context.window.AgentAgencyArt.renderSVG;
+test("Five Analysis Hub levels use distinct modular structures without altering thresholds",()=>{
+ const art=[0,1,2,3,4].map(level=>renderSVG(level,"analysis"));
+ assert.equal(new Set(art).size,5);
+ for(let i=0;i<5;i++)assert.match(art[i],new RegExp('data-level="'+i+'"'));
+ assert.deepEqual(art.map(svg=>(svg.match(/class="agency-art-structure"/g)||[]).length),[1,1,2,2,3]);
+ assert.equal(art[0].includes("agency-art-drone"),false);
+ assert.equal(art[3].includes("agency-art-landing"),true);
+ assert.equal(art[4].includes("agency-art-landing"),true);
+ assert.equal(renderSVG(99,"analysis"),renderSVG(4,"analysis"));
+});
+test("Agency artwork remains data-free and all known islands reuse one renderer",()=>{
+ for(const theme of ["radar","analysis","dossier","dispatch","comms","interview","advanced","finale"]){
+  const svg=renderSVG(1,theme);
+  assert.match(svg,/<svg /);
+  assert.match(svg,new RegExp('data-theme="'+theme+'"'));
+  assert.doesNotMatch(svg,/<script|onload=|<foreignObject/i);
+ }
+});
+test("Warm beige styling loads after the legacy theme and has reduced-motion safeguards",()=>{
+ const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const css=readFileSync(new URL("../dashboard/agency-theme-beige.css",import.meta.url),"utf8");
+ assert.ok(html.indexOf("agency-world.css")<html.indexOf("agency-theme-beige.css"));
+ assert.ok(html.indexOf("agency-art.js")<html.indexOf("agency-world.js"));
+ assert.match(css,/#f7eddd/i);
+ assert.match(css,/prefers-reduced-motion/);
+});

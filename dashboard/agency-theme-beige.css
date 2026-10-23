@@ -1,0 +1,109 @@
+/* The Agency design direction B+C: airy, warm-beige isometric world.
+ * Presentation-only override; independent of CRM persistence and scoring.
+ */
+.agency-world{
+ --agency-ink:#534a41;--agency-sub:#786e61;--agency-line:#d6c8b3;
+ --agency-surface:#fff9ef;--agency-paper:#f7eddd;--agency-accent:#c08c51;
+ width:min(1340px,calc(100vw - 20px));background:#f7eddd!important;
+ color:var(--agency-ink)!important;border:1px solid #d4c4ac!important;
+ box-shadow:0 22px 70px #352b2045!important;
+}
+.agency-world::backdrop{background:#342d2770!important;backdrop-filter:blur(3px)}
+.agency-world-top{background:#f7edddf5!important;border-bottom:1px solid var(--agency-line)!important}
+.agency-world h2,.agency-world h3,.agency-world .agency-inspector-heading{color:var(--agency-ink)!important}
+.agency-world .agency-kicker{color:#92795a!important;letter-spacing:.16em}
+.agency-world .agency-close{background:#ebe0ce!important;color:#514539!important;border:1px solid #d4c5b0}
+.agency-world-intro,.agency-world .agency-disclaimer{color:var(--agency-sub)!important}
+.agency-map-scroll{
+ background:linear-gradient(180deg,#fbf2e3,#f1e3cc)!important;
+ border:1px solid var(--agency-line)!important;
+ scrollbar-color:#bea587 #f1e3cc;
+}
+.agency-map{padding:14px 16px!important;gap:6px!important}
+.agency-world .agency-island{
+ flex:0 0 214px;width:214px;min-height:292px;padding:10px 6px 14px;
+ color:var(--agency-ink)!important;background:transparent!important;
+ border:1px solid transparent;border-radius:8px;
+ transition:background-color .2s,border-color .2s;
+}
+.agency-world .agency-island:hover{background:#ffffff70!important;border-color:#ddcbb3!important}
+.agency-world .agency-island[aria-pressed=true]{
+ background:#fffaf1!important;border-color:#be9d75!important;
+ box-shadow:0 2px 9px #aa937725;
+}
+.agency-world .agency-island:focus-visible{outline:2px solid #a47743}
+.agency-world .agency-island-number{color:#9c896e}
+.agency-world .agency-island-title{color:#534a40;font-size:.76rem}
+.agency-world .agency-island-sub{color:#776b5c;min-height:20px}
+.agency-world .agency-island-stat{color:#6f5f50;font-size:.66rem}
+.agency-world .agency-level-pips i{background:#ded1bc}
+.agency-world .agency-level-pips i.is-active{background:#c79258;box-shadow:none}
+.agency-world .agency-scene-v2{
+ width:202px;height:173px;max-width:100%;overflow:visible;
+ background:none;image-rendering:pixelated;flex-shrink:0;
+}
+.agency-scene-v2 .agency-art{
+ display:block;width:100%;height:100%;
+ overflow:visible;image-rendering:pixelated;
+}
+.agency-world .agency-inspector{
+ background:#fffaf2!important;border:1px solid var(--agency-line)!important;
+ color:var(--agency-ink)!important;border-radius:9px;
+}
+.agency-world .agency-inspector-heading span,
+.agency-world .agency-inspector p{color:var(--agency-sub)!important}
+.agency-world .agency-meter{background:#e4d8c5!important}
+.agency-world .agency-meter span{background:#c99258!important}
+.agency-world .agency-award{
+ background:#faf2e5!important;border:1px solid #dfd1bd!important;
+ opacity:.48!important;color:var(--agency-ink)!important;
+}
+.agency-world .agency-award.earned{
+ opacity:1!important;background:#fff9ee!important;border-color:#c9ac82!important;
+}
+.agency-world .agency-award-glyph{color:#a58c69!important}
+.agency-world .agency-award.earned .agency-award-glyph{
+ color:#c58c4d!important;text-shadow:none!important;
+}
+.agency-world .agency-award-copy small{color:#796e61!important}
+.agency-world .agency-celebration{
+ background:#fbefdb!important;color:#6b5030!important;
+ border-color:#caad85!important;
+}
+.agency-world .agency-celebration h3{color:#805a2d!important}
+.agency-world .agency-celebration p{color:#7f6749!important}
+/* Evolution gallery is opt-in in the Inspector, not an extra game task. */
+.agency-evolution{margin-top:12px;border-top:1px solid var(--agency-line);padding-top:9px}
+.agency-evolution summary{cursor:pointer;font-weight:600;font-size:.78rem;color:#745d41}
+.agency-evolution-strip{
+ display:flex;gap:7px;overflow-x:auto;scroll-snap-type:x proximity;
+ padding:10px 0 3px;scrollbar-color:#c8af8d transparent;
+}
+.agency-evolution-stage{
+ flex:0 0 132px;min-width:132px;text-align:center;scroll-snap-align:start;
+ border:1px solid #e4d7c5;background:#fbf4e8;border-radius:7px;
+ padding:5px 4px 9px;color:#796c5d;
+}
+.agency-evolution-stage[data-current=true]{border-color:#be9260;background:#fffaf2}
+.agency-evolution-stage .agency-scene-v2{width:125px;height:102px}
+.agency-evolution-stage strong{display:block;font-size:.68rem}
+.agency-evolution-stage small{display:block;font-size:.61rem;color:#806d57}
+.agency-art-structure{animation:agency-art-enter .5s ease-out both;transform-origin:50% 80%}
+.agency-art-drone-motion{animation:agency-art-hover 4s ease-in-out infinite alternate}
+.agency-art-beacon{animation:agency-art-pulse 2.9s steps(2,end) infinite}
+.agency-art-agent-motion{animation:agency-art-walk 5s ease-in-out infinite alternate}
+.agency-art-display{animation:agency-art-pulse 4.6s steps(2,end) infinite}
+@keyframes agency-art-enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes agency-art-hover{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+@keyframes agency-art-walk{from{transform:translateX(0)}to{transform:translateX(3px)}}
+@keyframes agency-art-pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@media(max-width:760px){
+ .agency-world .agency-island{flex-basis:210px;width:210px}
+ .agency-map{padding:10px!important}
+ .agency-world .agency-world-content{padding:13px}
+ .agency-world .agency-island-title{font-size:.73rem}
+}
+@media(prefers-reduced-motion:reduce){
+ .agency-world .agency-art *,.agency-art-structure,.agency-art-drone,.agency-art-beacon,
+ .agency-art-agent,.agency-art-agent-motion,.agency-art-drone-motion,.agency-art-display{animation:none!important;transition:none!important}
+}
