@@ -19,7 +19,69 @@ Stand: 20.10.2026. Keine automatische Ablehnung oder Ausblendung wegen Relevanz.
 - Die Markierung (`export_selection`) und die Bewertungsgründe (`relevance_ratings[].reasons`) werden nur in der optionalen gerätegebundenen IndexedDB-Speicherung und in privaten **Gesamtsicherungen v0.3** gehalten. Vorhandene v0.3-Sicherungen ohne diese optionalen Felder bleiben lesbar.
 - Diese Bewertungsdatei kann in einem separaten Chat zur Trainingsauswertung hochgeladen werden. **Es gibt noch kein automatisches serverseitiges Training, keine automatische Aussortierung und keine öffentliche Speicherung der Bewertungen.**
 
+## Kriterienfeedback v2 (20.10.2026)
+
+Die Hauptbewertung bleibt **1–100** und ist vollständig unabhängig vom Kriterienfeedback.
+
+- **Arbeitsweg** (`distance`), **Aufgaben** (`tasks`), **Arbeitgeber** (`employer`) und **Arbeitsbedingungen** (`conditions`): jeweils eine unmittelbar bedienbare Rot–Neutral–Grün-Farbfläche mit unsichtbarem Range-Eingabeelement. Die Richtung des Effekts und seine Stärke werden als ganzzahliger Wert von **−100** (sehr negativ) bis **+100** (sehr positiv) gespeichert. **0** ist eine bewusste neutrale Bewertung; *nicht angefasst* bedeutet **nicht bewertet** und bleibt ohne Schlüssel. Ein × neben der Farbfläche setzt nur diesen Teilwert zurück.
+- **Berufsfeld** (`field_relation`): genau eine von `unrelated` (keinerlei Berufsverwandtheit), `transferable` (erkennbare Erfahrung) oder `aligned` (richtiges Berufsfeld); Klick auf die aktive Auswahl hebt sie auf.
+- **Seniorität** (`seniority_assessment`): genau eine von `underchallenging` (unterfordernd), `too_early` (zu jung bzw. noch wenig Erfahrung, aber potenzielle Entwicklung), `good_chance` (gute Chance) oder `overwhelming` (absolute Überforderung). **Diese Labels sind Kategorien, keine automatische lineare Skala.**
+
+Beispiel für einen **bewerteten** Export (`schema_version: 1.1.0`):
+
+```json
+{
+  "user_score": 78,
+  "aspects": {"distance": -75, "tasks": 60, "employer": 20},
+  "field_relation": "aligned",
+  "seniority_assessment": "good_chance"
+}
+```
+
+Bestehende v0.3-Gesamtsicherungen und frühere Einzelgründe unter `reason` oder `reasons` bleiben lesbar; der Altbestand erscheint im Export zusätzlich als `legacy_reasons`. Alte pauschale Gründe werden **nicht** in neue Skalenwerte umgedeutet. Die Kriterien werden nur lokal bzw. in privaten Exporten gespeichert. Im Export ist `ratings` die Menge vollständig bewerteter Jobs, `unrated_feedback` enthält separat Eingaben ohne 1–100-Gesamtscore. Beide sind keine automatische Vorselektion.
+
+## Übersichtliche Bewertungsansicht
+
+Die Dashboard-Hauptliste besitzt zwei umschaltbare Reiter:
+
+- **Unbewertet (Standard):** offene Inserate ohne explizites Relevanzfeedback.
+- **Bearbeitet:** Inserate mit einer vergebenen 1–100-Relevanz oder bereits eingetragenen Kriterien-/Freitextbewertungen; unabhängig vom separaten Bewerbungsstatus.
+
+Nach dem Bewerten bleibt die aktuelle Karte zur Ergänzung von Kriterien und Notizen stehen. Der Button **«✓ Fertig · nächste Stelle»** entfernt sie aus der unbewerteten Liste, ohne den Datensatz zu löschen. Der Reiter «Bearbeitet» ermöglicht jederzeit weitere Korrekturen.
+
+Die Zugehörigkeit zu diesen Ansichten wird aus bereits vorhandenen lokalen Feedbackdaten berechnet, ohne ein neues öffentliches Statusfeld. Import, Dublettenerkennung und vollständiger Trainings-JSON-Export bleiben unverändert. Ein für den Inserateexport gesetztes Diskettensymbol allein gilt **nicht** als Relevanzbewertung.
+
 ## Datenschutz und Grenzen
 Das Repo und GitHub Pages sind öffentlich. Bewertungen und Bewerbungsnotizen werden nicht automatisch an GitHub gesendet. Sie dürfen niemals in `dashboard/jobs.json`, einem öffentlichen Commit oder PR landen. Der Bewertungs-JSON-Export ist privat aufzubewahren. Dies ist bewusst der kostenlose, einfach wartbare Übergang ohne Feedback-API.
 
 **Wichtig:** Der GitHub-Importer kann Daten nur aus Joblinks gewinnen, die in einer tatsächlichen Mail enthalten sind. Eine Betreffzeile mit hunderten Treffern bedeutet nicht hunderte exportierte Inserate. Die Quellenabdeckung muss bei neuen Job-Abos weiter kalibriert werden.
+
+
+## Verbindliche Trainingsregel: Nur explizit bearbeitete Werte (22.10.2026)
+
+Für das Offline-Training zählt **jedes Feld nur dann als Nutzerlabel, wenn es explizit erfasst wurde**.
+Eine vorhandene Gesamtrelevanz (1–100) ist ein eigenes Label und darf ohne weitere
+Kriterienwerte verwendet werden. Umgekehrt dürfen einzeln bearbeitete Kriterien
+ohne Gesamtscore als Teilfeedback genutzt werden, nicht jedoch als Gesamtrating.
+
+- Fehlende Kriterien in `aspects` sind **unbekannt** und dürfen niemals mit `0`,
+  einem Mittelwert oder einem aus dem Gesamtscore abgeleiteten Wert aufgefüllt werden.
+- Ein ausdrücklich gespeicherter Aspektwert `0` bedeutet dagegen **bewusst neutral**
+  und ist ein gültiges Label.
+- `field_relation: null` und `seniority_assessment: null` sind **unbewertet**,
+  nicht gleichbedeutend mit `unrelated`, `overwhelming` oder einer anderen Kategorie.
+- Nicht bearbeitete UI-Standardpositionen, KI-Vorschläge, Metadaten und alte
+  `reason`/`reasons`-Labels dürfen nicht in neue numerische Kriterienwerte
+  umgedeutet werden. Freitext ist zusätzlicher Kontext, kein numerischer Ersatz.
+- Wenn ein Gesamtscore vergeben und nur «Aufgaben» geändert wurde, trainieren
+  wir den Gesamtscore und **nur** Aufgaben, nicht die fünf anderen Kriterien.
+- Veraltete JSON-Exporte v1.0.0 bleiben Gesamtscore-Trainingsmaterial,
+  auch wenn sie keine neuen Kriterienwerte enthalten.
+
+Die Umsetzung für zukünftige, explizit ausgelöste Offline-Analysen liegt in
+`selector/training_feedback.py`, mit synthetischen Tests in
+`tests/test_training_feedback.py`. Diese Dateien verändern weder
+`selector/score.py` noch den produktiven Import oder das Dashboard.
+Sie starten **kein** automatisches Training und schreiben keine persönlichen
+Bewertungen in GitHub zurück. Trainingsdateien bleiben ausserhalb
+des öffentlichen Repositorys.

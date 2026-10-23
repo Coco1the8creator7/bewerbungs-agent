@@ -19,7 +19,8 @@ import sys
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
-from importer.enrich import enrich_jobs
+
+from importer.normalize import make_job
 
 OUT = Path("dashboard/jobs.json")
 STATE = Path("importer/import-state.json")
@@ -31,14 +32,6 @@ ADDRESSES = {"jobmail@jobs.ch": "jobs.ch", "no-reply@publicjobs.ch": "publicjobs
 DETAIL = re.compile(r"https?://(?:www\.)?jobs\.ch/(?:de|fr|it)/stellenangebote/detail/([0-9a-f-]{36})/",re.I)
 PUBLIC = re.compile(r"https?://opn\.publicjobs\.ch/jmultn/([a-zA-Z0-9]+)",re.I)
 MDLINK = re.compile(r"\[([^\]]+)\]\((https?://[^)]+)\)")
-CATEGORIES = {
-    "Fernwärme": ["fernwärme", "wärmenetz", "thermische netze", "nahwärme"],
-    "Energiekonzept": ["energiekonzept", "energiesystem", "energiecontrolling"],
-    "Projektleitung": ["projektleit", "projektmanager"],
-    "Energieberatung": ["energieberat"],
-    "Erneuerbare Energien": ["erneuerbar", "wärmepumpe", "energieingenieur"],
-    "Fachbereich Energie": ["energie", "umweltingenieur"],
-}
 class MailTextParser(HTMLParser):
     """Turn an HTML-only job alert into a link-preserving, line-based text view."""
     BLOCKS={"p","div","section","article","tr","td","li","br","h1","h2","h3"}
@@ -261,45 +254,29 @@ def listings(platform,subject,text,html,received):
         if canonical in seen: continue
         seen.add(canonical)
         company,location = _metadata(body,title,url,platform)
-        lo=hi=None
-        p=re.search(r"(\d{2,3})\s*[-–]\s*(\d{2,3})\s*%",title)
-        q=re.search(r"(\d{2,3})\s*%",title)
-        if p: lo,hi=int(p.group(1)),int(p.group(2))
-        elif q: lo=hi=int(q.group(1))
-        categories=[c for c,terms in CATEGORIES.items() if any(term in title.casefold() for term in terms)]
-        jobid="job-"+hashlib.sha256((platform+"|"+key).encode()).hexdigest()[:24]
-        results.append({
-            "schema_version":"0.1.0","id":jobid,"source":platform,"source_job_id":key,
-            "title":title,"company":company,"location":location,"remote_mode":"unknown","url":canonical,
-            "published_at":None,"first_seen_at":received,"last_seen_at":received,"categories":categories,
-            "description":None,"salary_chf_year_min":None,"salary_chf_year_max":None,
-            "salary_kind":"unknown","workload_pct_min":lo,"workload_pct_max":hi,
-            "contract_type":"unknown","provenance":{"source_message_id":None,"source_received_at":None,"alert_name":None},
-            "processing":{"state":"needs_review","warnings":["Jobmail-Link; Originalseite nicht validiert"],"extraction_confidence":None},
-            "matching":{"status":"not_run","score":None}
-        })
+        results.append(make_job(platform,key,canonical,title,company,location,received))
     return results
 
-def merge(previous,incoming):
-    # Old parser accidentally imported vendor footer links. These are not job ads.
-    by_id={j["id"]:j for j in previous if not (j.get("source")=="publicjobs.ch" and j.get("title","").strip().casefold()=="swiss public services ag")}
-    for job in incoming:
-        if job["id"] in by_id:
-            old=by_id[job["id"]]
-            job["first_seen_at"]=old["first_seen_at"]
-            for key in ("company","location"):
-                if job[key] is None:job[key]=old.get(key)
-            job["last_seen_at"]=max(job["last_seen_at"],old.get("last_seen_at") or old["first_seen_at"])
-            # Preserve enriched fields on repeat imports and previous public metadata.
-            for key in ("description", "description_source", "selection"):
-                if not job.get(key) and old.get(key):
-                    job[key] = old[key]
-        by_id[job["id"]]=job
-    return sorted(by_id.values(),key=lambda j:j["first_seen_at"],reverse=True)
+def merge(previous, incoming):
+    from importer.pipeline import merge_jobs
+    return merge_jobs(previous, incoming)[0]
 
-def write_state(timestamp):
+def read_description_cursor():
+    """Backfill progress is independent of Gmail's incremental message cursor."""
+    if not STATE.exists():
+        return None
+    try:
+        value = json.loads(STATE.read_text(encoding="utf-8")).get("description_backfill_cursor")
+        return value if isinstance(value, str) else None
+    except (ValueError, OSError, TypeError):
+        return None
+
+def write_state(timestamp, description_cursor=None):
     STATE.parent.mkdir(parents=True,exist_ok=True)
-    STATE.write_text(json.dumps({"last_success_utc":timestamp.isoformat(),"parser_version":PARSER_VERSION},indent=2)+"\n",encoding="utf-8")
+    data = {"last_success_utc": timestamp.isoformat(), "parser_version": PARSER_VERSION}
+    if description_cursor:
+        data["description_backfill_cursor"] = description_cursor
+    STATE.write_text(json.dumps(data, indent=2)+"\n",encoding="utf-8")
 
 def run():
     started=time.monotonic()
@@ -316,14 +293,24 @@ def run():
         extracted=listings(*record)
         print(f"Quelle {record[0]}: {len(extracted)} Stellenlinks; Nachrichtentitel: {record[1][:70]}",flush=True)
         found.extend(extracted)
-    combined=merge(previous,found)
-    combined, enrichment_stats = enrich_jobs(combined)
-    print("Anreicherung:", json.dumps(enrichment_stats, sort_keys=True), flush=True)
+    from importer.pipeline import process, validate_public
+    combined, outcomes = process(previous, found)
+    # New Gmail offers are enriched first (max. 10), then older missing descriptions
+    # get an independent, round-robin slot. Do not fetch the same offer twice in a run.
+    from importer.enrich import backfill_descriptions
+    from selector.score import apply
+    attempted_new = [j["id"] for j in found if j.get("url") and not j.get("description")][:10]
+    combined, description_cursor, backfill_stats = backfill_descriptions(
+        combined, read_description_cursor(), max_jobs=8, skip_ids=attempted_new)
+    apply(combined)  # descriptions affect the transparent, non-excluding suggestions
+    validate_public(combined)
+    print("Pipeline:", json.dumps(outcomes), flush=True)
+    print("Beschreibungs-Nachimport:", json.dumps(backfill_stats, sort_keys=True), flush=True)
     # Avoid overwriting a useful list if transient Gmail query yields nothing.
     if not messages and not previous:raise RuntimeError("Keine Jobmails gefunden; Initialimport abgebrochen")
     OUT.parent.mkdir(parents=True,exist_ok=True)
     OUT.write_text(json.dumps(combined,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    write_state(started_utc)
+    write_state(started_utc, description_cursor)
     print(f"Nachrichten gelesen: {messages}; Stellenlinks erkannt: {len(found)}; Dashboard-Datensätze: {len(combined)}; Laufzeit: {time.monotonic()-started:.1f}s",flush=True)
 if __name__=="__main__":
     try:run()

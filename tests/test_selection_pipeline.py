@@ -64,11 +64,12 @@ Test AG, Zug
         self.assertEqual(rows[0]["company"],"Muster Energie AG")
         self.assertEqual(rows[0]["location"],"Baden")
 
-    def test_repeated_import_keeps_identity_without_ghost_entries(self):
+    def test_repeated_import_never_deletes_legacy_records(self):
         original=listings("publicjobs.ch","alert","[Projektleiter](http://opn.publicjobs.ch/jmultn/J0B123456)\nTest AG - Bern","",DATE)
         previous=original+[{"id":"footer","title":"Swiss Public Services AG","source":"publicjobs.ch"}]
         merged=merge(previous,original)
-        self.assertEqual(len(merged),1)
+        self.assertEqual(len(merged),2)
+        self.assertIn(previous[-1], merged) # Cleanup requires a separate explicit migration.
 
     def test_employer_link_without_real_fixture_is_conservative(self):
         body="[Projektleiter Fernwärme](https://jobs.example.org/career/positions/12345678-projektleiter)\n"

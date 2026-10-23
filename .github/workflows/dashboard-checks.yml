@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "dashboard/**"
+      - "importer/**"
+      - "selector/**"
       - "examples/**"
       - "schemas/**"
       - "tests/**"
@@ -11,6 +13,8 @@ on:
   pull_request:
     paths:
       - "dashboard/**"
+      - "importer/**"
+      - "selector/**"
       - "examples/**"
       - "schemas/**"
       - "tests/**"

@@ -335,11 +335,17 @@
       }
     },
     "description_source": {
-      "type": "string",
       "enum": [
         "jsonld_jobposting"
-      ],
-      "description": "Method used to extract a validated public description."
+      ]
+    },
+    "url_aliases": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
     }
   }
 }

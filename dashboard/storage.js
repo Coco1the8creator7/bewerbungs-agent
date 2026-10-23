@@ -6,6 +6,7 @@
   const DB_NAME = "bewerbungs-agent-local-v1";
   const STORE = "snapshots";
   const KEY = "current";
+  const LAST_VISIT_KEY = "last-dashboard-visit"; // Only an ISO timestamp; not job or applicant data.
   let opening = null;
 
   function connect() {
@@ -42,6 +43,18 @@
   window.AgentStore = Object.freeze({
     load: () => operation("readonly", store => store.get(KEY)),
     save: snapshot => operation("readwrite", store => store.put(snapshot, KEY)),
-    clear: () => operation("readwrite", store => store.delete(KEY)),
+    // Anonymous UI timestamp used solely to compare new job imports across visits.
+    loadLastVisit: () => operation("readonly", store => store.get(LAST_VISIT_KEY)),
+    recordVisit: timestamp => {
+      if (typeof timestamp !== "string" || !Number.isFinite(Date.parse(timestamp))) {
+        return Promise.reject(new Error("Ungültiger Besuchszeitpunkt."));
+      }
+      return operation("readwrite", store => store.put(timestamp, LAST_VISIT_KEY));
+    },
+    // Opting out of device persistence also deletes the separately stored visit timestamp.
+    clear: async () => {
+      await operation("readwrite", store => store.delete(KEY));
+      await operation("readwrite", store => store.delete(LAST_VISIT_KEY));
+    },
   });
 })();
