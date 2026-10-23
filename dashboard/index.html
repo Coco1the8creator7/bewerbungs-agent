@@ -210,10 +210,10 @@ button:disabled{opacity:.52;cursor:not-allowed}
   <div><div class="eyebrow">◈ BEWERBUNGS-AGENT / MISSION CONTROL</div><h1>Career.Agency<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben.</p></div>
 </header>
 <section class="section" aria-labelledby="overviewTitle">
-  <div class="section-heading"><h2 id="overviewTitle">Statusübersicht</h2><p>Neue Inserate seit Besuch/Vortag · übrige Kennzahlen 7 Tage</p></div>
+  <div class="section-heading"><h2 id="overviewTitle">Statusübersicht</h2><p>Aktueller Stand · Neue Inserate seit Besuch/Vortag</p></div>
   <div class="stats" aria-label="Kennzahlen">
     <div class="stat"><div class="name">Neue Inserate</div><strong id="newCount">0</strong><small id="newCountWindow">Seit gestern · Besuchsverlauf wird geladen</small></div>
-    <div class="stat"><div class="name">Seit letzter Woche in Prüfung</div><strong id="reviewNewCount">0</strong><small>In den letzten 7 Tagen aufgenommen</small></div>
+    <div class="stat"><div class="name">Unbewertete Inserate</div><strong id="unratedCount">0</strong><small>Aktuell im Reiter «Unbewertet»</small></div>
     <div class="stat"><div class="name">Total in Prüfung</div><strong id="reviewTotalCount">0</strong><small>Aktuell im Status «In Prüfung»</small></div>
     <div class="stat"><div class="name">Absagen neu</div><strong id="declinedNewCount">0</strong><small>In den letzten 7 Tagen erfasst</small></div>
   </div>
@@ -980,7 +980,7 @@ let newJobDraft=null;
 function actionButton(job){const b=node("button","Details","secondary compact-button");b.type="button";b.addEventListener("click",()=>openDetails(job.id));return b;}
 function renderStats(){
  el("newCount").textContent=countNewArrivals(jobs,incomingWindow.cutoff);
- el("reviewNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="review"&&recent(stageChangedAt(j.id))).length;
+ el("unratedCount").textContent=unratedJobs().length;
  el("reviewTotalCount").textContent=jobs.filter(j=>stageOf(j.id)==="review").length;
  el("declinedNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="declined"&&recent(stageChangedAt(j.id))).length;
 }
