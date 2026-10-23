@@ -41,8 +41,15 @@ vm.runInNewContext(fs.readFileSync("dashboard/storage.js","utf8"),{window:win,Pr
   const original={jobs:[{id:"test"}],annotations:[{decision:"review"}]};
   await win.AgentStore.save(original);
   assert.deepEqual(await win.AgentStore.load(),original,"restores both jobs and annotations");
+  assert.equal(await win.AgentStore.loadLastVisit(),undefined,"no visit timestamp initially");
+  const timestamp="2026-10-23T10:15:00.000Z";
+  await win.AgentStore.recordVisit(timestamp);
+  assert.equal(await win.AgentStore.loadLastVisit(),timestamp,"visit timestamp persists independently");
+  assert.deepEqual(await win.AgentStore.load(),original,"visit timestamp does not overwrite private workspace");
+  await assert.rejects(()=>win.AgentStore.recordVisit("invalid-date"),/Ungültiger/);
   await win.AgentStore.clear();
   assert.equal(await win.AgentStore.load(),undefined,"deletion removes the saved state");
+  assert.equal(await win.AgentStore.loadLastVisit(),undefined,"deletion removes visit timestamp");
   const noDb={};
   vm.runInNewContext(fs.readFileSync("dashboard/storage.js","utf8"),{window:noDb,Promise,Error,Object});
   await assert.rejects(()=>noDb.AgentStore.load(),/nicht unterstützt/);

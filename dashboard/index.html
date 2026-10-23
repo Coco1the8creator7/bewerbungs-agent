@@ -210,10 +210,10 @@ button:disabled{opacity:.52;cursor:not-allowed}
   <div><div class="eyebrow">◈ BEWERBUNGS-AGENT / MISSION CONTROL</div><h1>Career.Agency<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben.</p></div>
 </header>
 <section class="section" aria-labelledby="overviewTitle">
-  <div class="section-heading"><h2 id="overviewTitle">Statusübersicht</h2><p>Aktueller Stand · Zeitfenster 7 Tage</p></div>
+  <div class="section-heading"><h2 id="overviewTitle">Statusübersicht</h2><p>Aktueller Stand · Neue Inserate seit Besuch/Vortag</p></div>
   <div class="stats" aria-label="Kennzahlen">
-    <div class="stat"><div class="name">Neue Inserate</div><strong id="newCount">0</strong><small>Neu in den letzten 7 Tagen, ungeprüft</small></div>
-    <div class="stat"><div class="name">Seit letzter Woche in Prüfung</div><strong id="reviewNewCount">0</strong><small>In den letzten 7 Tagen aufgenommen</small></div>
+    <div class="stat"><div class="name">Neue Inserate</div><strong id="newCount">0</strong><small id="newCountWindow">Seit gestern · Besuchsverlauf wird geladen</small></div>
+    <div class="stat"><div class="name">Unbewertete Inserate</div><strong id="unratedCount">0</strong><small>Aktuell im Reiter «Unbewertet»</small></div>
     <div class="stat"><div class="name">Total in Prüfung</div><strong id="reviewTotalCount">0</strong><small>Aktuell im Status «In Prüfung»</small></div>
     <div class="stat"><div class="name">Absagen neu</div><strong id="declinedNewCount">0</strong><small>In den letzten 7 Tagen erfasst</small></div>
   </div>
@@ -283,7 +283,7 @@ button:disabled{opacity:.52;cursor:not-allowed}
       <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
         <span><strong>Auf diesem Gerät dauerhaft speichern</strong> (Browser-Datenbank, freiwillig)</span>
       </label>
-      <p>Nur auf einem privaten, vertrauenswürdigen Gerät aktivieren. Ohne Aktivierung bleiben Änderungen nur bis zum Neuladen erhalten. Diese Option synchronisiert keine Daten zwischen Geräten und speichert nichts in GitHub.</p>
+      <p>Nur auf einem privaten, vertrauenswürdigen Gerät aktivieren. Ohne Aktivierung bleiben Änderungen nur bis zum Neuladen erhalten. Diese Option synchronisiert keine Daten zwischen Geräten und speichert nichts in GitHub.</p><p>Für «Neue Inserate» wird unabhängig davon ausschliesslich der letzte Besuchszeitpunkt auf diesem Gerät gespeichert. Beim Löschen der lokalen Daten wird auch dieser Zeitstempel entfernt.</p>
       <div class="data-state" id="storageStatus" role="status" aria-live="polite">Nur aktuelle Sitzung · nicht dauerhaft gespeichert</div>
     </div>
     <p id="message" role="status" aria-live="polite" class="status-message">Demo-Daten geladen. Kein Zugriff auf Gmail oder ein Backend.</p>
@@ -587,6 +587,33 @@ let jobs=[],currentJobId=null,demoMode=false;
 const recentDays=7;
 const dayMs=24*60*60*1000;
 function validDate(iso){if(typeof iso!=="string"||!iso)return null;const ms=Date.parse(iso);return Number.isFinite(ms)?ms:null;}
+// Only a local visit timestamp is retained; no ratings, job IDs or navigation history.
+function newJobsWindow(previousVisit, now=new Date()){
+ const yesterdayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1).getTime();
+ const timestamp=validDate(previousVisit),today=now.toDateString();
+ if(timestamp!==null&&timestamp<=now.getTime()&&new Date(timestamp).toDateString()!==today){
+  return {cutoff:timestamp,label:"Seit letztem Besuch · "+locale.format(new Date(timestamp))};
+ }
+ return {cutoff:yesterdayStart,label:timestamp!==null&&timestamp<=now.getTime()?"Seit gestern · heute mehrfach geöffnet":"Seit gestern · kein früherer Besuch gespeichert"};
+}
+function countNewArrivals(rows,cutoff,now=Date.now()){
+ return rows.filter(j=>{
+  if(typeof j.id==="string"&&j.id.startsWith("MANUAL-"))return false;
+  const first=validDate(j.first_seen_at);
+  return first!==null&&first>=cutoff&&first<=now;
+ }).length;
+}
+let incomingWindow=newJobsWindow(null);
+async function initializeNewJobsWindow(){
+ const now=new Date();let previous=null,readFailed=false;
+ try{previous=await window.AgentStore.loadLastVisit();}
+ catch{readFailed=true;}
+ incomingWindow=newJobsWindow(previous,now);
+ el("newCountWindow").textContent=incomingWindow.label+(readFailed?" · Verlauf nicht verfügbar":"");
+ try{await window.AgentStore.recordVisit(now.toISOString());}
+ catch{el("newCountWindow").textContent+=" · ohne lokale Speicherung";}
+ renderStats();
+}
 function recent(iso){const ms=validDate(iso);if(ms===null)return false;const delta=Date.now()-ms;return delta>=0&&delta<recentDays*dayMs;}
 function dateLabel(iso){const d=validDate(iso);return d===null?"–":locale.format(new Date(d));}
 function unique(values){return [...new Set(values.filter(Boolean))].sort((a,b)=>a.localeCompare(b,"de-CH"));}
@@ -952,8 +979,8 @@ function startNewJob(){
 let newJobDraft=null;
 function actionButton(job){const b=node("button","Details","secondary compact-button");b.type="button";b.addEventListener("click",()=>openDetails(job.id));return b;}
 function renderStats(){
- el("newCount").textContent=unratedJobs().filter(j=>recent(j.first_seen_at)).length;
- el("reviewNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="review"&&recent(stageChangedAt(j.id))).length;
+ el("newCount").textContent=countNewArrivals(jobs,incomingWindow.cutoff);
+ el("unratedCount").textContent=unratedJobs().length;
  el("reviewTotalCount").textContent=jobs.filter(j=>stageOf(j.id)==="review").length;
  el("declinedNewCount").textContent=jobs.filter(j=>stageOf(j.id)==="declined"&&recent(stageChangedAt(j.id))).length;
 }
@@ -1293,6 +1320,7 @@ el("persistEnabled").addEventListener("change",async e=>{
  }
 });
 async function initialize(){
+ await initializeNewJobsWindow();
  let restored=false;
  try{
   const saved=await window.AgentStore.load();
