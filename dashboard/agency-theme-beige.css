@@ -89,9 +89,9 @@
 .agency-evolution-stage strong{display:block;font-size:.68rem}
 .agency-evolution-stage small{display:block;font-size:.61rem;color:#806d57}
 .agency-art-structure{animation:agency-art-enter .5s ease-out both;transform-origin:50% 80%}
-.agency-art-drone{animation:agency-art-hover 4s ease-in-out infinite alternate}
+.agency-art-drone-motion{animation:agency-art-hover 4s ease-in-out infinite alternate}
 .agency-art-beacon{animation:agency-art-pulse 2.9s steps(2,end) infinite}
-.agency-art-agent{animation:agency-art-walk 5s ease-in-out infinite alternate}
+.agency-art-agent-motion{animation:agency-art-walk 5s ease-in-out infinite alternate}
 .agency-art-display{animation:agency-art-pulse 4.6s steps(2,end) infinite}
 @keyframes agency-art-enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes agency-art-hover{from{transform:translateY(0)}to{transform:translateY(-5px)}}
@@ -105,5 +105,5 @@
 }
 @media(prefers-reduced-motion:reduce){
  .agency-world .agency-art *,.agency-art-structure,.agency-art-drone,.agency-art-beacon,
- .agency-art-agent,.agency-art-display{animation:none!important;transition:none!important}
+ .agency-art-agent,.agency-art-agent-motion,.agency-art-drone-motion,.agency-art-display{animation:none!important;transition:none!important}
 }
