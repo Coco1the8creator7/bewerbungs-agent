@@ -1,7 +1,7 @@
 {
   "type": "bewerbungs-agent-feedback",
   "schema_version": "1.0.0",
-  "updated_at": "2026-10-23T12:38:23.929Z",
+  "updated_at": "2026-10-23T12:47:06.429Z",
   "annotations": [],
   "relevance_ratings": [
     {
@@ -1272,6 +1272,19 @@
       "updated_at": "2026-10-23T12:38:15.595Z",
       "suggested_score_at_rating": 45,
       "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-3bf6bcc7d6041e35da513ab0",
+      "score": 18,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-23T12:47:03.953Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
     }
   ],
   "export_selection": [],
@@ -1635,6 +1648,12 @@
       "job_id": "job-fb18cfb0836300b7a0d32315",
       "type": "screened",
       "at": "2026-10-23T12:38:07.427Z"
+    },
+    {
+      "id": "954e49ae-da11-4811-8910-9f2beea33b22",
+      "job_id": "job-3bf6bcc7d6041e35da513ab0",
+      "type": "screened",
+      "at": "2026-10-23T12:47:00.202Z"
     }
   ],
   "overrides": [],
