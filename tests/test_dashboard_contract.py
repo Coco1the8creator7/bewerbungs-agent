@@ -54,7 +54,10 @@ class DashboardContractTests(unittest.TestCase):
     def test_earth_palette_covers_dashboard_and_agency(self):
         html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
         agency = (ROOT / "dashboard/agency-world.css").read_text(encoding="utf-8")
-        self.assertIn("--earth-bg:#201b17", html)
+        self.assertIn("--earth-bg:#f1e7d8", html)
+        self.assertIn("--world-design-background:#f1e7d8", html)
+        self.assertIn("body{background:var(--earth-bg);color:var(--earth-page-text)}", html)
+        self.assertIn("header h1,header .eyebrow,header .sub", html)
         self.assertIn("--earth-surface:#2b251f", html)
         self.assertIn("--earth-sage:#b2c49f", html)
         self.assertIn("--earth-clay:#d6a087", html)
@@ -78,8 +81,24 @@ class DashboardContractTests(unittest.TestCase):
             ("#241c15", "#c5a27b"),  # Primary button label
             ("#eee4d5", "#514334"),  # Secondary button label
             ("#aa9b88", "#241f19"),  # Placeholder text
+            ("#4f3c2b", "#f1e7d8"),  # Page headings on pale World Design beige
+            ("#675341", "#f1e7d8"),  # Page metadata on pale background
         ):
             self.assertGreaterEqual(contrast(fg, bg), 4.5, f"Insufficient contrast: {fg} on {bg}")
+
+    def test_floating_rating_save_reuses_existing_github_action(self):
+        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        self.assertIn('id="floatingSaveGithubFeedback"', html)
+        self.assertIn('class="floating-save"', html)
+        self.assertIn('position:fixed;', html)
+        self.assertIn('safe-area-inset-bottom', html)
+        self.assertIn('el("floatingSaveGithubFeedback").addEventListener("click",()=>el("saveGithubFeedback").click());', html)
+        self.assertEqual(html.count('el("saveGithubFeedback").addEventListener("click",async()=>{'), 1)
+        self.assertIn("button.disabled=true;floating.disabled=true;", html)
+        self.assertIn("button.disabled=false;floating.disabled=false;", html)
+        self.assertIn('document.querySelector("dialog[open]")', html)
+        self.assertIn('addEventListener("scroll",updateFloatingSaveVisibility,{passive:true})', html)
+        self.assertIn('showFloatingSaveFeedback("Bewertungen gespeichert ✓")', html)
 
     def test_dashboard_stage_and_score_logic(self):
         result = subprocess.run(["node", "tests/test_dashboard_logic.cjs"], cwd=ROOT, capture_output=True, text=True)
