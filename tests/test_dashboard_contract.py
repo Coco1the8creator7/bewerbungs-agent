@@ -51,6 +51,36 @@ class DashboardContractTests(unittest.TestCase):
         self.assertIn('type:"bewerbungs-agent-decisions"', html)
         self.assertNotIn("localStorage", html)
 
+    def test_earth_palette_covers_dashboard_and_agency(self):
+        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        agency = (ROOT / "dashboard/agency-world.css").read_text(encoding="utf-8")
+        self.assertIn("--earth-bg:#201b17", html)
+        self.assertIn("--earth-surface:#2b251f", html)
+        self.assertIn("--earth-sage:#b2c49f", html)
+        self.assertIn("--earth-clay:#d6a087", html)
+        self.assertIn("background:var(--earth-surface);border-color:var(--earth-border)", html)
+        self.assertIn(".agency-world{", agency)
+        self.assertIn("background:#211b16;color:#eee4d5", agency)
+        self.assertNotIn("#101727", html, "Legacy dark-blue page background must not return")
+        self.assertNotIn("#0c1526", agency, "Legacy dark-blue world background must not return")
+
+        def contrast(foreground, background):
+            def luminance(hex_color):
+                channels = [int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+                r, g, b = [(x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4) for x in channels]
+                return 0.2126 * r + 0.7152 * g + 0.0722 * b
+            a, b = sorted([luminance(foreground), luminance(background)])
+            return (b + 0.05) / (a + 0.05)
+
+        for fg, bg in (
+            ("#eee4d5", "#2b251f"),  # Card body text
+            ("#b8a992", "#2b251f"),  # Muted text
+            ("#241c15", "#c5a27b"),  # Primary button label
+            ("#eee4d5", "#514334"),  # Secondary button label
+            ("#aa9b88", "#241f19"),  # Placeholder text
+        ):
+            self.assertGreaterEqual(contrast(fg, bg), 4.5, f"Insufficient contrast: {fg} on {bg}")
+
     def test_dashboard_stage_and_score_logic(self):
         result = subprocess.run(["node", "tests/test_dashboard_logic.cjs"], cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
