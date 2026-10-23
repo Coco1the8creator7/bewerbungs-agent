@@ -53,9 +53,9 @@
       polygon([[-11,-17],[0,-27],[7,-18]],palette.turf)+'</g>';
   }
   function agent(x,y) {
-    return '<g class="agency-art-agent" transform="translate('+x+' '+y+')">'+
+    return '<g class="agency-art-agent" transform="translate('+x+' '+y+')"><g class="agency-art-agent-motion">'+
        rect(-3,-12,6,7,palette.ink)+rect(-2,-16,4,4,palette.light)+
-       rect(-3,-5,2,5,palette.ink)+rect(1,-5,2,5,palette.ink)+'</g>';
+       rect(-3,-5,2,5,palette.ink)+rect(1,-5,2,5,palette.ink)+'</g></g>';
   }
   function dish(x,y) {
     return '<g class="agency-art-dish" transform="translate('+x+' '+y+')">'+
@@ -65,10 +65,10 @@
       rect(5,-30,2,10,palette.ink)+'</g>';
   }
   function drone(x,y) {
-    return '<g class="agency-art-drone" transform="translate('+x+' '+y+')">'+
+    return '<g class="agency-art-drone" transform="translate('+x+' '+y+')"><g class="agency-art-drone-motion">'+
       polygon([[-15,-2],[15,-2],[10,2],[-10,2]],palette.ink)+
       rect(-6,-7,12,7,palette.stone)+
-      rect(-16,-4,5,2,palette.glow)+rect(11,-4,5,2,palette.glow)+'</g>';
+      rect(-16,-4,5,2,palette.glow)+rect(11,-4,5,2,palette.glow)+'</g></g>';
   }
   function landing(x,y) {
     return '<g class="agency-art-landing">'+
