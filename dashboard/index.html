@@ -1280,6 +1280,11 @@ function loadDemo(){
  render();
  saveChanges();
 }
+// A single underlying GitHub action serves both save buttons.
+function shouldShowFloatingSave(scrollY,rect,viewportHeight,dialogOpen){
+ return scrollY>180&&!!rect&&(rect.bottom<=0||rect.top>=viewportHeight)&&!dialogOpen;
+}
+
 el("choose").addEventListener("click",()=>{el("picker").value="";el("picker").click();});
 el("picker").addEventListener("change",async e=>{
  const file=e.target.files?.[0];if(!file)return;
@@ -1368,10 +1373,6 @@ el("loadGithubFeedback").addEventListener("click",async()=>{
  }catch(e){githubStatus("Laden fehlgeschlagen: "+e.message);}
 });
 
-// A single underlying GitHub action serves both save buttons.
-function shouldShowFloatingSave(scrollY,rect,viewportHeight,dialogOpen){
- return scrollY>180&&!!rect&&(rect.bottom<=0||rect.top>=viewportHeight)&&!dialogOpen;
-}
 function updateFloatingSaveVisibility(){
  const main=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback");
  if(!main||!floating||typeof main.getBoundingClientRect!=="function")return;
