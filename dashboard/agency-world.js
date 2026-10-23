@@ -52,6 +52,7 @@
  const number=n=>Number(n).toLocaleString("de-CH");
  const make=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
  function scene(phase){
+  if(window.AgentAgencyArt)return window.AgentAgencyArt.createScene(phase);
   const panel=make("div","agency-scene");panel.setAttribute("aria-hidden","true");
   const level=Math.max(phase.level,phase.id==="radar"&&phase.count>0?1:0);
   const sky=make("div","agency-sky");panel.append(sky);
