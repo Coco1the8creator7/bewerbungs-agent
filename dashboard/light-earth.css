@@ -1,0 +1,328 @@
+/*
+ * Career.Agency — Light Earth surfaces
+ *
+ * This is the final presentation layer: it follows the existing dashboard and
+ * Agency stylesheets. All colours are centralised here to avoid changing any
+ * data, interaction or game logic. The World Design page background stays fixed.
+ */
+:root {
+  color-scheme: light;
+  --world-design-background: #f1e7d8;
+  --earth-bg: var(--world-design-background);
+  --earth-page-text: #49392b;
+  --earth-surface: #f8f1e7;
+  --earth-raised: #fdf7ee;
+  --earth-border: #d8c7b1;
+  --earth-text: #49392b;
+  --earth-muted: #6b5845;
+  --earth-accent: #795a40;
+  --earth-accent-hover: #674c34;
+  --earth-sage: #e0e9d8;
+  --earth-clay: #f1e0d5;
+  --hud-border: var(--earth-border);
+  --hud-bg: var(--earth-surface);
+  --hud-dim: var(--earth-muted);
+  --hud-cyan: var(--earth-accent);
+  --hud-violet: #8b6049;
+  color: var(--earth-text);
+  background: var(--earth-bg);
+}
+
+body { background: var(--world-design-background); color: var(--earth-page-text); }
+header { border-color: #d5c4b0; }
+header h1, header .eyebrow, header .sub,
+.section-heading h2, .section-heading p { color: var(--earth-page-text); }
+header .sub, .section-heading p { color: var(--earth-muted); }
+h2, h3, .job-title { color: var(--earth-text); }
+.eyebrow, .mission-label, .review-label { color: #67513a; }
+.sub, .muted, .job-meta, .stat .name, .stat small,
+.archive summary, .tools summary, .disclaimer, .status-message,
+.section-heading p { color: var(--earth-muted); }
+
+.stat, .panel, .card, .mission-card {
+  background: var(--earth-surface);
+  border-color: var(--earth-border);
+  color: var(--earth-text);
+}
+.stat strong, .review-value { color: var(--earth-text); }
+.stat:before { opacity: .6; }
+.panel.filters, .filters { background: #f6ebdd; }
+.pipeline-head { background: #f1e5d4; color: #67513a; border-color: var(--earth-border); }
+.pipeline-row + .pipeline-row, .archive, .card-footer { border-color: #e4d7c6; }
+.card:hover { border-color: #bca487; }
+.empty { color: var(--earth-muted); }
+.score, .score.pending { background: #eee0cd; color: #5b4633; }
+.tag { background: #ede1d0; color: #604931; }
+
+.stage { background: #e9ddcd; color: #563f2e; }
+.stage.review { background: #eadcc7; color: #62492c; }
+.stage.applied, .stage.interview, .stage.accepted {
+  background: #e0e9d8;
+  color: #36553c;
+}
+.stage.declined { background: #f1e0d5; color: #7c4535; }
+
+label { color: #574634; }
+input, select, textarea {
+  background: #fdf7ee;
+  border-color: #cfbba3;
+  color: var(--earth-text);
+}
+input::placeholder, textarea::placeholder { color: #75624e; }
+input:focus-visible, select:focus-visible, button:focus-visible,
+textarea:focus-visible, summary:focus-visible, a:focus-visible,
+.card:focus-visible { outline: 2px solid #916b48; outline-offset: 3px; }
+a, #detailTitle a { color: #6a4d32; }
+a:hover, #detailTitle a:hover { color: #523a26; }
+.job-title-button { color: #61482f!important; }
+
+button {
+  background: var(--earth-accent);
+  color: #fff9f1;
+}
+button:hover { background: var(--earth-accent-hover); }
+button.secondary {
+  background: #e8dbc9;
+  color: #4e3b2c;
+}
+button.secondary:hover { background: #dcc9af; }
+button:disabled { opacity: .65; }
+.review-tabs button {
+  background: #eee1d0;
+  border-color: #d8c7b1;
+  color: #604931;
+}
+.review-tabs button:hover { background: #e6d6c0; }
+.review-tabs button[aria-pressed="true"] {
+  background: #dbc4a7;
+  border-color: #987c59;
+  color: #493626;
+}
+
+.mission-heading p, .route-caption, .route-node small,
+.route-node.reached small, .quest-foot, .quest-count,
+.review-scale, .review-reasons-label, .feedback-hint,
+.feedback-legacy, .review-value.unrated { color: var(--earth-muted); }
+.route-caption strong, .quest-title { color: var(--earth-text); }
+.route-map:before {
+  background: repeating-linear-gradient(90deg, #d3c1ab 0 7px, transparent 7px 15px);
+}
+.route-line { background: #978268; }
+.route-planet {
+  background: #ecdfcd;
+  border-color: #c6b198;
+  color: #715741;
+  box-shadow: 0 0 0 5px var(--earth-surface);
+}
+.route-node.reached .route-planet {
+  background: #dfdcc9;
+  border-color: #a2a78a;
+  color: #49543e;
+}
+.route-node.current .route-planet {
+  background: #d9c5a8;
+  border-color: #99795a;
+  color: #493626;
+  box-shadow: 0 0 0 5px var(--earth-surface);
+}
+.quest {
+  background: #f3e9dc;
+  border-color: #e3d4c0;
+}
+.quest.done { border-color: #a7b69a; }
+.quest.done .quest-count { color: #3d593f; }
+.quest-track { background: #ded0bc; }
+.quest-fill { background: #779071; }
+
+.review-panel { border-color: var(--earth-border); }
+.relevance-slider { accent-color: #6d815c; }
+button.reason-button {
+  background: #ede1d0;
+  border-color: #d7c2a8;
+  color: #5b452f;
+}
+button.reason-button:hover { background: #e3d0b8; }
+button.reason-button[aria-pressed="true"] {
+  background: #d8c3a5;
+  border-color: #9a7955;
+  color: #493626;
+}
+.feedback-spectrum {
+  color: #49392b;
+  border-color: #c8b6a1;
+  background: linear-gradient(90deg,
+    #e2bcb0 0%, #e8cfc1 25%, #e7dfd0 50%,
+    #d7e0cf 75%, #c1d6bd 100%);
+}
+.feedback-spectrum:hover { border-color: #987a56; }
+.feedback-spectrum-name,
+.feedback-spectrum-state {
+  color: #49392b;
+  text-shadow: none;
+}
+.feedback-spectrum:focus-within { outline-color: #916b48; }
+.feedback-spectrum-marker { background: #604a35; border-color: #fff8ed; }
+button.feedback-spectrum-reset {
+  background: #e8dbc9;
+  color: #55402f;
+  border-color: #cdb89d;
+}
+.feedback-legacy { border-color: #ae8e69; }
+.mark-button {
+  background: #eee1d0!important;
+  color: #705842!important;
+  border-color: #d2bea4!important;
+}
+.mark-button:hover { background: #e4d4bc!important; }
+.mark-button[aria-pressed="true"] {
+  background: #dce8d6!important;
+  color: #37583f!important;
+  border-color: #869f80!important;
+}
+.mark-button[aria-pressed="true"]:hover { background: #cfdfc9!important; }
+.card.export-marked { border-color: #89a181; }
+
+.persist-panel, .bottom .persist-panel {
+  background: #f8efe3;
+  border-color: var(--earth-border);
+  color: var(--earth-text);
+}
+.persist-panel p, .bottom .persist-panel p { color: var(--earth-muted); }
+.bottom { border-color: #cfbba3; }
+.bottom .tools summary, .bottom .disclaimer,
+.bottom .status-message { color: var(--earth-muted); }
+.data-state { color: #574634; }
+.context { background: #eee1d0; color: #604931; border-color: #d4bfa2; }
+.context.demo { background: #f3e5d2; color: #6c5030; border-color: #ddc8ab; }
+
+dialog {
+  background: #fdf7ee;
+  color: var(--earth-text);
+  border-color: #cdb9a0;
+  box-shadow: 0 20px 65px #513d2a33;
+}
+dialog::backdrop { background: #4d3b2973; }
+#detailDescription { color: #514333; }
+#detailTitle a::after { color: #795a40; }
+#detailReviewHost, #editFields { border-color: #e1d2bd; }
+#editFields summary { color: #61482f; }
+
+.floating-save {
+  background: #795a40;
+  color: #fff9f1;
+  border-color: #795a40;
+  box-shadow: 0 6px 20px #51402e35;
+}
+.floating-save:hover { background: #674c34; }
+.floating-save-status {
+  background: #fdf7ee;
+  color: #49392b;
+  border-color: #cfbaa1;
+  box-shadow: 0 7px 20px #51402e24;
+}
+.floating-save-status.is-error { border-color: #b3735d; }
+
+/* The Agency opens in the same quiet, light earth scheme.
+   Only surroundings change; all pixel-art level logic is preserved. */
+.agency-entry {
+  background: #e8dbc9!important;
+  color: #49392b!important;
+  border-color: #c9b49b!important;
+}
+.agency-entry:hover { background: #dcc9af!important; }
+.route-map[role=button]:hover { background: #ddceb840; }
+.route-map[role=button]:focus-visible { outline-color: #916b48; }
+.agency-world {
+  background: #f8f1e7;
+  color: #49392b;
+  border-color: #cdb9a0;
+  box-shadow: 0 20px 70px #513d2a33;
+}
+.agency-world::backdrop { background: #4d3b2973; }
+.agency-world-top {
+  background: #fbf4e9f0;
+  border-color: #dfd0bb;
+}
+.agency-world h2, .agency-world h3,
+.agency-inspector-heading { color: #49392b; }
+.agency-world .agency-kicker { color: #67513a; }
+.agency-world .agency-close {
+  background: #e8dbc9;
+  color: #49392b;
+}
+.agency-world .agency-close:hover { background: #dcc9af; }
+.agency-world-intro, .agency-inspector p,
+.agency-disclaimer { color: #6b5845; }
+.agency-map-scroll {
+  scrollbar-color: #b8a48b #eadcc9;
+  border-color: #d8c7b1;
+  background: radial-gradient(ellipse at 40% 100%, #d4ddc4a6 0%, transparent 65%),
+    repeating-linear-gradient(90deg, #c8b59d33 0 1px, transparent 1px 50px),
+    #efe3d1;
+}
+.agency-island { color: #49392b; }
+.agency-island:hover {
+  background: #e8dac540;
+  border-color: #cfb99e;
+}
+.agency-island[aria-pressed=true] {
+  background: #e2d1b1a8;
+  border-color: #a58862;
+}
+.agency-island:focus-visible { outline-color: #916b48; }
+.agency-island-number, .agency-island-stat,
+.agency-island-sub { color: #6b5845; }
+.agency-level-pips i { background: #d8c6ae; }
+.agency-level-pips i.is-active {
+  background: #809475;
+  box-shadow: 0 0 5px #80947555;
+}
+/* Retain the shape and shadow depth of the existing tiny isometric buildings. */
+.agency-ground {
+  background: linear-gradient(150deg,
+    #cbb69a 15%, #ad9274 53%, #a78969 54%, #947655 76%);
+  box-shadow: 0 6px 0 #bda387;
+}
+.agency-ground:before {
+  background: linear-gradient(120deg, #e3d3b17a, #a9ba9b7a);
+}
+.agency-building, .agency-tower {
+  background: linear-gradient(90deg,
+    #b69a7d 0 18%, #907357 18% 70%, #ad8c6b 70%);
+  border-color: #e0c9a9;
+  box-shadow: 3px 4px 0 #907557;
+}
+.agency-inspector {
+  background: #fdf7ee;
+  border-color: #dcc9b1;
+}
+.agency-inspector-heading span { color: #69543f; }
+.agency-meter { background: #dfd0bb; }
+.agency-meter span { background: #809475; }
+.agency-award {
+  background: #f4e9dc;
+  border-color: #dfd0bb;
+  opacity: .75;
+}
+.agency-award.earned {
+  background: #e2e9d8;
+  border-color: #9bb293;
+  opacity: 1;
+}
+.agency-award-glyph, .agency-award.earned .agency-award-glyph { color: #745b42; }
+.agency-award-copy small { color: #695742; }
+.agency-celebration {
+  background: radial-gradient(ellipse at 40% 60%, #dfe9d1, #f7efe4 75%);
+  border-color: #b8c4aa;
+}
+.agency-celebration h3 { color: #49392b; }
+.agency-celebration p { color: #6b5845; }
+
+/* Preserve readable navigation labels on small screens. */
+@media(max-width:650px) {
+  .route-planet,
+  .route-node.current .route-planet,
+  .route-node.reached .route-planet {
+    box-shadow: 0 0 0 4px var(--earth-surface);
+  }
+}
