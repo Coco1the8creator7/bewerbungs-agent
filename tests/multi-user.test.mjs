@@ -7,20 +7,30 @@ const feedback=(score)=>({type:'bewerbungs-agent-feedback',schema_version:'1.0.0
   activity_log:[],overrides:[],manual_jobs:[],export_selection:[]});
 function fakeClient() {
   let current=A;const profiles=new Map(),snapshots=new Map();
-  const client={auth:{async getUser(){return {data:{user:{id:current}},error:null};}},
+  const client={auth:{async getUser(){return {data:{user:{id:current,email:current+'@example.test'}},error:null};}},
     from(table) {
       const map=table==='career_profiles'?profiles:snapshots;
-      const query={constraints:[],payload:null,eq(key,v){this.constraints.push([key,v]);return this;},
-        select(){return this;},async maybeSingle(){const rows=[...map.values()].filter(x=>this.constraints.every(([k,v])=>x[k]===v));
-          return {data:rows[0]??null,error:null};},
-        then(resolve,reject){return Promise.resolve({data:[...map.values()].filter(x=>this.constraints.every(([k,v])=>x[k]===v)),error:null}).then(resolve,reject);},
-        upsert(value){if(value.user_id!==current)return Promise.resolve({data:null,error:Error('RLS denied')});
-          const key=table==='career_profiles'?value.user_id:value.user_id+'|'+value.kind;
-          map.set(key,{...value});return Promise.resolve({data:null,error:null});}
+      const makeKey=value=>table==='career_profiles'?value.user_id:value.user_id+'|'+value.kind;
+      const query={constraints:[],updates:null,
+        eq(key,v){this.constraints.push([key,v]);return this;},
+        select(){return this;},
+        filtered(){return [...map.values()].filter(x=>this.constraints.every(([k,v])=>x[k]===v)&&x.user_id===current);},
+        async maybeSingle(){
+          const row=this.filtered()[0]??null;
+          if(this.updates && row){Object.assign(row,this.updates);map.set(makeKey(row),row);}
+          return {data:row,error:null};
+        },
+        then(resolve,reject){return Promise.resolve({data:this.filtered(),error:null}).then(resolve,reject);},
+        async upsert(value){if(value.user_id!==current)return {data:null,error:Error('RLS denied')};
+          map.set(makeKey(value),{...value});return {data:null,error:null};},
+        async insert(value){if(value.user_id!==current)return {data:null,error:Error('RLS denied')};
+          const key=makeKey(value);if(map.has(key))return {data:null,error:{code:'23505'}};
+          map.set(key,{...value});return {data:null,error:null};},
+        update(values){this.updates=values;return this;}
       };return query;
     }};return {client,login(id){current=id;},profiles,snapshots};
 }
-test('two independent accounts cannot accidentally share stored feedback',async()=>{
+test('two accounts cannot accidentally share private feedback or profile',async()=>{
  const x=fakeClient(),store=createPrivateStore(x.client);
  await store.saveSnapshot('feedback',feedback(12));
  await store.saveProfile('Testkonto A');
@@ -30,11 +40,20 @@ test('two independent accounts cannot accidentally share stored feedback',async(
  await store.saveSnapshot('feedback',feedback(95));
  await store.saveProfile('Testkonto B');
  x.login(A);
- assert.equal((await store.loadSnapshot('feedback')).relevance_ratings[0].score,12);
+ assert.equal((await store.loadSnapshot('feedback')).payload.relevance_ratings[0].score,12);
  assert.equal((await store.loadProfile()).display_name,'Testkonto A');
  x.login(B);
- assert.equal((await store.loadSnapshot('feedback')).relevance_ratings[0].score,95);
+ assert.equal((await store.loadSnapshot('feedback')).payload.relevance_ratings[0].score,95);
  assert.equal((await store.exportData()).snapshots.length,1);
+});
+test('stale device cannot silently overwrite another device',async()=>{
+ const x=fakeClient(),store=createPrivateStore(x.client);
+ await store.saveSnapshot('feedback',feedback(10));
+ const previous=await store.loadSnapshot('feedback');
+ assert.equal(previous.revision,1);
+ assert.equal(await store.saveSnapshot('feedback',feedback(40),previous.revision),2);
+ await assert.rejects(()=>store.saveSnapshot('feedback',feedback(20),previous.revision),/anderen Gerät/);
+ assert.equal((await store.loadSnapshot('feedback')).payload.relevance_ratings[0].score,40);
 });
 test('invalid/oversize legacy input cannot be saved',()=>{
  assert.throws(()=>validateSnapshot('feedback',{type:'bad'}),/Inkompatibles/);
