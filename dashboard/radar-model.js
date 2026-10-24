@@ -28,7 +28,7 @@
   if(!title)return false;
   // Deliberately conservative: EFZ/EBA alone identifies a qualification,
   // not an apprenticeship. Adult vacancies often require an EFZ.
-  return /\\b(lehrstelle|lehrling|lernende[rn]?|ausbildungsplatz|lehre als|apprenti\\w*|apprentissage)\\b/.test(title);
+  return /\b(lehrstelle|lehrling|lernende[rn]?|ausbildungsplatz|lehre als|apprenti\w*|apprentissage)\b/.test(title);
 
  }
  function startOfLocalDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();}
