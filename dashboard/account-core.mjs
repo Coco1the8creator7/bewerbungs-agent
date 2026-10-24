@@ -53,8 +53,12 @@ export function createPrivateStore(client) {
         .select('display_name,created_at,updated_at').eq('user_id',id).maybeSingle());
       const snapshots = unwrap(await client.from('career_snapshots')
         .select('kind,payload,updated_at').eq('user_id',id));
+      const {data:authData, error:authError} = await client.auth.getUser();
+      if(authError || !authData?.user || authData.user.id !== id) throw new Error('Sitzung nicht mehr gültig.');
       return {type:'career-agency-user-export',schema_version:'1.0.0',
-        exported_at:new Date().toISOString(),profile,snapshots};
+        exported_at:new Date().toISOString(),
+        account:{id, email:authData.user.email ?? null, created_at:authData.user.created_at ?? null},
+        profile,snapshots};
     }
   });
 }
