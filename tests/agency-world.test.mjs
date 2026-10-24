@@ -88,3 +88,17 @@ test("Warm beige styling loads after the legacy theme and has reduced-motion saf
  assert.match(css,/#f7eddd/i);
  assert.match(css,/prefers-reduced-motion/);
 });
+
+test("Mission Control previews use the same Agency renderer and current CRM levels",()=>{
+ const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const css=readFileSync(new URL("../dashboard/agency-theme-beige.css",import.meta.url),"utf8");
+ assert.equal((html.match(/class="mission-route-art"/g)||[]).length,5);
+ assert.doesNotMatch(html,/id="routeShip"|el\("routeShip"\)/);
+ assert.match(html,/window\.AgentAgency\.buildModel\(agencyData\(\)\)/);
+ assert.match(html,/window\.AgentAgencyArt\.createScene\(phase\)/);
+ assert.match(html,/\["radar","analysis","dispatch","interview","finale"\]/);
+ assert.match(html,/host\.dataset\.sceneKey!==sceneKey/);
+ assert.match(css,/#routeMap \.mission-route-art \.agency-art/);
+ assert.match(css,/scroll-snap-type:x proximity/);
+ assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+});
