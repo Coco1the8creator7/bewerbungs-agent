@@ -18,7 +18,7 @@ function fakeClient() {
         async maybeSingle(){
           const row=this.filtered()[0]??null;
           if(this.updates && row){Object.assign(row,this.updates);map.set(makeKey(row),row);}
-          return {data:row,error:null};
+          return {data:row ? structuredClone(row) : null,error:null};
         },
         then(resolve,reject){return Promise.resolve({data:this.filtered(),error:null}).then(resolve,reject);},
         async upsert(value){if(value.user_id!==current)return {data:null,error:Error('RLS denied')};
