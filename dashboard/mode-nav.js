@@ -1,14 +1,14 @@
 /* Career.Agency: shared navigation only. Individual mode UIs live elsewhere. */
 (function(){
  "use strict";
- const modes=new Set(["startseite","radar","dossiers","agency","einstellungen"]);
+ const modes=new Set(["startseite","radar","dossiers","agency","profil","einstellungen"]);
  const menu=document.getElementById("modeSidebar");
  const toggle=document.getElementById("openModeSidebar");
  const close=document.getElementById("closeModeSidebar");
  const backdrop=document.getElementById("modeNavBackdrop");
  const links=[...document.querySelectorAll(".mode-nav-link[data-mode]")];
  const pages=[...document.querySelectorAll("[data-mode-page]")];
- if(!menu||!toggle||!close||!backdrop||pages.length!==5)return;
+ if(!menu||!toggle||!close||!backdrop||pages.length!==modes.size||links.length!==modes.size)return;
 
  const modeFromHash=()=>{
   const candidate=window.location.hash.slice(1).toLowerCase();
