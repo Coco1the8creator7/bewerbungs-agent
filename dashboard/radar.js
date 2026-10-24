@@ -82,7 +82,9 @@
  }
  function renderSkills(){
   for(const [group,items] of Object.entries(groups())){
-   const host=get("radarSkills-"+group);host.replaceChildren();
+   const slot=market()==="career"&&group==="fachwissen"?"schule":
+    market()==="career"&&group==="berufserfahrung"?"erfahrungen":group;
+   const host=get("radarSkills-"+slot);host.replaceChildren();
    for(const item of items)host.append(chip(group,item));
   }
   const extra=get("radarExtraSkills");extra.replaceChildren();
