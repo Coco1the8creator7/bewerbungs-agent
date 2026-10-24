@@ -1,4 +1,4 @@
-/* Career.Agency: shared five-mode navigation shell.
+/* Career.Agency: shared six-mode navigation shell.
    Keep each mode's future visual design in its own stylesheet. */
 .career-app-header{display:flex;align-items:center;gap:13px}
 .career-app-header>div{flex:1;min-width:0}
@@ -38,22 +38,22 @@
 }
 .mode-nav-links{display:grid;gap:5px;align-content:start}
 .mode-nav-link{
- display:flex;align-items:center;min-height:48px;
+ display:flex;align-items:center;gap:12px;min-height:48px;
  padding:11px 15px;border-radius:11px;
  color:#554536!important;text-decoration:none!important;
  font-size:.98rem;font-weight:650;
  border:1px solid transparent
 }
+.mode-nav-link svg{
+ width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round
+}
+.mode-nav-secondary{margin-top:auto;padding-top:14px;border-top:1px solid #e6d9c8}
 .mode-nav-link:hover{background:#f0e6d8;border-color:#ebdcc9}
 .mode-nav-link[aria-current="page"]{
  background:#eae0d1;color:#3f3227!important;
- border-color:#d8c8b1;font-weight:780
+ border-color:#d8c8b1;font-weight:780;
+ box-shadow:inset 3px 0 0 #967654
 }
-.mode-nav-link[aria-current="page"]::before{
- content:"";width:5px;height:18px;background:#967654;border-radius:5px;
- margin-right:11px
-}
-.mode-sidebar-foot{font-size:.74rem;color:#9b8872;margin:auto 9px 0}
 body.mode-menu-open{overflow:hidden}
 .career-mode-view[hidden],.career-mode-placeholder[hidden]{display:none!important}
 .career-mode-placeholder{min-height:55vh;padding:clamp(36px,8vh,90px) 0 80px}

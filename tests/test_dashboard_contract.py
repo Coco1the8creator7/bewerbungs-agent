@@ -14,6 +14,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class DashboardContractTests(unittest.TestCase):
+    def test_sidebar_navigation_has_six_modes_with_icons_and_bottom_account_links(self):
+        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        css = (ROOT / "dashboard/mode-nav.css").read_text(encoding="utf-8")
+        js = (ROOT / "dashboard/mode-nav.js").read_text(encoding="utf-8")
+        sidebar = re.search(r'<aside id="modeSidebar".*?</aside>', html, re.DOTALL)
+        self.assertIsNotNone(sidebar)
+        sidebar = sidebar.group()
+        modes = re.findall(r'data-mode="([^"]+)"', sidebar)
+        self.assertEqual(modes, ["startseite", "radar", "dossiers", "agency", "profil", "einstellungen"])
+        self.assertEqual(sidebar.count('viewBox="0 0 24 24" aria-hidden="true" focusable="false"'), 6)
+        self.assertIn('class="mode-nav-links mode-nav-secondary"', sidebar)
+        self.assertLess(sidebar.index('data-mode="agency"'), sidebar.index('class="mode-nav-links mode-nav-secondary"'))
+        self.assertIn('margin-top:auto', css)
+        self.assertIn('pages.length!==modes.size||links.length!==modes.size', js)
+        for mode in modes:
+            self.assertIn(f'data-mode-page="{mode}"', html)
+
     def test_dashboard_has_valid_javascript(self):
         html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
         scripts = re.findall(r"<script>(.*?)</script>", html, flags=re.DOTALL | re.IGNORECASE)

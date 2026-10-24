@@ -347,13 +347,15 @@ header .sub,.section-heading p{color:#6b5744}
     <button id="closeModeSidebar" class="mode-sidebar-close" type="button" aria-label="Menü schliessen">✕</button>
   </div>
   <nav class="mode-nav-links" aria-label="Career.Agency Modi">
-    <a href="#startseite" data-mode="startseite" class="mode-nav-link" aria-current="page">Startseite</a>
-    <a href="#radar" data-mode="radar" class="mode-nav-link">Radar</a>
-    <a href="#dossiers" data-mode="dossiers" class="mode-nav-link">Dossiers</a>
-    <a href="#agency" data-mode="agency" class="mode-nav-link">Agency</a>
-    <a href="#einstellungen" data-mode="einstellungen" class="mode-nav-link">Einstellungen</a>
+    <a href="#startseite" data-mode="startseite" class="mode-nav-link" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Startseite</span></a>
+    <a href="#radar" data-mode="radar" class="mode-nav-link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m12 12 6-6"/></svg><span>Radar</span></a>
+    <a href="#dossiers" data-mode="dossiers" class="mode-nav-link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v12H3z"/><path d="M3 10h18"/></svg><span>Dossiers</span></a>
+    <a href="#agency" data-mode="agency" class="mode-nav-link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9zM12 1v3M12 20v3M1 12h3M20 12h3"/></svg><span>Agency</span></a>
   </nav>
-  <p class="mode-sidebar-foot">Fünf Bereiche · eine Plattform.</p>
+  <nav class="mode-nav-links mode-nav-secondary" aria-label="Profil und Einstellungen">
+    <a href="#profil" data-mode="profil" class="mode-nav-link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg><span>Mein Profil</span></a>
+    <a href="#einstellungen" data-mode="einstellungen" class="mode-nav-link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M10 2h4l.6 2.4 2 .9 2.2-1.1 2.2 3.5-1.8 1.8v2.1l1.8 1.8-2.2 3.5-2.2-1.1-2 .9L14 22h-4l-.6-2.4-2-.9-2.2 1.1L3 16.3l1.8-1.8v-2.1L3 10.6l2.2-3.5 2.2 1.1 2-.9z"/></svg><span>Einstellungen</span></a>
+  </nav>
 </aside>
 <main>
 <header class="career-app-header">
@@ -537,6 +539,9 @@ header .sub,.section-heading p{color:#6b5744}
 </section>
 <section id="mode-agency" class="career-mode-placeholder" data-mode-page="agency" aria-labelledby="mode-agency-title" hidden>
   <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / AGENCY</span><h2 id="mode-agency-title">Agency</h2><p>Die eigenständige Modus-Oberfläche folgt später. Die bestehende Agency World bleibt erreichbar.</p><button id="modeLaunchAgency" type="button">Bestehende Agency World öffnen ↗</button></div>
+</section>
+<section id="mode-profil" class="career-mode-placeholder" data-mode-page="profil" aria-labelledby="mode-profil-title" hidden>
+  <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / MEIN PROFIL</span><h2 id="mode-profil-title">Mein Profil</h2><p>Dein persönlicher Profilbereich entsteht hier. Eine Benutzeranmeldung und die geschützte Speicherung persönlicher Daten sind noch nicht eingerichtet.</p></div>
 </section>
 <section id="mode-einstellungen" class="career-mode-placeholder" data-mode-page="einstellungen" aria-labelledby="mode-einstellungen-title" hidden>
   <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / EINSTELLUNGEN</span><h2 id="mode-einstellungen-title">Einstellungen</h2><p>Hier entsteht die zentrale Einstellungsansicht. Die bisherigen Daten- und Synchronisationsfunktionen bleiben vorerst auf der Startseite.</p></div>
