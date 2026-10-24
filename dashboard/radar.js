@@ -38,7 +38,7 @@
  }
  function updateSourceLabel(){
   const n=state.selectedSources.length;
-  get("radarSourceCount").textContent=n===0?"Noch keine Wunschquelle markiert":n+" Wunschquelle"+(n===1:"":"n")+" markiert";
+  get("radarSourceCount").textContent=n===0?"Noch keine Wunschquelle markiert":n+" Wunschquelle"+(n===1?"":"n")+" markiert";
  }
  function chip(group,skill,custom=false){
   const selected=custom?state.profile.extraSkills.includes(skill):state.profile.skills[group].includes(skill);
