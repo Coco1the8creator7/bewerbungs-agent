@@ -38,7 +38,7 @@ Keine Microservices. Öffentlicher Inseratekatalog (`dashboard/jobs.json`) bleib
 
 - `dashboard/account.html`, `account.js`, `account-config.js`: separate Kontooberfläche, Registrierung/Email-Bestätigung, Passwort-Login/Reset, Profildaten, TOTP-MFA-Enrollment und Challenge, expliziter Feedback-/Workspace-Import, Export, Abmeldung, Kontolöschung.
 - Supabase JS v2.105.0; Browser-Session nutzt `sessionStorage` statt dauerhaftem GitHub-PAT in `localStorage`. Eine offene Session im selben Browser bleibt ein Angriffsrisiko; geteilte Geräte grundsätzlich vermeiden.
-- `dashboard/account-core.mjs`: Konto-ID nur aus `auth.getUser()`, kein vom Benutzer vorgegebenes `user_id`. Datenformat-Kompatibilität: `bewerbungs-agent-feedback/1.0.0` und `bewerbungs-agent-workspace/0.3.0`, maximal 10 MiB je Snapshot.
+- `dashboard/account-core.mjs`: Konto-ID nur aus `auth.getUser()`, kein vom Benutzer vorgegebenes `user_id`. Datenformat-Kompatibilität: `bewerbungs-agent-feedback/1.0.0` und `bewerbungs-agent-workspace/0.3.0`, maximal 10 MiB je Snapshot. Jeder Snapshot besitzt eine Revision; eine überholte Geräteversion wird beim Speichern abgewiesen (kein stilles Überschreiben).
 - `supabase/migrations/20261024000100_career_multiuser.sql`: Profile + private Snapshots, FK-Cascade bei Auth-Löschung, RLS auf beiden Tabellen, SELECT/INSERT/UPDATE/DELETE nur für authentifizierte Eigentümer. `anon` hat keinerlei Tabellenrechte.
 - `supabase/functions/delete-account/index.ts`: verifiziert JWT serverseitig, erfordert bestätigte Email, AAL2 (TOTP) und explizite Bestätigung, löscht nur den authentifizierten Nutzer mit serverseitigem Service-Role-Key. Lösch-Request verlangt zusätzliche Bestätigung in der UI. JWTs bleiben bis zum Ablauf eventuell noch formal gültig; nicht als Logout-Ersatz behandeln.
 - Kein Upload privater Daten ohne expliziten Klick, kein Import des alten `feedback.json` beim Login, kein automatischer CV-Upload, keine automatisierte Bewerbung.
@@ -70,6 +70,6 @@ Keine Microservices. Öffentlicher Inseratekatalog (`dashboard/jobs.json`) bleib
 
 - **Blockiert:** Livebetrieb für Jugendliche, Migration/Entfernung bestehender persönlicher Daten aus `main` und Historienänderungen – nur mit ausdrücklicher Freigabe.
 - **Extern:** Supabase-Projekt, Hostingregion, vertraglicher Datenschutz, SMTP/Email-Bestätigung, Auth-Redirects, DNS/Custom-Domain, CDN/CSP und Login-Rate-Limits.
-- **Technisch:** browserseitige vollständige Sync-Anbindung des Bestands-Dashboards, Konfliktbehandlung mehrerer Geräte/Revisionen, Offline-Strategie, gesicherte Backups, sichere File-Storage-Policies, Sitzungslaufzeit, Penetrationstest.
+- **Technisch:** browserseitige vollständige Sync-Anbindung des Bestands-Dashboards, inhaltliche Zusammenführung konkurrierender Änderungen (Revisionen erkennen Konflikte, mergen sie aber nicht), Offline-Strategie, gesicherte Backups, sichere File-Storage-Policies, Sitzungslaufzeit, Penetrationstest.
 - **MFA:** TOTP gewählt. Passkeys/WebAuthn laut Supabase-Dokumentation im Oktober 2026 noch experimentell; erneute Evaluation vor Einführung.
 - **Produkt:** Stufe 2 (lernender Jugendlicher-Assistent), Bewerbungsfreigaben, Jugend-UX, Datenschutzinformation und Onboarding werden gesondert entschieden.
