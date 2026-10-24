@@ -88,3 +88,12 @@
 @media(max-width:780px){#mode-radar .radar-grid,#mode-radar .radar-form-grid{grid-template-columns:1fr}#mode-radar .radar-display{min-height:280px}}
 @media(max-width:520px){#mode-radar{padding-top:22px}#mode-radar .radar-heading{align-items:start}#mode-radar .radar-surface{padding:16px}#mode-radar .radar-metrics{gap:9px}#mode-radar .radar-metric{padding:14px 12px}#mode-radar .radar-source-grid,#mode-radar .radar-personal-fields,#mode-radar .radar-grade-grid{grid-template-columns:1fr}#mode-radar .radar-personal-fields .span-two{grid-column:1}#mode-radar button.radar-tab{padding:11px 13px}#mode-radar .radar-dial{width:200px}}
 @media(prefers-reduced-motion:reduce){#mode-radar .radar-sweep,#mode-radar .radar-ping{animation:none!important}#mode-radar *{scroll-behavior:auto!important}}
+
+/* Mode choice: shared UI, isolated adult/learner search contexts. */
+#mode-radar .radar-markets{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:-4px 0 22px}
+#mode-radar button.radar-market{border:1px solid #d5c1a9;border-radius:999px;background:#f8f0e5;
+ color:#6a5540;font-size:.78rem;font-weight:750;padding:10px 15px;min-height:42px}
+#mode-radar button.radar-market:hover{background:#e9dfd2}
+#mode-radar button.radar-market[aria-pressed="true"]{background:#e1ebdc;border-color:#93a789;color:#38533b}
+#mode-radar [hidden]{display:none!important}
+@media(max-width:520px){#mode-radar .radar-markets{gap:7px}#mode-radar button.radar-market{flex:1 1 150px;text-align:center}}
