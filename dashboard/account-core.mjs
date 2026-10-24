@@ -37,22 +37,34 @@ export function createPrivateStore(client) {
     async loadSnapshot(kind) {
       if (!['feedback','workspace'].includes(kind)) throw new Error('Ungültiger Datentyp.');
       const id = await userId();
-      const data = unwrap(await client.from('career_snapshots').select('payload')
+      const data = unwrap(await client.from('career_snapshots').select('payload,revision')
         .eq('user_id',id).eq('kind',kind).maybeSingle());
-      return data?.payload ?? null;
+      return data ?? null;
     },
-    async saveSnapshot(kind, value) {
+    async saveSnapshot(kind, value, expectedRevision = null) {
       validateSnapshot(kind,value);
-      const id = await userId();
-      unwrap(await client.from('career_snapshots')
-        .upsert({user_id:id,kind,payload:value,updated_at:new Date().toISOString()},{onConflict:'user_id,kind'}));
+      const id = await userId(), updated_at = new Date().toISOString();
+      if (expectedRevision === null) {
+        const result = await client.from('career_snapshots').insert({
+          user_id:id,kind,payload:value,updated_at,revision:1
+        });
+        if (result.error?.code === '23505') throw new Error('Cloud-Daten wurden zwischenzeitlich erstellt. Bitte neu laden.');
+        unwrap(result);
+        return 1;
+      }
+      if (!Number.isSafeInteger(expectedRevision) || expectedRevision < 1) throw new Error('Ungültige Datenversion.');
+      const row = unwrap(await client.from('career_snapshots').update({
+        payload:value,updated_at,revision:expectedRevision+1
+      }).eq('user_id',id).eq('kind',kind).eq('revision',expectedRevision).select('revision').maybeSingle());
+      if (!row) throw new Error('Cloud-Daten wurden auf einem anderen Gerät verändert. Bitte zuerst neu laden und vergleichen.');
+      return row.revision;
     },
     async exportData() {
       const id = await userId();
       const profile = unwrap(await client.from('career_profiles')
         .select('display_name,created_at,updated_at').eq('user_id',id).maybeSingle());
       const snapshots = unwrap(await client.from('career_snapshots')
-        .select('kind,payload,updated_at').eq('user_id',id));
+        .select('kind,payload,updated_at,revision').eq('user_id',id));
       const {data:authData, error:authError} = await client.auth.getUser();
       if(authError || !authData?.user || authData.user.id !== id) throw new Error('Sitzung nicht mehr gültig.');
       return {type:'career-agency-user-export',schema_version:'1.0.0',
