@@ -336,7 +336,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./agency-world.css">
 <link rel="stylesheet" href="./light-earth.css">
 <link rel="stylesheet" href="./agency-theme-beige.css">
-<link rel="stylesheet" href="./mode-nav.css">
+<link rel="stylesheet" href="./mode-nav.css">\n<link rel="stylesheet" href="./radar.css">
 </head>
 <body data-active-mode="startseite">
 <div id="modeNavBackdrop" class="mode-nav-backdrop" hidden></div>
@@ -444,8 +444,92 @@ header .sub,.section-heading p{color:#6b5744}
   <p class="disclaimer">Stellen und gespeicherte Bewertungen sind öffentlich im GitHub-Repository sichtbar. GitHub-Speichern erfordert einen persönlichen Token; dieser wird nur in deinem Browser gespeichert. Auf fremden Geräten keinen Token hinterlegen.</p>
 </footer>
 </div><!-- Die bestehende CRM-Startseite bleibt unverändert. -->
-<section id="mode-radar" class="career-mode-placeholder" data-mode-page="radar" aria-labelledby="mode-radar-title" hidden>
-  <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / RADAR</span><h2 id="mode-radar-title">Radar</h2><p>Hier entsteht der Radar-Modus. Seine Oberfläche und Funktionen definieren wir separat.</p></div>
+<section id="mode-radar" class="career-mode-view" data-mode-page="radar" aria-labelledby="mode-radar-title" hidden>
+  <div class="radar-heading">
+    <div><span class="radar-kicker">CAREER.AGENCY / LEHRSTELLEN-RADAR</span><h2 id="mode-radar-title">Dein Radar</h2>
+      <p class="radar-intro">Entdecke passende Lehrstellen, zeig deine Stärken und finde heraus, was dir wirklich wichtig ist.</p></div>
+    <span class="radar-badge">PROTOTYP 0.1 · Schweiz</span>
+  </div>
+  <div class="radar-tabs" role="tablist" aria-label="Radar-Bereiche">
+    <button type="button" class="radar-tab" role="tab" id="radarTabOverview" data-tab="overview" aria-controls="radarPanelOverview" aria-selected="true" tabindex="0">01&nbsp; Überblick</button>
+    <button type="button" class="radar-tab" role="tab" id="radarTabProfile" data-tab="profile" aria-controls="radarPanelProfile" aria-selected="false" tabindex="-1">02&nbsp; Meine Stärken</button>
+    <button type="button" class="radar-tab" role="tab" id="radarTabReview" data-tab="review" aria-controls="radarPanelReview" aria-selected="false" tabindex="-1">03&nbsp; Bewertungs-Hub</button>
+  </div>
+  <div class="radar-panel" role="tabpanel" id="radarPanelOverview" data-panel="overview" aria-labelledby="radarTabOverview">
+    <div class="radar-grid">
+      <section class="radar-surface soft" aria-label="Animierter Inserate-Radar">
+        <div class="radar-surface-head"><div><div class="radar-kicker">SCAN / 01</div><h3>Stellenradar</h3></div><span class="radar-scope">SCHWEIZ</span></div>
+        <div class="radar-display">
+          <div class="radar-dial" role="img" aria-label="Dekorative Radar-Animation, kein aktiver Live-Crawler">
+            <span class="radar-sweep" aria-hidden="true"></span><span class="radar-cross" aria-hidden="true"></span>
+            <span class="radar-ping a" aria-hidden="true"></span><span class="radar-ping b" aria-hidden="true"></span><span class="radar-ping c" aria-hidden="true"></span>
+          </div>
+          <div><div class="radar-live" id="radarLiveLabel">IMPORT NOCH NICHT GELADEN</div>
+          <div class="radar-not-live">Illustration · kein automatischer Suchlauf durch die Animation</div></div>
+        </div>
+      </section>
+      <section class="radar-surface" aria-label="Statistik importierter Stellen">
+        <div class="radar-surface-head"><div><span class="radar-kicker">IMPORT / STATUS</span><h3>Was dein Radar bisher gefunden hat</h3></div>
+          <button id="radarRefresh" class="secondary compact-button" type="button">↻ Aktualisieren</button></div>
+        <div class="radar-metrics">
+          <div class="radar-metric"><span>Inserate gesammelt</span><strong id="radarTotal">–</strong><small>Alle Inserate im aktuellen öffentlichen Feed</small></div>
+          <div class="radar-metric"><span>Neu seit gestern</span><strong id="radarSinceYesterday">–</strong><small>Erstmals erfasst ab gestern 00:00, Ortszeit</small></div>
+          <div class="radar-metric"><span>Neu diese Woche</span><strong id="radarWeek">–</strong><small>Erstmals erfasst seit Montag 00:00</small></div>
+          <div class="radar-metric"><span>Mögliche Lehrstellen</span><strong id="radarApprenticeships">–</strong><small>Automatisch erkannt, noch nicht geprüft</small></div>
+        </div>
+        <p id="radarFeedStatus" class="radar-notice" role="status" aria-live="polite">Statistik lädt beim Öffnen des Radars.</p>
+      </section>
+    </div>
+    <section class="radar-surface radar-block" aria-labelledby="radarSourcesTitle">
+      <div class="radar-block-title"><div><span class="radar-kicker">QUELLEN / AUSWAHL</span><h3 id="radarSourcesTitle">Wo möchtest du suchen?</h3></div><span id="radarSourceCount" class="radar-small">Keine Auswahl</span></div>
+      <div id="radarSources" class="radar-source-grid" role="group" aria-label="Wunschquellen für Lehrstellen"></div>
+      <p class="radar-notice">Die Quellenwahl filtert <strong>bereits importierte Lehrstellen</strong> im Bewertungs-Hub. Zusätzliche Webseiten werden noch nicht abgefragt: Quellencrawler und Benutzerkonten gehören zu einer späteren Ausbaustufe. Der bisherige Import ist auf Erwachsenenstellen ausgerichtet.</p>
+    </section>
+  </div>
+  <div class="radar-panel" role="tabpanel" id="radarPanelProfile" data-panel="profile" aria-labelledby="radarTabProfile" hidden>
+    <div class="radar-form-grid">
+      <section class="radar-surface" aria-labelledby="radarSkillsTitle">
+        <span class="radar-kicker">DEIN PROFIL / SKILLS</span><h3 id="radarSkillsTitle">Was kannst du schon?</h3>
+        <p class="radar-small">Auch Erfahrungen aus Schule, Freizeit oder einer Schnupperlehre zählen. Wähle nur aus, was auf dich zutrifft.</p>
+        <div class="radar-group"><div class="radar-group-title">Schule & Lernen</div><div id="radarSkills-schule" class="radar-chip-list" role="group" aria-label="Schulfächer und Lernen"></div></div>
+        <div class="radar-group"><div class="radar-group-title">Persönliche Stärken</div><div id="radarSkills-staerken" class="radar-chip-list" role="group" aria-label="Persönliche Stärken"></div></div>
+        <div class="radar-group"><div class="radar-group-title">Erste Erfahrungen</div><div id="radarSkills-erfahrungen" class="radar-chip-list" role="group" aria-label="Erste Erfahrungen"></div></div>
+        <div class="radar-group"><div class="radar-group-title">Interessen</div><div id="radarSkills-interessen" class="radar-chip-list" role="group" aria-label="Interessengebiete"></div></div>
+        <div class="radar-group"><label class="radar-label" for="radarCustomSkill">Eigene Stärke oder Fähigkeit ergänzen</label>
+          <div class="radar-add-row"><input id="radarCustomSkill" maxlength="48" placeholder="z. B. Videos schneiden" autocomplete="off"><button type="button" id="radarAddSkill">Hinzufügen</button></div>
+          <div id="radarExtraSkills" class="radar-chip-list" style="margin-top:10px"></div><p id="radarSkillCount" class="radar-small">0 ausgewählt</p></div>
+      </section>
+      <section class="radar-surface" aria-labelledby="radarWishesTitle">
+        <span class="radar-kicker">SUCHPROFIL / WÜNSCHE</span><h3 id="radarWishesTitle">Wie stellst du dir deine Lehre vor?</h3>
+        <p class="radar-small">Du musst dich noch nicht festlegen. Deine Wünsche helfen künftig bei der Suche und beim Schreiben deiner Unterlagen.</p>
+        <div class="radar-personal-fields">
+          <div class="span-two"><label class="radar-label" for="radar-occupations">Berufe, die mich interessieren (Komma getrennt)</label><input id="radar-occupations" maxlength="250" autocomplete="off" placeholder="z. B. Mediamatiker/in, Schreiner/in"></div>
+          <div><label class="radar-label" for="radar-region">Wunschregion / Ort</label><input id="radar-region" maxlength="80" autocomplete="off" placeholder="z. B. Zürich"></div>
+          <div><label class="radar-label" for="radar-level">Lehrabschluss</label><select id="radar-level"><option value="any">Noch offen</option><option value="EFZ">EFZ</option><option value="EBA">EBA</option></select></div>
+          <div><label class="radar-label" for="radar-startYear">Gewünschter Lehrbeginn</label><input id="radar-startYear" type="number" min="2026" max="2034" step="1" placeholder="z. B. 2027"></div>
+          <div class="span-two"><label class="radar-label" for="radar-example">Ein echtes Beispiel aus deinem Alltag</label><textarea id="radar-example" maxlength="500" rows="3" placeholder="Was hast du gemacht, auf das du stolz bist? Zum Beispiel ein Schulprojekt, eine Aufgabe im Verein oder beim Schnuppern."></textarea><p class="radar-small">Selbstauskunft für spätere Bewerbungsentwürfe · noch keine automatische Übernahme.</p></div>
+        </div>
+        <label class="radar-privacy" for="radarSaveOptIn"><input id="radarSaveOptIn" type="checkbox"><span><strong>Nur auf diesem Gerät dauerhaft speichern</strong><br>Freiwillig, nur auf einem privaten Gerät. Ohne Häkchen bleibt alles nur in diesem Tab. Kein Cloud-Upload und keine Veröffentlichung im GitHub-Repository.</span></label>
+        <div class="radar-actions"><button id="radarExport" type="button">Profil als JSON exportieren</button><button id="radarForget" class="radar-danger" type="button">Radar-Daten löschen</button></div>
+        <p id="radarStatus" class="radar-status" role="status" aria-live="polite">Nur in diesem Tab · noch nicht gespeichert.</p>
+        <p class="radar-notice">Wichtig: Auf Schul- oder Gemeinschaftsgeräten keine persönlichen Angaben dauerhaft speichern. Exportierte Dateien enthalten deine Eingaben. Daten können derzeit weder einem Benutzerkonto zugeordnet noch automatisch in Bewerbungen übernommen werden.</p>
+      </section>
+    </div>
+  </div>
+  <div class="radar-panel" role="tabpanel" id="radarPanelReview" data-panel="review" aria-labelledby="radarTabReview" hidden>
+    <section class="radar-surface" aria-labelledby="radarReviewTitle">
+      <div class="radar-block-title"><div><span class="radar-kicker">DEINE ENTSCHEIDUNG / UNTERSTÜTZT</span><h3 id="radarReviewTitle">Lehrstellen beurteilen</h3></div><span class="radar-small" id="radarReviewCount">0 reale Kandidaten</span></div>
+      <p class="radar-small">Vier einfache Kriterien von 1 bis 5 – jede Einschätzung ist freiwillig. Nichts wird automatisch als «gut» oder «schlecht» gewertet. Unbewertete Felder bleiben unbewertet.</p>
+      <div class="radar-review-tools">
+        <label><input type="checkbox" id="radarStrictOccupation">Nur meine Wunschberufe</label>
+        <label><input type="checkbox" id="radarStrictRegion">Nur meine Wunschregion</label>
+        <button type="button" class="secondary compact-button" id="radarToggleDemo">3 fiktive Beispiele anzeigen</button>
+      </div>
+      <p class="radar-small">Die Quellenwahl aus «Überblick» und dein EFZ-/EBA-Wunsch gelten für die echten Ergebnisse. Berufs- und Ortsabgleich sind einfache Textfilter – keine Berufsberatung oder Eignungsdiagnostik.</p>
+      <div id="radarReviewList" class="radar-review-list" aria-live="polite"></div>
+      <p class="radar-notice">Deine Bewertungen bleiben bewusst getrennt vom bisherigen Erwachsenen-CRM und werden nicht an GitHub oder das Matching-Training übertragen. Für eine produktive Lehrstellensuche braucht es zuerst verlässliche Lehrstellenquellen und eine geschützte Benutzerverwaltung.</p>
+    </section>
+  </div>
 </section>
 <section id="mode-dossiers" class="career-mode-placeholder" data-mode-page="dossiers" aria-labelledby="mode-dossiers-title" hidden>
   <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / DOSSIERS</span><h2 id="mode-dossiers-title">Dossiers</h2><p>Hier entsteht der Dossiers-Modus. Seine Oberfläche und Funktionen definieren wir separat.</p></div>
@@ -1600,6 +1684,6 @@ document.addEventListener("close",updateFloatingSaveVisibility,true);
 updateFloatingSaveVisibility();
 initialize();
 </script>
-<script src="./mode-nav.js"></script>
+<script src="./radar-model.js"></script>\n<script src="./radar.js"></script>\n<script src="./mode-nav.js"></script>
 </body>
 </html>
