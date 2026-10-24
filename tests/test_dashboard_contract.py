@@ -27,7 +27,10 @@ class DashboardContractTests(unittest.TestCase):
         self.assertIn('class="mode-nav-links mode-nav-secondary"', sidebar)
         self.assertLess(sidebar.index('data-mode="agency"'), sidebar.index('class="mode-nav-links mode-nav-secondary"'))
         self.assertIn('margin-top:auto', css)
-        self.assertIn('pages.length!==modes.size||links.length!==modes.size', js)
+        self.assertNotIn('pages.length!==modes.size', js)
+        self.assertIn('pages.map(page=>page.dataset.modePage)', js)
+        self.assertRegex(html, r'href="\\./mode-nav\\.css\\?v=[^"]+"')
+        self.assertRegex(html, r'src="\\./mode-nav\\.js\\?v=[^"]+"')
         for mode in modes:
             self.assertIn(f'data-mode-page="{mode}"', html)
 
