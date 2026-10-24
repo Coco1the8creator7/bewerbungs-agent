@@ -70,6 +70,20 @@ begin
     succeeded := true;
   exception when insufficient_privilege then null; end;
   if succeeded then raise exception 'Anon can read profiles'; end if;
+  succeeded := false;
+  begin
+    insert into public.career_profiles(user_id,display_name)
+      values ('11111111-1111-4111-8111-111111111111','anonymous write')
+      on conflict (user_id) do update set display_name='anonymous write';
+    succeeded := true;
+  exception when insufficient_privilege then null; end;
+  if succeeded then raise exception 'Anon can write profiles'; end if;
+  succeeded := false;
+  begin
+    perform * from public.career_snapshots;
+    succeeded := true;
+  exception when insufficient_privilege then null; end;
+  if succeeded then raise exception 'Anon can read snapshots'; end if;
 end $test$;
 reset role;
 -- CASCADE also removes private records when the Auth user is deleted.
