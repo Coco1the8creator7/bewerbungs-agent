@@ -1244,7 +1244,8 @@ function renderNewJobs(){
   card.append(node("p",jobTaskPreview(j.description),"job-meta"),node("div",jobSalaryLabel(j),"job-meta"));
   const tags=document.createElement("div");tags.className="tags";
   for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
-  card.append(tags,ratingPanel(j));
+  // Bewertungen erscheinen ausschliesslich in der Detailansicht.
+  card.append(tags);
   const footer=document.createElement("div");footer.className="card-footer";
   const actions=document.createElement("div");actions.className="card-actions";
   actions.append(actionButton(j));footer.append(actions);

@@ -51,6 +51,20 @@ class DashboardContractTests(unittest.TestCase):
         self.assertIn('type:"bewerbungs-agent-decisions"', html)
         self.assertNotIn("localStorage", html)
 
+    def test_job_rating_controls_only_appear_inside_details_dialog(self):
+        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        cards = re.search(r"function renderNewJobs\(\)\{(.*?)\n\}\nfunction render\(", html, re.DOTALL)
+        details = re.search(r"function openDetails\(id\)\{(.*?)\n\}\nfunction startNewJob\(", html, re.DOTALL)
+        self.assertIsNotNone(cards, "Job-card rendering function not found")
+        self.assertIsNotNone(details, "Details dialog function not found")
+        self.assertNotIn("ratingPanel(", cards.group(1),
+                         "The landing-page job cards must not contain rating controls")
+        self.assertIn("card.append(tags);", cards.group(1))
+        self.assertIn("openDetails(j.id)", cards.group(1),
+                      "Clicking a job card must still open its details dialog")
+        self.assertIn('el("detailReviewHost").replaceChildren(ratingPanel(j))', details.group(1),
+                      "The existing rating editor must remain in the details dialog")
+
     def test_earth_palette_covers_dashboard_and_agency(self):
         html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
         agency = (ROOT / "dashboard/agency-world.css").read_text(encoding="utf-8")
