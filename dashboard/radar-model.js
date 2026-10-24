@@ -1,0 +1,106 @@
+/* Career.Agency Radar v0.1: pure, offline-testable apprentice matching helpers.
+ * This module never stores or transmits personal information.
+ */
+(function(root){
+ "use strict";
+ const sources=Object.freeze([
+  {id:"berufsberatung.ch",label:"berufsberatung.ch",hint:"Offizielles Berufs- und Lehrstellenportal"},
+  {id:"yousty.ch",label:"Yousty",hint:"Lehrstellen und Schnupperangebote"},
+  {id:"lehrstellen.ch",label:"lehrstellen.ch",hint:"Schweizer Lehrstellenportal"},
+  {id:"gateway.one",label:"gateway.one",hint:"Lehrstellen und Berufsorientierung"}
+ ]);
+ const skillGroups=Object.freeze({
+  schule:["Mathematik & Zahlen","Deutsch & Schreiben","Fremdsprachen","Natur & Technik","Gestalten","Digitale Grundlagen"],
+  staerken:["Teamarbeit","Zuverlässigkeit","Sorgfalt","Kreativität","Praktisch anpacken","Mit Menschen umgehen"],
+  erfahrungen:["Schnupperlehre","Schulprojekt","Verein","Nebenjob","Eigenes Projekt","Zu Hause mithelfen"],
+  interessen:["Technik","Handwerk","Natur & Tiere","Gesundheit & Soziales","Medien & Gestaltung","Kaufmännisches","Gastronomie","Informatik","Bauen","Logistik"]
+ });
+ const criteria=Object.freeze([
+  {id:"interest",label:"Mein Interesse",hint:"Möchte ich diesen Beruf kennenlernen?"},
+  {id:"tasks",label:"Tätigkeiten",hint:"Passen die beschriebenen Aufgaben zu mir?"},
+  {id:"commute",label:"Arbeitsweg",hint:"Ist der Arbeitsweg für mich machbar?"},
+  {id:"company",label:"Lehrbetrieb",hint:"Gefällt mir, was ich über den Betrieb weiss?"}
+ ]);
+ const fold=v=>String(v??"").toLocaleLowerCase("de-CH").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ß/g,"ss").trim();
+ const slug=s=>fold(s).replace(/[^a-z0-9]+/g,"");
+ function isApprenticeship(job){
+  const title=fold(job?.title);
+  const description=fold(job?.description).slice(0,2000);
+  if(!title)return false;
+  // Do not classify ordinary adult vacancies simply because they mention training.
+  return /\b(lehrstelle|lehrling|lernende[rn]?|ausbildungsplatz|lehre als|apprenti\w*|apprentissage)\b/.test(title) ||
+   /\b(efz|eba)\b/.test(title) && !/\b(berufsbildner|ausbildner|leitung|projektleiter|trainer)\b/.test(title) ||
+   /\b(lehrstelle|lehrling|apprentissage)\b/.test(description) && /\b(efz|eba|lehre)\b/.test(title);
+ }
+ function startOfLocalDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();}
+ function summarize(rows,now=new Date()){
+  const seen=new Set();
+  const unique=(Array.isArray(rows)?rows:[]).filter(j=>{
+   if(!j||typeof j.id!=="string"||!j.id||j.id.startsWith("DEMO-")||j.id.startsWith("MANUAL-")||seen.has(j.id))return false;
+   seen.add(j.id);return true;
+  });
+  const yesterday=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1).getTime();
+  const weekday=(now.getDay()+6)%7;
+  const week=new Date(now.getFullYear(),now.getMonth(),now.getDate()-weekday).getTime();
+  const end=now.getTime();
+  const since=start=>unique.filter(j=>{
+   const ms=Date.parse(j.first_seen_at);
+   return Number.isFinite(ms)&&ms>=start&&ms<=end;
+  }).length;
+  return {total:unique.length,sinceYesterday:since(yesterday),thisWeek:since(week),
+   apprenticeships:unique.filter(isApprenticeship).length,missingDates:unique.filter(j=>!Number.isFinite(Date.parse(j.first_seen_at))).length};
+ }
+ const initialProfile=()=>({skills:{schule:[],staerken:[],erfahrungen:[],interessen:[]},extraSkills:[],
+  occupations:"",region:"",level:"any",startYear:"",example:"",strictOccupation:false,strictRegion:false});
+ function normalizedProfile(raw){
+  const base=initialProfile(),o=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw:{};
+  const skills=o.skills&&typeof o.skills==="object"?o.skills:{};
+  for(const group of Object.keys(skillGroups))
+   base.skills[group]=[...new Set((Array.isArray(skills[group])?skills[group]:[]).filter(s=>typeof s==="string"&&skillGroups[group].includes(s)))];
+  base.extraSkills=[...new Set((Array.isArray(o.extraSkills)?o.extraSkills:[]).filter(x=>typeof x==="string").map(x=>x.trim()).filter(x=>x.length>0&&x.length<=48))].slice(0,12);
+  for(const [key,max] of [["occupations",250],["region",80],["example",500]])base[key]=typeof o[key]==="string"?o[key].slice(0,max):"";
+  base.level=["any","EFZ","EBA"].includes(o.level)?o.level:"any";
+  base.startYear=/^20\d{2}$/.test(String(o.startYear||""))?String(o.startYear):"";
+  base.strictOccupation=o.strictOccupation===true;
+  base.strictRegion=o.strictRegion===true;
+  return base;
+ }
+ function normalizedState(raw){
+  const obj=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw:{};
+  const selectedSources=[...new Set((Array.isArray(obj.selectedSources)?obj.selectedSources:[]).filter(x=>sources.some(s=>s.id===x)))];
+  const ratings={};
+  if(obj.ratings&&typeof obj.ratings==="object"&&!Array.isArray(obj.ratings))
+   for(const [id,item] of Object.entries(obj.ratings).slice(0,400)){
+    if(typeof id!=="string"||id.length>180||!item||typeof item!=="object")continue;
+    const scores={};
+    for(const c of criteria)if(Number.isInteger(item.scores?.[c.id])&&item.scores[c.id]>=1&&item.scores[c.id]<=5)scores[c.id]=item.scores[c.id];
+    const note=typeof item.note==="string"?item.note.slice(0,400):"";
+    if(Object.keys(scores).length||note)ratings[id]={scores,note};
+   }
+  return {schema_version:"radar-prototype-v1",profile:normalizedProfile(obj.profile),selectedSources,ratings};
+ }
+ function sourceMatch(jobSource,selection){
+  const term=slug(jobSource);
+  if(!term)return false;
+  return selection.some(id=>term.includes(slug(id))||slug(id).includes(term) && term.length>4);
+ }
+ function apprenticeshipLevel(job){
+  const title=fold(job?.title);return /\beba\b/.test(title)?"EBA":/\befz\b/.test(title)?"EFZ":null;
+ }
+ function matchesPreferences(job,profile,sourcesChosen){
+  if(sourcesChosen.length&&!sourceMatch(job.source,sourcesChosen))return false;
+  if(profile.level!=="any"){const level=apprenticeshipLevel(job);if(level&&level!==profile.level)return false;}
+  if(profile.strictRegion&&profile.region&&!fold(job.location).includes(fold(profile.region)))return false;
+  const choices=profile.occupations.split(/[,;\n]/).map(fold).filter(Boolean);
+  if(profile.strictOccupation&&choices.length&&!choices.some(x=>fold(job.title).includes(x)))return false;
+  return true;
+ }
+ function ratingAverage(rating){
+  const nums=criteria.map(c=>rating?.scores?.[c.id]).filter(x=>Number.isInteger(x)&&x>=1&&x<=5);
+  return nums.length?{value:nums.reduce((a,b)=>a+b,0)/nums.length,count:nums.length}:null;
+ }
+ const api=Object.freeze({sources,skillGroups,criteria,isApprenticeship,summarize,initialProfile,
+  normalizedProfile,normalizedState,matchesPreferences,ratingAverage});
+ root.CareerRadarModel=api;
+ if(typeof module!=="undefined"&&module.exports)module.exports=api;
+})(typeof globalThis!=="undefined"?globalThis:this);
