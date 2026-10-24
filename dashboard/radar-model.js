@@ -118,7 +118,10 @@
  function sourceMatch(jobSource,selection){
   const term=slug(jobSource);
   if(!term)return false;
-  return selection.some(id=>term.includes(slug(id))||slug(id).includes(term) && term.length>4);
+  return selection.some(id=>{
+   const candidate=slug(id);
+   return term===candidate||term===candidate.replace(/ch$/,"")||candidate===term.replace(/ch$/,"");
+  });
  }
  function apprenticeshipLevel(job){
   const title=fold(job?.title);return /\beba\b/.test(title)?"EBA":/\befz\b/.test(title)?"EFZ":null;
