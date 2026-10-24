@@ -1,7 +1,7 @@
 {
   "type": "bewerbungs-agent-feedback",
   "schema_version": "1.0.0",
-  "updated_at": "2026-10-23T13:12:50.186Z",
+  "updated_at": "2026-10-24T10:18:24.223Z",
   "annotations": [],
   "relevance_ratings": [
     {
@@ -1799,6 +1799,388 @@
       "updated_at": "2026-10-23T13:12:45.000Z",
       "suggested_score_at_rating": 45,
       "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-2b21fec80fa1c8a257d64a48",
+      "score": 9,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-24T10:15:13.020Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-634861c0bcc93db99d7c9cb5",
+      "score": 17,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-24T10:15:19.016Z",
+      "suggested_score_at_rating": 57,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-b1f53c97068cff21e043f607",
+      "score": 44,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "transferable",
+      "seniority_assessment": "overwhelming",
+      "updated_at": "2026-10-24T10:15:25.910Z",
+      "suggested_score_at_rating": 71,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-50f222c6879fa560ee98e0df",
+      "score": 62,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "distance": 100,
+        "employer": 97,
+        "tasks": 59
+      },
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:15:39.624Z",
+      "suggested_score_at_rating": 71,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-12884822bacf4463d2743c29",
+      "score": 40,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "tasks": -54
+      },
+      "field_relation": "transferable",
+      "seniority_assessment": "good_chance",
+      "updated_at": "2026-10-24T10:15:50.510Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-618c642ff106da8e7f13c645",
+      "score": 57,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": "good_chance",
+      "updated_at": "2026-10-24T10:15:57.939Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-232725b7131456f41d7dbd88",
+      "score": 59,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:11.795Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-7e9052fd058fcd04ec012fbc",
+      "score": 44,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:08.758Z",
+      "suggested_score_at_rating": 57,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-7d98ce8333bc0e39f92d984a",
+      "score": 5,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "employer": -100,
+        "tasks": -100
+      },
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:25.519Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-dcf725f63e183edaf36e5d26",
+      "score": 43,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:24.412Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-d56448f38cd418a4cc9c8912",
+      "score": 22,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:28.714Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-10b696768450bd290bacb127",
+      "score": 37,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:33.095Z",
+      "suggested_score_at_rating": 57,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-9d9d5692ca33e39b267fff30",
+      "score": 1,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:38.305Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-d8776faea2cb6f0ff718b0c9",
+      "score": 8,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:41.365Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-3942caafa20ab5a552336ff9",
+      "score": 60,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:46.133Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-c715cd0925b12f36b40e816e",
+      "score": 71,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "conditions": 46,
+        "tasks": 69
+      },
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:16:54.060Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-9595fc0994eb005810c1c0a8",
+      "score": 48,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "transferable",
+      "seniority_assessment": "underchallenging",
+      "updated_at": "2026-10-24T10:17:09.025Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-0637549ce8d17d14343bbc33",
+      "score": 26,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:17:06.532Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-09b627f320bf928929991aa2",
+      "score": 33,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "tasks": -4,
+        "employer": -15,
+        "distance": 15
+      },
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:17:27.608Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-4d00999bad6be6c53f7e2e53",
+      "score": 29,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:17:24.731Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-b99723f9c6d64a24ba2f50e5",
+      "score": 36,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:17:34.267Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-64dd40a80e9e04a34e16458c",
+      "score": 42,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:17:37.053Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-8b77727fec4a15b7d5aa393d",
+      "score": 20,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:17:42.354Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-43348d467a1722a8747621f7",
+      "score": 55,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {
+        "distance": -74
+      },
+      "field_relation": null,
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:17:52.466Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-53bbe9439b4d099b6ab473f7",
+      "score": 14,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:18:07.390Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-37d9cd2fd61e124bbd4cf036",
+      "score": 21,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:18:05.390Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-f24527a536b0f32ca0883f66",
+      "score": 13,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:18:13.606Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
+    },
+    {
+      "id": "job-5366913b16d95dec36fc5970",
+      "score": 5,
+      "reasons": [],
+      "reason": "",
+      "note": "",
+      "aspects": {},
+      "field_relation": "unrelated",
+      "seniority_assessment": null,
+      "updated_at": "2026-10-24T10:18:18.893Z",
+      "suggested_score_at_rating": 45,
+      "selector_version": "heuristic-v1"
     }
   ],
   "export_selection": [],
@@ -2378,6 +2760,174 @@
       "job_id": "job-2145a413255ff68ae0e67648",
       "type": "screened",
       "at": "2026-10-23T13:12:33.812Z"
+    },
+    {
+      "id": "10ccc738-b83a-49d1-9329-0eb52dbcef8a",
+      "job_id": "job-2b21fec80fa1c8a257d64a48",
+      "type": "screened",
+      "at": "2026-10-24T10:15:11.670Z"
+    },
+    {
+      "id": "a59bc746-888b-4aaf-9fdf-e0d8a8f0ed7b",
+      "job_id": "job-634861c0bcc93db99d7c9cb5",
+      "type": "screened",
+      "at": "2026-10-24T10:15:18.024Z"
+    },
+    {
+      "id": "b6741a13-22ee-4709-aff3-0cd81db1eed8",
+      "job_id": "job-b1f53c97068cff21e043f607",
+      "type": "screened",
+      "at": "2026-10-24T10:15:24.585Z"
+    },
+    {
+      "id": "7aa8d501-182d-4cc0-9656-e6737b10a393",
+      "job_id": "job-50f222c6879fa560ee98e0df",
+      "type": "screened",
+      "at": "2026-10-24T10:15:29.953Z"
+    },
+    {
+      "id": "b836666a-8095-48ca-8660-1b3ac2964bff",
+      "job_id": "job-12884822bacf4463d2743c29",
+      "type": "screened",
+      "at": "2026-10-24T10:15:44.401Z"
+    },
+    {
+      "id": "6ae41984-edde-4f49-8817-19a11a25d104",
+      "job_id": "job-618c642ff106da8e7f13c645",
+      "type": "screened",
+      "at": "2026-10-24T10:15:53.863Z"
+    },
+    {
+      "id": "200c931f-0dd2-47f5-b720-4b05b64fbcc3",
+      "job_id": "job-232725b7131456f41d7dbd88",
+      "type": "screened",
+      "at": "2026-10-24T10:16:05.710Z"
+    },
+    {
+      "id": "fe877055-dff5-4445-9be2-8c1beeb506ca",
+      "job_id": "job-7e9052fd058fcd04ec012fbc",
+      "type": "screened",
+      "at": "2026-10-24T10:16:07.310Z"
+    },
+    {
+      "id": "a8339954-a559-477c-85d1-efd9a3f5acb1",
+      "job_id": "job-7d98ce8333bc0e39f92d984a",
+      "type": "screened",
+      "at": "2026-10-24T10:16:16.036Z"
+    },
+    {
+      "id": "7527a498-23a9-4fba-8226-c4f5d06765cd",
+      "job_id": "job-dcf725f63e183edaf36e5d26",
+      "type": "screened",
+      "at": "2026-10-24T10:16:23.465Z"
+    },
+    {
+      "id": "c448ace8-666b-4fd6-a5d6-dd2ba70d7a29",
+      "job_id": "job-d56448f38cd418a4cc9c8912",
+      "type": "screened",
+      "at": "2026-10-24T10:16:28.714Z"
+    },
+    {
+      "id": "72551fc9-05f8-4a24-a16f-c23441a0ddfc",
+      "job_id": "job-10b696768450bd290bacb127",
+      "type": "screened",
+      "at": "2026-10-24T10:16:33.095Z"
+    },
+    {
+      "id": "c1482f92-5736-48a7-bc92-d0c354f108cd",
+      "job_id": "job-9d9d5692ca33e39b267fff30",
+      "type": "screened",
+      "at": "2026-10-24T10:16:38.305Z"
+    },
+    {
+      "id": "c9d66739-1934-4dfe-98d7-94889f097542",
+      "job_id": "job-d8776faea2cb6f0ff718b0c9",
+      "type": "screened",
+      "at": "2026-10-24T10:16:41.365Z"
+    },
+    {
+      "id": "9519bdb7-025e-4d37-87ad-0c7244e3a46b",
+      "job_id": "job-3942caafa20ab5a552336ff9",
+      "type": "screened",
+      "at": "2026-10-24T10:16:46.133Z"
+    },
+    {
+      "id": "8945e670-8bf2-4d2b-b301-9cbce1276746",
+      "job_id": "job-c715cd0925b12f36b40e816e",
+      "type": "screened",
+      "at": "2026-10-24T10:16:46.917Z"
+    },
+    {
+      "id": "d8388265-cea2-4ba8-b035-3168c9d3b541",
+      "job_id": "job-9595fc0994eb005810c1c0a8",
+      "type": "screened",
+      "at": "2026-10-24T10:16:57.614Z"
+    },
+    {
+      "id": "1c11c838-ac36-49d5-8de5-96b4aa3e3b24",
+      "job_id": "job-0637549ce8d17d14343bbc33",
+      "type": "screened",
+      "at": "2026-10-24T10:17:06.040Z"
+    },
+    {
+      "id": "f6e1f8a2-b961-4fcc-89e9-b4ee6bc6012e",
+      "job_id": "job-09b627f320bf928929991aa2",
+      "type": "screened",
+      "at": "2026-10-24T10:17:13.493Z"
+    },
+    {
+      "id": "f876d0ad-f122-4a2a-8e93-c50ea36b8676",
+      "job_id": "job-4d00999bad6be6c53f7e2e53",
+      "type": "screened",
+      "at": "2026-10-24T10:17:23.898Z"
+    },
+    {
+      "id": "8599d9dc-060a-4b22-aa99-dfec72eead7c",
+      "job_id": "job-b99723f9c6d64a24ba2f50e5",
+      "type": "screened",
+      "at": "2026-10-24T10:17:34.267Z"
+    },
+    {
+      "id": "79423d2d-270c-42af-a0fb-93933eef57e6",
+      "job_id": "job-64dd40a80e9e04a34e16458c",
+      "type": "screened",
+      "at": "2026-10-24T10:17:36.341Z"
+    },
+    {
+      "id": "7c3d0e14-45f6-403a-81e3-81cd67d75262",
+      "job_id": "job-8b77727fec4a15b7d5aa393d",
+      "type": "screened",
+      "at": "2026-10-24T10:17:42.354Z"
+    },
+    {
+      "id": "0c3fe8d3-ee06-45f4-832d-1b86dc3c895e",
+      "job_id": "job-43348d467a1722a8747621f7",
+      "type": "screened",
+      "at": "2026-10-24T10:17:47.606Z"
+    },
+    {
+      "id": "f5ffeaca-4edd-49f0-9e0d-431bbf923740",
+      "job_id": "job-53bbe9439b4d099b6ab473f7",
+      "type": "screened",
+      "at": "2026-10-24T10:17:56.502Z"
+    },
+    {
+      "id": "f5cf4aea-5c08-474b-a02d-ec80a2f89699",
+      "job_id": "job-37d9cd2fd61e124bbd4cf036",
+      "type": "screened",
+      "at": "2026-10-24T10:18:03.355Z"
+    },
+    {
+      "id": "c9850289-c93e-4e73-8954-590923763267",
+      "job_id": "job-f24527a536b0f32ca0883f66",
+      "type": "screened",
+      "at": "2026-10-24T10:18:13.606Z"
+    },
+    {
+      "id": "4763be80-97e1-4659-81b1-e1082ffbf562",
+      "job_id": "job-5366913b16d95dec36fc5970",
+      "type": "screened",
+      "at": "2026-10-24T10:18:18.893Z"
     }
   ],
   "overrides": [],
