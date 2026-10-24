@@ -11,6 +11,7 @@ create table if not exists public.career_snapshots (
   user_id uuid not null references auth.users(id) on delete cascade,
   kind text not null check (kind in ('feedback', 'workspace')),
   payload jsonb not null,
+  revision bigint not null default 1 check (revision >= 1),
   updated_at timestamptz not null default now(),
   primary key (user_id, kind),
   constraint career_snapshot_object check (jsonb_typeof(payload) = 'object'),
