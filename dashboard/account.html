@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Career.Agency – Konto (Pilot)</title>
+<style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,sans-serif;background:#f1e7d8;color:#49392b}
+*{box-sizing:border-box}body{margin:0;padding:28px 16px}.wrap{max-width:740px;margin:auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}header a{color:#795a40}
+main{margin-top:28px}.panel{background:#f8f1e7;border:1px solid #d8c7b1;border-radius:16px;padding:24px;margin:16px 0}
+h1{font-size:clamp(1.5rem,4vw,2.2rem);margin:0}h2{font-size:1.16rem}p,small{line-height:1.6}
+label{display:block;font-weight:600;margin:16px 0 5px}input,select{display:block;width:100%;padding:12px;font:inherit;background:#fffaf2;color:#49392b;border:1px solid #ab9b87;border-radius:8px}
+button{background:#795a40;border:1px solid #795a40;border-radius:9px;color:#fff9f1;font:inherit;font-weight:600;padding:11px 15px;cursor:pointer;margin:7px 7px 7px 0}
+button.secondary{background:#e8dbc9;border-color:#bca991;color:#4e3b2c}
+button:disabled{opacity:.55;cursor:not-allowed}.danger{background:#8a4137;border-color:#8a4137}
+#status{white-space:pre-wrap;padding:12px 0;min-height:32px}section[hidden],div[hidden]{display:none}.subtle{color:#6b5845;font-size:.9rem}
+.warning{border-left:3px solid #9a5d29;padding-left:12px}.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+img.qr{max-width:180px;display:block;margin:12px 0}
+</style></head><body><div class="wrap"><header><a href="./index.html">← Bewerbungs-Dashboard</a><span>Phase 1 · Konto-Pilot</span></header>
+<main><h1>Dein privater Career.Agency-Bereich</h1>
+<p>Testumgebung für Anmeldung und geräteübergreifende Speicherung. Das bisherige Bewerbungs-Dashboard wird nicht verändert oder automatisch hochgeladen.</p>
+<p id="status" role="status" aria-live="polite">Konto-Dienst wird geprüft …</p>
+<section class="panel" id="signinPanel" hidden><h2>Anmelden oder registrieren</h2>
+<label for="email">E-Mail-Adresse</label><input id="email" type="email" autocomplete="email">
+<label for="password">Passwort</label><input id="password" type="password" autocomplete="current-password" minlength="12">
+<div class="row"><button id="signin">Anmelden</button><button class="secondary" id="signup">Registrieren</button>
+<button class="secondary" id="forgot">Passwort vergessen</button></div>
+<p class="subtle">Für Tests nur Testkonten verwenden. Nach der Registrierung den Bestätigungslink aus der E-Mail öffnen. Keine echten Bewerbungsunterlagen hochladen.</p></section>
+<section class="panel" id="recoveryPanel" hidden><h2>Passwort neu setzen</h2>
+<label for="newPassword">Neues Passwort (mindestens 12 Zeichen)</label><input id="newPassword" type="password" minlength="12" autocomplete="new-password">
+<button id="setPassword">Passwort ändern</button></section>
+<section class="panel" id="mfaGate" hidden><h2>Zusätzliche Anmeldung</h2>
+<p>Bestätige den Code deiner Authenticator-App.</p>
+<label for="mfaSigninCode">6-stelliger Code</label><input id="mfaSigninCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+<button id="verifySigninMfa">Bestätigen</button><button class="secondary" id="signoutGate">Abmelden</button></section>
+<section class="panel" id="privatePanel" hidden>
+<h2>Dein Konto</h2><p id="loggedInAs"></p>
+<label for="displayName">Anzeigename (freiwillig)</label><input id="displayName" maxlength="80" autocomplete="nickname">
+<button id="saveProfile">Profil speichern</button><button class="secondary" id="signout">Abmelden</button>
+<h2>Private Daten</h2><p>Deine JSON-Dateien werden nur nach ausdrücklichem Import in deiner privaten Datenbank gespeichert. Änderungen im alten Dashboard werden nicht automatisch synchronisiert.</p>
+<label for="snapshotKind">Dateityp</label><select id="snapshotKind"><option value="feedback">Feedback v1.0.0</option><option value="workspace">Gesamtsicherung v0.3.0</option></select>
+<label for="snapshotFile">Private JSON-Datei</label><input id="snapshotFile" type="file" accept="application/json,.json">
+<button id="uploadSnapshot">Datei geschützt speichern</button><button class="secondary" id="downloadSnapshot">Gespeicherte Datei herunterladen</button>
+<button class="secondary" id="exportAll">Alle Kontodaten exportieren</button>
+<p class="subtle">Vor dem Import lokale Sicherung anlegen. Vorhandene Cloud-Daten desselben Typs werden nur nach einer Bestätigung ersetzt.</p>
+<h2>Zusätzliche Sicherheit</h2>
+<p id="aalStatus"></p><button class="secondary" id="startMfa">Authenticator-App einrichten</button>
+<div id="mfaEnroll" hidden><img id="mfaQr" class="qr" alt="QR-Code zur Einrichtung der Authenticator-App">
+<p class="subtle">Den QR-Code oder Geheimschlüssel niemals weitergeben.</p><label for="mfaEnrollCode">Bestätigungscode</label>
+<input id="mfaEnrollCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"><button id="finishMfa">MFA aktivieren</button></div>
+<h2>Konto löschen</h2><p class="warning">Dauerhafte Kontolöschung ist nur mit bestätigter Zwei-Faktor-Anmeldung und expliziter Bestätigung möglich. Exportiere zuvor deine Daten. Die Löschung der alten öffentlichen Git-Dateien erfolgt dadurch nicht.</p>
+<label for="deleteEmail">E-Mail zur Bestätigung erneut eingeben</label><input id="deleteEmail" type="email" autocomplete="off">
+<label for="deletePhrase">Zur Bestätigung LÖSCHEN eingeben</label><input id="deletePhrase" autocomplete="off">
+<button class="danger" id="deleteAccount">Mein Konto endgültig löschen</button>
+</section>
+</main></div><script src="./account-config.js"></script><script type="module" src="./account.js"></script></body></html>
