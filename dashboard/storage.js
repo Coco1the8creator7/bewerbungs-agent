@@ -6,7 +6,8 @@
   const DB_NAME = "bewerbungs-agent-local-v1";
   const STORE = "snapshots";
   const KEY = "current";
-  const RADAR_KEY = "radar-prototype-v1"; // Private, opt-in and isolated from legacy CRM/feedback.\n  const LAST_VISIT_KEY = "last-dashboard-visit"; // Only an ISO timestamp; not job or applicant data.
+  const RADAR_KEY = "radar-prototype-v1"; // Private, opt-in and isolated from legacy CRM/feedback.
+  const LAST_VISIT_KEY = "last-dashboard-visit"; // Only an ISO timestamp; not job or applicant data.
   let opening = null;
 
   function connect() {
@@ -57,7 +58,8 @@
     // Opting out of device persistence also deletes the separately stored visit timestamp.
     clear: async () => {
       await operation("readwrite", store => store.delete(KEY));
-      await operation("readwrite", store => store.delete(LAST_VISIT_KEY));\n      await operation("readwrite", store => store.delete(RADAR_KEY));
+      await operation("readwrite", store => store.delete(LAST_VISIT_KEY));
+      await operation("readwrite", store => store.delete(RADAR_KEY));
     },
   });
 })();
