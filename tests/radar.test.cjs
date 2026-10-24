@@ -65,3 +65,60 @@ test("radar is isolated from adult CRM and uses opt-in local persistence",()=>{
  assert.doesNotMatch(js,/localStorage|GithubFeedback|fetch\(["'].*feedback/);
  assert.match(html,/FIKTIVE|fiktive/);
 });
+
+test("adult market retains job-alert feed as independent matching input",()=>{
+ const adult={id:"job-123",title:"Projektleiter thermische Netze",source:"jobs.ch",location:"Zürich",first_seen_at:"2026-10-24T06:00:00Z"};
+ const learner={id:"job-456",title:"Lehrstelle Zeichner/in EFZ",source:"yousty.ch",location:"Zürich",first_seen_at:"2026-10-24T06:00:00Z"};
+ const now=new Date("2026-10-24T14:00:00Z");
+ assert.equal(model.summarize([adult,learner],now,"career").total,1);
+ assert.equal(model.summarize([adult,learner],now,"apprentice").total,1);
+ assert.equal(model.matchesPreferences(adult,{...model.initialProfile("career"),level:"EBA"},["jobs.ch"],"career"),true);
+ assert.equal(model.matchesPreferences(adult,model.initialProfile("career"),["publicjobs.ch"],"career"),false);
+ assert.equal(model.matchesPreferences(learner,model.initialProfile(),["yousty.ch"],"apprentice"),true);
+});
+
+test("career ratings, skills and source choices are disjoint from youth profile",()=>{
+ const old={
+  profile:{skills:{schule:["Mathematik & Zahlen"]}},
+  ratings:{"old-id":{scores:{interest:3},note:"Frühere Lehrstellen-Bewertung"}},
+  selectedSources:["yousty.ch"]
+ };
+ const current=model.normalizedState(old);
+ assert.equal(current.market,"career");
+ assert.equal(current.ratings["old-id"].scores.interest,3);
+ assert.deepEqual(current.selectedSources,["yousty.ch"]);
+ assert.equal(current.career.selectedSources.length,0);
+ assert.equal(current.career.ratings["old-id"],undefined);
+ assert.equal(current.profile.skills.schule[0],"Mathematik & Zahlen");
+ const newState=model.normalizedState({...old,career:{
+  selectedSources:["jobs.ch"],
+  profile:{skills:{fachwissen:["Projektplanung"],berufserfahrung:["Fachbauleitung"]}},
+  ratings:{"adult-id":{scores:{interest:4,conditions:5},note:""}}
+ }});
+ assert.equal(newState.career.profile.skills.fachwissen[0],"Projektplanung");
+ assert.equal(newState.career.profile.skills.berufserfahrung[0],"Fachbauleitung");
+ assert.equal(newState.career.ratings["adult-id"].scores.conditions,5);
+ assert.equal(newState.ratings["adult-id"],undefined);
+ assert.equal(model.ratingAverage(newState.career.ratings["adult-id"],"career").value,4.5);
+ assert.deepEqual(model.normalizedState({...newState,market:"apprentice"}).market,"apprentice");
+ const migrated=model.normalizedProfile({skills:{schule:["Projektplanung"],erfahrungen:["Fachbauleitung"]}},"career");
+ assert.deepEqual(migrated.skills.fachwissen,["Projektplanung"]);
+ assert.deepEqual(migrated.skills.berufserfahrung,["Fachbauleitung"]);
+});
+
+test("Radar uses original public jobs.json and keeps legacy CRM intact",()=>{
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
+ const nav=fs.readFileSync(path.join(root,"dashboard/mode-nav.js"),"utf8");
+ assert.match(html,/data-market="career"/);
+ assert.match(html,/data-market="apprentice"/);
+ assert.match(html,/id="radarSourcesInfo"/);
+ assert.match(radar,/fetch\("\.\/jobs\.json"/);
+ assert.match(radar,/model\.careerCriteria/);
+ assert.match(radar,/model\.matchesPreferences/);
+ assert.match(radar,/AgentCareerFilter\.isVisible/);
+ assert.match(radar,/bucket\(\)\.ratings/);
+ assert.doesNotMatch(radar,/GithubFeedback\.(save|publish)|feedback\.json|fetch\(["'].*\/api\/.*POST/);
+ assert.match(nav,/hashchange/);
+ assert.match(html,/id="newJobsList"/);
+});
