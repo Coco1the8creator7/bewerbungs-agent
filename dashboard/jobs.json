@@ -1,6 +1,890 @@
 [
   {
     "schema_version": "0.1.0",
+    "id": "job-2b21fec80fa1c8a257d64a48",
+    "source": "jobs.ch",
+    "source_job_id": "d3ee334e-3c34-4d1c-858f-5c233ba27d74",
+    "title": "Cleanroom Fabrication Engineer at the Quantum Device Lab",
+    "company": "ETH Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/d3ee334e-3c34-4d1c-858f-5c233ba27d74/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": "Cleanroom Fabrication Engineer at the Quantum Device Lab\nAt the Quantum Device Lab, led by Prof. Andreas Wallraff at the Department of Physics of ETH Zurich, we fabricate quantum devices using micro- and nanofabrication techniques. We use the devices to conduct state-of-the-art experimental research in quantum information science and technology. In particular, we work on scaling the developed technologies to build large-scale error-corrected quantum computers. We operate across various cleanrooms in the Zurich area, and develop new technology and approaches which benefit from a coherent, farsighted vision. We collaborate closely with academic and industrial partners within the quantum community.\nProject background\nWe are looking for a Cleanroom Fabrication Engineer to join our interdisciplinary team doing research and development at the forefront of quantum technologies. You will play a crucial role in the development of quantum processor chips, working on devices that incorporate tens to hundreds of qubits. A primary goal of work will be the scaling of micro-fabricated chips, including the development of Through-Silicon-Vias (TSVs), connecting the front to back surface of the chips with high-quality superconducting films. These will reduce the impact of parasitic box modes, and enable alternative signal routing paths, enabling the scaling up in device size.\nJob description\nYour responsibilities will include:\nDevice fabrication: Execution and refinement of micro and nano-fabrication runs using existing fabrication processes.\nProcess development: Development and optimization of novel fabrication processes for scalable architectures (such as high-aspect-ratio TSVs deep reactive-ion etching and conformal coating).\nYield improvement: Systematic metrology inspection to continuously improve fabrication yield.\nHigh-coherence compatibility: Collaboration with other fabrication engineers of the lab and the measurement researchers to evaluate impact of processes on qubit coherence metrics, and guarantee high-quality device outputs.\nDocumentation: Preparation of technical and scientific documentation of your work. Tracking of run logs and process metrics shared with scientists from the Quantum Device Lab who have the lead in characterizing and operating the fabricated devices.\nProfile\nWe are looking for a highly motivated fabrication engineer to lead the fabrication and process development of devices that advance our capabilities in large-scale quantum computing.\nCandidates must have experience in an academic and/or industrial setting in a number of the following areas:\nHands-on cleanroom experience: Proven record with semi- or superconductor processing techniques, such as electron beam lithography, photolithography, dry and wet etching, thin film deposition\nProcess control: surface characterization, metrology (optical-, scanning-electron microscopy, atomic force microscopy), material science, statistical process control, yield improvement, failure analysis.\nSpecialized equipment: practical technical knowledge of vacuum technology, (pumps, UHV systems, ...), leak detection, or cryogenic systems.\nResearch experience: ability to demonstrate high-quality reporting examples.\nFurther Requirements:\nYou are expected to be skilled in communicating your findings to collaborators in a multidisciplinary environment. You should have high attention to details, structured work habits, and the ability to handle complex workflows.\nYou must hold a Master degree or equivalent in micro- and nanofabrication, material science, physics, electrical engineering or a related field. A PhD degree can be helpful but is not required.\nYou must possess excellent English communication skills; knowledge of German is a plus.\nWe offer\nIn depth exposure the rapidly developing field of quantum technology, and opportunity to tackle a wide range of fabrication challenges, combined with ample learning opportunities.\nA collaborative, interdisciplinary R&D environment. A rewarding, inspiring working environment with a flat hierarchy and open culture in a diverse and international team.\nAccess to state-of-the-art cleanroom fabrication facilities located at ETH Hönggerberg (FIRST), at IBM Rüschlikon (BRNC) and at PSI Villigen (PICO).\nWorking, teaching and research at ETH Zurich\nWe value diversity and sustainability\nIn line with our values, ETH Zurich encourages an inclusive culture. We promote equality of opportunity, value diversity and nurture a working and learning environment in which the rights and dignity of all our staff and students are respected. Visit our Equal Opportunities and Diversity website to find out how we ensure a fair and open environment that allows everyone to grow and flourish. Sustainability is a core value for us – we are consistently working towards a climate-neutral future.\nCurious? So are we.\nWe look forward to receiving your online application with the following documents:\nA detailed curriculum vitae\nA statement of research interests, containing a short description of your background, motivation, and skills\nPdf copies of theses and transcripts/certificates from (under-)graduate studies (Bachelor, Master’s, and eventual PhD) and work certificates as available\nNames of three contacts for references (Please arrange for one or more of the reference letters to be sent directly by email to wallraff.office@phys.ethz.ch)\nFurther information about the Quantum Device Lab can be found on our Website. Questions regarding the position should be directed to jbesse@phys.ethz.ch (no applications).\nPlease note that we exclusively accept applications submitted through our online application portal. Applications via email or postal services will not be considered.\nWe would like to point out that the pre-selection is carried out by the responsible recruiters and not by artificial intelligence.\nFor recruitment services the GTC of ETH Zurich apply.\nAbout ETH Zürich\nETH Zurich is one of the world’s leading universities specialising in\nscience and technology. We are renowned for our excellent education,\ncutting-edge fundamental research and direct transfer of new knowledge\ninto society. Over 30,000 people from more than 120 countries find our\nuniversity to be a place that promotes independent thinking and an\nenvironment that inspires excellence. Located in the heart of Europe,\nyet forging connections all over the world, we work together to\ndevelop solutions for the global challenges of today and tomorrow.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-634861c0bcc93db99d7c9cb5",
+    "source": "jobs.ch",
+    "source_job_id": "2085e546-c4f2-46fd-9eff-37b73a218817",
+    "title": "Leiter/-in Strassenregion",
+    "company": "Baudirektion Kanton Zürich",
+    "location": "Glattbrugg",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/2085e546-c4f2-46fd-9eff-37b73a218817/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": "Kanton Zürich\nBaudirektion\nTiefbauamt\nGlattbrugg\nNach Vereinbarung\nprojektieren | bauen | erhalten\nLeiter/-in Strassenregion\n80 - 100%\nMöchten Sie mit rund 45 Mitarbeitenden und im engen Austausch mit den Gemeinden die dynamische und urbane Region um den Flughafen Zürich gestalten? Als Leiter/-in Strassenregion verantworten Sie sowohl den baulichen und betrieblichen Strassenunterhalt als auch die Weiterentwicklung der Verkehrsinfrastruktur. Wenn Sie sich für ein abwechslungsreiches Aufgabengebiet an der Schnittstelle zwischen baulichen Tätigkeiten, Führung und Politik begeistern können, sind Sie bei uns richtig.\nWas Sie bei uns bewegen\nSie führen die Strassenregion mit rund 45 Mitarbeitenden in zwei Unterhaltsbezirken und tragen die Gesamtverantwortung für den Betrieb und Unterhalt unserer Verkehrsanlagen sowie die Umsetzung von Strassenbauprojekten\nAls Eigentümer/-in der Staatsstrassen pflegen Sie den Dialog mit Gemeinden, Behörden und der Bevölkerung und fungieren als zentrale Ansprechperson\nGemeinsam mit Ihren Projektleitenden priorisieren, steuern und realisieren Sie Instandhaltungsprojekte über den gesamten Projektzyklus\nSie treiben Innovationen im Tiefbau voran und entwickeln Standards für einen nachhaltigen und wirtschaftlichen Strassenunterhalt weiter\nSie wirken aktiv als Mitglied der Geschäftsleitung des Strasseninspektorats mit\nDas bringen Sie mit\nSie sind versiert im Umgang mit verschiedenen Anspruchsgruppen und können gekonnt auf unterschiedliche Anliegen eingehen\nDurch Ihr ausgeprägtes Verhandlungsgeschick finden Sie gute Lösungen für die involvierten Parteien\nSie verfügen über mehrjährige Führungserfahrung und verstehen es, operative Teams sowie Projektleitende erfolgreich zu führen und weiterzuentwickeln\nSie verfügen über ein abgeschlossenes Studium als Bauingenieur/-in oder eine vergleichbare Ausbildung sowie fundierte Berufserfahrung im Tiefbau\nSie erkennen Entwicklungen im Tiefbau frühzeitig und treiben Themen wie Nachhaltigkeit, Digitalisierung oder neue Bauverfahren aktiv voran\nWie wir Sie begeistern\nSie übernehmen Verantwortung für die wachstumsstärkste Region des Kantons Zürich. Ob Ausbau der Verkehrsinfrastruktur, komplexe Instandhaltungsprojekte oder die Weiterentwicklung einer urban geprägten Region – Ihre Entscheidungen haben direkte Auswirkungen auf die Mobilität der Zürcher Bevölkerung. Dabei profitieren Sie von grossem Gestaltungsspielraum und einem guten Netzwerk innerhalb der Verwaltung und überkantonale Grenzen hinaus.\nIhr Kontakt\nChristof Kamm\nStrasseninspektor\n043 257 68 24\nLiebe Personaldienstleister! Leider können wir keine Dossiers berücksichtigen, die mit Honorarforderungen verbunden sind. Es werden ausschliesslich Direktbewerbungen beantwortet und im Auswahlverfahren berücksichtigt.\nÜber uns\nKreisel oder Lichtsignalanlage? Veloweg oder Velostreifen? Mehr Bäume und weniger Versiegelung. Busbevorzugung und sichere Fusswege. Tempo 50 oder Tempo 30? Mit solchen Themen beschäftigen wir uns tagtäglich und liefern Antworten. Beim Tiefbauamt (TBA) prägen wir das zukünftige Gesicht des Kantons Zürich.\nWollen Sie Spuren hinterlassen? Wenn Sie sich mit uns bei der Baudirektion engagieren, leisten Sie einen wichtigen Beitrag zur Gestaltung des Kantons Zürich. Interessieren Sie sich für diese verantwortungsvolle und vielseitige Herausforderung?\nWir bieten...\nSinnstiftende Arbeit\nsinnstiftende Arbeit mit echtem Mehrwert für die Gesellschaft\nGestaltungsspielraum\nRaum für eigene Ideen und aktive Mitgestaltung\nVerantwortungsvolle Tätigkeit\ndie Chance, Verantwortung zu übernehmen und mitzugestalten\nTeam\nein kollegiales Team mit wertschätzender Zusammenarbeit\nGute Sozialleistungen (PK)\neine attraktive Pensionskasse mit vielen Möglichkeiten\nIhr Bewerbungsprozess\nVorselektion\nErstgespräch\nZweitgespräch\nAssessment Center\nFinaler Entscheid\nzh.ch/jobs\nzh.ch/tba\nJetzt bewerben",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b1f53c97068cff21e043f607",
+    "source": "jobs.ch",
+    "source_job_id": "e1a19f28-014b-45a2-a340-3fc9281de217",
+    "title": "Bauleiter:in Bahnbau / Infrastrukturbau 80-100% - Bern",
+    "company": "AFRY Schweiz AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/e1a19f28-014b-45a2-a340-3fc9281de217/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": "Unternehmensbeschreibung\nAFRY bietet Ingenieur-, Projektmanagement- und Beratungsdienstleistungen an, welche die Energiewende sowie die industrielle Transformation unterstützen und die gesellschaftliche Resilienz stärken. Mit weltweit 18.000 Expertinnen und Experten vereinen wir globale Reichweite mit lokalem Fachwissen und umfassender Branchenkenntnis, um die Zukunft kommender Generationen nachhaltig zu gestalten.\nMaking Future\nStellenbeschreibung\nWerden Sie Teil unseres Teams CIVIL. Wir leiten, entwickeln, entwerfen und planen Infrastrukturprojekte aller Art im Tief- und Tunnelbau. Diese Projekte begleiten wir von der Planung bis zur Realisierung.\nÜbernehmen Sie bei uns Verantwortung als:\nBAULEITER:IN BAHNBAU / INFRASTRUKTURBAU 80-100% - BERN\nIHRE AUFGABEN – TECHNIK IN DIE PRAXIS BRINGEN:\nTeil der örtlichen Bauleitung für ein Bahn-Infrastrukturgrossprojekt im Raum Bern und Begleitung der Umsetzung direkt vor Ort\nKoordination der Arbeiten auf der Baustelle und kontrollieren deren fachgerechte Ausführung.\nEinhalten von Terminen und vertragliche Vorgaben im Blick und Verantwortung für Abnahmen sowie Garantiearbeiten\nEinsetzen von digitalen Arbeitsmethoden wie «BIM2field» auf der Baustelle und Verbindung der Planung und Ausführung\nErfahrungen aus der Ausführung in die Projektierung und Projektleitung einbringen\nIHRE CHANCEN – MITGESTALTEN UND WEITERKOMMEN:\nSichtbare Ergebnisse: Aktives Mitwirken an einem Bahn-Grossprojekt und Erleben, wie aus Planung gebaute Infrastruktur wird\nFachlicher Austausch: Teil eines interdisziplinären Bauleitungsteams und Verbinden unterschiedlicher Perspektiven zu praxisgerechten Lösungen\nDigitale Baupraxis: Ausbildung in «BIM2field» und Anwendung des Wissens in Ihren Projekten\nKonkrete Perspektiven: Mögliche Weiterentwicklung in Richtung Objekt-, Los- oder Chefbauleitung weiter\nIHR PROFIL – TECHNISCH VERSIERT, PRAKTISCH ORIENTIERT:\nAusbildung als Techniker:in TS, Bauingenieur:in FH/ETH oder eine gleichwertige Qualifikation\nEinige Jahre Erfahrung in der Bauleitung von Infrastrukturprojekten in der Schweiz idealerweise im Bahnbau\nKenntnisse der Anforderungen von Baustellen unter Bahnbetrieb sowie von Bahntechnik und Bahnsicherheit\nErfahrung in der Projektierung und Interesse an der praktischen Umsetzung technischer Lösungen\nSelbständige und zuverlässige Arbeitsweise, kundenorientiertes Denken und Verantwortungsübernahme\nKlare Kommunikation und Freude an der Zusammenarbeit im Team\nSichere Anwendung der MS-Office-Programme; Kenntnisse in «Messerli BAUAD» sind von Vorteil\nSehr gute Deutschkenntnisse in Wort und Schrift (mind. C1), Kenntnisse in Englisch, Französisch oder Italienisch sind von Vorteil\nWerden Sie Teil der AFRY-Erfolgsgeschichte! Wir bieten Gestaltungsspielraum und Eigenverantwortung, kollegiale und internationale Arbeitsatmosphäre, zeitgemässe Anstellungsbedingungen, flexible Arbeitsmodelle, überdurchschnittliche Sozialleistungen, attraktive Entwicklungsmöglichkeiten.\nWir freuen uns auf Ihre online Bewerbung!\nZusätzliche Informationen\nBei AFRY sorgen wir bei allem, was wir tun, für Veränderungen. Denn Wandel entsteht nur, wenn mutige Ideen zusammenkommen. Wenn wir erfolgreich zusammenarbeiten, innovativ tätig sind und unterschiedliche Blickwinkel einnehmen. So gestalten wir die Zukunft. Wir sind aktiv auf der Suche nach qualifizierten Bewerberinnen und Bewerbern, die ein Teil unserer integrativen und vielfältigen Teams auf der ganzen Welt werden möchten. Schließe Dich uns an, um den Übergang zu einer nachhaltigeren Zukunft zu beschleunigen.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 71,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit",
+        "energie",
+        "energiewende"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-50f222c6879fa560ee98e0df",
+    "source": "jobs.ch",
+    "source_job_id": "394c8ff7-ed2d-4e98-9510-954cc4bd416b",
+    "title": "Projektleiter:in Bauingenieurwesen im Bereich Wasser & Abwasser 80-100% - Zürich",
+    "company": "AFRY Schweiz AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/394c8ff7-ed2d-4e98-9510-954cc4bd416b/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": "Unternehmensbeschreibung\nAFRY bietet Ingenieur-, Projektmanagement- und Beratungsdienstleistungen an, welche die Energiewende sowie die industrielle Transformation unterstützen und die gesellschaftliche Resilienz stärken. Mit weltweit 18.000 Expertinnen und Experten vereinen wir globale Reichweite mit lokalem Fachwissen und umfassender Branchenkenntnis, um die Zukunft kommender Generationen nachhaltig zu gestalten.\nMaking Future\nStellenbeschreibung\nWerden Sie Teil unseres Teams WASSER & UMWELT. Wir planen und realisieren Abwasserreinigungsanlagen mit modernsten Technologien für die weitergehende Nährstoffelimination und die Entfernung von organischen Spurenstoffen. Zudem minimieren wir Energieverbräuche, nutzen Abwasser als Ressource und schliessen Stoffkreisläufe für nachhaltige Lösungen. Unterstützen Sie uns in der Projektierung und Realisierung von Kläranlagen. Planen Sie mit uns die nachhaltigen Infrastrukturanlagen von morgen, die zur Verbesserung der Wasserqualität in Flüssen und Seen beitragen und gleichzeitig durch innovative und kundenorientierte Lösungen unsere Bauherren begeistern.\nÜbernehmen Sie bei uns Verantwortung als:\nPROJEKTLEITER:IN BAUINGENIEURWESEN IM BEREICH WASSER & ABWASSER 80-100% - ZÜRICH\nGestalten Sie die Wasserinfrastruktur von morgen\nKläranlagen und Anlagen der Siedlungsentwässerung gehören zu den anspruchsvollsten Infrastrukturprojekten: Sie verbinden Hoch- und Tiefbau, Tragwerksplanung, Verfahrenstechnik, Maschinenbau und Gebäudetechnik – häufig bei laufendem Betrieb und unter hohen Anforderungen an Qualität, Termine und Kosten.\nBei AFRY übernehmen Sie eine zentrale Rolle in solchen Projekten. Sie entwickeln Bauwerkskonzepte, koordinieren interdisziplinäre Planungsteams und begleiten unsere Kunden von der ersten Idee bis zur erfolgreichen Realisierung.\nDabei arbeiten Sie nicht allein: In unserem Team Wasser & Umwelt treffen Sie auf erfahrene Fachpersonen, die ihr Wissen teilen, Verantwortung übernehmen und sich gegenseitig unterstützen.\nIHRE AUFGABEN:\nPlanen und realisieren von anspruchsvolle Hoch- und Tiefbauten und entwickeln von innovative und wirtschaftliche Lösungen für Betreiber von Abwasserreinigungsanlagen sowie Anlagen der Siedlungsentwässerung\nÜbernehmen von die Gesamt- oder Teilprojektleitung und steuern Qualität, Kosten, Termine und Risiken\nKoordinieren von interdisziplinäre Projektteams und führen die Schnittstellen zu Tragwerksplanung, Verfahrenstechnik, Architektur, Maschinenbau, Gebäudetechnik und EMSR\nBeraten und begleiten von unseren Kunden und vertreten die Projekte gegenüber Bauherrschaften, Behörden, Planungsbeteiligten und ausführenden Unternehmen über alle SIA-Planungsphasen\nWAS SIE BEI UNS ERWARTET:\nEin eingespieltes und erfahrenes Team\nKomplexe Projekte mit technischem Anspruch und Wirkung\nFreiraum für Eigeninitiative und Verantwortung\nInterdisziplinäre Zusammenarbeit auf Augenhöhe\nFörderung Ihrer individuellen Stärken\nFlexible und zeitgemässe Arbeitsmodelle\nIHR PROFIL:\nAbgeschlossenes Studium im Bauingenieurwesen, Architektur oder einer vergleichbaren Fachrichtung\nMehrjährige Berufserfahrung (mindestens 5 Jahre) in der Planung und Realisierung von Infrastruktur-, Industrie- oder Hochbauprojekten\nErfahrung idealerweise im Bereich Wasser und Abwasser, im konstruktiven Ingenieurbau, in der Tragwerksplanung oder in der Fachbauleitung\nInteresse an interdisziplinären Fragestellungen und Freude an der Zusammenarbeit mit unterschiedlichen Fachbereichen\nErfahrung in der kollaborativen Projektabwicklung mit BIM sowie mit digitalen Planungsmethoden\nSelbstständige, strukturierte Arbeitsweise sowie ausgeprägte Kommunikations- und Teamfähigkeiten\nSehr gute mündliche und schriftliche Deutschkenntnisse und gute Englischkenntnisse. Französischkenntnisse sind von Vorteil, jedoch keine Voraussetzung\nWerden Sie Teil der AFRY-Erfolgsgeschichte! Wir bieten Gestaltungsspielraum und Eigenverantwortung, kollegiale und internationale Arbeitsatmosphäre, zeitgemässe Anstellungsbedingungen, flexible Arbeitsmodelle, überdurchschnittliche Sozialleistungen, attraktive Entwicklungsmöglichkeiten und grosszügige Beteiligung am ÖV Abo sowie ein Halbtax damit Sie unsere modernen Bürogebäude an zentraler Lage bestens erreichen.\nWir freuen uns auf Ihre online Bewerbung!\nZusätzliche Informationen\nBei AFRY sorgen wir bei allem, was wir tun, für Veränderungen. Denn Wandel entsteht nur, wenn mutige Ideen zusammenkommen. Wenn wir erfolgreich zusammenarbeiten, innovativ tätig sind und unterschiedliche Blickwinkel einnehmen. So gestalten wir die Zukunft. Wir sind aktiv auf der Suche nach qualifizierten Bewerberinnen und Bewerbern, die ein Teil unserer integrativen und vielfältigen Teams auf der ganzen Welt werden möchten. Schließe Dich uns an, um den Übergang zu einer nachhaltigeren Zukunft zu beschleunigen.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 71,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit",
+        "energie",
+        "energiewende"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b7942482fc0191e88e640f87",
+    "source": "jobs.ch",
+    "source_job_id": "b15c3f80-ab27-465f-9587-ff466af2289d",
+    "title": "(Junior) Data Engineer & Data Scientist (80–100 %)",
+    "company": "WEMF AG für Werbemedienforschung",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/b15c3f80-ab27-465f-9587-ff466af2289d/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": "Datenlösungen für die Medien- und Werbebranche entwickeln und umsetzen.\nWir suchen eine umsetzungsorientierte Persönlichkeit mit Data Engineering- und Data Science-Knowhow. In Ihrer vielseitigen Rolle entwickeln Sie belastbare Datenlösungen und begleiten datengetriebene Projekte von der Idee bis zur Markteinführung. Dank ausgeprägter Projektmanagement- und Kommunikationskompetenzen schaffen Sie die Verbindung zwischen Technologie, Fachbereichen und Entscheidungsträgerinnen und Entscheidungsträgern.\nIhre Aufgaben\nKonzeption, Aufbau und Weiterentwicklung von Datenpipelines, Datenmodelle und Datenplattformen\nLeitung datenbezogener Projekte inklusive Budget- und Ressourcensteuerung\nIntegration, Aufbereitung und Qualitätssicherung strukturierter und unstrukturierter Daten aus unterschiedlichen Quellen\nKonzeption, Entwicklung, Validierung und Produktivsetzung statistischer Modelle sowie Machine-Learning-Lösungen sowie KI-Systemen, insbesondere von Retrieval-Augmented-Generation-(RAG)-Lösungen und Integrationen auf Basis des Model Context Protocol (MCP)\nAnalyse komplexer Datenbestände und Übersetzung der Ergebnisse handlungsorientierte Empfehlungen\nKoordination interdisziplinärer Teams und externer Partner\nDokumentation von Datenflüssen, Modellen, Architekturentscheidungen und Betriebsprozessen\nIhr Profil\nHochschulabschluss in Informatik, Data Engineering, Data Science, Statistik, Mathematik oder einer vergleichbaren Fachrichtung\nPraxiserfahrung im Data Engineering und/oder Data Science sowie in der Umsetzung datenbezogener Projekte\nSehr gute Kenntnisse in Python, R und SQL; Erfahrung mit ETL/ELT-Prozessen, APIs, Versionsverwaltung und automatisierten Deployments\nErfahrung mit Cloud-Datenplattformen, modernen Data Warehouses oder Lakehouse-Architekturen sowie gängigen Analyse- und Machine-Learning-Frameworks\nPraktische Erfahrung in der Entwicklung und Integration von KI-Systemen, insbesondere mit RAG-Architekturen, Vektordatenbanken, Embedding-Modellen sowie MCP-basierten Setups\nErfahrung in der Markt- oder Medienforschung, insbesondere im Umgang mit Befragungsdaten, sowie Kenntnisse der Medien- und Werbebranche sind von Vorteil\nProjektleitungserfahrung, idealerweise in einem agilen oder hybriden Umfeld\nStrukturierte, eigenverantwortliche und lösungsorientierte Arbeitsweise mit hohem Qualitätsbewusstsein\nSehr gute Deutsch- und Englischkenntnisse in Wort und Schrift\nWas wir bieten\nArbeit mit branchenweit etablierten Daten von höchster Qualität bei maximaler Anwendungsorientierung\nEine Schlüsselrolle mit grossem Gestaltungsspielraum in einem datenorientierten Umfeld\nInterdisziplinäre Zusammenarbeit mit kurzen Entscheidungswegen und offener Kommunikationskultur\nModerne Technologien sowie gezielte fachliche und persönliche Weiterbildung\nFlexible Arbeitsmodelle und zeitgemässe Anstellungsbedingungen\nÜber die WEMF\nDie WEMF AG für Werbemedienforschung ist die neutrale und unabhängige Branchenforschungsorganisation für den Schweizer und Liechtensteiner Medien- und Werbemarkt. Sie schafft mit verlässlichen, währungssetzenden Studien, Audits, Datenlösungen und Beratung Transparenz und fundierte Entscheidungsgrundlagen für die Medien- und Werbebranche. Zu ihren Aufgaben gehören die nationale Leserschaftsforschung, die Zertifizierung von Printmedien, Out-of-Home Screens oder Online Targeting Predictions, die Erhebung des Mediennutzungs- und Konsumverhaltens sowie die Entwicklung innovativer Daten- und Softwarelösungen für einen zunehmend crossmedialen Markt.\nInteressiert?\nWir freuen uns auf Ihre vollständige Bewerbung.\nFür Fragen steht Ihnen Marc Sele, Deputy CEO und Executive Director of Data and Tools unter +41 43 311 76 64 gerne zur Verfügung.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-618c642ff106da8e7f13c645",
+    "source": "jobs.ch",
+    "source_job_id": "88b517a8-fe60-4323-93b1-1529c62c2907",
+    "title": "Trader",
+    "company": "MCP (Switzerland) Sàrl",
+    "location": "Zurich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/88b517a8-fe60-4323-93b1-1529c62c2907/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": "Responsibilities\nIdentify, evaluate, and execute timely market opportunities and equity index options trading strategies across EU, China, India and South Korean financial markets. This will involve equity options research and analysis for trade idea generation, testing, and implementation.\nPrice and model equity index options and equity derivatives.\nAnalyze large quantities of data and use machine learning and other statistical methods to derive patterns.\nUtilize portfolio optimization techniques to build and rebalance the portfolio dynamically\nResponsible for portfolio construction and implementation including devising execution strategies and monitoring acceptable risk parameters.\nActively communicate with all portfolio management team members throughout the trading day to drive an actively traded portfolio.\nQualifications/Skills Required:\nBachelor's degree in Math or Statistics is required.\nAt least 1 year of experience working in high frequency trading environment, which can include internships, apprenticeships or professional experience.\nExperience researching both US & International ETFs.\nStrong mathematical skills, demonstration of exceptional ability (competitions, research or awards)\nExperience researching and enhancing tools and algorithms for skew pricing and auctions.\nExperience developing trading ideas, gathering and analyzing trading requirements and challenges, and designing solutions using statistical analysis and quantitative methods.\nProven independent trading ability outside of a large firm\nPosition fluency in Korean or Mandarin Chinese, including familiarity with financial terms, to support high-level trading in these markets.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-12884822bacf4463d2743c29",
+    "source": "jobs.ch",
+    "source_job_id": "d84e5117-00b4-4b24-963c-039127f74f3c",
+    "title": "(Senior) Relationship Manager (m/w/d)",
+    "company": "Bank von Roll AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/d84e5117-00b4-4b24-963c-039127f74f3c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": "Gemeinsam für heute, morgen und die nächste Generation.\n(Senior) Relationship Manager (m/w/d)\n80 - 100% / Private Banking / Zürich / Fokus Schweizer, Deutsche und Internationale Kunden\nIm Private Banking betreuen wir vermögende und anspruchsvolle Privatpersonen, Familien, Unternehmer, Family Offices, Stiftungen sowie Finanzintermediäre. Wir beraten unsere Kunden umfassend entlang ihrer Bedürfnisse und pflegen sehr persönliche und langjährige Kundenbeziehungen.\nZur Verstärkung suchen wir Sie, eine talentierte, dynamische und kommunikationsstarke Persönlichkeit als (Senior) Relationship Manager für ein 80 - 100% Pensum an unserem Sitz im Herzen von Zürich.\nSind Sie bereit, sich als Person mit Ihren Fähigkeiten einzubringen, Ihren Teil zum Wachstum beizutragen und die Entwicklung mitzugestalten? Dann bewerben Sie sich jetzt.\nIHRE AUFGABE\nGanzheitliche Betreuung und Beratung von Private Banking-Kunden\nÜbernahme, Bewirtschaftung und Ausbau eines bestehenden Kundenbuchs durch Erkennen und Entwicklung des Kundenpotenzials für Schweizer, Deutsche und Internationale Kunden\nAkquisition neuer Kundenbeziehungen über das eigene Netzwerk und gezielte Marktbearbeitung\nErarbeiten von bedürfnisorientierten Lösungen unter Einbezug der individuellen Wünsche, Ziele und der Lebenssituation unserer Kundschaft\nLeistungsbeitrag zur Erreichung der Ertragsziele des Private Banking\nIHR PROFIL\nAbgeschlossenes Studium oder relevante Weiterbildung (Universität, FH/HF, Finanzplaner, AZEK)\nNachweisbare und erfolgreiche Akquisitions- / Beratungs- und Betreuungserfahrung von Private Banking-Kunden, Unternehmern und semi-institutionellen Kunden\nEngagierte und zuverlässige Persönlichkeit mit ausgeprägter Kundenorientierung\nTeamplayer mit hohem Qualitätsbewusstsein, breites Spektrum an fundiertem Wissen, vorbildlichen Umgangsformen, ausgeprägtem Verhandlungsgeschick mit hohem Mass an Diskretion und Integrität\nSpezifische Marktkenntnisse mit dem Fokus Schweiz, Deutschland und International\nSehr gute Kenntnisse der regulatorischen Anforderungen und der Front-to-Back Prozesse von Private Banking-Kunden in der Schweiz und grenzüberschreitend\nFliessende Deutsch- und sehr gute Englischkenntnisse, weitere Sprachen von Vorteil\nUNSER ANGEBOT\nSpannende und abwechslungsreiche Tätigkeit mit unternehmerischem Gestaltungsspielraum und hoher Eigenverantwortung in einer Schweizer Privatbank\nLangfristige Perspektive in einem stabilen, nachhaltigen und wachstumsorientierten Umfeld\nKunden- und leistungsorientiertes Betriebsklima mit professionellen und kompetenten Kolleginnen und Kollegen\nDirekter Zugang zur Geschäftsleitung, flache Hierarchien und rasche Entscheidungswege\nEine Arbeitgeberin, die sich um ihre Mitarbeitenden kümmert und in Sie investiert\nWir freuen uns auf Ihre Bewerbung!",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-a4a853f65061b8db0b725c10",
+    "source": "jobs.ch",
+    "source_job_id": "353830ab-9746-4806-a8db-a3144813bd89",
+    "title": "Pflegedienstleitung (PDL) - Spitex mit Angehörigenpflege",
+    "company": "Care21",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/353830ab-9746-4806-a8db-a3144813bd89/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-8dde011b7f1c4bb86dd65ae3",
+    "source": "jobs.ch",
+    "source_job_id": "973f7ed7-927d-4d11-82fa-a5249fca5d65",
+    "title": "IT System Engineer 80-100%",
+    "company": "Prime21",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/973f7ed7-927d-4d11-82fa-a5249fca5d65/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-232725b7131456f41d7dbd88",
+    "source": "jobs.ch",
+    "source_job_id": "6352377a-3f48-4b55-a346-ad7fbd0922cc",
+    "title": "Projekt- und Vertriebsingenieur:in Mittelspannung 80-100%",
+    "company": "Siemens Schweiz AG, Zuerich",
+    "location": "CH-ZH",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/6352377a-3f48-4b55-a346-ad7fbd0922cc/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-846ed4ece9fcd0a7741a89f4",
+    "source": "jobs.ch",
+    "source_job_id": "0647edea-9dd3-46e1-992d-b513bca26ca8",
+    "title": "Dipl. Pflegefachfrau/-mann mit Fallführung - Demenz 60-100% (a)",
+    "company": "Spitex Zürich AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/0647edea-9dd3-46e1-992d-b513bca26ca8/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7e9052fd058fcd04ec012fbc",
+    "source": "jobs.ch",
+    "source_job_id": "196e2b7d-e962-4b3d-a5ee-d34d9aaea9c2",
+    "title": "Projektleiter:in Bauphysik 80-100%",
+    "company": "Gruner AG",
+    "location": "Zug / Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/196e2b7d-e962-4b3d-a5ee-d34d9aaea9c2/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-3b31e4ef212b8c2c408cf9f5",
+    "source": "jobs.ch",
+    "source_job_id": "8ad961f6-a5c6-4d40-8eba-ccd6e0937720",
+    "title": "Abteilungsleitung auf Demenzstation",
+    "company": "Stadt Zürich Gesundheitszentren für das Alter",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/8ad961f6-a5c6-4d40-8eba-ccd6e0937720/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7d98ce8333bc0e39f92d984a",
+    "source": "jobs.ch",
+    "source_job_id": "6ad8e49e-350a-4729-8a9c-d25115e09304",
+    "title": "Sous-Chef:in",
+    "company": "Genossenschaft ZFV Unternehmungen",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/6ad8e49e-350a-4729-8a9c-d25115e09304/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-dcf725f63e183edaf36e5d26",
+    "source": "jobs.ch",
+    "source_job_id": "ea0bb333-c5d8-45cc-8440-085dae1c82b7",
+    "title": "BAUFÜHRER*IN",
+    "company": "Marti AG, Bauunternehmung",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ea0bb333-c5d8-45cc-8440-085dae1c82b7/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-d56448f38cd418a4cc9c8912",
+    "source": "jobs.ch",
+    "source_job_id": "b439e827-cf1f-456d-9953-59156bc11a3e",
+    "title": "Sachbearbeiter:in Leistungsabrechnung",
+    "company": "SailerClinic AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/b439e827-cf1f-456d-9953-59156bc11a3e/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-10b696768450bd290bacb127",
+    "source": "jobs.ch",
+    "source_job_id": "5ff2d203-a27e-4dad-b672-6ca55ef34b00",
+    "title": "BAULEITUNG / PROJEKTLEITUNG 80 % bis 100 %",
+    "company": "taroarchitekten würenlingen ag",
+    "location": "Würenlingen",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5ff2d203-a27e-4dad-b672-6ca55ef34b00/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-ef029cd930ecca2022a2e1f4",
+    "source": "jobs.ch",
+    "source_job_id": "434d1060-f7f1-4598-be85-618d5741e428",
+    "title": "Medizinische Praxisassistentin EFZ (m/w/d) 80%",
+    "company": "Kinderspital Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/434d1060-f7f1-4598-be85-618d5741e428/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-8a192323f99957f3d1e336f3",
+    "source": "jobs.ch",
+    "source_job_id": "56389cd5-a9de-413f-89dc-ccd447c693ed",
+    "title": "Wiedereinstieg in die Pflege - Dipl. Pflegefachfrau/-mann 60-100% (a)",
+    "company": "Spitex Zürich AG",
+    "location": "CH-8000 ??????",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/56389cd5-a9de-413f-89dc-ccd447c693ed/",
+    "published_at": null,
+    "first_seen_at": "2026-10-24T05:08:41+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
     "id": "job-b1260e80f51fb1baa4fb0bec",
     "source": "jobs.ch",
     "source_job_id": "fc3cce5a-0e59-4478-b5c6-b52e42c5d8b6",
@@ -715,7 +1599,7 @@
     "first_seen_at": "2026-10-23T05:09:11+00:00",
     "last_seen_at": "2026-10-23T05:09:11+00:00",
     "categories": [],
-    "description": null,
+    "description": "Gebäudetechnikplanerin / Gebäudetechnikplaner Heizung / Kälte\nFür unseren Bereich Gebäude- und Energietechnik suchen wir zur Verstärkung unseres Teams eine qualifizierte Persönlichkeit.\nTätigkeitsgebiet\nSie arbeiten an Neu- und Umbauprojekten unserer Kunden in allen Phasen und bearbeiten dabei die Projekte sowohl in der Planungs- als auch in der Realisierungsphase.\nSie nehmen in unseren Projekten eine zentrale Rolle wahr. Im interdisziplinären Umfeld unseres Gebäudetechnikbereiches sind Sie die kompetente Anlaufstelle für alle Fragen rund um den Heizungs- und Kältebereich.\nThemen wie erneuerbare Energien, Energieeffizienz und Wirtschaftlichkeit spielen bei unseren Projekten eine zentrale Rolle.\nSie nehmen die Kundenbedürfnisse auf, prüfen Lösungsvarianten und organisieren eigenständig die Planung und Abwicklung Ihrer Projekte.\nAnforderungen\nSie verfügen über eine Grundausbildung als Gebäudetechnikplanerin/Gebäudetechnikplaner und/oder eine Weiterbildung zum Techniker oder zur Technikerin TS/HF im Bereich Gebäudetechnik und weisen bestenfalls bereits einige Jahre Berufserfahrung im Bauwesen aus.\nSie haben eine rasche Auffassungsgabe, schätzen Teamarbeit und können andere motivieren.\nSie sind es gewohnt, selbständig und lösungsorientiert zu arbeiten, schätzen aber die Teamarbeit ebenso.\nDas Koordinieren mit mehreren Projektinvolvierten macht Ihnen Spass.\nFreude am Umgang mit Kunden und an immer wieder neuen Aufgabenstellungen runden Ihr Profil ab.\nHelbling Benefits\nEin kompetentes, aufgestelltes und kollegiales Team\nEin interessantes Umfeld mit Mitarbeitenden aus verschiedensten Disziplinen\nEin dynamisches Umfeld mit flachen Hierarchien und Raum für neue Ideen\nEinen zentral gelegenen Arbeitsort über den Dächern von Zürich\nFortschrittliche Arbeits- und Anstellungsbedingungen\nEine attraktive, leistungs- und erfolgsorientierte Vergütung\nHaben wir Ihr Interesse geweckt?\nHaben wir Ihr Interesse geweckt? Dann freut sich Frau Cornelia Lüscher auf Ihre Bewerbungsunterlagen via unser Bewerberportal.\nWir bitten um Verständnis dafür, dass wir nur Direktbewerbungen berücksichtigen.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -739,12 +1623,16 @@
       "score": null
     },
     "selection": {
-      "suggested_score": 45,
+      "suggested_score": 60,
       "version": "heuristic-v1",
-      "reason_codes": [],
+      "reason_codes": [
+        "erneuerbare energ",
+        "energie"
+      ],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -1123,7 +2011,7 @@
     "first_seen_at": "2026-10-23T05:09:11+00:00",
     "last_seen_at": "2026-10-23T05:09:11+00:00",
     "categories": [],
-    "description": null,
+    "description": "Alpinum Investment Managementist ein erfolgreich wachsender Schweizer Vermögensverwalter mit Sitz in Zürich und einem verwalteten Vermögen von rund USD 2 Milliarden. Wir bieten eine breit aufgestellte Fondsplattform, bei der langfristiger Kapitalzuwachs und ein konsequentes Drawdown-Management im Fokus stehen. Unsere innovativen und qualitativ hochwertigen Anlagelösungen heben sich vom Markt ab und wurden bereits mehrfach ausgezeichnet. Sie sind speziell auf die Anforderungen von Family Offices, Vermögensverwaltern, Banken und Pensionskassen zugeschnitten.\nUnsere Kernkompetenzen liegen in alternativen und traditionellen Fixed Income Investments, Hedgefonds und Private Debt – Anlagebereichen, in denen wir über mehr als ein Jahrzehnt umfassende Erfahrung aufgebaut und nachhaltig Ergebnisse im ersten Quartil erzielt haben. Mit unseren etablierten Fixed-Income-Lösungen und dem wachsenden Bereich Liquid Alternatives sind wir in Anlageklassen positioniert, die bei professionellen Investoren zunehmend an Bedeutung gewinnen.\nWir suchen eine engagierte, ambitionierte und unternehmerisch denkende Persönlichkeit mit Leidenschaft für Finanzmärkte und Kundenbeziehungen. Sie verfügen über einige Jahre Erfahrung in der Finanzindustrie, erste Vertriebserfolge und ein eigenes, wachsendes Netzwerk. Mit Eigeninitiative, Leistungsbereitschaft und Drive können Sie dieses weiter ausbauen und gemeinsam mit uns wachsen.\nWas Sie bei uns tun werden:\nAktive Gewinnung und Betreuung institutioneller Kunden mit Fokus auf Family Offices, Vermögensverwalter, Banken und Pensionskassen.\nSelbständige Identifikation und Ansprache potenzieller Investoren sowie überzeugende Präsentation unserer Investmentlösungen.\nEntwicklung und Unterstützung von Sales Pitches, Präsentationen und aussagekräftigen Grafiken/Inhalten in enger Zusammenarbeit mit dem Marketing- und Investment-Team.\nAktive Nutzung moderner Vertriebskanäle – von persönlichen Meetings und Roadshows bis zu Social Media, AI und digitalen Tools. Unterstützung aller Vertriebsaktivitäten wie Mailings, Roadshows, Events, Social Media Posts.\nPflege und Weiterentwicklung von CRM-Daten, Kontaktlisten und Sales-Pipelines.\nBeobachtung von Markttrends, Wettbewerbern und Kundenbedürfnissen und deren Übersetzung in konkrete Vertriebschancen.\nWas Sie mitbringen:\n2–4 Jahre relevante Erfahrung im Fondsvertrieb, Asset Management oder einem vergleichbaren Umfeld sowie erste nachweisbare Vertriebserfolge; idealerweise mit Hochschulabschluss oder fundierter praxisbezogener Ausbildung im Bereich Wirtschaft oder Finanzen.\nEin eigenes, wachsendes Netzwerk zu professionellen Investoren und Freude an aktiver Kundenakquise.\nAusgeprägtes Interesse an Finanzmärkten und die Fähigkeit, anspruchsvolle Investmentlösungen schnell zu verstehen und überzeugend zu vermitteln.\nUnternehmerische Persönlichkeit mit hoher Eigenmotivation, Drive, gutem Urteilsvermögen und einer pragmatischen Hands-on-Mentalität.\nKommunikationsstärke, professionelles Auftreten, Teamfähigkeit, strukturierte, zuverlässige und proaktive Arbeitsweise mit hoher Serviceorientierung.\nHohe digitale Affinität und sicherer Umgang mit PowerPoint, Excel, AI-Tools/Social Media.\nFliessende Deutsch- und Englischkenntnisse; Französisch/Italienisch sind von Vorteil.\nWas wir bieten:\nEine unternehmerische Vertriebsrolle bei einem etablierten Schweizer Asset Manager mit attraktiven Fixed-Income- und Liquid-Alternatives-Lösungen.\nDirekte Zusammenarbeit mit erfahrenen Investment Professionals und die Möglichkeit, tiefes Produkt-Know-how aufzubauen.\nHoher Handlungsspielraum, kurze Entscheidungswege und die Möglichkeit, eigene Ideen unmittelbar umzusetzen.\nDie Chance, Kundenbasis, Vertriebsstrategie und den nächsten Wachstumsschritt von Alpinum aktiv mitzugestalten.\nFühlen Sie sich von dieser Herausforderung angesprochen und möchten den nächsten Wachstumsschritt von Alpinum aktiv mitgestalten? Dann freuen wir uns darauf, Sie kennenzulernen.\nBitte senden Sie uns Ihre vollständigen Bewerbungsunterlagen bestehend aus Lebenslauf, Motivationsschreiben sowie relevanten Arbeitszeugnissen und Diplome über den folgenden Link:\nJetzt online bewerben Bewerbung via Personalvermittlung\nFür weitere Informationen kontaktieren Sie bitte unseren externen HR Partner HC Solutions, Frau Morena Forner oder Frau Annika Danielsson.\nBewerbungen von Personalvermittlern sind ebenfalls direkt an HC Solutions zu richten.\nAlpinum Investment Management AG\nFrau Morena Forner\nRecruiter\n044 915 12 12\nE-Mail schreiben",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -1152,7 +2040,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -1965,7 +2854,7 @@
     "first_seen_at": "2026-10-22T05:08:35+00:00",
     "last_seen_at": "2026-10-22T05:08:35+00:00",
     "categories": [],
-    "description": null,
+    "description": "Werde Fachspezialist*in für Netzinformationssysteme bei ewz. Gestalte die Zukunft mit flexiblen Arbeitsmodellen.\nAufgaben\nEntwickle unsere Netzinformationssysteme aktiv weiter.\nErstelle Konzepte und Richtlinien mit Weitblick.\nSichere hohe Datenqualität durch dein Qualitätsbewusstsein.\nFähigkeiten\nAbgeschlossene Berufslehre als Geomatiker*in oder Zeichner*in.\nMehrjährige Erfahrung mit GIS und CAD-Systemen.\nStrukturierte Arbeitsweise und Freude an Zusammenarbeit.\newz ist seit über 130 Jahren täglich dynamisch und visionär unterwegs. Ob nachhaltige Energieproduktion, smarte Energielösung oder innovative Vernetzungstechnologie: Entwickle mit uns heute, was morgen wichtig ist.\nDafür setzt du deine Energie ein\nAn der Weiterentwicklung unserer Netzinformationssystemen bist du massgebend beteiligt und trägst dabei eine Teilverantwortung.\nBei der Erstellung von Konzepten und Richtlinien denkst du übergreifend und mit Weitblick.\nDu prägst mit deinem Qualitätsbewusstsein die Erfassungsprozesse und sicherst so eine hohe Datenqualität.\nIn deiner Rolle vertrittst du die Nutzenden unserer Systeme gegenüber der IT.\nDu erteilst Aufträge an die IT, überwachst die Umsetzungen und bist für die Abnahme inklusive Testing zuständig.\nDas bringst du mit\nDu hast eine abgeschlossenen Berufslehre als Geomatiker*in oder Zeichner*in.\nEine Weiterbildung auf Stufe FA/HF/FH (beispielsweise HF Informatik oder Gemoatiktechniker*in FA) hast du erfolgreich abgeschlossen.\nMehrjährige Berufserfahrung im Umfeld von GIS und CAD-Systemen bringst du mit – nicht nur als reine*r Anwender*in.\nDu kannst Themen ganzheitlich erfassen und deine Arbeitsweise ist klar strukturiert.\nDie Zusammenarbeit und der Austausch mit verschiedenen Schnittstellen fallen dir leicht und bereiten dir Freude.\nVielfalt bereichert und bringt uns weiter. Wir begrüssen Bewerbende aus verschiedenen Kulturen, Generationen, mit unterschiedlichen Werten und Einstellungen und setzen uns für Chancengleichheit jeden Geschlechts sowie jeder sexuellen Orientierung ein.\nDein Arbeitsort\nTramstrasse 10\n8050 Zürich\nFür Personaldienstleister\nFür diese Stelle nehmen wir keine Dossiers von Personaldienstleister entgegen.\nDas hast du dir verdient\nMehr Energie für dein Leben:\nDurch mobiles Arbeiten, flexible Arbeitsmodelle und Teilzeitmöglichkeiten kannst du deine Arbeitszeit aktiv mitgestalten und sie so einteilen, wie sie am besten zu deinem Leben passt. Du kannst beispielsweise bis zu 2 Wochen zusätzliche Ferien einkaufen und auf allen Stufen Teilzeit arbeiten. Auch Jobsharing/-splitting und unbezahlter Urlaub sind bei uns natürlich möglich.\nEine Investition in deine Zukunft:\nWir legen nicht nur Wert darauf, faire und transparente Löhne zu zahlen, sondern stellen auch sicher, dass dir von deinem Lohn mehr übrigbleibt. Wir übernehmen 60% der Sparbeiträge und bieten zusätzlich einen überobligatorischen Zins auf das angesparte Kapital.\nEin Energieschub für deine Freizeit:\nWir zahlen dir monatlich 100 Franken auf deine Lunch-Check Karte ein. Zudem profitierst du jährlich von weiteren Fringe Benefits im Wert von 150 Franken und von attraktiven Handyabos.\nEntwicklung und Weiterbildung:\nMit unserem Talentmanagement fördern wir deine Entwicklung gezielt – durch vielfältige interne und externe Weiterbildungsangebote sowie spannende Entwicklungsmöglichkeiten.\nSinnhafte Arbeit:\nNachhaltigkeit und sinnstiftende Arbeit sind bei uns nicht nur Worte: Gestalte bei uns Zürich und die Zukunft mit. Setze gemeinsam mit uns Energie für ein gutes Morgen frei.\nVolle Power für die Familie:\nMit unseren 16 Wochen Mutterschafts- und 4 Wochen Vaterschaftsurlaub bekommst du einen zusätzlichen Energieschub für die Familienzeit. Selbstverständlich hast du auch die Möglichkeit, dein Pensum zu reduzieren.\nMehr zu unseren Vorteilen\nMit deiner Power setzt du neue Energie für ein gutes Morgen frei – das belohnen wir mit spannenden Vorteilen!\nMehr erfahren\nSo lernen wir uns kennen\nBewerbung\nVirtuelles Erstgespräch\nPersönliches Zweitgespräch\nFinaler Entscheid\nHast du Fragen zum Bewerbungsprozess oder zur Stelle? Kontaktiere uns\nGino Keller\nLeiter HR Talent Acquisition\nTelefonnummer\n+41 58 319 44 38\nJetzt bewerben",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -1989,12 +2878,15 @@
       "score": null
     },
     "selection": {
-      "suggested_score": 45,
+      "suggested_score": 50,
       "version": "heuristic-v1",
-      "reason_codes": [],
+      "reason_codes": [
+        "energie"
+      ],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -2147,7 +3039,7 @@
     "categories": [
       "Projektleitung"
     ],
-    "description": null,
+    "description": "Bauphysik & Akustik verbinden, Projekte gestalten und nachhaltige Lösungen entwickeln: Übernimm Verantwortung, bring deine Ideen ein und arbeite flexibel in einem interdisziplinären Team.\nProjektleiter:in Akustik und Bauphysik (m/w/d) 60 - 100%\nFür unseren Kunden, ein etabliertes Schweizer Unternehmen mit rund 400 Mitarbeitenden, suchen wir eine engagierte Persönlichkeit als Projektleiter/in Akustik und Bauphysik im Geschäftsbereich Nachhaltiges Bauen.\nDas Unternehmen ist seit über 40 Jahren in verschiedenen Bereichen rund um Beratung, Planung und Bau tätig und entwickelt nachhaltige und zukunftsorientierte Lösungen für Lebensraum. Dich erwartet ein interdisziplinäres Umfeld mit anspruchsvollen Projekten, viel Eigenverantwortung und Raum, dein Fachgebiet aktiv weiterzuentwickeln.\nDeine Aufgaben\nSelbstständige Leitung anspruchsvoller Bauphysik- und Akustikprojekte bei Neu- und Umbauten mit Verantwortung für Qualität, Termine und Wirtschaftlichkeit\nBeratung von Bauherrschaften und Projektteams zu Wärmeschutz, Feuchteschutz, Schallschutz und Raumakustik\nErstellung von bauphysikalischen Nachweisen, Berechnungen und Fachberichten\nEntwicklung wirtschaftlicher, praxisnaher und nachhaltiger Lösungen in Zusammenarbeit mit Architektur- und Planungsbüros\nDirekter Austausch mit Kundinnen und Kunden sowie interdisziplinären Projektpartnern\nMitwirkung bei der Akquisition neuer Projekte und beim Ausbau von Kundenbeziehungen\nWeiterentwicklung des Leistungsangebots und Einbringen eigener Ideen im Bereich Bauphysik und Akustik\nDein Profil\nAbgeschlossenes Studium in Bauingenieurwesen, Umweltingenieurwesen, Physik oder vergleichbare Ausbildung\nWeiterbildung in Bauphysik, Umwelttechnik, Akustik oder einem verwandten Fachgebiet\nMehrjährige Berufserfahrung in Bauphysik und/oder Akustik\nErfahrung in der selbstständigen Bearbeitung und Leitung von Bau- und Planungsprojekten\nSelbstständige, strukturierte und lösungsorientierte Arbeitsweise\nFreude an Kundenkontakt, Beratung, Akquisition und interdisziplinärer Zusammenarbeit\nUnternehmerisches Denken, Eigeninitiative und stilsicheres Deutsch in Wort und Schrift; weitere Sprachen von Vorteil\nWas dich erwartet\nFlexible Arbeitsmodelle mit Jahresarbeitszeit, mobilem Arbeiten und Teilzeitmöglichkeiten\nAttraktive Ferien- und Sozialversicherungsleistungen\nVielfältige Möglichkeiten für fachliche und persönliche Weiterbildung\nUnterstützung bei externer Weiterbildung und Sprachkursen\nAttraktive ÖV- und Mobilitätsangebote\nRegelmässige Team-, Bereichs- und Unternehmensevents\nVerschiedene Angebote für Gesundheit, Sport und Wohlbefinden sowie vergünstigte Verpflegungsmöglichkeiten\nHaben wir Dein Interesse geweckt?\nDann freuen wir uns auf Deine vollständigen Bewerbungsunterlagen mit Lebenslauf sowie relevanten Zeugnissen und Diplomen. Wir prüfen die Unterlagen sorgfältig und freuen uns darauf, Dich kennenzulernen.\nJenny Eisfeld",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -2178,7 +3070,8 @@
       ],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -2390,7 +3283,7 @@
     "categories": [
       "Projektleitung"
     ],
-    "description": null,
+    "description": "Projektleiterin / Projektleiter Verkehrstechnik Schwerpunkt Veloinfrastruktur (100 %)\nIhre neue Herausforderung per sofort oder nach Vereinbarung als Ihre Aufgaben Projektleitung bei der Umsetzung der kantonalen Verkehrsplanung Leiten von verkehrs- und sicherheitstechnischen Planungsstudien, und Teilvorprojekten mit Fokus Veloinfrastruktur Begleiten und Beraten der Projektleiter Strassenbau und diverser interner und externer Stellen in verkehrs- und sicherheitstechnischen und raumplanerischen Fragen Erstellen von Vorprüfungs- und Genehmigungsunterlagen zu Sondernutzungsplänen Erarbeiten von Stellungnahmen zu Vernehmlassungen von Normen, Gesetzen und kantonalen Richtplänen Ihr Profil Studienabschluss als Bau-, Elektro- oder Verkehrsingenieur/in, Geograf/in, Raumplaner/in oder gleichwertige Ausbildung Fachkenntnisse und Praxiserfahrung in der Leitung von anspruchsvollen und interdisziplinären Projekten der Verkehrstechnik und Raumplanung Ausgeprägte Team- und Kommunikationsfähigkeiten sowie Freude mit unterschiedlichen Interessengruppen zu verhandeln und zu kooperieren Stilsicheres Deutsch in Wort und Schrift Unser Angebot Kanton Zug als Arbeitgeber Zug ist ein liebens- und lebenswerter Kanton mit starker Wirtschaft, gutem Bildungsangebot, breitem Kulturschaffen und schöner Landschaft. Auch als Arbeitgeberin ist die Zuger Verwaltung sehr beliebt. Die Tätigkeitsgebiete der sieben Direktionen und rund 50 Ämter sind vielfältig. Die Kantonale Verwaltung zählt zu einer der grössten Arbeitgeberinnen des Kantons. Sie erbringt Dienstleistungen für ihre Einwohnerinnen und Einwohner sowie die ansässigen Unternehmen, die von Sicherheit über Gesundheit, Umwelt und Soziales reichen. Entsprechend vielseitig sind die Aufgaben und Arbeitsfelder unserer Mitarbeitenden. Lernende und Praktikantinnen und Praktikanten sind bei der Kantonalen Verwaltung ebenfalls willkommen, um erste Berufserfahrungen zu sammeln. Interessiert? Dann freuen wir uns auf Ihre Bewerbung via Bewerbungslink. Für weitere Auskünfte stehen Ihnen der Abteilungsleiter Philipp Klingenbeck (T: +41 41 594 29 76, philipp.klingenbeck@zg.ch) oder die Personalverantwortliche Cécile Müller (T: +41 41 594 20 36, cecile.mueller@zg.ch) gerne zur Verfügung. Hinweis: Diese Stelle möchten wir ohne Unterstützung von externen Dienstleistern besetzen. E-Mail-Bewerbungen können nicht berücksichtigt werden.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -2421,7 +3314,11 @@
       ],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting",
+    "url_aliases": [
+      "https://publicjobs.ch/jobs/zug/energie-ingenieurwesen-verkehr/167447-projektleiterin-projektleiter-verkehrstechnik-schwerpunkt-veloinfrastruktur-80-100"
+    ]
   },
   {
     "schema_version": "0.1.0",
@@ -3421,7 +4318,7 @@
     "first_seen_at": "2026-10-21T05:15:53+00:00",
     "last_seen_at": "2026-10-21T05:15:53+00:00",
     "categories": [],
-    "description": null,
+    "description": "IN A NUTSHELL\nAls Data Migration Engineer - Investment Finance verantwortest du den kritischsten Teil jedes Onboardings: die saubere Überführung der Daten aus dem Altsystem in unsere Portfolio-Management-Plattform sowie den Aufbau der täglichen Datenfeeds. Denn nur mit korrekten, vollständigen Daten liefert das System verlässliche Resultate - sie sind das Fundament für jede Portfolioverwaltung und Finanzentscheidung unserer anspruchsvollen Kund:innen.\nMit deiner einzigartigen Kombination aus Finanzwissen und technischer Expertise trägst du massgeblich dazu bei, grosse Kundenbestände erfolgreich auf die QPLIX-Plattform zu migrieren und gestaltest so die Zukunft des Wealth Managements mit.\nDEINE AUFGABEN\nEnd-to-End-Datenmigration: Du übernimmst die volle technische Verantwortung für komplexe Migrationen-Kundenstammdaten, Positions- und Transaktionsdaten sowie das Anlageuniversum\nDatenqualität: Du verantwortest Validierung, Plausibilisierung und Qualitätssicherung der migrierten Daten, inklusive Abstimmung mit den Quellsystemen\nSchnittstellen zu Depotbanken und Data Providern: Du baust und betreust die Datenanbindungen an Depotbanken und Data Provider - die täglichen Feeds, ohne die Portfolios nicht verwaltet werden können\nAutomatisierung von Teilschritten der Datenmigration\nOptimierung der Prozesse für eine bessere Skalierbarkeit von Migrationsprojekten\ndetaillierte Analyse komplexer Datensätze (z.B. Exporte aus Altsystemen) für die Übernahme ins Zielsystem\nBeratung der Projekt-Teams bei Herausforderungen in der Datenübernahme\nSchnittstelle zwischen Consultants, Entwicklungsabteilung und Kund:innen\nDEIN PROFIL\nerfolgreich abgeschlossenes Studium im Bereich (Wirtschafts-)Informatik, Finanzmathematik (oder vergleichbare Qualifikation)\nmehrjährige Erfahrung in der Analyse, Aufbereitung und Übernahme grosser Datenmengen, idealerweise in der Finanzbranche\nfundiertes Verständnis der gängigen liquiden Assetklassen (Aktien, Obligationen, Derivate etc.) sowie der zugehörigen Finanztransaktionen inkl. Corporate Actions\nsehr gute Kenntnisse in Python sowie fundierte SQL-Kenntnisse (relationale Datenbanken); Erfahrung mit dokumentenorientierten Datenbanken (z. B. MongoDB) und weiteren Sprachen von Vorteil\nausgeprägte analytische Fähigkeiten sowie strukturierte, lösungsorientierte Denkweise\nsehr gute Organisationsfähigkeit, schnelle Auffassungsgabe und eigenverantwortliche Arbeitsweise\nsorgfältiger Umgang mit sensiblen Kundendaten\nverhandlungssicher in Deutsch und Englisch (C1), weitere Landessprachen sind von Vorteil\nWARUM WIR?\nflexible Arbeitsmodelle, moderne Anstellungsbedingungen und attraktive Entwicklungsperspektiven in einem wachsenden FinTech-Umfeld\nüberdurchschnittliche Benefits inkl. aktuellem Apple- oder Android-Smartphone, individuellem Weiterbildungsbudget, Fitness-Abo und weiteren Extras\noffene Unternehmenskultur mit starkem Teamspirit, viel Eigenverantwortung und kurzen Entscheidungswegen\nzentral gelegener Standort in Zürich mit hervorragender Anbindung\nQPLIX ist ein Arbeitgeber, der die Chancengleichheit fördert. Wir glauben, dass Integration und Vielfalt der Schlüssel zu einer erfolgreichen und besseren Arbeitswelt sind.\nWenn du Freude daran hast, komplexe Vermögen in einem der modernsten Systeme am Markt abzubilden und Kund:innen mit einer pragmatischen, lösungsorientierten „can-do“-Mentalität zu begeistern, freuen wir uns auf deine Bewerbung.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -3450,7 +4347,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -4063,7 +4961,7 @@
     "url": "https://www.jobs.ch/de/stellenangebote/detail/191be58d-9642-4d1b-8d7a-83ca4c0f70e0/",
     "published_at": null,
     "first_seen_at": "2026-10-20T05:10:18+00:00",
-    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
     "categories": [],
     "description": "Du möchtest dein technisches Können im Fachbereich Lüftung einbringen und suchst eine neue Herausforderung? Als Servicemonteur:in am Universitätsspital Zürich erwarten dich vielseitige Aufgaben rund um unsere Lüftungsanlagen. Wir freuen uns darauf, dich kennenzulernen.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nServicemonteur:in HLK (Schwerpunkt Lüftung) 80-100%\nper 1. März 2027 oder nach Vereinbarung\nDeine Hauptaufgaben\nDu stellst die Versorgungssicherheit und den störungsfreien Betrieb der RLT-Anlagen sicher\nIn deinem Zuständigkeitsbereich planst und organisierst du alle Instandhaltungsmassnahmen nach Priorität und koordinierst die Einsätze externer Firmen\nIm Tagesgeschäft übernimmst du die anfallenden Instandhaltungsarbeiten und behebst Störungen an den RLT-Anlagen\nBei Umbau- und Erneuerungsprojekten bringst du dein Fachwissen ein und begleitest die Projekte bis zur Inbetriebnahme und Abnahme\nDu sorgst für die Einhaltung der geltenden Normen, gesetzlichen Vorschriften sowie der USZ-internen Richtlinien, Weisungen und Prozesse\nDie Anlagendokumentationen erstellst du und hältst sie aktuell\nNach einer gründlichen Einarbeitung übernimmst du auch Einsätze in unserer Pikettorganisation (Werkstattbereitschafts- und Einsatzdienst rund um die Uhr, an sieben Tagen pro Woche)\nDein Profil\nDu hast eine abgeschlossene Berufsausbildung im Bereich HLK. Eine Weiterbildung, beispielsweise als Instandhaltungsfachperson, ist von Vorteil\nIn der Anlageninstandhaltung, im Unterhalt, bei Energieoptimierungen und in der Gebäudeautomation (MSRL) bringst du fundierte Berufserfahrung mit, idealerweise aus dem Spitalumfeld oder einem vergleichbaren Betrieb mit 24/7-Betrieb\nDu verfügst über gute EDV-Kenntnisse (MS Office, Instandhaltungssoftware) sowie gute kommunikative und organisatorische Fähigkeiten\nDeine Arbeitsweise ist proaktiv, eigenverantwortlich, ziel- und kundenorientiert\nDu bist belastbar, arbeitest gerne im Team und überzeugst mit hoher Sozialkompetenz sowie einwandfreien Deutschkenntnissen in Wort und Schrift\nUnsere Benefits\nWir bieten dir eine abwechslungsreiche und interessante Tätigkeit in einer anspruchsvollen Umgebung. Deine bereits erworbenen Fähigkeiten und Kenntnisse kannst du in einem interdisziplinären Umfeld einsetzen und weiterentwickeln.\nUniversitätsspital Zürich\n8091 Zürich",
     "salary_chf_year_min": null,
@@ -4203,7 +5101,7 @@
     "url": "https://www.jobs.ch/de/stellenangebote/detail/edfe3f0c-70d8-4291-9765-5225afa23f42/",
     "published_at": null,
     "first_seen_at": "2026-10-20T05:10:18+00:00",
-    "last_seen_at": "2026-10-20T05:10:18+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
     "categories": [
       "Fernwärme"
     ],
@@ -4573,7 +5471,7 @@
     "first_seen_at": "2026-10-20T05:10:18+00:00",
     "last_seen_at": "2026-10-20T05:10:18+00:00",
     "categories": [],
-    "description": null,
+    "description": "Dauerstelle\nSonderpädagogik\nDer Standort Riedtli im Schulkreis Waidberg wurde im Schuljahr 2025/26 eröffnet. Wir führen drei Klassen vom Kindergarten bis zur Mittelstufe mit insgesamt 21 Schüler*Innen. Für die Ergänzung unseres Leitungsteams suchen wir ab 01. Januar 2027 eine*n erfahrene\nLeitung Betreuung HPS, 80%.\nAufgaben\nLeitung der sonderschulischen Betreuung in den Bereichen Personal, Betrieb und Pädagogik\nPersonalführung der Mitarbeitenden im Bereich Betreuung mit einer Führungsspanne von zirka 20 Mitarbeitenden\nSicherstellung einer bedürfnis- und bedarfsorientierten Betreuung im Unterricht und in der Betreuung\nUnterstützung der Schulleitung am Standort in der Planung und Umsetzung von Schulentwicklungsprozessen\nStellvertretung der Schulleitung in der Tagesorganisation am Standort\nProfil\nAbschluss im Bereich Sozialpädagogik auf Tertiärstufe (Fachhochschule, Höhere Fachschule)\nEine abgeschlossene Führungsausbildung oder die Bereitschaft eine solche zu absolvieren sowie praktische Führungserfahrung\nErfahrung im sonderpädagogischen Bereich\nAusgeprägte Sozial- und Selbstkompetenzen, sowie eine klar integrative Haltung\nSehr gute Team- und Kommunikationsfähigkeiten\nWir bieten\nHerausfordernde, abwechslungsreiche und verantwortungsvolle Tätigkeit mit viel Gestaltungsraum\nSpannende interdisziplinäre Aufgaben im Sonderschulbereich in enger Zusammenarbeit mit der Regelschule\nMöglichkeit der aktiven Mitgestaltung in unserer Schule\nFortschrittliche Anstellungsbedingungen gemäss Vorgaben der Stadt Zürich\nÜber uns\nDie Heilpädagogische Schule der Stadt Zürich ist eine Tagessonderschule für 4 bis 15-jährige Kinder mit einer kognitiven und/oder mehrfachen Beeinträchtigung. Als Teil der Dienstabteilung Sonderpädagogik bieten den Schülerinnen und Schülern, die in verschiedenen Schulhäusern der Stadt Zürich in separierten Klassen beschult werden, ein unterstützendes Umfeld und setzen die Schwerpunkte der interdisziplinären Förderung in ihre Stärken.\nUnsere Teams an den verschiedenen Standorten in der Stadt Zürich bestehen aus schulischen Heilpädagog*innen, Sozialpädagog*innen, Fachpersonen Betreuung, Lernenden sowie Assistent*innen.\nInteressiert?\nWeitere Auskünfte erteilt Ihnen gerne Frau Anke Stamm, Standortleitung HPS Riedtli, 044 413 38 50 oder E-Mail schreiben.\nHaben wir Ihr Interesse geweckt? Dann freuen wir uns über Ihre Onlinebewerbung.\nReferenz-Nr.: 51762",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -4602,7 +5500,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -5935,7 +6834,7 @@
     "url": "https://www.jobs.ch/de/stellenangebote/detail/ff2276c6-f4d7-4722-9b17-08672e7c7fd5/",
     "published_at": null,
     "first_seen_at": "2026-10-19T05:02:35+00:00",
-    "last_seen_at": "2026-10-19T05:02:35+00:00",
+    "last_seen_at": "2026-10-24T05:08:41+00:00",
     "categories": [],
     "description": null,
     "salary_chf_year_min": null,
@@ -7556,7 +8455,7 @@
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
     "categories": [],
-    "description": null,
+    "description": "Baumpflegespezialist:in (60-100 %) Stadtgrün Winterthur Stadtgrün Winterthur plant, pflegt und betreut die Grün- und Freiräume, den Wald, den Wildpark Bruderhaus, die fünf Friedhöfe sowie das Krematorium der Gartenstadt Winterthur. Unsere Leistungen sind zentral für die Qualität der Gartenstadt Winterthur als Wohn- und Wirtschaftsstandort. Die Hauptabteilung Siedlungsgrün ist mit ihren 70 Mitarbeitenden für die Pflege der öffentlichen Grünflächen der Stadt Winterthur verantwortlich. Der Baumbestand der Stadt Winterthur auf öffentlichem Grund umfasst über 16'000 Bäume, die von Stadtgrün Winterthur gepflegt und unterhalten werden. Zur Erfüllung dieser wichtigen und vielfältigen Aufgaben, suchen wir eine einsatzfreudige, engagierte Persönlichkeit mit organisatorischem Talent. Nebst einem dynamischen Team und professionellem Umfeld erwartet Sie bei Stadtgrün Winterthur eine moderne Infrastruktur und ein umfangreicher Maschinenpark. Wir fördern unsere Mitarbeitenden und bieten persönliche Weiterbildungsmöglichkeiten. Ihre Aufgaben Pflegen und erhalten des alten Baumbestandes der Stadt Winterthur Kontrollieren und pflegen des zugewiesenen Baumbestandes zur Sicherstellung der Verkehrssicherheit Vornehmen der Baumbeurteilung sowie Festlegen der nötigen Massnahmen nach rationellen Aspekten Planen und ausführen einer nachhaltigen Baumpflege nach aktuellem Stand der Technik und des Fachwissens Direkte Ansprechpartner für Reviere, Kunden und Dritte für fachspezifische Fragestellungen betreffend Baumpflege Ihr Profil Abgeschlossene Ausbildung als Baumpflegespezialist:in mit eidg. Fachausweis, Baumpfleger:in BSB oder gleichwertiger Ausbildung Mehrjährige Berufserfahrung in der Baumpflege/Baumkontrolle, im gärtnerischen Unterhalt sowie fundierte Gehölz- und Pflanzenkenntnisse Selbständigkeit, Verantwortungsbewusstsein, Zuverlässigkeit sowie Dienstleistungsorientierung Körperlich belastbar und schwindelfrei Führerausweis der Kategorie BE, MS-Office-Kenntnisse sowie sicherer Umgang mit digitalen Mitteln, Erfahrung mit Baumkataster-Programme von Vorteil Was bieten wir Sinnstiftende Aufgabe mit sichtbarer Wirkung auf das Stadtbild und die Lebensqualität Winterthurs Spannendes und abwechslungsreiches Tätigkeitsfeld rund um Stadtbäume, Baumschutz und nachhaltige Baumentwicklung Kollegiales, engagiertes Umfeld mit enger Zusammenarbeit über Fachbereiche hinweg Möglichkeit, die Weiterentwicklung der städtischen Baumpflege aktiv mitzugestalten Moderne Anstellungsbedingungen, attraktive Ferienregelung und breites internes Weiterbildungsangebot Kontakt Ihre Fragen zur Stelle beantwortet Ihnen gerne Flurin Ginsig, Leiter Baumpflege, Telefon 079 577 72 35. Mehr erfahren? https://stadt.winterthur.ch/ Wir freuen uns auf Ihre Online-Bewerbung.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -7588,6 +8487,7 @@
     },
     "url_aliases": [
       "https://publicjobs.ch/jobs/zuerich/energie-ingenieurwesen-verkehr/166635-baumpflegespezialist-in-60-100"
-    ]
+    ],
+    "description_source": "jsonld_jobposting"
   }
 ]
