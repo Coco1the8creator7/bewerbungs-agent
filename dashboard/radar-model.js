@@ -16,9 +16,9 @@
   interessen:["Technik","Handwerk","Natur & Tiere","Gesundheit & Soziales","Medien & Gestaltung","Kaufmännisches","Gastronomie","Informatik","Bauen","Logistik"]
  });
  const careerSkillGroups=Object.freeze({
-  schule:["Projektplanung","Energietechnik","Bau & Infrastruktur","Kundenberatung","Digitalisierung","Analytisches Arbeiten"],
+  fachwissen:["Projektplanung","Energietechnik","Bau & Infrastruktur","Kundenberatung","Digitalisierung","Analytisches Arbeiten"],
   staerken:["Projektkoordination","Selbstständigkeit","Teamarbeit","Kommunikation","Organisation","Lösungsorientierung"],
-  erfahrungen:["Fachbauleitung","Projektleitung","Ausschreibungen","Offertenvergleich","Bausitzungen","Technische Planung"],
+  berufserfahrung:["Fachbauleitung","Projektleitung","Ausschreibungen","Offertenvergleich","Bausitzungen","Technische Planung"],
   interessen:["Fernwärme & thermische Netze","Erneuerbare Energien","Energiekonzepte","Nachhaltigkeit","Beratung & Vertrieb","Kommunale Projekte"]
  });
  const careerCriteria=Object.freeze([
@@ -64,14 +64,22 @@
   return {total:entries.length,sinceYesterday:since(yesterday),thisWeek:since(week),
    apprenticeships:entries.filter(isApprenticeship).length,missingDates:entries.filter(j=>!Number.isFinite(Date.parse(j.first_seen_at))).length};
  }
- const initialProfile=()=>({skills:{schule:[],staerken:[],erfahrungen:[],interessen:[]},extraSkills:[],
+ const initialProfile=(market="apprentice")=>({skills:market==="career"?
+   {fachwissen:[],staerken:[],berufserfahrung:[],interessen:[]}:
+   {schule:[],staerken:[],erfahrungen:[],interessen:[]},extraSkills:[],
   occupations:"",region:"",level:"any",startYear:"",example:"",strictOccupation:false,strictRegion:false});
  function normalizedProfile(raw,market="apprentice"){
-  const base=initialProfile(),o=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw:{};
+  const base=initialProfile(market),o=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw:{};
   const skills=o.skills&&typeof o.skills==="object"?o.skills:{};
   const groups=market==="career"?careerSkillGroups:skillGroups;
-  for(const group of Object.keys(groups))
-   base.skills[group]=[...new Set((Array.isArray(skills[group])?skills[group]:[]).filter(s=>typeof s==="string"&&groups[group].includes(s)))];
+  for(const group of Object.keys(groups)){
+   // Early v0.2 adult profile values used UI-slot names; migrate them without loss.
+   const legacy=market==="career"&&group==="fachwissen"?"schule":
+    market==="career"&&group==="berufserfahrung"?"erfahrungen":group;
+   const selected=[...(Array.isArray(skills[group])?skills[group]:[]),
+    ...(legacy!==group&&Array.isArray(skills[legacy])?skills[legacy]:[])];
+   base.skills[group]=[...new Set(selected.filter(x=>typeof x==="string"&&groups[group].includes(x)))];
+  }
   base.extraSkills=[...new Set((Array.isArray(o.extraSkills)?o.extraSkills:[]).filter(x=>typeof x==="string").map(x=>x.trim()).filter(x=>x.length>0&&x.length<=48))].slice(0,12);
   for(const [key,max] of [["occupations",250],["region",80],["example",500]])base[key]=typeof o[key]==="string"?o[key].slice(0,max):"";
   base.level=["any","EFZ","EBA"].includes(o.level)?o.level:"any";
