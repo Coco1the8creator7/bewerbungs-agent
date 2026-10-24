@@ -336,12 +336,32 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./agency-world.css">
 <link rel="stylesheet" href="./light-earth.css">
 <link rel="stylesheet" href="./agency-theme-beige.css">
+<link rel="stylesheet" href="./mode-nav.css">
 </head>
-<body>
+<body data-active-mode="startseite">
+<div id="modeNavBackdrop" class="mode-nav-backdrop" hidden></div>
+<aside id="modeSidebar" class="mode-sidebar" aria-label="Bereichsnavigation" aria-hidden="true" inert>
+  <div class="mode-sidebar-header">
+    <div><span class="mode-sidebar-kicker">NAVIGATION</span><strong>Career.Agency</strong></div>
+    <button id="closeModeSidebar" class="mode-sidebar-close" type="button" aria-label="Menü schliessen">✕</button>
+  </div>
+  <nav class="mode-nav-links" aria-label="Career.Agency Modi">
+    <a href="#startseite" data-mode="startseite" class="mode-nav-link" aria-current="page">Startseite</a>
+    <a href="#radar" data-mode="radar" class="mode-nav-link">Radar</a>
+    <a href="#dossiers" data-mode="dossiers" class="mode-nav-link">Dossiers</a>
+    <a href="#agency" data-mode="agency" class="mode-nav-link">Agency</a>
+    <a href="#einstellungen" data-mode="einstellungen" class="mode-nav-link">Einstellungen</a>
+  </nav>
+  <p class="mode-sidebar-foot">Fünf Bereiche · eine Plattform.</p>
+</aside>
 <main>
-<header>
+<header class="career-app-header">
+  <button id="openModeSidebar" class="mode-menu-button" type="button" aria-controls="modeSidebar" aria-expanded="false" aria-label="Menü öffnen">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
   <div><div class="eyebrow">◈ BEWERBUNGS-AGENT / MISSION CONTROL</div><h1>Career.Agency<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben.</p></div>
 </header>
+<div id="mode-startseite" class="career-mode-view" data-mode-page="startseite">
 <section class="section" aria-labelledby="overviewTitle">
   <div class="section-heading"><h2 id="overviewTitle">Statusübersicht</h2><p>Aktueller Stand · Neue Inserate seit Besuch/Vortag</p></div>
   <div class="stats" aria-label="Kennzahlen">
@@ -423,6 +443,19 @@ header .sub,.section-heading p{color:#6b5744}
   </details>
   <p class="disclaimer">Stellen und gespeicherte Bewertungen sind öffentlich im GitHub-Repository sichtbar. GitHub-Speichern erfordert einen persönlichen Token; dieser wird nur in deinem Browser gespeichert. Auf fremden Geräten keinen Token hinterlegen.</p>
 </footer>
+</div><!-- Die bestehende CRM-Startseite bleibt unverändert. -->
+<section id="mode-radar" class="career-mode-placeholder" data-mode-page="radar" aria-labelledby="mode-radar-title" hidden>
+  <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / RADAR</span><h2 id="mode-radar-title">Radar</h2><p>Hier entsteht der Radar-Modus. Seine Oberfläche und Funktionen definieren wir separat.</p></div>
+</section>
+<section id="mode-dossiers" class="career-mode-placeholder" data-mode-page="dossiers" aria-labelledby="mode-dossiers-title" hidden>
+  <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / DOSSIERS</span><h2 id="mode-dossiers-title">Dossiers</h2><p>Hier entsteht der Dossiers-Modus. Seine Oberfläche und Funktionen definieren wir separat.</p></div>
+</section>
+<section id="mode-agency" class="career-mode-placeholder" data-mode-page="agency" aria-labelledby="mode-agency-title" hidden>
+  <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / AGENCY</span><h2 id="mode-agency-title">Agency</h2><p>Die eigenständige Modus-Oberfläche folgt später. Die bestehende Agency World bleibt erreichbar.</p><button id="modeLaunchAgency" type="button">Bestehende Agency World öffnen ↗</button></div>
+</section>
+<section id="mode-einstellungen" class="career-mode-placeholder" data-mode-page="einstellungen" aria-labelledby="mode-einstellungen-title" hidden>
+  <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / EINSTELLUNGEN</span><h2 id="mode-einstellungen-title">Einstellungen</h2><p>Hier entsteht die zentrale Einstellungsansicht. Die bisherigen Daten- und Synchronisationsfunktionen bleiben vorerst auf der Startseite.</p></div>
+</section>
 <dialog id="details" aria-labelledby="detailTitle">
   <div class="detail-top"><h2 id="detailTitle">Inserat</h2><button type="button" id="dismissDetails" class="secondary compact-button" aria-label="Detailansicht schliessen">✕</button></div><p id="detailMeta" class="muted"></p>
   <section class="dialog-field" aria-label="Stellenbeschreibung"><div id="detailDescription"></div></section>
@@ -1397,6 +1430,11 @@ el("loadGithubFeedback").addEventListener("click",async()=>{
 
 function updateFloatingSaveVisibility(){
  const main=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback");
+ if(document.body.dataset.activeMode!=="startseite"){
+  floating.hidden=true;
+  el("floatingSaveStatus").hidden=true;
+  return;
+ }
  if(!main||!floating||typeof main.getBoundingClientRect!=="function")return;
  const rect=main.getBoundingClientRect();
  floating.hidden=!shouldShowFloatingSave(window.scrollY||0,rect,window.innerHeight||0,!!document.querySelector("dialog[open]"));
@@ -1562,5 +1600,6 @@ document.addEventListener("close",updateFloatingSaveVisibility,true);
 updateFloatingSaveVisibility();
 initialize();
 </script>
+<script src="./mode-nav.js"></script>
 </body>
 </html>
