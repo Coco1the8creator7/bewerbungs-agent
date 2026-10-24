@@ -29,8 +29,8 @@ class DashboardContractTests(unittest.TestCase):
         self.assertIn('margin-top:auto', css)
         self.assertNotIn('pages.length!==modes.size', js)
         self.assertIn('pages.map(page=>page.dataset.modePage)', js)
-        self.assertRegex(html, r'href="\\./mode-nav\\.css\\?v=[^"]+"')
-        self.assertRegex(html, r'src="\\./mode-nav\\.js\\?v=[^"]+"')
+        self.assertRegex(html, r'href="\./mode-nav\.css\?v=[^"]+"')
+        self.assertRegex(html, r'src="\./mode-nav\.js\?v=[^"]+"')
         for mode in modes:
             self.assertIn(f'data-mode-page="{mode}"', html)
 
