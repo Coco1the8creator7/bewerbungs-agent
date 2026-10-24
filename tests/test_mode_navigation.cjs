@@ -6,7 +6,7 @@ const vm=require("node:vm");
 const html=fs.readFileSync("dashboard/index.html","utf8");
 const css=fs.readFileSync("dashboard/mode-nav.css","utf8");
 const js=fs.readFileSync("dashboard/mode-nav.js","utf8");
-for(const name of ["startseite","radar","dossiers","agency","einstellungen"]){
+for(const name of ["startseite","radar","dossiers","agency","profil","einstellungen"]){
  assert.match(html,new RegExp('data-mode="'+name+'"'));
  assert.match(html,new RegExp('data-mode-page="'+name+'"'));
 }
@@ -36,11 +36,11 @@ function fakeElement(data={}){
   focus(){doc.activeElement=this;}
  };
 }
-const links=["startseite","radar","dossiers","agency","einstellungen"].map(mode=>{
+const links=["startseite","radar","dossiers","agency","profil","einstellungen"].map(mode=>{
  const e=fakeElement({mode});e.textContent=mode;
  return e;
 });
-const pages=["startseite","radar","dossiers","agency","einstellungen"].map(mode=>fakeElement({modePage:mode}));
+const pages=["startseite","radar","dossiers","agency","profil","einstellungen"].map(mode=>fakeElement({modePage:mode}));
 const menu=fakeElement(),toggle=fakeElement(),close=fakeElement(),backdrop=fakeElement();
 const launch=fakeElement(),oldAgency=fakeElement();
 let agencyOpens=0;
@@ -87,9 +87,19 @@ win.location.hash="#agency";
 windowHandlers.get("hashchange")();
 launch.fire("click");
 assert.equal(agencyOpens,1);
+win.location.hash="#profil";
+windowHandlers.get("hashchange")();
+assert.equal(doc.body.dataset.activeMode,"profil");
+assert.equal(pages.filter(x=>!x.hidden)[0].dataset.modePage,"profil");
+assert.equal(links[4].getAttribute("aria-current"),"page");
+win.location.hash="#einstellungen";
+windowHandlers.get("hashchange")();
+assert.equal(doc.body.dataset.activeMode,"einstellungen");
+assert.equal(pages.filter(x=>!x.hidden)[0].dataset.modePage,"einstellungen");
+assert.equal(links[5].getAttribute("aria-current"),"page");
 win.location.hash="#unbekannt";
 windowHandlers.get("hashchange")();
 assert.equal(doc.body.dataset.activeMode,"startseite");
 assert.ok(scrolled>=3);
 assert.ok(scrollEvents>=4);
-console.log("Five-mode sidebar checks passed");
+console.log("Six-mode sidebar checks passed");
