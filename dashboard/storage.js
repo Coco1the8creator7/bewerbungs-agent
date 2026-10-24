@@ -6,7 +6,7 @@
   const DB_NAME = "bewerbungs-agent-local-v1";
   const STORE = "snapshots";
   const KEY = "current";
-  const LAST_VISIT_KEY = "last-dashboard-visit"; // Only an ISO timestamp; not job or applicant data.
+  const RADAR_KEY = "radar-prototype-v1"; // Private, opt-in and isolated from legacy CRM/feedback.\n  const LAST_VISIT_KEY = "last-dashboard-visit"; // Only an ISO timestamp; not job or applicant data.
   let opening = null;
 
   function connect() {
@@ -45,6 +45,9 @@
     save: snapshot => operation("readwrite", store => store.put(snapshot, KEY)),
     // Anonymous UI timestamp used solely to compare new job imports across visits.
     loadLastVisit: () => operation("readonly", store => store.get(LAST_VISIT_KEY)),
+    loadRadar: () => operation("readonly", store => store.get(RADAR_KEY)),
+    saveRadar: value => operation("readwrite", store => store.put(value, RADAR_KEY)),
+    clearRadar: () => operation("readwrite", store => store.delete(RADAR_KEY)),
     recordVisit: timestamp => {
       if (typeof timestamp !== "string" || !Number.isFinite(Date.parse(timestamp))) {
         return Promise.reject(new Error("Ungültiger Besuchszeitpunkt."));
@@ -54,7 +57,7 @@
     // Opting out of device persistence also deletes the separately stored visit timestamp.
     clear: async () => {
       await operation("readwrite", store => store.delete(KEY));
-      await operation("readwrite", store => store.delete(LAST_VISIT_KEY));
+      await operation("readwrite", store => store.delete(LAST_VISIT_KEY));\n      await operation("readwrite", store => store.delete(RADAR_KEY));
     },
   });
 })();
