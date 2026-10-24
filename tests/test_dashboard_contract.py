@@ -53,8 +53,8 @@ class DashboardContractTests(unittest.TestCase):
 
     def test_job_rating_controls_only_appear_inside_details_dialog(self):
         html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
-        cards = re.search(r"function renderNewJobs\\(\\)\\{(.*?)\\n\\}\\nfunction render\\(", html, re.DOTALL)
-        details = re.search(r"function openDetails\\(id\\)\\{(.*?)\\n\\}\\nfunction startNewJob\\(", html, re.DOTALL)
+        cards = re.search(r"function renderNewJobs\(\)\{(.*?)\n\}\nfunction render\(", html, re.DOTALL)
+        details = re.search(r"function openDetails\(id\)\{(.*?)\n\}\nfunction startNewJob\(", html, re.DOTALL)
         self.assertIsNotNone(cards, "Job-card rendering function not found")
         self.assertIsNotNone(details, "Details dialog function not found")
         self.assertNotIn("ratingPanel(", cards.group(1),
