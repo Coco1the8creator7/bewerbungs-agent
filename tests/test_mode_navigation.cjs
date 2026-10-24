@@ -12,8 +12,8 @@ for(const name of ["startseite","radar","dossiers","agency","profil","einstellun
 }
 assert.match(html,/id="openModeSidebar"/);
 assert.match(html,/id="modeSidebar"/);
-assert.match(html,/src="\.\/mode-nav\.js"/);
-assert.match(html,/href="\.\/mode-nav\.css"/);
+assert.match(html,/src="\.\/mode-nav\.js\?v=[^"]+"/);
+assert.match(html,/href="\.\/mode-nav\.css\?v=[^"]+"/);
 assert.match(html,/id="agencyWorld"/);
 assert.match(html,/id="newJobsList"/);
 assert.match(css,/\.mode-sidebar\.is-open/);
@@ -102,4 +102,18 @@ windowHandlers.get("hashchange")();
 assert.equal(doc.body.dataset.activeMode,"startseite");
 assert.ok(scrolled>=3);
 assert.ok(scrollEvents>=4);
-console.log("Six-mode sidebar checks passed");
+// Simulate a newly deployed HTML mode with stale JavaScript navigation code.
+pages.push(fakeElement({modePage:"neuer-modus"}));
+win.location.hash="#startseite";
+vm.runInNewContext(js,{document:doc,window:win,Event:class{constructor(type){this.type=type;}}});
+assert.equal(doc.body.dataset.activeMode,"startseite");
+toggle.fire("click");
+assert.equal(menu.inert,false);
+assert.equal(toggle.getAttribute("aria-expanded"),"true");
+assert.equal(backdrop.hidden,false);
+close.fire("click");
+assert.equal(menu.inert,true);
+win.location.hash="#neuer-modus";
+windowHandlers.get("hashchange")();
+assert.equal(doc.body.dataset.activeMode,"neuer-modus");
+console.log("Six-mode sidebar and deployment-mismatch checks passed");

@@ -1,18 +1,21 @@
 /* Career.Agency: shared navigation only. Individual mode UIs live elsewhere. */
 (function(){
  "use strict";
- const modes=new Set(["startseite","radar","dossiers","agency","profil","einstellungen"]);
+ // Derive routes from the current HTML instead of requiring an exact count.
+ // Cached assets may briefly disagree with the HTML after a deployment.
+ const pages=[...document.querySelectorAll("[data-mode-page]")];
+ const modes=new Set(pages.map(page=>page.dataset.modePage).filter(Boolean));
+ const fallbackMode=modes.has("startseite")?"startseite":pages[0]?.dataset.modePage;
  const menu=document.getElementById("modeSidebar");
  const toggle=document.getElementById("openModeSidebar");
  const close=document.getElementById("closeModeSidebar");
  const backdrop=document.getElementById("modeNavBackdrop");
  const links=[...document.querySelectorAll(".mode-nav-link[data-mode]")];
- const pages=[...document.querySelectorAll("[data-mode-page]")];
- if(!menu||!toggle||!close||!backdrop||pages.length!==modes.size||links.length!==modes.size)return;
+ if(!menu||!toggle||!close||!backdrop||!fallbackMode)return;
 
  const modeFromHash=()=>{
   const candidate=window.location.hash.slice(1).toLowerCase();
-  return modes.has(candidate)?candidate:"startseite";
+  return modes.has(candidate)?candidate:fallbackMode;
  };
  function setMenuOpen(open){
   menu.classList.toggle("is-open",open);
@@ -26,7 +29,7 @@
   else toggle.focus({preventScroll:true});
  }
  function showMode(mode,scrollToTop=true){
-  const selected=modes.has(mode)?mode:"startseite";
+  const selected=modes.has(mode)?mode:fallbackMode;
   document.body.dataset.activeMode=selected;
   for(const page of pages)page.hidden=page.dataset.modePage!==selected;
   for(const link of links){
