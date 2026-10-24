@@ -89,14 +89,14 @@ if (!ready) {
     if(existing && !confirm('Vorhandene private '+kind+'-Daten wirklich ersetzen? Bitte zuerst exportieren.')){
       status('Import abgebrochen.');return;
     }
-    await store.saveSnapshot(kind,payload);
+    await store.saveSnapshot(kind,payload,existing?.revision ?? null);
     byId('snapshotFile').value='';status('Privater '+kind+'-Datensatz gespeichert.');
   }));
   byId('downloadSnapshot').addEventListener('click',()=>handle(async()=>{
     const kind=byId('snapshotKind').value;
     const data=await store.loadSnapshot(kind);
     if(!data)throw Error('Noch keine Datei dieses Typs gespeichert.');
-    download('career-agency-'+kind+'.json',data);status('Private Datei exportiert.');
+    download('career-agency-'+kind+'.json',data.payload);status('Private Datei exportiert.');
   }));
   byId('exportAll').addEventListener('click',()=>handle(async()=>{
     download('career-agency-konto-export.json',await store.exportData());
