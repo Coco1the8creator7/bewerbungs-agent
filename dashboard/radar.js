@@ -226,6 +226,9 @@
   const adult=market()==="career";
   for(const b of root.querySelectorAll(".radar-market"))b.setAttribute("aria-pressed",String(b.dataset.market===market()));
   get("radarAudienceBadge").textContent=adult?"PERSÖNLICHER TEST · 0.2":"LEHRSTELLEN-VORSCHAU · 0.2";
+  get("radarIntro").textContent=adult?
+   "Deine bestehenden Stellenabos liefern weiterhin aktuelle Inserate. Teste hier das Radar mit deinen eigenen Stellen.":
+   "Entdecke deine Stärken, Wunschberufe und spätere Lehrstellenquellen. Noch im Prototyp ohne eigenständigen Lehrstellenimport.";
   get("radarSegmentLabel").textContent=adult?"Davon im CRM sichtbar":"Mögliche Lehrstellen";
   get("radarSegmentHint").textContent=adult?"Bestehende CRM-Anzeigeregeln · kein Importfilter":
    "Im Titel als Lehrstelle erkannt, noch nicht geprüft";
