@@ -10,7 +10,7 @@ function response(status:number,body:Record<string,unknown>,origin:string|null){
     'Access-Control-Allow-Methods':'POST, OPTIONS'
   };
   if(origin && allowed.includes(origin))headers['Access-Control-Allow-Origin']=origin;
-  return new Response(JSON.stringify(body),{status,headers});
+  return new Response(status===204?null:JSON.stringify(body),{status,headers});
 }
 Deno.serve(async req=>{
   const origin=req.headers.get('Origin');
