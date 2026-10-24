@@ -32,7 +32,7 @@
   pending.catch(e=>message("Speichern fehlgeschlagen: "+e.message));
  }
  function changed(){
-  message(persistent?"Auf diesem Gerät gespeichert (keine Cloud-Synchronisation).":"Nur in diesem Tab · nicht dauerhaft gespeichert.");
+  message(persistent?"Wird nur auf diesem Gerät gespeichert (keine Cloud-Synchronisation).":"Nur in diesem Tab · nicht dauerhaft gespeichert.");
   persist();
  }
  function sources(){
@@ -225,7 +225,7 @@
  function renderMarket(){
   const adult=market()==="career";
   for(const b of root.querySelectorAll(".radar-market"))b.setAttribute("aria-pressed",String(b.dataset.market===market()));
-  get("radarAudienceBadge").textContent=adult?"PRIVATER TEST · 0.2":"LEHRSTELLEN-VORSCHAU · 0.2";
+  get("radarAudienceBadge").textContent=adult?"PERSÖNLICHER TEST · 0.2":"LEHRSTELLEN-VORSCHAU · 0.2";
   get("radarSegmentLabel").textContent=adult?"Davon im CRM sichtbar":"Mögliche Lehrstellen";
   get("radarSegmentHint").textContent=adult?"Bestehende CRM-Anzeigeregeln · kein Importfilter":
    "Im Titel als Lehrstelle erkannt, noch nicht geprüft";
