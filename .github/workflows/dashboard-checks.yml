@@ -42,4 +42,7 @@ jobs:
         run: |
           node --check dashboard/agency-art.js
           node --check dashboard/agency-world.js
+          node --check dashboard/radar-model.js
+          node --check dashboard/radar.js
+          node --test tests/radar.test.cjs
           node --test tests/agency-world.test.mjs
