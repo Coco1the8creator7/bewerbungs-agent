@@ -1,0 +1,74 @@
+/* Career.Agency: shared five-mode navigation shell.
+   Keep each mode's future visual design in its own stylesheet. */
+.career-app-header{display:flex;align-items:center;gap:13px}
+.career-app-header>div{flex:1;min-width:0}
+.mode-menu-button{
+ display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;
+ padding:0;border:1px solid #d8caba;border-radius:11px;
+ background:#f4eadc;color:#524234;box-shadow:none
+}
+.mode-menu-button:hover,.mode-sidebar-close:hover{background:#eadbca;color:#352b22}
+.mode-menu-button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.mode-nav-backdrop{
+ position:fixed;inset:0;z-index:100;
+ background:rgba(33,27,22,.42)
+}
+.mode-nav-backdrop[hidden]{display:none!important}
+.mode-sidebar{
+ position:fixed;left:0;top:0;bottom:0;z-index:101;
+ width:min(308px,calc(100vw - 48px));
+ padding:calc(23px + env(safe-area-inset-top)) 17px calc(22px + env(safe-area-inset-bottom));
+ background:#fbf6ed;color:#3d3024;border-right:1px solid #dfd1bd;
+ box-shadow:12px 0 35px rgba(37,27,18,.16);
+ transform:translateX(-105%);transition:transform .2s ease;
+ display:flex;flex-direction:column;gap:24px;
+ pointer-events:none;overflow-y:auto;overscroll-behavior:contain
+}
+.mode-sidebar.is-open{transform:translateX(0);pointer-events:auto}
+.mode-sidebar-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 7px}
+.mode-sidebar-header strong{display:block;color:#3d3024;font-weight:780;font-size:1.28rem;letter-spacing:-.035em}
+.mode-sidebar-kicker,.career-mode-kicker{
+ display:block;color:#8e7962;font-size:.65rem;font-weight:750;
+ letter-spacing:.14em;margin-bottom:5px
+}
+.mode-sidebar-close{
+ display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;
+ padding:0;background:transparent;color:#574938;
+ border-radius:10px;font-size:1.15rem
+}
+.mode-nav-links{display:grid;gap:5px;align-content:start}
+.mode-nav-link{
+ display:flex;align-items:center;min-height:48px;
+ padding:11px 15px;border-radius:11px;
+ color:#554536!important;text-decoration:none!important;
+ font-size:.98rem;font-weight:650;
+ border:1px solid transparent
+}
+.mode-nav-link:hover{background:#f0e6d8;border-color:#ebdcc9}
+.mode-nav-link[aria-current="page"]{
+ background:#eae0d1;color:#3f3227!important;
+ border-color:#d8c8b1;font-weight:780
+}
+.mode-nav-link[aria-current="page"]::before{
+ content:"";width:5px;height:18px;background:#967654;border-radius:5px;
+ margin-right:11px
+}
+.mode-sidebar-foot{font-size:.74rem;color:#9b8872;margin:auto 9px 0}
+body.mode-menu-open{overflow:hidden}
+.career-mode-view[hidden],.career-mode-placeholder[hidden]{display:none!important}
+.career-mode-placeholder{min-height:55vh;padding:clamp(36px,8vh,90px) 0 80px}
+.career-mode-coming{
+ max-width:620px;margin:0 auto;padding:30px clamp(24px,4vw,48px);
+ border:1px solid #e7dccc;border-radius:16px;background:#fffaf2;
+ color:#544333
+}
+.career-mode-coming h2{font-size:clamp(1.55rem,3vw,2.2rem);margin:0 0 9px;color:#3f3327}
+.career-mode-coming p{margin:0;color:#756451;line-height:1.65;font-size:.95rem}
+.career-mode-coming button{margin-top:20px}
+@media(max-width:650px){
+ .career-app-header{gap:10px;align-items:flex-start}
+ .mode-menu-button{margin-top:2px}
+ .career-mode-placeholder{padding-top:30px}
+ .career-mode-coming{padding:27px 23px}
+}
+@media(prefers-reduced-motion:reduce){.mode-sidebar{transition:none}}
