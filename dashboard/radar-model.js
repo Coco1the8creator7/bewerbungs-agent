@@ -25,12 +25,11 @@
  const slug=s=>fold(s).replace(/[^a-z0-9]+/g,"");
  function isApprenticeship(job){
   const title=fold(job?.title);
-  const description=fold(job?.description).slice(0,2000);
   if(!title)return false;
-  // Do not classify ordinary adult vacancies simply because they mention training.
-  return /\b(lehrstelle|lehrling|lernende[rn]?|ausbildungsplatz|lehre als|apprenti\w*|apprentissage)\b/.test(title) ||
-   /\b(efz|eba)\b/.test(title) && !/\b(berufsbildner|ausbildner|leitung|projektleiter|trainer)\b/.test(title) ||
-   /\b(lehrstelle|lehrling|apprentissage)\b/.test(description) && /\b(efz|eba|lehre)\b/.test(title);
+  // Deliberately conservative: EFZ/EBA alone identifies a qualification,
+  // not an apprenticeship. Adult vacancies often require an EFZ.
+  return /\\b(lehrstelle|lehrling|lernende[rn]?|ausbildungsplatz|lehre als|apprenti\\w*|apprentissage)\\b/.test(title);
+
  }
  function startOfLocalDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();}
  function summarize(rows,now=new Date()){
