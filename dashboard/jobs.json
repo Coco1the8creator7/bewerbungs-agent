@@ -1,6 +1,974 @@
 [
   {
     "schema_version": "0.1.0",
+    "id": "job-87d50470d2fcc2c7e14496f8",
+    "source": "jobs.ch",
+    "source_job_id": "3a5227a9-8dbd-4886-b506-b7d52475581e",
+    "title": "SachbearbeiterIn Steuern/Treuhand – mit Blick in die Zukunft | Zürich",
+    "company": "Swiss CryptoTax GmbH",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/3a5227a9-8dbd-4886-b506-b7d52475581e/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": "Du bist gut in deinem Job. Aber du weisst, dass viel mehr möglich wäre.\nDu willst nicht den ganzen Tag Daten erfassen, Belege sortieren oder immer dieselben Arbeitsschritte wiederholen. Du willst dein Wissen einsetzen, Lösungen finden, Verantwortung übernehmen und am Abend wissen, wofür du gearbeitet hast.\nGenau solche Menschen suchen wir.\nWir haben eine klare Mission: Alles, was unnötig Zeit frisst, wird automatisiert. Mit KI, intelligenten Prozessen und dem Anspruch, jeden Tag besser zu werden.\nNicht irgendwann. Sondern jetzt.\nDamit unsere Mitarbeitenden mehr Zeit für das haben, was wirklich zählt: anspruchsvolle Aufgaben, persönliche Beratung und die Freude an guter Arbeit.\nDrei Unternehmen. 50 Köpfe. Keine Lust auf Stillstand.\nUnser Firmenverbund vereint drei Kompetenzbereiche:\nSwiss CryptoTax GmbH – Kryptowährungen, digitale Vermögenswerte und innovative Steuerberatung.\nLenherr & Partner AG – Steuern, Treuhand und Wirtschaftsprüfung für vermögende Privatpersonen und Unternehmen.\nINTUS AG – Treuhand, Immobilien und Architektur.\nWas uns antreibt, sind drei Werte:\nSinnhaftigkeit. Wir wollen verstehen, gestalten und etwas bewegen.\nMehrwert. Wir wollen Ergebnisse schaffen, nicht einfach Stunden füllen.\nWertschätzung. Wir setzen auf Menschen, die etwas können, etwas wollen und etwas beitragen.\nWas du bei uns bewegst.\nDu bearbeitest Steuererklärungen für natürliche und juristische Personen, führst Buchhaltungen, erstellst Jahresabschlüsse und unterstützt bei der Betreuung anspruchsvoller Mandate.\nDu denkst über deine Aufgaben hinaus, erkennst Verbesserungsmöglichkeiten und nutzt neue Technologien, um deine Arbeit intelligenter zu gestalten.\nWir suchen keine Person, die einfach Aufgaben abhakt. Wir suchen jemanden, der/die mitdenkt und Verantwortung übernimmt.\nDu passt zu uns, wenn …\ndu bereits fundierte Erfahrung im Schweizer Steuer- und Treuhandwesen mitbringst.\ndu fachlich stark bist, präzise arbeitest und hohe Ansprüche an deine eigene Leistung stellst.\ndu selbstständig denkst, Lösungen suchst und Verantwortung nicht scheust.\ndu neugierig bist, KI als Chance begreifst und bestehende Abläufe kritisch hinterfragst.\ndu nicht einfach irgendeinen Job suchst, sondern ein Umfeld, in dem du wachsen und etwas bewirken kannst.\nWas wir dir bieten.\nAnspruchsvolle Mandate. Direkte Entscheidungswege. Fachliche Vielfalt. Moderne Technologien. Persönliche Entwicklung. Und KollegInnen, die gemeinsam etwas bewegen wollen.\nBei uns zählt nicht, wie lange du an einer Aufgabe sitzt. Sondern wie gut du sie löst.\nWir bieten dir kein Umfeld, in dem du einfach funktionieren sollst. Sondern eines, in dem du dein Potenzial entfalten kannst.\nWir suchen nicht irgendwen. Wir suchen dich – wenn du mehr willst.\nMehr Verantwortung. Mehr Sinn. Mehr Möglichkeiten. Mehr Freude an deiner Arbeit.\nWeniger Müssen. Mehr Wollen.\nZeig uns, was du kannst und was dich antreibt.\nWir freuen uns auf deine Bewerbung.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-a63f9015d05236a4ca2835de",
+    "source": "jobs.ch",
+    "source_job_id": "9dc01019-0cc7-4d76-89cb-ba4f3a7ad926",
+    "title": "Servicetechniker/in Wärmepumpen - Region Zug (m/w/d) | Auch Quereinsteiger willkommen",
+    "company": "Hoval AG",
+    "location": "Feldmeilen",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/9dc01019-0cc7-4d76-89cb-ba4f3a7ad926/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [
+      "Erneuerbare Energien"
+    ],
+    "description": "Zur Verstärkung unseres Service-Teams in der Region Zug suchen wir DICH!\nAls führendes Technologieunternehmen begeistert Hoval seit Jahrzehnten mit wegweisenden Systemlösungen für Heiz- und Klimatechnik. Um unsere umfangreichen Servicedienstleistungen für unsere Kunden anbieten zu können, benötigen wir motivierte Persönlichkeiten, die ihr Wissen gezielt einsetzen.\nDu bringst technisches Verständnis mit, arbeitest gerne selbstständig und möchtest dich fachlich weiterentwickeln? Dann bist du bei uns genau richtig. Auch motivierte Quereinsteiger aus verwandten technischen Berufen sind herzlich willkommen.\nTätigkeiten:\nInbetriebnahmen von neuen Anlagen\nStörungsbehebungen bei Hoval-Wärmepumpen\nUnterhalts- und Wartungsarbeiten\nKundenberatung beim Verkauf von Serviceverträgen und Ersatzteilen\nPikettdienst, Einteilung in Absprache mit dem Team\nDie Einsätze sind jeweils ab Wohnort in die Region\nWir bieten Dir:\nVerantwortungsvolle und abwechslungsreiche Tätigkeiten\nVerkaufsprämien und attraktive Sozialleistungen\nKollegiales und hilfsbereites Team\nGezielte Einschulung in unsere Hoval-Produkte sowie laufende Fortbildungen\nMöglichkeit zur Weiterbildung als Fachmann\nGeschäftsfahrzeug sowie Laptop und Smartphone etc.\nDein Profil:\nAbgeschlossene technische Ausbildung beispielsweise als Kältemonteur, Heizungsinstallateur, Elektroinstallateur oder Automechaniker\nAbgeschlossene Ausbildung als Fachmann für Wärmesysteme von Vorteil\nErfahrung in der Regelungstechnik sowie Hydraulikkenntnisse erwünscht\nSelbstständige, zuverlässige und belastbare Persönlichkeit\nGute Kommunikations- und Verkaufsfähigkeiten\nFreude an einer regen Reisetätigkeit innerhalb der Region\nOb erfahrene Fachkraft oder motivierter Quereinsteiger mit technischem Hintergrund: Bei Hoval erwarten dich spannende Herausforderungen, ein starkes Team und attraktive Entwicklungsmöglichkeiten. Wir freuen uns darauf, dich kennenzulernen und deine vollständige Online-Bewerbung zu erhalten.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 54,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "wärmepumpe"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-c7e474a58c0559c28643ddd4",
+    "source": "jobs.ch",
+    "source_job_id": "97fed453-63ab-44c5-8f14-e5c3696114db",
+    "title": "Dipl. Pflegefachfrau / Dipl. Pflegefachmann für das NDS HF Anästhesie Pädiatrie",
+    "company": "Kinderspital Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/97fed453-63ab-44c5-8f14-e5c3696114db/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": "Dipl. Pflegefachfrau / Dipl. Pflegefachmann für das NDS HF Anästhesie Pädiatrie gesucht! Werde Teil des größten Universitäts-Kinderspitals der Schweiz.\nAufgaben\nDurchführung von Allgemeinanästhesien bei Säuglingen und Kindern.\nPraktische Weiterbildung auf der Anästhesieabteilung und im Skillslab.\nTheoretische Weiterbildung an der Z-INA in Zürich besuchen.\nFähigkeiten\nDiplom in Pflege HF oder FH und zwei Jahre Berufserfahrung erforderlich.\nFreude am Lernen und Verantwortung zu übernehmen.\nGeschick im Umgang mit Patient und Technik.\nArbeitgeber Kinderspital Zürich\nDas Kinderspital Zürich ist mit rund 3'000 Mitarbeitenden das grösste Universitäts-Kinderspital der Schweiz und eines der führenden Zentren für Kinder- und Jugendmedizin in Europa. Das Grösste am \"Kispi\" aber sind die Kleinen: Bis zu 100'000 Patientinnen und Patienten werden jährlich versorgt, in 47 Fachbereichen tun wir alles zu ihrem Wohl. Nicht nur modernste Geräte und höchste Qualität in der Behandlung werden am Kispi gross geschrieben, sondern auch ein gutes Gespür für Zwischenmenschliches. Neben dem gesamten kindermedizinischen und kinder-chirurgischen Spektrum bietet das Kinderspital auch ein einzigartiges Rehabilitationszentrum und ein Forschungszentrum.\nDeine Aufgaben\nDu führst Allgemeinanästhesien bei Säuglingen, Kindern und Jugendlichen in verschiedenen operativen Fachbereichen durch\nDu absolvierst 3 Semester des praktischen Teils der Weiterbildung auf der Anästhesieabteilung sowie im Skillslab des Kinderspitals Zürich und 1 Semester im Spital Uster\nDu besuchst die modular aufgebauten theoretischen Weiterbildungen an der Z-INA in Zürich (www.z-ina.ch)\nDein Profil\nDiplom in Pflege HF oder FH\nMindestens zwei Jahre Berufserfahrung auf einer Akutstation in der Pädiatrie\nFreude am stetigen Lernen\nBereitschaft, Verantwortung zu übernehmen und Entscheidungen zu treffen und mitzutragen\nGeschick im Umgang mit Patient und Technik\nChristoph Beyer\nBerufsbildner Pflege\n+41 44 249 40 48\nKinderspital Zürich\nLenggstrasse 30\n8008 Zürich",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-94d0109338bb059f4c8abcde",
+    "source": "jobs.ch",
+    "source_job_id": "6bdb0bcc-77c4-4ccc-bacf-3c2b93811922",
+    "title": "Anwaltsassistent:in",
+    "company": "Binder Legal KLG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/6bdb0bcc-77c4-4ccc-bacf-3c2b93811922/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-db41f62e13fad2d5c50efc53",
+    "source": "jobs.ch",
+    "source_job_id": "612a916c-4fd9-412e-bb0a-da89b98f20de",
+    "title": "Köchin/Koch Standort Triemli (befristet)",
+    "company": "Stadtspital Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/612a916c-4fd9-412e-bb0a-da89b98f20de/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": "Befristete Stelle\nStadtspital Zürich\nGemeinsam für das Wohl unserer Patient*innen.\nFür unsere Küche am Standort Triemli suchen wir, befristet ab sofort für eine halbes Jahr eine zuverlässige und engagierte Persönlichkeit.\nAufgaben\nDu bist verantwortlich für die Produktion einer bedürfnisgerechten, innovativen, gesundheitlich und hygienisch einwandfreien Patienten- wie auch Gästeverpflegung.\nMit den Waren, Lebensmitteln und andere Produkte gehst du schonend um und kochen nach neuzeitlichen Erkenntnissen sowie Kochtechniken.\nDu übertriffst die Erwartungen unserer Kundschaft.\nDu garantierst bei Bankett und Spezial-Anlässen eine hochstehende Küche und bist mitverantwortlich für Mise-en-Place sowie bei der Zusammenstellung und Zubereitung der Gerichte.\nFür Sauberkeit und Ordnung trägst du Verantwortung.\nProfil\nAbgeschlossene Lehre als Köchin bzw. Koch\nMotivation, Lust auf Neues und auf Veränderungen\nOffene Persönlichkeit mit hoher Eigenverantwortung\nsaubere, effiziente und selbständige Arbeitsweise\nWir bieten\nWir bieten dir ein sehr interessantes, vielseitiges und anspruchsvolles Aufgabengebiet in einem modernen Spitalbetrieb mit attraktiven Anstellungsbedingungen und ausgezeichneten Sozialleistungen der Stadt Zürich. Du möchtest dich einbringen, weiterentwickeln, Veränderungen anstreben und dabei einer sinnvollen Aufgabe nachgehen? Herzlich willkommen, ein sehr motiviertes und aufgeschlossenes Team mit flachen Hierarchiestufen freut sich auf deine Bewerbung!\nÜber uns\nDas Stadtspital Zürich zählt mit über 34'000 stationären und rund 436'000 ambulanten Patient*innen pro Jahr zu den Top 10 der Schweizer Spitäler. Als modernes Zentrumsspital an mehreren Standorten in der Stadt Zürich bieten wir die gesamte Bandbreite der medizinischen Grundversorgung, inklusive 24-Stunden-Notfall und Intensivmedizin an. Unsere 4'400 Mitarbeitenden setzen sich täglich mit viel Engagement und Herzblut für eine exzellente Patientenversorgung ein.\nInteressiert?\nFür weitere Informationen steht dir Olivier Kern, Fachbereichsleiter Küche, T +41 44 416 13 01, gerne zur Verfügung.\nReferenz-Nr.: 51989",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-11369d961d3af1994697af45",
+    "source": "jobs.ch",
+    "source_job_id": "2c743f5f-6fe5-452f-aae4-6278077e9524",
+    "title": "CEO (m/w/d) – Bandleader gesucht",
+    "company": "asm Fundraising AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/2c743f5f-6fe5-452f-aae4-6278077e9524/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": "Ein Dirigent steht vor dem Orchester und gibt mit dem Taktstock den Ton an. Ein Bandleader steht mittendrin, spielt selbst mit, zählt ein – und hört genau hin, wann es Zeit für das Solo der anderen ist.\nGenau diese Person suchen wir: jemanden, der unsere familiengeprägte Marketing- und Fundraising-Agentur in die nächste Generation führt. Mit Groove, mit Haltung und mit Freude am gemeinsamen Sound.\nDie Band\nDie asm Fundraising AG spielt seit mehr als 40 Jahren für Non-Profit-Organisationen, Stiftungen und öffentliche Institutionen – auf Bühnen in der ganzen Schweiz und in mehreren Sprachen. Unsere 20 Musikerinnen und Musiker beherrschen ganz unterschiedliche Instrumente: Strategie, Kreation, Daten und Fundraising.\nWas uns zusammenhält, ist kein Notenblatt, sondern eine gemeinsame Haltung. Verlässlichkeit, Respekt und der Anspruch, der Sache zu dienen, sind der Grundton, auf dem alles aufbaut. Bei der Tourplanung ist der Verwaltungsrat mit an Bord: als Sparringpartner, der zuhört, mitdenkt und den gemeinsamen Sound mitprägt.\nIhre Rolle in der Band\nDen Groove halten: Sie geben die strategische Richtung vor, denken voraus und entwickeln gemeinsam mit dem Verwaltungsrat das Repertoire unserer Agentur weiter.\nMitspielen statt dirigieren: Sie stehen mitten im Team, führen wertschätzend und umsetzungsstark und leben unsere Werte vor – aus Überzeugung, nicht aus Pflicht.\nSoli ermöglichen: Sie erkennen Talente, fördern und coachen sie, delegieren gerne und verbinden einzelne Stimmen zu neuen Klängen.\nDie Setlist zusammenstellen: Sie steuern das Kundenportfolio nach Wirtschaftlichkeit und Komplexität, gewinnen neue Mandate und erkennen, welche Stücke zusammenpassen.\nIm Takt bleiben: Sie haben Zahlen, Kennzahlen und Controlling im Griff, setzen Vertragsmodelle flexibel ein und sorgen für Strukturen, die auch ohne Sie funktionieren.\nNeue Stücke wagen: Sie hinterfragen Bestehendes, treiben die Digitalisierung voran und schaffen Raum für Improvisation – ohne den Schlussakkord aus den Augen zu verlieren.\nAuf der Bühne stehen: Sie vertreten die Agentur glaubwürdig gegen aussen und bleiben ruhig, wenn mal eine Saite reisst.\nWas Sie mitbringen\nIhr Instrumentenkoffer\nAbschluss auf Tertiärstufe (FH oder Universität), idealerweise mit CAS oder MBA\nErfahrung als Geschäftsleiter/in oder GL-Mitglied\nFundraising-Verständnis und ein Netzwerk im NPO- und Philanthropie-Bereich\nBetriebswirtschaftliche Sattelfestigkeit, Verhandlungsgeschick und Projektmanagement-Erfahrung\nDigitale Urteilskraft, die den Menschen nicht aus dem Blick verliert – mit feinem Gehör für kritische Rückfragen und Feedback\nVerständnis für das Zusammenspiel der föderalistischen Schweiz\nDeutsch und Französisch verhandlungssicher, Englisch sehr gut; Italienisch ist Ihre Zugabe\nIhr Rhythmusgefühl\nSie fühlen sich in einem Familienunternehmen zu Hause und spielen gerne im Ensemble.\nSie sind integer, loyal und verlässlich – die Musik ist wichtiger als Ihr eigener Applaus.\nSie hören zu, bevor Sie spielen: mit hoher emotionaler Intelligenz und Gespür für Konstellationen.\nSie finden den richtigen Ton für jedes Publikum – von der Bundesrätin bis zur Reinigungskraft.\nSie machen Komplexes hörbar einfach und schaffen Klarheit, wenn es laut wird.\nSie sind neugierig, mutig und holen sich Rat, wenn ein Part neu ist.\nWas wir Ihnen bieten\nIhr Platz auf der Bühne: die Mitte einer eingespielten, interdisziplinären Band\nEin Repertoire mit Sinn: Mandate für Organisationen, die Gesellschaft und Umwelt weiterbringen\nFreiraum für neue Arrangements: viel Gestaltungsfreiheit und eine sorgfältige Übergabe – die ersten Stücke spielen wir gemeinsam\nEin Proberaum mit bester Akustik: zentraler Standort in Zürich und moderne Büroinfrastruktur\nPausen zwischen den Konzerten: 5 oder 6 Wochen Ferien, damit Sie mit frischer Energie zurück auf die Bühne kommen\nEin Sound, der nachklingt – auch nach der letzten Tour: attraktive Personenversicherungen, insbesondere eine starke berufliche Vorsorge, deren Beiträge mehrheitlich wir tragen\nLust auf eine Jam-Session?\nDann zählen Sie ein: Senden Sie uns Ihre vollständigen Bewerbungsunterlagen. Gerne stehen wir Ihnen auch für ein erstes Vorgespräch zur Verfügung. Diskretion ist selbstverständlich.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 50,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "energie"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-aaf1b710fc7be2a56ae759c8",
+    "source": "jobs.ch",
+    "source_job_id": "0a911de8-2230-42df-bd52-0895276b217f",
+    "title": "SPS / PLC Programmierer (m/w/d)",
+    "company": "Rocken®",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/0a911de8-2230-42df-bd52-0895276b217f/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": "Rocken® ist ein Schweizer Unternehmen mit dem Sitz in Zürich.\nWir haben eine webbasierte Online- Plattform zur Jobsuche und Talentgewinnung entwickelt, die den\nBewerbungsprozess digitalisiert und die Unternehmung dabei unterstützt, Talente am Markt rasch zu\nerkennen und langfristig für sich zu gewinnen. Mit einem digitalen Rocken Profil kann sich jeder\nBewerber schnell und unkompliziert mit marktführenden Firmen verbinden und das Profil teilen.\nUnsere Arbeit stellt technologisch und organisch die Menschen im Mittelpunkt. Rocken® bietet\nExecutive- Search und Talent Management Beratung an, um die persönlichen und individuellen Ansprüche\njedes Einzelnen abzuholen und diese in der Personalbeschaffung und Karriereplanung optimal umzusetzen.\nSPS / PLC Programmierer (m/w/d)\nVerantwortung:\nEntwicklung und Programmierung von SPS- und PLC-Steuerungen\nErstellung von Steuerungssoftware für Maschinen und Anlagen\nInbetriebnahme und Test von Steuerungssystemen\nFehleranalyse und Behebung von Softwareproblemen\nAnpassung und Optimierung bestehender SPS-Programme\nEnge Zusammenarbeit mit dem Engineering-Team\nSicherstellung der Einhaltung von Qualitätsstandards\nDokumentation der entwickelten Softwarelösungen\nQualifikationen:\nAbgeschlossene technische Ausbildung im Bereich Elektrotechnik, Automatisierungstechnik oder vergleichbar\nFundierte Kenntnisse in der Programmierung von Steuerungen mit Siemens S7\nErfahrung in der Inbetriebnahme von Anlagen und Systemen\nKenntnisse in der Erstellung von Visualisierungen und Bedienoberflächen\nGute Englischkenntnisse in Wort und Schrift\nHohe Teamfähigkeit und Kommunikationsstärke\nBenefits:\nAttraktive Weiterbildungs- und Entwicklungsmöglichkeiten\nKomfortables Büro mit moderner Infrastruktur\nOffene Unternehmenskultur\nEingespieltes und dynamisches Team\nFlache Hierarchien\nROCKEN Jobs:\nhttps://rocken.jobs\nProfil erstellen:\nhttps://rocken.jobs/application/profil-erstellen/\nArbeitsort\nZürich\nKontakt\nBini Konxheli,\n+41443852171",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-6236ac1142896cb4693d2786",
+    "source": "jobs.ch",
+    "source_job_id": "9ec4ec3b-cbdb-40d5-abda-79a2084a6e6c",
+    "title": "Sachbearbeitung Immobilienbewirtschaftung 80-100% (m/w/d)",
+    "company": "Noldin Immobilien AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/9ec4ec3b-cbdb-40d5-abda-79a2084a6e6c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": "Die Noldin Immobilien AG ist ein Famillienunternehmen mit einem gemischten Immobilien-Portefeuille im Grossraum Zürich. Wir verwalten hauptsächlich familieneigene Liegenschaften und sind aktiv in der Entwicklung und im Bau neuer Immobilienprojekte. Für die Unterstützung des bestehenden Teams suchen wir eine Person Sachbearbeitung Immobilienbewirtschaftung 80-100% (m/w/d).\nZu Ihren Aufgaben zählen:\nUmfangreiche Unterstützung der Immobilien-Bewirtschaftung\nAdministrative Betreuung der Mietenden\nKorrespondenzen aller Art per E-Mail und brieflich\nKontierung von Kreditorenrechnungen\nBearbeitung von Mietwechsel\nKoordination von Reparaturaufträgen\nMitbetreuung der Kundenanrufe und Empfang der Kunden\nSie erfüllen folgende Anforderungen:\nErfahrung in der Sachbearbeitung Immobilienbewirtschaftung\nHohes Mass an Sozialkompetenz und Belastbarkeit\nLeistungsbereite und engagierte Persönlichkeit\nOrganisationstalent\nFähigkeiten zu vernetztem Denken und selbstständigem Arbeiten\nGute Umgangsformen und stilsicheres Deutsch\nInteresse an einer langjährigen Anstellung\nVon Vorteil sind:\nDiplom Sachbearbeiter/in Immobilienbewirtschaftung oder die Bereitschaft den Lehrgang zu absolvieren\nKaufmännische Grundausbildung\nErfahrung mit dem Betriebssystem für Immobilien RIMO R5\nFremdsprachenkenntnisse\nEs erwartet Sie eine vielseitige, anspruchsvolle und selbstständige Tätigkeit mit spannenden Aufgaben. Wir sind ein kleines und aufgestelltes Team mit kollegialem Arbeitsklima. Unsere schönen Büroräumlichkeiten befinden sich an zentraler Lage in der Nähe des Bahnhofs Wiedikon. Wir bieten Ihnen eine marktgerechte Entlöhung, eine 40-Stunden-Woche bei einem Anstellungspensum von 100% sowie die Möglichkeit, an einem Tag pro Woche im Homeoffice zu arbeiten.\nVon Vorteil können Sie die Stelle per 1. Januar 2027 oder früher antreten.\nWir freuen uns auf Ihre vollständigen Bewerbungsunterlagen.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-210ba093b6cfb2b9c16ca073",
+    "source": "jobs.ch",
+    "source_job_id": "d8d6b08f-8ba9-4d60-9346-04d2e3adc5db",
+    "title": "Mitarbeiter:in Administration und Assistenz der Geschäftsleitung (40 %)",
+    "company": "The M.-L. von Franz Institute for Studies in Synchronicity",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/d8d6b08f-8ba9-4d60-9346-04d2e3adc5db/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": "Über uns\nDie Spielzeit – Psychologie & Beratung (www.spielzeit.ch) ist eine spezialisierte psychologische und psychotherapeutische Fachstelle in Zürich. Seit über 40 Jahren begleiten wir Kinder, Jugendliche und Erwachsene mit Behinderung, Neurodiversität oder Krankheit sowie ihre Familien und Bezugspersonen.\nNeben Psychotherapie, Diagnostik und Beratung bieten wir Fachpersonen und Institutionen Fallberatungen, Supervisionen und Fortbildungen an. Die Spielzeit ist ein Projekt der gemeinnützigen Schweizer Trägerstiftung The M.-L. von Franz Institute for Studies in Synchronicity (MLFI).\nZur Ergänzung unseres Assistenzteams suchen wir per 1. Januar 2027 oder nach Vereinbarung eine zuverlässige und dienstleistungsorientierte Persönlichkeit. Du unterstützt den Geschäftsleiter der Spielzeit und des MLFI in administrativen und organisatorischen Belangen. Deine Aufgaben und Prioritäten stimmst du im Arbeitsalltag mit der bestehenden Assistenz der Geschäftsleitung (80%) ab.\nDeine Aufgaben\nZu deinen Aufgaben gehören:\nKoordination von Behandlungsterminen und Besprechungen sowie Pflege der Kalender\nBearbeitung von Anfragen sowie Führung der internen und externen Korrespondenz\nErstellung, Bearbeitung und Verwaltung von Dokumenten und Daten\nOrganisation und Koordination interner administrativer Abläufe\nVor- und Nachbereitung von SitzungenMitarbeit bei Projekten, Veranstaltungen und besonderen Anlässen\nDas bringst du mit\nAbgeschlossene kaufmännische Ausbildung oder vergleichbare Qualifikation\nBerufserfahrung in der Geschäftsleitungsassistenz oder einer anspruchsvollen Administrationsfunktion\nSehr gute und stilsichere Deutschkenntnisse in Wort und SchriftSicherer Umgang mit Microsoft 365\nStrukturierte, sorgfältige und vorausschauende Arbeitsweise sowie ausgeprägtes Organisationsgeschick\nHohes Verantwortungsbewusstsein, Zuverlässigkeit und Diskretion\nVerbindliches, dienstleistungsorientiertes Auftreten und Freude an der interdisziplinären Zusammenarbeit\nDas bieten wir dir\nEine vielseitige und verantwortungsvolle Tätigkeit\nEin wertschätzendes, kollegiales und interdisziplinäres Arbeitsumfeld\nEine sinnstiftende Aufgabe in einem spezialisierten psychologischen und gemeinnützigen Umfeld\nKurze Entscheidungswege und die Möglichkeit, interne Abläufe aktiv mitzugestalten\nEine sorgfältige Einführung und eine klar geregelte Zusammenarbeit im Assistenzteam\nEinen gut mit öffentlichen Verkehrsmitteln erreichbaren Arbeitsplatz in Zürich\nPensum und Arbeitstage\nDas Arbeitspensum beträgt 40 % und verteilt sich auf zwei feste Arbeitstage pro Woche: Freitag sowie einen weiteren, gemeinsam festgelegten Arbeitstag am Dienstag, Mittwoch oder Donnerstag.\nArbeitsort\nArbeitsort ist die Spielzeit an der Spyristrasse 7 in 8044 Zürich. Die Tätigkeit wird vollständig vor Ort ausgeübt; Homeoffice ist für diese Position nicht vorgesehen.\nDeine Bewerbung\nHaben wir dein Interesse geweckt? Dann freuen wir uns auf deine vollständigen Bewerbungsunterlagen per E-Mail an: Rilana Trachsel, Assistenz der Geschäftsleitung.\nSpielzeit Psychologie & Beratung\nSpyristrasse 7 / CH-8044 Zürich",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 40,
+    "workload_pct_max": 40,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-64cfc7ece7302b246c5b6046",
+    "source": "jobs.ch",
+    "source_job_id": "4aaaa569-b27d-4a7c-b4d3-d5a59902bfeb",
+    "title": "Projektleiter/in AVOR im Geschäftskundenbereich",
+    "company": "4B AG",
+    "location": "Adliswil",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/4aaaa569-b27d-4a7c-b4d3-d5a59902bfeb/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-957f8e5213e6557e3e35ab3f",
+    "source": "jobs.ch",
+    "source_job_id": "0a77d766-1f49-483b-86fd-8548bdd7be19",
+    "title": "Verkäufer*in Fleisch-/Fischtheke",
+    "company": "Migros Zürich",
+    "location": "Stäfa",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/0a77d766-1f49-483b-86fd-8548bdd7be19/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-fc07dc707400274272dc2d7f",
+    "source": "jobs.ch",
+    "source_job_id": "38ac98fb-5611-4874-9784-dd98f79dadb7",
+    "title": "Fachspezialist:in Baustandards Hochbau / NPK",
+    "company": "Gropag Personalmanagement GmbH",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/38ac98fb-5611-4874-9784-dd98f79dadb7/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-458d244bfb3c6e68ed733486",
+    "source": "jobs.ch",
+    "source_job_id": "c55199c2-1288-4c15-a00a-7ee3e1b377a0",
+    "title": "Fachärztin Allgemeine Innere Medizin (a) 80-100%",
+    "company": "Helsana Versicherungen AG, Zürich",
+    "location": "Bellinzona & Homeoffice",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/c55199c2-1288-4c15-a00a-7ee3e1b377a0/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": "Werde Teil der Health & Medical Service AG als Fachärztin. Flexible Arbeitszeiten und ein kollegiales Umfeld erwarten dich.\nAufgaben\nVerkehrsmedizinische Tauglichkeitsuntersuchungen durchführen\nPräventive Gesundheitschecks für individuelle Kunden anbieten\nBeratung in Arbeits-, Betriebs- und Verkehrsmedizin\nFähigkeiten\nFacharzt für Allgemeine Innere Medizin oder gleichwertig erforderlich\nHohe Dienstleistungs- und Kundenorientierung\nGute Deutsch- und Italienischkenntnisse von Vorteil\nDu punktest durch dein Verantwortungsbewusstsein und möchtest dich als Facharzt (a) in einem kollegialen Umfeld einbringen? Die Health & Medical Service AG freut sich auf deine Bewerbung. Die Hauptstandorte sind Zürich und Bern. Wir arbeiten zu den üblichen Bürozeiten, ohne Wochenendeinsätze.\nFachärztin Allgemeine Innere Medizin (a) 80-100%\nDu punktest durch dein Verantwortungsbewusstsein und möchtest dich als Facharzt (a) in einem kollegialen Umfeld einbringen? Die Health & Medical Service AG freut sich auf deine Bewerbung. Die Hauptstandorte sind Zürich und Bern. Wir arbeiten zu den üblichen Bürozeiten, ohne Wochenendeinsätze.\nWas dich erwartet\nDurchführen von verkehrsmedizinischen Tauglichkeitsuntersuchungen sowie arbeitsmedizinischen Eignungsuntersuchungen\nDurchführen von präventiven Gesundheitschecks für Individualkundinnen und -kunden, aber auch massgeschneidert für Unternehmungen, abgestimmt auf die Belastungen der jeweiligen Arbeitsplätze\nBeraten und Unterstützen unserer Kundinnen und Kunden in Fragen der Arbeits-, Betriebs- und Verkehrsmedizin\nGeregelte Arbeitszeiten ohne Pikett-, Nacht- und Wochenendarbeit\nGrosszügige Unterstützung bei Weiterbildungsangeboten, regelmässige interne Fortbildungen\nWas du mitbringst\nFacharzt/Fachärztin FMH in der Grundversorgung Allgemeine Innere Medizin, praktischer Arzt/Ärztin (oder gleichwertig anerkannter Facharzttitel) oder Arbeitsmedizin\nReisebereitschaft an unseren Nebenstandort in Bellinzona\nErfahrung in Betriebs- oder Verkehrsmedizin von Vorteil\nAusgeprägte Dienstleistungs- und Kundenorientierung sowie hohes Verantwortungsbewusstsein\nStilsicheres Deutsch sowie gute Italienischkenntnisse bzw. die Bereitschaft, vorhandene Sprachkompetenzen zu erweitern\nHast du Fragen zum Bewerbungsprozess?\nStephanie Heim 058 340 62 49 LinkedIn Job-ID: 34246\nAusgezeichnete Arbeitgeberin\nIn den Bereichen Gesundheitsförderung, Recruiting-Qualität sowie für Vereinbarkeit von Beruf und Privatleben wird Helsana immer wieder ausgezeichnet.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    },
+    "description_source": "jsonld_jobposting"
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b57878440ef811ac1beb3544",
+    "source": "jobs.ch",
+    "source_job_id": "cf53018c-35be-4748-8d2e-7f65b66d232d",
+    "title": "Lüftungstechniker:in",
+    "company": "Equans Switzerland Facility Management AG",
+    "location": "Zürich Flughafen",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/cf53018c-35be-4748-8d2e-7f65b66d232d/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-59bad505e6fbdada5534173f",
+    "source": "jobs.ch",
+    "source_job_id": "e70c62a4-17ec-4ac2-b80b-031e948f8260",
+    "title": "Kundenberater/in Rentenleistungen AHV (80%-100%)",
+    "company": "Sozialversicherungsanstalt des Kantons Zürich SVA",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/e70c62a4-17ec-4ac2-b80b-031e948f8260/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 80,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-fe783912f0156e6acabd7686",
+    "source": "jobs.ch",
+    "source_job_id": "0e1d9338-55e6-4a44-9e2d-69a2ca37e8a9",
+    "title": "Teamleiter:in / Bauingenieur:in Hochbau 80-100%",
+    "company": "CSD INGENIEURE",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/0e1d9338-55e6-4a44-9e2d-69a2ca37e8a9/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-67a12be091702fc42af6fbe1",
+    "source": "jobs.ch",
+    "source_job_id": "9ee59af3-057a-4dcc-a550-1930bcb28fcb",
+    "title": "Planungsleiter/in Immobilienentwicklung Zürich",
+    "company": "HRS Real Estate AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/9ee59af3-057a-4dcc-a550-1930bcb28fcb/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-a70769bc54374326797d4e27",
+    "source": "jobs.ch",
+    "source_job_id": "12934838-2814-4270-ab62-c66a36829eae",
+    "title": "Bau- & Projektleiter*in - der Job für echte Bauprofis",
+    "company": "TEAMGOLD AG",
+    "location": "Zumikon",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/12934838-2814-4270-ab62-c66a36829eae/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-e8d73bca05f19f114ea2d37f",
+    "source": "jobs.ch",
+    "source_job_id": "7ac155ed-4142-4702-9a24-92e90e16237a",
+    "title": "Product Expert/Verkaufsassistent 100% (m/w)",
+    "company": "Mercedes-Benz Automobil AG (Merbag)",
+    "location": "Adliswil",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/7ac155ed-4142-4702-9a24-92e90e16237a/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-e60880906b05f02b66d9df3d",
+    "source": "jobs.ch",
+    "source_job_id": "db051719-0179-4dc5-878a-36197be54576",
+    "title": "Bauleiter:in Elektro 80-100% - Zürich",
+    "company": "AFRY Schweiz AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/db051719-0179-4dc5-878a-36197be54576/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-c383d348f5591a4ec2a3c245",
+    "source": "jobs.ch",
+    "source_job_id": "465a3f28-8591-425f-b97d-647a53ae4929",
+    "title": "Leiter*in Gruppe Werkstatt Stadtreinigung",
+    "company": "ERZ Entsorgung + Recycling Zürich",
+    "location": "Wallisellen",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/465a3f28-8591-425f-b97d-647a53ae4929/",
+    "published_at": null,
+    "first_seen_at": "2026-10-25T06:03:28+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
     "id": "job-2b21fec80fa1c8a257d64a48",
     "source": "jobs.ch",
     "source_job_id": "d3ee334e-3c34-4d1c-858f-5c233ba27d74",
@@ -1695,7 +2663,7 @@
     "first_seen_at": "2026-10-23T05:09:11+00:00",
     "last_seen_at": "2026-10-23T05:09:11+00:00",
     "categories": [],
-    "description": null,
+    "description": "BAULEITER:IN HOCHBAU\n100 % | Zürich und Grossraum Zürich\nGestalte mit uns den Aufbau von LeitWerk Suisse und übernimm Verantwortung für anspruchsvolle Hochbauprojekte in der Schweiz.\nAls Teil der LeitWerk Gruppe gestalten und steuern wir anspruchsvolle Bauprojekte. Dabei verbinden wir die Nähe, Entscheidungsstärke und Marktkenntnis eines Schweizer Unternehmens mit der Erfahrung und dem fachlichen Netzwerk einer etablierten Unternehmensgruppe.\nUnsere Schwerpunkte liegen im Bau- und Projektmanagement. Dabei steuern wir Projekte ganzheitlich, von der Projektvorbereitung sowie Ausschreibung und Vergabe über die Projekt- und Bauleitung, die Kosten-, Termin- und Qualitätssteuerung bis zur Übergabe.\nFür den weiteren Ausbau unseres Standorts in Zürich suchen wir eine Persönlichkeit, die Verantwortung übernimmt, mit uns weiter wächst und die Entwicklung von LeitWerk Suisse aktiv mitgestaltet.\nDeine Aufgaben\nEigenständige Projekt- und Bauleitung anspruchsvoller Hochbauprojekte, insbesondere in der Ausführungsphase\nVertretung der Interessen der Bauherrschaft gegenüber Planenden, Unternehmen und weiteren Projektbeteiligten\nSteuerung und Überwachung von Kosten, Terminen und Qualität\nKoordination der Unternehmer, Fachplanenden und internen Projektbeteiligten\nVorbereitung, Leitung und Protokollierung von Bau- und Projektbesprechungen\nKontrolle der Ausführung auf Übereinstimmung mit Plänen, Verträgen, Normen und Qualitätsvorgaben\nMitwirkung bei Ausschreibungen, Vergaben, Rechnungsprüfung sowie Nachtrags- und Änderungsmanagement\nBegleitung von Abnahmen, Mängelmanagement, Inbetriebnahmen und Projektübergaben\nSicherstellung einer klaren Dokumentation und verlässlichen Kommunikation mit der Bauherrschaft\nDas bringst du mit\nAusbildung: Studium in Bauingenieurwesen oder Architektur, Ausbildung als dipl. Bauleiter:in, Techniker:in oder eine vergleichbare Qualifikation\nErfahrung: Mehrjährige Berufserfahrung in der Bauleitung oder im Baumanagement von Hochbauprojekten in der Schweiz\nSchweizer Baupraxis: Gute Kenntnisse der relevanten Schweizer Normen, insbesondere SIA, sowie der örtlichen Prozesse und Projektkultur\nProjektsteuerung: Sicherheit im Umgang mit Kosten, Terminen, Qualität, Ausschreibung, Vergabe und Nachtragsmanagement\nPersönlichkeit: Verbindliches Auftreten, Durchsetzungsvermögen, Verantwortungsbewusstsein und Freude an Zusammenarbeit\nArbeitsweise: Selbstständig, vorausschauend, strukturiert und lösungsorientiert\nSprache: Sehr gute Deutschkenntnisse in Wort und Schrift; weitere Landessprachen sind willkommen\nDas bieten wir dir\nGestaltungsspielraum Du wirkst am Aufbau und an der Entwicklung von LeitWerk Suisse aktiv mit und kannst Prozesse sowie Zusammenarbeit mitprägen.\nSpannende Projekte Du übernimmst Verantwortung in anspruchsvollen Hochbauprojekten mit sichtbarem Ergebnis.\nStarke Gruppe Du profitierst vom fachlichen Austausch, von Standards und vom Netzwerk der LeitWerk Gruppe.\nPersönliches Onboarding Wir sorgen für eine strukturierte Einarbeitung und eine enge Begleitung beim Start.\nFlexible Arbeitsgestaltung Moderne Arbeitsmittel und flexible Arbeitszeiten schaffen passenden Spielraum.\nZeitgemässe Anstellungsbedingungen Wir bieten eine faire, marktgerechte Vergütung sowie attraktive Sozial- und Versicherungsleistungen. Urlaub gestaffelt bis 30 Arbeitstage\nVerpflegungsbenefit Mit Lunch-Checks unterstützen wir deine Verpflegung im Arbeitsalltag.\nWeiterentwicklung Fachliche Schulungen, Workshops und Entwicklungsmöglichkeiten innerhalb der LeitWerk Gruppe unterstützen deinen nächsten Schritt.\nTeam und Netzwerk Regelmässiger fachlicher Austausch sowie gemeinsame Events stärken die\nZusammenarbeit über Standorte hinweg.\nPasst das zu dir?\nDann freuen wir uns darauf, dich kennenzulernen. Sende uns deine Bewerbungsunterlagen oder melde dich unkompliziert für ein erstes Gespräch.\nAnsprechpartnerin: Eva Motzet",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -1724,7 +2692,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -3814,7 +4783,7 @@
     "url": "https://www.jobs.ch/de/stellenangebote/detail/c34c4330-1bb4-4764-9110-9dbdab9a4fd7/",
     "published_at": null,
     "first_seen_at": "2026-10-21T05:15:53+00:00",
-    "last_seen_at": "2026-10-21T05:15:53+00:00",
+    "last_seen_at": "2026-10-25T06:03:28+00:00",
     "categories": [],
     "description": "ewz ist seit über 130 Jahren täglich dynamisch und visionär unterwegs. Ob nachhaltige Energieproduktion, smarte Energielösung oder innovative Vernetzungstechnologie: Entwickle mit uns heute, was morgen wichtig ist.\nDafür setzt du deine Energie ein\nFür 12 Monate wirkst du im Project Management Office (PMO) an Initiativen zur Weiterentwicklung unseres Projektmanagements mit.\nDu optimierst unser Projektmanagement-Portal und entwickelst unsere Projektvorlagen weiter.\nDu sammelst praktische Erfahrung im Projektmanagement und lernst Prozesse und Methoden kennen.\nVon der Planung bis zur Durchführung gestaltest du unsere Projektmanagement-Netzwerkveranstaltungen aktiv mit.\nDu arbeitest in Digitalisierungsprojekten mit und unterstützt unsere Projektleitenden bei der Umsetzung ihrer Projekte.\nDas bringst du mit\nDu studierst Informatik, Wirtschaft, Ingenieurwissenschaften oder einen vergleichbaren Studiengang.\nDu kennst bereits Projektmanagement-Methoden und möchtest diese in der Praxis anwenden und vertiefen.\nMit deiner offenen und kontaktfreudigen Art gehst du aktiv auf Menschen zu und schätzt den persönlichen Austausch.\nDank deiner schnellen Auffassungsgabe und konzeptionellen Fähigkeiten bringst du Ideen auf den Punkt und setzt diese gerne in die Praxis um.\nDie Zusammenarbeit mit unterschiedlichen Anspruchsgruppen bereitet dir Freude und du bringst deine Ideen aktiv ein.\nVielfalt bereichert und bringt uns weiter. Wir begrüssen Bewerbende aus verschiedenen Kulturen, Generationen, mit unterschiedlichen Werten und Einstellungen und setzen uns für Chancengleichheit jeden Geschlechts sowie jeder sexuellen Orientierung ein.\nDein Arbeitsort\nTramstrasse 35\n8050 Zürich\nFür Personaldienstleister\nFür diese Stelle nehmen wir keine Dossiers von Personaldienstleister entgegen.\nDas hast du dir verdient\nMehr Energie für dein Leben:\nDurch mobiles Arbeiten, flexible Arbeitsmodelle und Teilzeitmöglichkeiten kannst du deine Arbeitszeit aktiv mitgestalten und sie so einteilen, wie sie am besten zu deinem Leben passt. Du kannst beispielsweise bis zu 2 Wochen zusätzliche Ferien einkaufen und auf allen Stufen Teilzeit arbeiten. Auch Jobsharing/-splitting und unbezahlter Urlaub sind bei uns natürlich möglich.\nEine Investition in deine Zukunft:\nWir legen nicht nur Wert darauf, faire und transparente Löhne zu zahlen, sondern stellen auch sicher, dass dir von deinem Lohn mehr übrigbleibt. Wir übernehmen 60% der Sparbeiträge und bieten zusätzlich einen überobligatorischen Zins auf das angesparte Kapital.\nNachhaltig und vergünstigt reisen:\nMit dem Mobilitätsbeitrag von bis zu 600 Franken im Jahr reist du günstig und nachhaltig – egal, ob du mit dem Velo durch Zürich radeln oder mit dem Zug die Schweiz erkunden willst.\nEin Energieschub für deine Freizeit:\nWir zahlen dir monatlich 100 Franken auf deine Lunch-Check Karte ein. Zudem profitierst du jährlich von weiteren Fringe Benefits im Wert von 150 Franken und von attraktiven Handyabos.\nEntwicklung und Weiterbildung:\nMit unserem Talentmanagement fördern wir deine Entwicklung gezielt – durch vielfältige interne und externe Weiterbildungsangebote sowie spannende Entwicklungsmöglichkeiten.\nSinnhafte Arbeit:\nNachhaltigkeit und sinnstiftende Arbeit sind bei uns nicht nur Worte: Gestalte bei uns Zürich und die Zukunft mit. Setze gemeinsam mit uns Energie für ein gutes Morgen frei.\nMehr zu unseren Vorteilen\nMit deiner Power setzt du neue Energie für ein gutes Morgen frei – das belohnen wir mit spannenden Vorteilen!\nMehr erfahren\nSo lernen wir uns kennen\nBewerbung\nVirtuelles Erstgespräch\nPersönliches Zweitgespräch\nFinaler Entscheid\nHast du Fragen zum Bewerbungsprozess oder zur Stelle? Kontaktiere uns\nHendrik Wesselmann\nHochschulpraktikant HR Business Partner\nTelefonnummer\n+41 58 319 46 12\nMichael Geiger\nLeiter Proj. Solutions & Process Mgmt.\nTelefonnummer\n+41 58 319 25 63\nJetzt bewerben",
     "salary_chf_year_min": null,
@@ -4278,7 +5247,7 @@
     "first_seen_at": "2026-10-21T05:15:53+00:00",
     "last_seen_at": "2026-10-21T05:15:53+00:00",
     "categories": [],
-    "description": null,
+    "description": "WERUN ist der Laufexperte, der Performance und Lifestyle verbindet. Wir bieten mehr als klassische Beratung – bei uns triffst du auf exklusive Styles, innovative Running-Produkte und echte Leidenschaft fürs Laufen.\nDu liebst Bewegung, Stil und Kundennähe? Dann lauf mit uns los!\nWir suchen per sofort oder nach Vereinbarung:\nRunning-Verkaufsberater/in 60% und Running-Verkaufsberater/in 100%\nStandort: WERUN Sihlcity\nDein Tätigkeitsgebiet:\nPersönliche und kompetente Beratung unserer Kundinnen und Kunden – mit echtem Gespür für ihre Bedürfnisse\nDurchführung professioneller Laufschuhanalysen inklusive individueller Produktempfehlung\nAktiver Verkauf von hochwertigen Lauf- und Lifestyle-Produkten\nSorgfältige Warenannahme, Kontrolle und Präsentation im Verkaufsraum\nKassenführung sowie Unterstützung bei Lagerbewirtschaftung und Inventuren\nMitgestaltung von Events, Verkaufsaktionen und Produktplatzierungen\nDein Profil:\nAbgeschlossene Ausbildung im Detailhandel vorzugsweise im Sportbereich\nEigenständige, zuverlässige Arbeitsweise und ein hoher Qualitätsanspruch\nLeidenschaft für exzellenten Kundenservice, idealerweise mit Erfahrung im Einzelhandel (insbesondere Sport)\nTeamgeist und herausragende Kommunikationsfähigkeiten, um effektiv mit Kolleginnen und Kollegen sowie Kunden zu interagieren\nGrosse Sportbegeisterung, bestenfalls selbst sportlich aktiv\nDein Gewinn:\nEin junges, dynamisches Team mit echter Running-Leidenschaft\nFlache Hierarchien und kurze Entscheidungswege & Raum für eigene Ideen\nZentral gelegen und ausgezeichnete ÖV-Anbindungen\nAttraktive Mitarbeiter Vergünstigungen\nHaben wir Dein Interesse geweckt?\nDann freuen wir uns über dein vollständiges Bewerbungsdossier inkl. Salär Vorstellungen\nSportsystem AG\nReusssteg 9\nCH-6003 Luzern",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -4307,7 +5276,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -5843,7 +6813,7 @@
     "first_seen_at": "2026-10-19T05:02:35+00:00",
     "last_seen_at": "2026-10-19T05:02:35+00:00",
     "categories": [],
-    "description": null,
+    "description": "Wir sind eine Abteilung mit dem Schwerpunkt Hepatologie, Gastroenterologie und Endokrinologie. Wir betreuen unter anderem Patient:innen mit entzündlichen Darmerkrankungen, Stoffwechselerkrankungen sowie Patient:innen mit Leberzirrhose, die auf eine Transplantation warten.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nFaGe für die Hepatologie, Gastroenterologie und Endokrinologie 80-100%\nper sofort oder nach Vereinbarung\nDeine Hauptaufgaben\nPflege und Betreuung von Patient:innen mit hepatolgischen, gastroenterologischen und endokrinologischen Krankheitsbildern im Tandem und in enger Absprache mit einer diplomierten Pflegefachperson im Früh- und Spätdienst\nUmgang mit komplexen, sich schnell verändernden Situationen\nKoordination der Patientenbetreuung im multiprofessionellen Team\nKontinuierliche Weiterentwicklung deines Wissens und Weitergabe neuer Erkenntnisse im Team\nWas zeichnet Dich aus?\nDu bist examinierte Fachperson Gesundheit oder schliesst demnächst die Ausbildung ab. Dabei konntest du erste Erfahrungen im Akutbereich machen\nDu suchst nach medizinisch komplexen Herausforderungen und schätzt die Dynamik schnell wechselnder Situationen\nDu bist verantwortungsbewusst und schätzt eine Arbeitsumgebung, die sich an klaren Richtlinien orientiert\nEnge Zusammenarbeit im Team, gegenseitige Hilfsbereitschaft und der Austausch von Wissen sind dir ein Anliegen\nUnsere Benefits\nEin dynamisches, spannendes und anspruchsvolles Arbeitsumfeld, in dem Du Deine Fachkenntnisse auf universitärem Niveau kontinuierlich weiterentwickeln kannst\nUnser Team ist nicht nur hilfsbereit, sondern auch humorvoll und bunt gemischt. Wir legen grossen Wert auf unseren Teamgeist und unterstützen uns gegenseitig\nEine positive Kultur der Zusammenarbeit mit gegenseitiger Unterstützung und Weitergabe von Wissen sind für uns zentral\nWir erkennen und fördern das Potential aller Mitarbeitenden und bieten vielseitige Entwicklungsmöglichkeiten in verschiedene Richtungen\nIn der Dienstplanung berücksichtigen wir individuelle Präferenzen und fördern damit die Vereinbarkeit von Berufs- und Privatleben\nUniversitätsspital Zürich\n8091 Zürich",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -5872,7 +6842,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -6753,7 +7724,7 @@
     "first_seen_at": "2026-10-19T05:02:35+00:00",
     "last_seen_at": "2026-10-19T05:02:35+00:00",
     "categories": [],
-    "description": null,
+    "description": "Die Klinik für Infektionskrankheiten sucht eine Pflegefachperson. Arbeiten Sie in einem spannenden Team mit vielfältigen Aufgaben!\nAufgaben\nKlinische Patientenversorgung und Studienberatung in der Sprechstunde.\nDurchführung von Impfungen und Blutentnahmen für Patienten.\nMithilfe bei der HIV-Patientenbetreuung in Studien.\nFähigkeiten\nPflegefachfrau/-mann (HF/FH) mit mehrjähriger Erfahrung.\nGute IT-Anwenderkenntnisse und Englischkenntnisse.\nStrukturierte und proaktive Arbeitsweise.\nDie Klinik für Infektionskrankheiten und Spitalhygiene leistet neben einem breiten klinischen wie auch interdisziplinären Aufgabengebiet, einen wichtigen Beitrag in der Forschung. In diesem vielschichtigen Arbeitsumfeld ist die Ambulante Sprechstunde das Herz in der ambulanten, infektiologischen Versorgung und klinischen Forschung.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nPflegefachperson (Study Nurse) für die Klinik für Infektionskrankheiten und Spitalhygiene 40%\n1. November 2026 oder nach Vereinbarung\nIhre Hauptaufgaben\nKlinische Patientenversorgung inklusive Studienberatung und -integration: Mitbetreuung von Patientinnen und Patienten in der ambulanten infektiologischen Sprechstunde\nNurse-led Impfsprechstunde: Durchführung von Blutentnahmen, Impfungen und Betreuung von Patientinnen und Patienten\nStudienpatienten: aktive Mithilfe bei der HIV-Patientenbetreuung der Schweizerischen-HIV-Kohorten-Studie (SHCS)\nInterdisziplinäre interne und externe Zusammenarbeit mit Ärztinnen und Ärzten und Pflegemitarbeitenden\nIhr Profil\nPflegefachfrau / -mann (HF/FH) mit mehrjähriger Erfahrung\nErfahrung als Study Nurse von Vorteil\nGCP-Nachweis von Vorteil\nGute IT-Anwenderkenntnisse, Office, KISIM\nSehr gute Deutsch- und gute Englischkenntnisse in Wort und Schrift, weitere Fremdsprachen von Vorteil\nStrukturierte, exakte und selbständige Arbeitsweise\nEngagierte, proaktive und kommunikative Persönlichkeit\nUnsere Benefits\nUniversitätsspital Zürich\n8091 Zürich",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -6782,7 +7753,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -7748,7 +8720,7 @@
     "first_seen_at": "2026-10-18T05:04:34+00:00",
     "last_seen_at": "2026-10-23T05:09:11+00:00",
     "categories": [],
-    "description": null,
+    "description": "Gesucht wird per sofort ein*e\nOperative*r Asset Manager*in\nDeine Aufgaben\nAnlagenspezifische Budget- und Investitionsplanung (z.B. Ersatzinvestitionen, Erweiterungs- und Optimierungsprojekte) unter Einbindung des technischen sowie kaufmännischen Betriebs und strategischem Asset Management\nÜberwachung des Sicherheits- und Notfallmanagements\nDurchführung von Analysen und Prognosen (wirtschaftlich, Szenario, Trend) zur Ermittlung des zukünftigen Bedarfs, basierend auf Betriebsdaten, technischer Expertise, kommerziellen Einblicken und Projektgeschäftsdaten\nEntwicklung und Optimierung anlagenspezifischer Instandhaltungsstrategien gemäss Lebenszyklusphase in Zusammenarbeit mit dem technischen Betrieb\nErkennung potenzieller Optimierungsmassnahmen durch Analyse von Trends und KPIs\nSystematische Auswertung und Dokumentation insbesondere grosser oder kritischer Anlagen\nVerwaltung operationeller Risiken im Zusammenhang mit Instandhaltung und Betrieb der Assets\nDein Profil\nHochschulabschluss (ETH/FH) in Ingenieurwesen oder einer vergleichbaren Fachrichtung, idealerweise mit Kenntnissen im Bereich Energieversorgung, Infrastruktur oder Gebäudetechnik\nStrategisches Denkvermögen und unternehmerisches Verständnis, insbesondere in der Bewertung von Investitionen, Instandhaltungsstrategien und Lebenszykluskosten von Anlagen\nErfahrung im Asset Management oder angrenzenden Bereichen wie Projektmanagement, Betrieb oder Instandhaltung technischer Anlagen - idealerweise im Umfeld der Energie- oder Gebäudetechnik\nAnalytische Fähigkeiten und Erfahrung in der Arbeit mit technischen und wirtschaftlichen Daten, z. B. zur Erstellung von Prognosen, Szenarien oder Risikoanalysen\nKommunikations- und Koordinationskompetenz im interdisziplinären Umfeld, verbunden mit einer selbstständigen, strukturierten und lösungsorientierten Arbeitsweise\nWas wir dir bieten\nEine aktive Rolle im Managen von Energieanlagen\nDie Chance, in einem Team gegenseitig voneinander zu profitieren und sich weiterzuentwickeln\nEin dynamisches Umfeld an der Schnittstelle von Energiewende, Infrastruktur und Optimierung\nOnline-Bewerbung\nUnser soziales Engagement\nEnergie 360° stellt allen Mitarbeitenden einen Arbeitstag pro Jahr zur Verfügung, um sich bei einer sozialen Aktivität zu engagieren. Gemeinsam setzen wir uns für eine nachhaltige Zukunft ein.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -7772,12 +8744,16 @@
       "score": null
     },
     "selection": {
-      "suggested_score": 45,
+      "suggested_score": 59,
       "version": "heuristic-v1",
-      "reason_codes": [],
+      "reason_codes": [
+        "energie",
+        "energiewende"
+      ],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
