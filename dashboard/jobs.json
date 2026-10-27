@@ -1,6 +1,791 @@
 [
   {
     "schema_version": "0.1.0",
+    "id": "job-1f87b19bc11d804f265ebf54",
+    "source": "jobs.ch",
+    "source_job_id": "ae778e11-f7be-4f1b-9ffb-63264dff7792",
+    "title": "Dipl. Pflegefachperson HF/FH oder eine Fachperson Gesundheit (m/w/d) 50-100 %",
+    "company": "Universitätsklinik Balgrist",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/ae778e11-f7be-4f1b-9ffb-63264dff7792/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": "Die Universitätsklinik Balgrist ist eine der renommiertesten orthopädischen Kliniken der Schweiz mit internationaler Anerkennung und angegliedertem Zentrum für Paraplegie.\nFür unseren Pflegepool der Orthopädie mit 6 Bettenstationen und Paraplegie mit 2 Stationen suchen wir nach Vereinbarung eine\nDipl. Pflegefachperson HF/FH oder eine Fachperson Gesundheit (m/w/d) 50-100 %\nIhre Aufgaben\nWahlweise stehen sie im Pflegepool für den Bereich Orthopädie oder für die Bereiche Paraplegie & Orthopädie zur Verfügung. Dabei übernehmen sie pflegerische Aufgaben zur Unterstützung der Pflegeteams.\nPrä- und postoperative Pflege von Patientinnen und Patienten mit Erkrankungen des Bewegungsapparates im Tandem Dipl. / FaGe\nBegleitung und Pflege von Patientinnen und Patienten der Paraplegie im Rehabilitationsprozess\nVollständige, fachgerechte Dokumentation im KISIM\nJe nach Wahl flexibler Einsatz auf allen Bettenstationen der Orthopädie und/oder Paraplegie\nIhr Profil\nAbschluss als Dipl. Pflegefachperson HF/FH oder Fachperson Gesundheit\nBerufserfahrung im Akutspital\nInteresse an abwechslungsreichen, komplexen Pflegesituationen\nSelbständige, eigenverantwortliche Arbeitsweise und ein ausgeprägtes Qualitäts- und Dienstleistungsbewusstsein\nBereitschaft, in verschiedenen Teams und bereichsübergreifend in beiden Fachgebieten zu arbeiten\nUnser Angebot\nFlexible Dienstzeiten dank Gleitzeit sowie eigenständige Dienstplanung. Sie bestimmen, wann sie arbeiten möchten\nAttraktive Vergütung: Marktgerechte Einstufung als Dipl. oder FaGe im Monatslohn mit zusätzlichen Pool-Zulagen je nach Einsatzbereich und Übernahme von Schichten\nDie Möglichkeit an einer der renommiertesten universitären Klinik mit ausgezeichnetem Ruf mitzuwirken\nEnge interprofessionelle Zusammenarbeit mit verschiedenen hochspezialisierten Teams\nÜberdurchschnittliche Förderung von Fort- und Weiterbildungen\nFahrvergünstigung von 50 % auf den ZVV-Bonuspass oder jährlichen Beitrag an ein Generalabonnement\nGeschenkter freier Tag zum Geburtstag\n20 % Rabatt in der Balgrist Apotheke AG\nArbeitsort an attraktiver Lage in Zürich mit sehr guter Anbindung an den öffentlichen Verkehr\nWeitere Vorteile sind nur einen Klick entfernt: Attraktive Angebote für unsere Mitarbeitende\nNächste Schritte\nFür weitere Auskünfte steht Ihnen Franziska Mathis-Jäggi, Bereichsleitung Pflege, Stv. Pflegedienstleitung, Telefon 044 386 32 05 gerne zur Verfügung.\nWir freuen uns auf Ihre komplette Online-Bewerbung.",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 50,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b6965bc1c7db01517a3ddf1c",
+    "source": "jobs.ch",
+    "source_job_id": "5a3dceca-9819-4e89-b0bf-d7d6640d895d",
+    "title": "ServicetechnikerIn Aufzüge (m/w/d) 80-100%",
+    "company": "Spotted",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/5a3dceca-9819-4e89-b0bf-d7d6640d895d/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": "Aufzugstechnik mit Zukunft! Dein eigener Servicekreis, Firmenwagen 24/7, innovative Anlagen & echte Entwicklungschancen. Steig ein in der Region Zürich!\nServicetechnikerIn Aufzüge (m/w/d) 80-100%\nEMCH ist seit über 140 Jahren erfolgreich in der Aufzugsbranche tätig und hat seinen Sitz in Bern. Das traditionsreiche Schweizer Familienunternehmen steht für höchste Qualität, technische Präzision und langfristige Kundenbeziehungen. Die Verbindung von Tradition und Innovation prägt die Unternehmenskultur.\nFür die Region Zürich suche ich im Auftrag motivierte Persönlichkeiten.\nDie Aufgaben:\nNach strukturierter Einarbeitung übernehmen Sie eigenverantwortlich einen festen Servicekreis\nRegelmäßige Wartung und Unterhalt von hochwertigen Aufzugsanlagen und Hebebühnen\nSchnelle und kompetente Fehleranalyse und Störungsbehebung\nDurchführung von Reparaturarbeiten direkt vor Ort\nÜbernahme von gelegentlichen Sonntags- und Pikettdiensten\nIhr Profil:\nAbgeschlossene technische Berufsausbildung (Elektriker/in, Elektromechaniker/in, Mechatroniker/in o.ä.)\nMehrjährige Berufserfahrung als Servicetechniker/in, idealerweise in der Aufzugsbranche\nSelbständige, strukturierte und zuverlässige Arbeitsweise\nAusgeprägtes kundenorientiertes Denken und professionelles Auftreten\nTechnisches Verständnis für elektromechanische Systeme\nFührerausweis Kategorie B\nDas erwartet Sie:\nFundiertes Onboarding mit erfahrenen Kollegen\nAbwechslungsreiche und technisch anspruchsvolle Aufgaben\nGezielte Weiterbildungen und Karrierechancen\nÜberdurchschnittliche Anstellungsbedingungen und Sozialleistungen\nFirmenfahrzeug zur privaten Nutzung\nWertschätzende Unternehmenskultur mit flachen Hierarchien\nKlingt das interessant für Sie? Dann freue mich noch heute auf Ihre Bewerbung!\nIsabell Wolter",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-5faaa1f0fa0369566e89f054",
+    "source": "jobs.ch",
+    "source_job_id": "7126043f-0681-4f42-9855-63d1d3c37b9d",
+    "title": "StV Fachverantwortliche/-r eSteuerbelege",
+    "company": "Kantonale Verwaltung Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/7126043f-0681-4f42-9855-63d1d3c37b9d/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": "Kanton Zürich\nFinanzdirektion\nSteueramt\nStV Fachverantwortliche/-r eSteuerbelege\n80 - 100%\nDie Schweizerische Steuerkonferenz (SSK) ist der Zusammenschluss der 26 kantonalen Steuerbehörden sowie der Eidgenössischen Steuerverwaltung (ESTV). Das Ressort Informatik der SSK (SSK IT) ist zuständig für gemeinsame Applikationen und Standards im Steuerbereich, welche von den kantonalen Steuerverwaltungen und der ESTV eingesetzt werden.\nIm Rahmen der Präsidentschaft SSK von Marina Züger, Leiterin des kantonalen Steueramts Zürich, ist das Team der SSK IT administrativ beim kantonalen Steueramt in Zürich angesiedelt. Die SSK IT ist ortsunabhängig tätig mit flexiblem Arbeitsort.\nFür den Bereich eSteuerauszug und Testing eCH-Standards suchen wir eine erfahrene, vernetzte und mitdenkende Persönlichkeit mit hoher Eigenverantwortung.\nDeine Hauptaufgaben:\nStellvertretung der Leitung des SSK-Teams eSteuerbelege bestehend aus Vertreter/-innen der Kantone und externen Partnern.\nMitwirkung bei der Weiterentwicklung der eCH-Standards, insbesondere für digitale Steuerbelege wie eCH-0196 eSteuerauszug.\nProjektleitung bei der Einführung und Umsetzung des eCH-Standards 0196 eSteuerauszug bei Banken\nUnterstützung bei der Einführung und Umsetzung der neuen eCH-Standards 0248 und 0275 bei Banken, Versicherungen, Krankenkassen und kantonalen Steuerverwaltungen\nPlanung, Durchführung und Koordination systematischer Tests inkl. Erstellung von Testkonzepten, Masterplänen und Hilfsmitteln.\nPlanung, Koordination und Austausch mit Stakeholdern wie Banken, Softwareherstellern und Steuerverwaltungen sowie externen Lieferanten.\nRegelmässige Information und Reporting an das SSK Ressort Informatik sowie an interne und externe Ansprechpartner.\nMitwirkung im Team SSK IT mit Übernahme unterstützender Tätigkeiten.\nDein Profil:\nMasterabschluss in Volks- oder Betriebswirtschaft oder Informatik oder gleichwertige Ausbildung\nMuttersprache Deutsch oder Französisch, mit sehr guten Kenntnissen der jeweils anderen Sprache (C1-C2) sowie Englisch (B2-C1)\nMehrjährige Erfahrung im Bereich steuerliche Bewertung von Wertschriften, idealerweise in der steuerlichen Prüfung von Wertschriftenverzeichnissen oder der Umsetzung des eSteuerauszugs.\nErfahrung in der Leitung eines Fachbereichs mit einem interdisziplinären Team und der Koordination mit externen Stakeholdern und Lieferanten\nAusgeprägte Kommunikations- und Koordinationsfähigkeiten\nStrukturierte, selbstständige und lösungsorientierte Arbeitsweise – auch im Homeoffice\nReisebereitschaft innerhalb der Schweiz\nDein neues Umfeld:\nMöchtest du deine Fähigkeiten in einem komplexen Umfeld einsetzen und diesen Bereich aktiv mitprägen? Bei uns hast du die Gelegenheit dazu!\nEin erfüllendes Arbeitsumfeld mit grosser Selbstverantwortung und Gestaltungsmöglichkeiten\nDer Kanton Zürich als ein solider, fairer und verlässlicher Arbeitgeber\nAttraktive Anstellungsbedingungen wie z.B. HomeOffice, flexible Arbeitszeiten & einen modernen Arbeitsplatz.\nJetzt bewerben",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-5e4fb6c93f03f26028e64609",
+    "source": "jobs.ch",
+    "source_job_id": "23d92d18-0681-4917-a011-2ee475787e99",
+    "title": "Kundenbetreuer/in",
+    "company": "Otto Fischer AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/23d92d18-0681-4917-a011-2ee475787e99/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": "Wir sind ein führendes Grosshandelsunternehmen im elektrotechnischen Bereich mit Sitz in Zürich und suchen für unsere Abteilung Angebotsgestaltung eine versierte und motivierte Persönlichkeit als\nKundenbetreuer/in\nIhre Aufgaben\nBeratung von Kunden\nBearbeitung und Nachfassung von Offerten\nAdministrative Aufgaben\nUnterstützung unseres Aussendiensts bei Offerten und Konditionen\nIhr Profil\nTechnische Grundausbildung, vorzugsweise als Elektroinstallateur/in oder vergleichbare Ausbildung\nKaufmännische Weiterbildung von Vorteil\nRoutiniert im Umgang mit MS Office und Microsoft Dynamics 365 von Vorteil\nGute Kommunikationsfähigkeiten in Deutsch, Italienisch und Französisch\nWir bieten Ihnen\nEine spannende und vielseitige Herausforderung mit Entwicklungsmöglichkeiten\nModerne Infrastruktur und flexible Arbeitszeiten\nOptimale Zufahrtswege (Ende Autobahn A1 bzw. Tram-Haltestelle vor dem Haus)\nEinen vergünstigten Parkplatz\nEin subventioniertes Personalrestaurant\n5 Wochen Ferien\nWenn Sie sich angesprochen fühlen, freut sich Frau Eveline Jäger über Ihr komplettes Bewerbungsdossier inkl. Foto - per Post oder elektronisch auf jobs.ch .\nOtto Fischer AG\nEveline Jäger\nAargauerstrasse 2\nPostfach\n8010 Zürich",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-1e386452c537c466f0a210dd",
+    "source": "jobs.ch",
+    "source_job_id": "d8cfb04c-5d1b-4c0f-a27a-5d656decc1c2",
+    "title": "1st level Applikations-Supporter (m/w)",
+    "company": "FineSolutions AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/d8cfb04c-5d1b-4c0f-a27a-5d656decc1c2/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": "Wir sind ein etabliertes Software- und Beratungsunternehmen mit Sitz in der Stadt Zürich. Seit über 25 Jahren sind wir Spezialisten, wenn es um Zollsoftware, Zollberatung und Schulungen geht. Die Kunden kommen v.a. aus der Deutschschweiz – vom KMU bis zum internationalen KonzenKonzern – und verlassen sich auf das Know-how, die Softwarelösungen und den persönlichen Support.\nUnser Softwareteam konzipiert, verkauft, implementiert und betreut eigene und Partner-Standardsoftwarelösungen für die Import- und Exportabwicklung von anspruchsvollen Importeuren und Exporteuren aus der Industrie. Den Kunden bieten wir einen ausgezeichneten, persönlichen Service und unterstützen sie bei technischen und zollfachlichen Fragestellungen. Die Softwarelösungen werden als Ergänzung zu diversen ERP-Systemen eingesetzt. Sie sind bei rund 500 Firmen im täglichen Einsatz.\nJobbeschreibung\nSie übernehmen in einem kollegialen Team von drei Mitarbeitenden vielseitige Aufgaben rund um den Applikationssupport, wobei Ihre Hauptaufgaben die folgenden sind:\nEntgegennehmen, bearbeiten und selbstständiges Lösen von telefonischen (meistens) und elektronischen Supportanfragen der IT-Verantwortlichen (technische Fragen) und Endanwender (applikatorische)\nBei Kunden mit On-Premises-Installationen: Installieren der Software auf Kundensystemen (Remote)\nKonfigurieren und Schulen der Software oder neuer Module davon (Remote)\nEinrichten und Konfigurieren von Datenbankumgebungen (MS SQL-Server)\nNachführen unserer Online-Hilfeseiten für die Benutzer\nÜberwachen der verschiedenen Kommunikationskanäle (zum Zollrechner, zu Kurierdienstunternehmen, etc.) und unseres zentralen Versandservers sowie unserer Hostingumgebung\nPflegen der internen Wissensablage\nAnpassen von kundenspezifischen Dokumenten\nMithelfen bei Tests und Auslieferungen von Softwareversionen sowie der Neuentwicklung (Zollsuite)\nAnalysieren von Kundenanforderungen –und Wünschen\nEinrichten von Schnittstellen zu vorgelagerten ERP-Systemen\nKommunizieren mit unseren externen Softwarepartnern\nDas bringen Sie mit:\nUm das bestehende Team zu ergänzen und unseren Kunden einen Mehrwert zu bringen, verfügen Sie idealerweise über die folgenden Kenntnisse:\nKaufmännische oder technische Grundkenntnisse\nIT-Kenntnisse in der Microsoft-Welt, vor allem MS Windows Server-Betriebssysteme sowie MS SQL Server\nPerfektes Verstehen von Schweizer Deutsch («Mundart»), Sprechen in Deutsch und wenn möglich auch Basiskenntnisse in Englisch\nMithilfe bei der Besetzung der Supportdienst-Zeiten, die von 07:30 – 12:00 Uhr und von 13:00 – 17:30 dauern (nach Plan, rotierend)\nFähigkeit zum selbstständigen Arbeiten innerhalb eines Teams\nFreundliches Auftreten und Spass am persönlichen Kundenkontakt\nIhre Benefits:\nEine abwechslungsreiche Tätigkeit mit viel Eigenverantwortung.\nEin herzliches, humorvolles Team, das Sie gerne willkommen heisst.\nAttraktive Anstellungsbedingungen mit Homeoffice-Möglichkeit (2–3 Tage/Woche).\nModerne und helle Büroräumlichkeiten.\nUnd ein Unternehmen, das Qualität und Menschlichkeit vereint.\nErleben Sie einen spannenden Abschnitt unseres Unternehmens mit, weil wir begonnen haben, erste lokale Installationen unserer Lösungen ImpoWin & ExpoWin durch die neue Zollsuite abzulösen!\nEintritt\nAb 1. Dezember 2026 oder nach Vereinbarung möglich",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-cc0a47e9e6c71192da23c2f9",
+    "source": "jobs.ch",
+    "source_job_id": "b837ec90-66ad-406b-aa15-54a62e3a443e",
+    "title": "Prozessfachmann-Frau / Operational Excellence Manager (w/m/d) 100%",
+    "company": "G. Bopp & Co AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/b837ec90-66ad-406b-aa15-54a62e3a443e/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": "Präzision, die Wirkung zeigt – von der Medizintechnik bis in die Raumfahrt.\nUnsere Feinstmetallgewebe sieht man selten, ihre Wirkung ist jedoch überall spürbar. Sie kommen in Brennstoffzellen und Batterien zum Einsatz, in moderner Elektronik und Akustik, in der Wasserfiltration, der Biotechnologie sowie in der Luft- und Raumfahrt. Bei BOPP entwickeln und produzieren wir hochpräzise Feinstmetallgewebe für anspruchsvolle Anwendungen weltweit. Unsere Lösungen entstehen dort, wo es auf kleinste Details ankommt und auf Menschen, die ihr Handwerk verstehen.\nAls Verstärkung unseres Teams in Zürich Affoltern suchen wir per sofort oder nach Vereinbarung eine/n\nProzessfachmann-Frau / Operational Excellence Manager (w/m/d) 100%\nZu deinen verantwortungsvollen Aufgaben gehören unter anderem:\nAnalyse, Bewertung und Optimierung von Produktions-, Logistik- und Administrationsprozessen\nIdentifikation und Quantifizierung von Einspar- und Effizienzpotenzialen\nLeitung und Umsetzung von Lean-, KVP- und Operational-Excellence-Projekten\nDurchführung von Zeitstudien sowie REFA-Analysen\nEntwicklung und Implementierung standardisierter Prozesse und Best Practices\nDurchführung von Machbarkeitsstudien, Versuchen und Wirtschaftlichkeitsanalysen\nUnterstützung der Fachbereiche bei der nachhaltigen Verbesserung ihrer Prozesse\nDefinition, Aufbau und Weiterentwicklung von KPI-Systemen zur Prozessüberwachung\nMitarbeit bei Investitionsprojekten sowie Unterstützung neuer Produktionsanlagen vor und nach SOP\nEnge Zusammenarbeit mit Produktion, Engineering, Qualität, Logistik und Einkauf\nAnalyse, Optimierung und Standardisierung von Produktions- und Geschäftsprozessen\nAnforderungen:\nTechnische Grundausbildung mit Weiterbildung als REFA-Fachmann/-frau, Prozessfachmann/-frau, Techniker HF, Lean Manager oder vergleichbare Ausbildung\nMehrjährige Erfahrung in der Prozessoptimierung innerhalb eines industriellen Produktionsunternehmens\nSehr gute Kenntnisse in Lean Management, KVP und kontinuierlicher Verbesserung\nErfahrung im Projektmanagement sowie in der Leitung interdisziplinärer Projekte\nAnalytische, strukturierte und lösungsorientierte Arbeitsweise\nGute Kommunikationsfähigkeiten und Freude daran, Mitarbeitende für Veränderungen zu begeistern\nWir bieten:\nEine spannende, abwechslungsreiche und anspruchsvolle Tätigkeit\nEinen modernen und sicheren Arbeitsplatz in einem professionellen Umfeld, geprägt von Vertrauen und Offenheit\nSehr kurze Entscheidungswege und eine familiäre Unternehmenskultur\nEin Team, dass sich gegenseitig unterstützt und gemeinsam an Lösungen arbeitet\nIndividuelle Einarbeitung und Schulung bei Stellenantritt\nAttraktive Anstellungsbedingungen mit sicherer Vorsorgeeinrichtung\nEine Anstellung bei einem 2026 von Deloitte als «Best Managed Company» ausgezeichneten Unternehmen\nSuchst du eine besondere Herausforderung? Möchtest du in einer verantwortungsvollen Position den Erfolg unseres Unternehmens substanziell mitgestalten? Dann sende uns deine vollständigen Unterlagen noch heute zu.\nFür Auskünfte steht dir Deniz Tevs unter Tel. +41 44 377 66 41 gerne zur Verfügung.\nWeitere produkt- und firmenbezogene Auskünfte finden Sie unter www.bopp.ch.\nG. BOPP + Co. AG\nHuman Resources\nBachmannweg 21\n8046 Zürich",
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "description_source": "jsonld_jobposting",
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-c4d5c2057aa547e7298881e4",
+    "source": "jobs.ch",
+    "source_job_id": "47a37f15-bafd-4d6c-8e9c-a21419a0a675",
+    "title": "SAP PP & WM Business Analyst 100% (w/m/d)",
+    "company": "G. Bopp & Co AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/47a37f15-bafd-4d6c-8e9c-a21419a0a675/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 100,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-b809a372475dee15a9daac19",
+    "source": "jobs.ch",
+    "source_job_id": "9e076e96-fbb9-4a00-b943-f3342adb518c",
+    "title": "FaGe, MPA oder Dipl. Pflegefachperson, Klinik für Pneumologie 50%",
+    "company": "Universitätsspital Zürich",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/9e076e96-fbb9-4a00-b943-f3342adb518c/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 50,
+    "workload_pct_max": 50,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-46ff45dc0efe90b96bb1f926",
+    "source": "jobs.ch",
+    "source_job_id": "46bc035a-4ab4-4f5c-bf83-d0deb157bf14",
+    "title": "Investor German tax reporting specialist",
+    "company": "LGT Capital Partners AG",
+    "location": "Pfaeffikon (Schuetzenstrasse)",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/46bc035a-4ab4-4f5c-bf83-d0deb157bf14/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-5a2309d03f748f7322e979ee",
+    "source": "jobs.ch",
+    "source_job_id": "110b5037-94ad-42bd-8681-3a21be09b87f",
+    "title": "Junior Projektleiter:in Elektro 80-100%",
+    "company": "AW_DeutschSchweiz",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/110b5037-94ad-42bd-8681-3a21be09b87f/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-7d7d50f33c8dd2140f7f29ef",
+    "source": "jobs.ch",
+    "source_job_id": "a6572785-123c-4909-8367-936a36c5623d",
+    "title": "Projektleiter Ingenieurgeologie und Geotechnik 80-100% (m/w/d)",
+    "company": "CSD INGENIEURE",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/a6572785-123c-4909-8367-936a36c5623d/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-af229130aa5c66c80f205cb2",
+    "source": "jobs.ch",
+    "source_job_id": "c0f851f4-3d0d-4a39-867a-720a340e874a",
+    "title": "Verkaufsmitarbeiter:in (f/d/m) 60%",
+    "company": "Sato Furnishings AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/c0f851f4-3d0d-4a39-867a-720a340e874a/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 60,
+    "workload_pct_max": 60,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-e8e80308da9371bd491110f7",
+    "source": "jobs.ch",
+    "source_job_id": "f6cda30d-4f87-4ae4-a5f9-7fead2613927",
+    "title": "BAULEITER (W/M/D) 80-100%",
+    "company": "Ghisleni Partner AG",
+    "location": "Rapperswil SG",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/f6cda30d-4f87-4ae4-a5f9-7fead2613927/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": 80,
+    "workload_pct_max": 100,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-6a2d081f1cf9866a0381fc17",
+    "source": "jobs.ch",
+    "source_job_id": "a860a7e0-4eb8-4439-8bed-9071ab3f1787",
+    "title": "Dipl. Pflegefachperson HF interdisziplinär",
+    "company": "See-Spital",
+    "location": "Horgen",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/a860a7e0-4eb8-4439-8bed-9071ab3f1787/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-a02980259def2731e2f96de8",
+    "source": "jobs.ch",
+    "source_job_id": "2a950003-8f6c-4b18-b933-614228140b99",
+    "title": "Senior Consultant - Consulting - Data Management & Governance",
+    "company": "EY (Ernst & Young AG)",
+    "location": "Zurich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/2a950003-8f6c-4b18-b933-614228140b99/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-8f88e5326723bc1a47ba706b",
+    "source": "jobs.ch",
+    "source_job_id": "7fdd8ed4-6182-4f8a-85e6-8790fe1f9428",
+    "title": "Projektleitung Bauingenieurwesen",
+    "company": "Fanzun AG",
+    "location": "Zürich",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/7fdd8ed4-6182-4f8a-85e6-8790fe1f9428/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [
+      "Projektleitung"
+    ],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 57,
+      "version": "heuristic-v1",
+      "reason_codes": [
+        "projektleit"
+      ],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
+    "id": "job-9ec3afdcddff7d377ea396f6",
+    "source": "jobs.ch",
+    "source_job_id": "a87c2a61-8d6c-4602-8cca-3ab634ef0184",
+    "title": "Leitung Finanzen-Liegenschaften (GL)",
+    "company": "Stadt Dübendorf",
+    "location": "Dübendorf",
+    "remote_mode": "unknown",
+    "url": "https://www.jobs.ch/de/stellenangebote/detail/a87c2a61-8d6c-4602-8cca-3ab634ef0184/",
+    "published_at": null,
+    "first_seen_at": "2026-10-26T06:01:52+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
+    "categories": [],
+    "description": null,
+    "salary_chf_year_min": null,
+    "salary_chf_year_max": null,
+    "salary_kind": "unknown",
+    "workload_pct_min": null,
+    "workload_pct_max": null,
+    "contract_type": "unknown",
+    "provenance": {
+      "source_message_id": null,
+      "source_received_at": null,
+      "alert_name": null
+    },
+    "processing": {
+      "state": "needs_review",
+      "warnings": [
+        "Jobmail-Link; Originalseite nicht validiert"
+      ],
+      "extraction_confidence": null
+    },
+    "matching": {
+      "status": "not_run",
+      "score": null
+    },
+    "selection": {
+      "suggested_score": 45,
+      "version": "heuristic-v1",
+      "reason_codes": [],
+      "mode": "suggestion_only",
+      "exclusion": false
+    }
+  },
+  {
+    "schema_version": "0.1.0",
     "id": "job-87d50470d2fcc2c7e14496f8",
     "source": "jobs.ch",
     "source_job_id": "3a5227a9-8dbd-4886-b506-b7d52475581e",
@@ -662,7 +1447,7 @@
     "first_seen_at": "2026-10-25T06:03:28+00:00",
     "last_seen_at": "2026-10-25T06:03:28+00:00",
     "categories": [],
-    "description": null,
+    "description": "Mit Ihnen sind unsere Kundinnen und Kunden gut beraten.\nWer dem Pensionsalter entgegengeht, hofft auf eine gute Rente – und hat oft viele Fragen. Auf die gibt niemand kompetenter und freundlicher Auskunft als vielleicht bald auch Sie.\nAls AHV-Profi berechnen und verfügen Sie Altersrenten sowie Renten für Kinder, Hinterlassene und Waisen. Sie stellen sicher, dass Voraussetzungen erfüllt sind und Renten termingerecht ausbezahlt werden. Sie behalten den Überblick über die aktiven Dossiers und unternehmen bei Änderungen die richtigen Schritte. Wenn geschiedene Personen Splittinggesuche einreichen, treffen Sie die nötigen Abklärungen und teilen das Einkommen gemäss den gesetzlichen Vorgaben. Und wenn Sie fachlich mal so richtig eingefuchst sind übernehmen Sie nach Wunsch vielfältige bereichserweiternde Tätigkeiten wie beispielsweise die Rentenbuchhaltung, Qualitätskontrollen oder die Mitarbeit in Projekten.\nBei aller Fachkompetenz agieren und kommunizieren Sie stets mit Einfühlungsvermögen, denn Sie wissen, dass Ihre Zahlen und Tabellen Auswirkungen auf die Alltagssituation Ihrer Kundinnen und Kunden haben.\nVoll- oder Teilzeit, aber voller Einsatz.\nFür diese anspruchsvolle Tätigkeit bringen Sie eine kaufmännische Ausbildung, Profil M oder E, oder eine vergleichbare Handelsschulausbildung mit. Besonders beeindrucken können Sie uns mit einem Fachausweis im Bereich Sozialversicherungen oder mit der Bereitschaft, ihn zu erlangen. Arbeitserfahrung in einer komplexen administrativen Tätigkeit wird Ihnen den Einstieg bei uns sehr erleichtern.\nDank Ihrer schnellen Auffassungsgabe, Entscheidungsfreude und Empathie werden Sie rasch zu einem wertvollen Mitglied unseres Teams. Unsere Kundinnen und Kunden schätzen Sie, weil Sie erstklassige und freundliche Dienstleistungen bieten. Sie drücken sich mündlich und schriftlich gewandt aus und freuen sich über Entwicklungsmöglichkeiten in einem dynamischen Umfeld.\nMitarbeiten, gemeinsam wachsen.\nDie SVA Zürich ist das Kompetenzzentrum für Sozialversicherungen. Sie gehört zu den Top- Arbeitgebenden im Kanton und liegt in Fussdistanz zum Hauptbahnhof Zürich. Dass unsere rund 1200 Mitarbeitenden überdurchschnittlich zufrieden sind, hat gute Gründe: eine Tätigkeit, die Sinn macht, flexible Arbeitszeiten mit Home-Office, gute Sozialleistungen und eine wertschätzende Du-Kultur. Wollen Sie sich beruflich und persönlich weiterentwickeln? Herzlich willkommen bei uns!\nSie kennen die SVA Zürich nicht? Höchste Zeit, uns kennenzulernen: www.svazurich.ch/erleben\nWeitere Informationen.\nUnsere HR-Fachfrau, Lisa Rickenbacher, 044 448 55 40, gibt Ihnen gerne weitere Auskünfte.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -691,7 +1476,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -2892,7 +3678,7 @@
     "first_seen_at": "2026-10-23T05:09:11+00:00",
     "last_seen_at": "2026-10-23T05:09:11+00:00",
     "categories": [],
-    "description": null,
+    "description": "Für einen exklusiven Privathaushalt suchen wir eine zuverlässige, sorgfältige und erfahrene Bügelfee, die mit viel Liebe zum Detail und einem hohen Qualitätsanspruch für perfekt gepflegte Wäsche und Garderobe sorgt.\nTätigkeiten\nPflege der grossen und sehr anspruchsvollen Garderobe\nDie Arbeitstage sind von Mo-Fr tagsüber und ab und zu an Samstagen\nMithilfe bei weiteren anfallenden Tätigkeiten in und ums Haus: Renigung, Pflege sämtlicher Einrichtungsgegenstände, Besorgungen der täglichen Einkäufe\nGewünschte Erfahrung\nAusgewiesene Fähigkeiten als erfahrene Haushälterin in exklusiven Privathaushalten\nMindestens fünf Jahre Erfahrung in exklusiven Privathaushalten mit entsprechenden Referenzen\nOrdnungshaltung und Sauberkeit ist für Sie eine Selbstverständlichkeit\ngrosse Leidenschaft, Verantwortung und «Hands-on» Mentalität\nBereitschaft neue Arbeitsabläufe zu lernen\nhohes Dienstleistungs- und Serviceverständnis\nselbstständiges und strukturiertes Arbeiten\nIm persönlichen Umgang sind Sie jederzeit freundlich, korrekt und zuvorkommend\nGrosse Flexibilität und Einsatzbereitschaft erwünscht\nSie sprechen gut Deutsch und haben sehr gute Englischkenntnisse (oder Spanisch / Portugiesisch)\nSie sind im Besitz eines Fahrausweises (B)\nabsolute Verschwiegenheit / Diskretion, Verlässlichkeit und Loyalität\neinwandfreier Leumund / Strafregisterauszug\nClair AG\nFrau Daniela Herrmann\nHR\n0417591747\nE-Mail schreiben",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -2921,7 +3707,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -3026,7 +3813,7 @@
     "url": "https://www.jobs.ch/de/stellenangebote/detail/2b08793a-8c4e-43f4-8bc2-48cadc9eee1f/",
     "published_at": null,
     "first_seen_at": "2026-10-22T05:08:35+00:00",
-    "last_seen_at": "2026-10-22T05:08:35+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
     "categories": [
       "Projektleitung"
     ],
@@ -5291,7 +6078,7 @@
     "url": "https://www.jobs.ch/de/stellenangebote/detail/4987a77b-a171-4aad-9a9e-7514ad5049e3/",
     "published_at": null,
     "first_seen_at": "2026-10-21T05:15:53+00:00",
-    "last_seen_at": "2026-10-21T05:15:53+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
     "categories": [],
     "description": "IN A NUTSHELL\nAls Data Migration Engineer - Investment Finance verantwortest du den kritischsten Teil jedes Onboardings: die saubere Überführung der Daten aus dem Altsystem in unsere Portfolio-Management-Plattform sowie den Aufbau der täglichen Datenfeeds. Denn nur mit korrekten, vollständigen Daten liefert das System verlässliche Resultate - sie sind das Fundament für jede Portfolioverwaltung und Finanzentscheidung unserer anspruchsvollen Kund:innen.\nMit deiner einzigartigen Kombination aus Finanzwissen und technischer Expertise trägst du massgeblich dazu bei, grosse Kundenbestände erfolgreich auf die QPLIX-Plattform zu migrieren und gestaltest so die Zukunft des Wealth Managements mit.\nDEINE AUFGABEN\nEnd-to-End-Datenmigration: Du übernimmst die volle technische Verantwortung für komplexe Migrationen-Kundenstammdaten, Positions- und Transaktionsdaten sowie das Anlageuniversum\nDatenqualität: Du verantwortest Validierung, Plausibilisierung und Qualitätssicherung der migrierten Daten, inklusive Abstimmung mit den Quellsystemen\nSchnittstellen zu Depotbanken und Data Providern: Du baust und betreust die Datenanbindungen an Depotbanken und Data Provider - die täglichen Feeds, ohne die Portfolios nicht verwaltet werden können\nAutomatisierung von Teilschritten der Datenmigration\nOptimierung der Prozesse für eine bessere Skalierbarkeit von Migrationsprojekten\ndetaillierte Analyse komplexer Datensätze (z.B. Exporte aus Altsystemen) für die Übernahme ins Zielsystem\nBeratung der Projekt-Teams bei Herausforderungen in der Datenübernahme\nSchnittstelle zwischen Consultants, Entwicklungsabteilung und Kund:innen\nDEIN PROFIL\nerfolgreich abgeschlossenes Studium im Bereich (Wirtschafts-)Informatik, Finanzmathematik (oder vergleichbare Qualifikation)\nmehrjährige Erfahrung in der Analyse, Aufbereitung und Übernahme grosser Datenmengen, idealerweise in der Finanzbranche\nfundiertes Verständnis der gängigen liquiden Assetklassen (Aktien, Obligationen, Derivate etc.) sowie der zugehörigen Finanztransaktionen inkl. Corporate Actions\nsehr gute Kenntnisse in Python sowie fundierte SQL-Kenntnisse (relationale Datenbanken); Erfahrung mit dokumentenorientierten Datenbanken (z. B. MongoDB) und weiteren Sprachen von Vorteil\nausgeprägte analytische Fähigkeiten sowie strukturierte, lösungsorientierte Denkweise\nsehr gute Organisationsfähigkeit, schnelle Auffassungsgabe und eigenverantwortliche Arbeitsweise\nsorgfältiger Umgang mit sensiblen Kundendaten\nverhandlungssicher in Deutsch und Englisch (C1), weitere Landessprachen sind von Vorteil\nWARUM WIR?\nflexible Arbeitsmodelle, moderne Anstellungsbedingungen und attraktive Entwicklungsperspektiven in einem wachsenden FinTech-Umfeld\nüberdurchschnittliche Benefits inkl. aktuellem Apple- oder Android-Smartphone, individuellem Weiterbildungsbudget, Fitness-Abo und weiteren Extras\noffene Unternehmenskultur mit starkem Teamspirit, viel Eigenverantwortung und kurzen Entscheidungswegen\nzentral gelegener Standort in Zürich mit hervorragender Anbindung\nQPLIX ist ein Arbeitgeber, der die Chancengleichheit fördert. Wir glauben, dass Integration und Vielfalt der Schlüssel zu einer erfolgreichen und besseren Arbeitswelt sind.\nWenn du Freude daran hast, komplexe Vermögen in einem der modernsten Systeme am Markt abzubilden und Kund:innen mit einer pragmatischen, lösungsorientierten „can-do“-Mentalität zu begeistern, freuen wir uns auf deine Bewerbung.",
     "salary_chf_year_min": null,
@@ -5431,7 +6218,7 @@
     "url": "https://www.jobs.ch/de/stellenangebote/detail/e5197c2a-e585-4d5f-b9c3-3c64b98f529e/",
     "published_at": null,
     "first_seen_at": "2026-10-21T05:15:53+00:00",
-    "last_seen_at": "2026-10-21T05:15:53+00:00",
+    "last_seen_at": "2026-10-26T06:01:52+00:00",
     "categories": [],
     "description": null,
     "salary_chf_year_min": null,
@@ -7860,7 +8647,7 @@
     "first_seen_at": "2026-10-19T05:02:35+00:00",
     "last_seen_at": "2026-10-19T05:02:35+00:00",
     "categories": [],
-    "description": null,
+    "description": "Das Universitätsspital Zürich sucht eine*n Leitende*n Arzt*Ärztin für die Klinik für Gefässchirurgie. Eine spannende Chance in einem innovativen Umfeld.\nAufgaben\nVerantwortung für komplexe Aortenchirurgie und Standardentwicklung.\nFührung und Förderung des ärztlichen Teams sowie Expertiseweitergabe.\nEngagement in Forschung, Lehre und Prozessoptimierung.\nFähigkeiten\nFacharzttitel für Gefässchirurgie, Dr. med. und MBA oder Master.\nMehrjährige Erfahrung in komplexer Aortenchirurgie und Verfahren.\nVerhandlungssicheres Deutsch und sehr gutes Englisch.\nGestalten Sie die Zukunft der Gefässchirurgie an einem der führenden medizinischen Zentren. Die Klinik für Gefässchirurgie am Universitätsspital Zürich (USZ) steht für Innovation, Präzision und interdisziplinäre Zusammenarbeit. Zur Verstärkung unseres Führungsteams suchen wir eine Persönlichkeit, die klinische Kompetenz mit akademischem Interesse und menschlicher Integrität verbindet.\nDas Universitätsspital Zürich ist eines der grössten Spitäler in der Schweiz. Unsere über 8'600 Mitarbeitenden und rund 700 Auszubildende setzen sich täglich für das Wohl unserer Patient:innen ein.\nLeitende Ärztin / Leitender Arzt (w/m/d) mit Schwerpunkt komplexe Aortenchirurgie für die Klinik für Gefässchirurgie 80-100%\nper sofort oder nach Vereinbarung\nIhre Mission - Gestalten & Führen\nKlinische Exzellenz: Operative Mitverantwortung für das gesamte Spektrum der komplexen Aortenchirurgie (offen, endovaskulär, hybrid) und Weiterentwicklung der Standards\nTeam-Entwicklung: Supervision und Förderung des ärztlichen Teams sowie aktive Weitergabe Ihrer Expertise\nStrategische Mitwirkung: Prozessoptimierung in Ambulanz, OP und Station zur Verbesserung der Patientenversorgung\nForschung & Lehre: Engagement in Forschung, universitärer Lehre und internationalen Kongressen\nKlinik-Management: Übernahme administrativer Aufgaben und Vertretung der Klinikleitung\nIhr Profil - Visionär & Erfahren\nQualifikation: Facharzttitel für Gefässchirurgie, Dr. med. sowie MBA oder Master oder abgeschlossene oder weit fortgeschrittene Habilitation\nExpertise: Mehrjährige Erfahrung in komplexer Aortenchirurgie (insb. F-/BEVAR); fundierte Kenntnisse in offenen und hybriden Verfahren\nLeadership-Persönlichkeit: Hohe Sozialkompetenz, Teamorientierung und souveränes Auftreten auch in anspruchsvollen Situationen\nSprachkompetenz: Verhandlungssicheres Deutsch (C1) und sehr gutes Englisch für den wissenschaftlichen Austausch\nUnsere Benefits\nSpitzenmedizin: Arbeiten Sie in einem weltweit führenden Spital mit modernster endovaskulärer Technologie\nAkademische Freiheit: Inspirierendes Forschungsumfeld, das Innovationen fördert und Raum für Weiterentwicklung bietet\nLeadership & Kultur: Verantwortungsvolle Rolle in einem kollegialen, hochspezialisierten Team mit flachen Hierarchien\nStandort Zürich: Lebensqualität auf höchstem Niveau\nWerden Sie Teil unseres Teams\nSind Sie bereit für den nächsten Karriereschritt in einem Umfeld, das höchste Qualität lebt? Dann freuen wir uns über Ihre Kontaktaufnahme.\nUniversitätsspital Zürich\n8091 Zürich",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -7889,7 +8676,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -8448,7 +9236,7 @@
     "first_seen_at": "2026-10-18T05:04:34+00:00",
     "last_seen_at": "2026-10-18T05:04:34+00:00",
     "categories": [],
-    "description": null,
+    "description": "Office-Manager/-in unserer Anwaltskanzlei (50-70%)\nManagement Support, HR & Kanzleiorganisation\nGestalten Sie die Organisation unserer Kanzlei mit\nSie organisieren gerne, denken vorausschauend und haben Freude daran, unterschiedliche Themen selbständig voranzubringen? Sie behalten auch dann den Überblick, wenn mehrere Aufgaben gleichzeitig anstehen, und möchten die Organisation einer Kanzlei aktiv mitgestalten? Dann freuen wir uns, Sie kennenzulernen.\nRUOSS VÖGELE ist eine renommierte, wirtschaftsrechtlich ausgerichtete Anwaltskanzlei in Zürich. Wir beraten nationale und internationale Unternehmen, Unternehmerinnen und Unternehmer sowie Privatpersonen in rechtlichen Fragen ihrer wirtschaftlichen Tätigkeit. Auch die Prozessführung, die Schiedsgerichtsbarkeit und die Vertretung unserer Klientschaft vor Behörden gehören zu unseren Kernkompetenzen.\nZur Unterstützung unserer Geschäftsleitung und zur Weiterentwicklung unserer Kanzleiorganisation suchen wir eine engagierte und vielseitige Persönlichkeit.\nIhre Aufgaben\nManagement Support: Sie bereiten Geschäftsleitungs- und Partnersitzungen sowie die jährliche Retraite vor und übernehmen die Organisation, Traktandierung, Protokollführung und Pendenzenkontrolle.\nHuman Resources: Sie begleiten Rekrutierungsprozesse, organisieren die Einführung neuer Mitarbeitenden und unterstützen bei der Vorbereitung von Mitarbeiter- und Probezeitgesprächen sowie bei der Erstellung von Arbeitszeugnissen.\nAssistenzkoordination und Personalprozesse: Sie koordinieren die Assistenzressourcen und wirken bei der Weiterentwicklung interner Personalprozesse mit.\nSie leiten selbständig interne Projekte und optimieren Abläufe.\nSie wirken bei ICT-Projekten mit und unterstützen die Weiterentwicklung unserer digitalen Arbeitsweise.\nKommunikation und Marketing: Betreuung von Website, LinkedIn-Account und Newsletter, Kanzleipublikationen und Kanzleiratings sowie Koordination externer Dienstleister.\nIhr Profil\nKaufmännische Grundausbildung mit einer Weiterbildung, z.B. in Human Resources, Projektmanagement oder Betriebswirtschaft, oder eine vergleichbare Qualifikation\nMehrjährige Erfahrung im Management Support, Human Resources oder Office Management, idealerweise in einer Anwaltskanzlei oder einem professionellen Dienstleistungsunternehmen\nAusgeprägtes Organisationstalent sowie Erfahrung in der Koordination oder Leitung von Projekten\nVerständnis für betriebliche Zusammenhänge und administrative Abläufe\nSelbständige, strukturierte, vorausschauende und lösungsorientierte Arbeitsweise\nAbsolute Diskretion, Loyalität und Integrität im Umgang mit vertraulichen Informationen\nKommunikationsstärke, souveränes Auftreten und Freude an der Zusammenarbeit im Team\nSehr gute Deutsch- und Englischkenntnisse, sicherer Umgang mit Microsoft Office und digitalen Kommunikationskanälen sowie Interesse an neuen Technologien\nUnser Angebot\nAbwechslungsreiche und verantwortungsvolle Schlüsselfunktion in direktem Austausch mit Geschäftsleitung und Partnerschaft\nGrosser Gestaltungsspielraum bei der Weiterentwicklung unserer Kanzleiorganisation\nViel Selbständigkeit und Raum für eigene Ideen\nMotiviertes und kollegiales Team aus jungen und erfahrenen Anwälten/-innen sowie weiteren Mitarbeitenden\nAttraktiver Arbeitsplatz im Zürcher Seefeld, nur wenige Minuten vom Bahnhof Stadelhofen entfernt, mit einer modernen Infrastruktur\nMöchten Sie RUOSS VÖGELE mitgestalten?\nWir freuen uns darauf, Sie kennenzulernen!\nAnnick Rölli (HR) / Pascale Gola (Partnerin)\nRUOSS VÖGELE\nKreuzstrasse 54\nCH-8032 Zürich\nTel. 044 250 43 00\nwww.ruossvoegele.ch",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -8477,7 +9265,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -8814,7 +9603,7 @@
     "first_seen_at": "2026-10-18T05:04:34+00:00",
     "last_seen_at": "2026-10-18T05:04:34+00:00",
     "categories": [],
-    "description": null,
+    "description": "WOFÜR WIR SIE SUCHEN\nErstellen und Optimieren komplexer Prüfprogramme für AOI- und SPI-Systeme sowie technische Umsetzung von Workflows bei Änderungen\nFachliche Begleitung von Prototypenphasen und Neuanläufen zur Sicherstellung eines reibungslosen Serienstarts\nAnalyse von Abweichungen, Durchführung von Machbarkeitsprüfungen und kontinuierliche Prozessverbesserung (KVP)\nMonitoring der qualitativen und quantitativen Performance der Anlagen im gesamten Prozessverlauf\nZuverlässige Abwicklung von Aufträgen und proaktive Bereitstellung benötigter Materialien gemäss Vorgaben\nFachliche Instruktion der Kollegen in technischen Belangen sowie aktive Erarbeitung nachhaltiger Problemlösungen\nSicherstellung einer optimalen Ausrüstung und ergonomischen Arbeitsplatzumgebung für maximale Effizienz\nTransparente Dokumentation der Leistungen durch präzise Zeitverrechnung nach Verursacherprinzip\nWAS SIE MITBRINGEN SOLLTEN\nAusbildung als Elektroniker, Mechatroniker oder Mikrotechnologe; idealerweise ergänzt durch eine Weiterbildung zum Prozessfachmann (mit eidg. Fachausweis) oder Techniker HF\nEinschlägige Erfahrung in der Programmierung von AOI-/SPI-Systemen und tiefes Verständnis der SMD-Fertigung\nVerhandlungssicheres Deutsch (in Wort und Schrift) für die technische Dokumentation und Team-Instruktion\nFundierte Kenntnisse relevanter Normen (z.B. IPC-A-610) und ein ausgeprägtes Bewusstsein für sicherheitskritische Elektronik\nStrukturierte, termingerechte und zuverlässige Arbeitsweise - auch bei technologisch anspruchsvollen Neuentwicklungen\nKommunikationsstarke Persönlichkeit, die technisches Wissen gezielt weitergibt und lösungsorientiert agiert\nWAS WIR IHNEN BIETEN\nEin dynamisches Arbeitsumfeld mit spannenden Projekten\nFlexible Arbeitszeiten (Gleit- und Vertrauensarbeitszeit)\nSehr gute Sozialleistungen und eine überobligatorische Pensionskasse\nMitarbeitervorteile eines Grosskonzerns, Mitarbeiteraktienkaufprogramm\nFörderung von bedarfsgerechter Weiterbildung\nPersonalrestaurant sowie externe Verpflegungs- und Einkaufsmöglichkeiten in der Nähe\nIndividuelle interne sowie externe Personalentwicklungsmassnahmen in Zusammenarbeit mit unserer Rheinmetall-Academy\nArbeitsplatz wenige Gehminuten vom Bahnhof Zürich-Oerlikon entfernt\nKONTAKTDETAILS\nZuständiger Ansprechpartner: Christoph Badertscher\nFür Fragen zu Ihrer Bewerbung, nutzen Sie bitte das Kontaktformular.\nWir weisen darauf hin, dass Dossiers von Personalvermittlern nicht berücksichtigt werden\nRheinmetall Air Defence AG\nChristoph Badertscher",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -8843,7 +9632,8 @@
       "reason_codes": [],
       "mode": "suggestion_only",
       "exclusion": false
-    }
+    },
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -8996,7 +9786,7 @@
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
     "categories": [],
-    "description": null,
+    "description": "Elektroinstallateur:in für temporäre Anschlüsse (100 %) Kundennah, zuverlässig und qualitätsbewusst: Diesen Stärken verdanken wir unseren Erfolg. Als Querverbundunternehmen kümmern wir uns um jegliche Anliegen unserer Kundschaft zu Strom, Telekom, Gas, Wasser, Fernwärme, Kehrichtverwertung, Abwasserreinigung und Energie-Contracting; gemäss unserem Versprechen: «Wir bieten Komfort». Ob auf Baustellen oder an Veranstaltungen wie den Musikfestwochen oder dem Albanifest, Sie stellen eine zuverlässige Stromversorgung sicher. Als Teil unseres Teams Netzbetrieb Technik übernehmen Sie Verantwortung, stellen Ihr technisches Können unter Beweis und leisten einen wichtigen Beitrag zum reibungslosen Betrieb unserer Stromversorgung. Freuen Sie sich auf vielseitige Aufgaben, ein kollegiales Team und ein Arbeitsumfeld, in dem Sie was bewegen können. Ihre Aufgaben Erstellen von temporären Netzanschlüssen für Baustellen sowie temporärer elektrischer Infrastruktur für Veranstaltungen Durchführen von Erstprüfungen nach den Regeln der Technik gemäss NIN Netzabklärungen von temporären Anschlüssen sowie Planung von grösseren Anschlüssen zusammen mit dem zuständigen Fachspezialisten Verantwortlich für die Revision und Unterhalt aller Abschlusskästen sowie des Materials und aller externen Anschlüsse Stellvertretung des Vorarbeiters temporäre Stromanschlüsse Ihr Profil Abgeschlossene Ausbildung als Elektroinstallateur:in EFZ und ausgewiesene Berufserfahrung Sie sind körperlich belastbar, packen gerne mit an und schätzen die Abwechslung zwischen Arbeiten im Freien und in der Werkstatt gleichermassen Umgang mit anspruchsvollen Kunden, Flexiblität, Teamfähigkeit und hohes Sicherheits- und Risikobewusstsein Selbständige Arbeitsweise sowie Zuverlässigkeit Führerschein der Kat. B Was bieten wir Fundierte Einarbeitung in einem kleinen Team Spannende Tätigkeit in einer zukunftsorientierten und nachhaltigen Branche 5 Wochen Ferien, ab 55. Lebensjahr eine zusätzliche Woche 15 Tage bezahlter Vaterschaftsurlaub (100 % Lohn) Zeitgemässe Entlöhnung und grosszügige Weiterbildungsmöglichkeiten Kontakt Ihre Fragen zur Stelle beantwortet Ihnen gerne Emmanuel Egli, Leiter Netzbetrieb Technik, Telefon +41 52 267 60 32. Mehr erfahren? https://stadt.winterthur.ch/ und https://stadtwerk.winterthur.ch/ Wir freuen uns auf Ihre Online-Bewerbung.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -9020,15 +9810,19 @@
       "score": null
     },
     "selection": {
-      "suggested_score": 45,
+      "suggested_score": 68,
       "version": "heuristic-v1",
-      "reason_codes": [],
+      "reason_codes": [
+        "fernwärme",
+        "energie"
+      ],
       "mode": "suggestion_only",
       "exclusion": false
     },
     "url_aliases": [
       "https://publicjobs.ch/jobs/zuerich/energie-ingenieurwesen-verkehr/167211-elektroinstallateur-in-fuer-temporaere-anschluesse-100"
-    ]
+    ],
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
@@ -9344,7 +10138,7 @@
     "first_seen_at": "2026-10-17T19:23:15+00:00",
     "last_seen_at": "2026-10-17T19:23:15+00:00",
     "categories": [],
-    "description": null,
+    "description": "Strassenbauer:in / Strassenbaupraktiker:in (100%) Sie bringen eine praktische Ausbildung im Strassenbau, Teamgeist, Flexibilität und Freude an der Arbeit im Freien mit? Als Strassenbauteam im Betrieb & Unterhalt sind wir zuständig für die sichere Benützung der Infrastrukturanlagen der Stadt Winterthur. Möchten Sie aktiv zur Lebensqualität in Winterthur beitragen? Dann freuen wir uns auf Ihre Onlinebewerbung. Ihre Aufgaben Reparatur an Belägen, Randsteinen und Schächten Instandstellung von Belägen Kleine Anpassungen im Strassenraum Kleine Anpassungen an der Strassenentwässerung Wochenendeinsätze und Winterdienst Ihr Profil Abschluss Strassenbauer:in EFZ / Strassenbaupraktiker:in EBA Führerausweis Kategorie B Handwerkliches Geschick, körperlich stark belastbar Gute Deutschkenntnisse Wohnhaft in Winterthur oder näherer Umgebung wegen Pikettdienst (Winterdienst) Was bieten wir Mindestens 5 Wochen Ferien Treueprämien in Form von bezahltem Urlaub Vielfältiges internes Kursangebot Faires, transparentes Lohnsystem Weitere Vorteile finden Sie auf unserer Webseite. Kontakt Ihre Fragen zur Stelle beantwortet Ihnen gerne Martin Voser, Fachbereichsleiter Baulicher Unterhalt, +41 79 639 19 68. Mehr erfahren? https://stadt.winterthur.ch/ Wir freuen uns auf Ihre Online-Bewerbung.",
     "salary_chf_year_min": null,
     "salary_chf_year_max": null,
     "salary_kind": "unknown",
@@ -9376,7 +10170,8 @@
     },
     "url_aliases": [
       "https://publicjobs.ch/jobs/zuerich/energie-ingenieurwesen-verkehr/166844-strassenbauer-in-strassenbaupraktiker-in-100"
-    ]
+    ],
+    "description_source": "jsonld_jobposting"
   },
   {
     "schema_version": "0.1.0",
