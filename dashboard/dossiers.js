@@ -5,7 +5,7 @@
 (function(){
  "use strict";
  const root=document.getElementById("mode-dossiers");
- if(!root||!window.indexedDB)return;
+ if(!root)return;
  const $=id=>document.getElementById(id);
  const DB="career-agency-dossiers-v1",DB_VERSION=1,MAX_BYTES=15*1024*1024,MAX_FILES=50;
  const ALLOWED=new Set(["pdf","doc","docx","odt","txt","png","jpg","jpeg"]);
@@ -163,7 +163,10 @@
   $("dossierTabCount").textContent="("+state.dossiers.length+")";
   const host=$("dossierList");host.replaceChildren();
   if(!rows.length){
-   host.append(make("div",q?"Keine passenden Dossiers gefunden.":"Noch keine Dossiers vorhanden. Starte über «Dossier vorbereiten» oder direkt aus einem Inserat.","dossier-empty"));
+   const empty=make("div",undefined,"dossier-empty");
+   empty.append(make("p",q?"Keine passenden Dossiers gefunden.":"Noch keine Dossiers vorhanden. Starte hier oder direkt aus einem Inserat."));
+   if(!q)empty.append(button("Dossier vorbereiten",()=>editDossier(null)));
+   host.append(empty);
   }else for(const row of rows)host.append(card(row));
   renderLibrary();
  }
@@ -235,7 +238,6 @@
  }
  window.CareerDossiers=Object.freeze({prepare});
  $("dossierCreate").addEventListener("click",()=>editDossier(null));
- $("dossierEmptyCreate").addEventListener("click",()=>editDossier(null));
  $("dossierUpload").addEventListener("click",()=>chooseFiles());
  $("dossierLibraryUpload").addEventListener("click",()=>chooseFiles());
  $("dossierFileInput").addEventListener("change",e=>handleUpload(e.target.files));
