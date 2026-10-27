@@ -75,8 +75,10 @@ function fakeUI(){
 test("exactly N DOM dots are created for 0, 1, 8, 250 and 1700 targets without hidden caps",()=>{
  const {window,nodes}=fakeUI();
  const app=window.CareerRadarDesigns;
- assert.equal(app.choices.length,6);
- assert.equal(nodes.radarDesignOptions.children.length,6);
+ assert.equal(app.choices.length,7);
+ assert.equal(app.choices[0].id,"zen");
+ assert.equal(nodes.radarDesignOptions.children.length,7);
+ assert.equal(nodes.radarDial.dataset.design,"zen");
  for(const n of [0,1,8,250,1700]){
   const jobs=Array.from({length:n},(_,i)=>({id:"new-"+i,title:"Stelle "+i}));
   assert.equal(app.setPoints(jobs,"in dieser Woche"),n);
@@ -92,8 +94,8 @@ test("switching design and timeframe never inserts fake contacts",()=>{
  const app=window.CareerRadarDesigns;
  const jobs=[{id:"a",title:"A"},{id:"b",title:"B"}];
  app.setPoints(jobs,"seit gestern");
- assert.equal(nodes.radarDial.dataset.design,undefined);
- nodes.radarDesignOptions.children[2].dispatchEvent({type:"click"});
+ assert.equal(nodes.radarDial.dataset.design,"zen");
+ nodes.radarDesignOptions.children[3].dispatchEvent({type:"click"});
  assert.equal(nodes.radarDial.dataset.design,"topography");
  assert.equal(nodes.radarTargets.children.length,2);
  let changed=0;
@@ -118,4 +120,40 @@ test("Radar UI uses one shared list for markers, excludes hardcoded decorative p
  assert.match(js,/CareerRadarDesigns\?\.setPoints\(newJobs/);
  assert.match(js,/radar-period-changed/);
  assert.match(css,/prefers-reduced-motion/);
+});
+
+test("Zen is the initial theme with four purely decorative concentric waves",()=>{
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const css=fs.readFileSync(path.join(root,"dashboard/radar-designs.css"),"utf8");
+ const js=fs.readFileSync(path.join(root,"dashboard/radar-designs.js"),"utf8");
+ assert.match(html,/id="radarDial" data-design="zen"/);
+ assert.match(html,/RADAR-DESIGNS \/ 7 VARIANTEN/);
+ assert.match(html,/class="radar-pulse-waves" aria-hidden="true"/);
+ const inner=html.slice(html.indexOf('class="radar-pulse-waves"'),html.indexOf('class="radar-cross"'));
+ assert.equal((inner.match(/class="radar-pulse-wave"/g)||[]).length,4);
+ assert.match(css,/@keyframes radar-zen-expand/);
+ assert.match(css,/radar-pulse-wave:nth-child\(4\)/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(css,/\.radar-dial\[data-design="zen"\] \.radar-sweep\{display:none\}/);
+ assert.match(css,/\.radar-dial\[data-design="zen"\] \.radar-target/);
+ assert.match(js,/let selected="zen"/);
+ assert.doesNotMatch(js,/container\.append\(.*radar-pulse/);
+});
+
+test("pulse design switch changes CSS only; targets and jobs stay untouched",()=>{
+ const {window,nodes}=fakeUI();
+ const api=window.CareerRadarDesigns;
+ api.setPoints([{id:"job-1",title:"A"},{id:"job-2",title:"B"},{id:"job-3",title:"C"}],"seit gestern");
+ const targets=nodes.radarTargets.children.slice();
+ for(const button of nodes.radarDesignOptions.children){
+  button.dispatchEvent({type:"click"});
+  assert.equal(nodes.radarTargets.children.length,3);
+  assert.ok(targets.every((point,index)=>point===nodes.radarTargets.children[index]),
+   "Changing design must not re-create, delete, or add any job targets");
+ }
+ nodes.radarDesignOptions.children[0].dispatchEvent({type:"click"});
+ assert.equal(nodes.radarDial.dataset.design,"zen");
+ const zenSwatch=nodes.radarDesignOptions.children[0].children[0];
+ assert.equal(zenSwatch.children.length,2);
+ assert.equal(zenSwatch.children[1].children.length,4);
 });
