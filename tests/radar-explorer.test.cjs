@@ -8,10 +8,11 @@ const radar=require("../dashboard/radar-model.js");
 
 test("the original activity catalog covers two audiences without sharing question ids",()=>{
  const youth=explorer.items("apprentice"),career=explorer.items("career");
- assert.ok(youth.length>=30);
+ assert.equal(youth.length,37);
  assert.ok(career.length>=12);
  assert.notStrictEqual(youth,career);
- assert.ok(youth.every(x=>x.id&&x.emoji&&x.title&&x.tags.length));
+ assert.ok(youth.every(x=>x.id&&x.title&&x.tags.length));
+ assert.ok(youth.every(x=>!x.emoji),"no borrowed image/emoji assets for interest cards");
  assert.equal(new Set(youth.map(x=>x.id)).size,youth.length);
  assert.equal(new Set(career.map(x=>x.id)).size,career.length);
 });
@@ -19,7 +20,7 @@ test("the original activity catalog covers two audiences without sharing questio
 test("only explicit likes count towards exploratory occupation suggestions",()=>{
  const state={choices:{wood:"like",make:"like",repair:"like",outside:"no"}};
  const summary=explorer.progress(state,"apprentice");
- assert.deepEqual(summary,{total:32,answered:4,liked:3,rejected:1});
+ assert.deepEqual(summary,{total:37,answered:4,liked:3,rejected:1});
  const results=explorer.matches(state,"apprentice");
  assert.ok(results.length);
  assert.ok(results.some(item=>item.title.includes("Schreiner")));
@@ -77,4 +78,42 @@ test("explorer UI is accessible without drag, contains no server write and stays
  assert.match(js,/aria-label/);
  assert.doesNotMatch(js,/innerHTML|localStorage|GithubFeedback|fetch\(|https?:\/\//);
  assert.match(css,/prefers-reduced-motion/);
+});
+
+test("all 37 interest topics use distinct, original SVG motifs and no external asset URLs",()=>{
+ const pictos=require("../dashboard/radar-interest-pictograms.js");
+ const topics=explorer.items("apprentice");
+ assert.equal(pictos.keys.length,37);
+ assert.deepEqual(new Set(topics.map(x=>x.id)),new Set(pictos.keys));
+ const js=fs.readFileSync(path.join(__dirname,"../dashboard/radar-interest-pictograms.js"),"utf8");
+ assert.match(js,/createElementNS/);
+ assert.match(js,/viewBox/);
+ assert.doesNotMatch(js,/fetch\(|https?:\/\/(?:www\.)?(?:berufsberatung\.ch|lucide\.dev|fontawesome)/);
+});
+
+test("legacy 32-interest choices migrate without clobbering explicit new responses",()=>{
+ const legacy={choices:{make:"like",outside:"no",repair:"like",sport:"no",
+   health:"like",buildings:"no",sell:"like"}};
+ const result=explorer.normalizeExplorer(legacy,"apprentice");
+ assert.deepEqual(result.choices,{
+  hands:"like",outside:"no",technical:"like",active:"no",
+  care:"like",plan:"no",contact:"like"
+ });
+ assert.deepEqual(explorer.progress(legacy,"apprentice"),{
+  total:37,answered:7,liked:4,rejected:3
+ });
+ const explicit=explorer.normalizeExplorer({choices:{sport:"like",active:"no"}},"apprentice");
+ assert.equal(explicit.choices.active,"no");
+ assert.equal(explorer.progress({choices:{independent:"like",hours:"no"}},"apprentice").answered,2);
+});
+
+test("the page integrates original SVG art and full 37-interest count",()=>{
+ const html=fs.readFileSync(path.join(__dirname,"../dashboard/index.html"),"utf8");
+ const ui=fs.readFileSync(path.join(__dirname,"../dashboard/radar-explorer-ui.js"),"utf8");
+ assert.match(html,/src="\.\/radar-interest-pictograms\.js"/);
+ assert.match(html,/0 von 37/);
+ assert.match(html,/aria-valuemax="37"/);
+ assert.match(ui,/picto\.create\(item\.id\)/);
+ assert.match(ui,/normalizeSavedAnswers/);
+ assert.doesNotMatch(ui,/item\.emoji/);
 });
