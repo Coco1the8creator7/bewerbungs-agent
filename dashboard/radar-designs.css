@@ -1,0 +1,104 @@
+/* Career.Agency Radar Design Lab / five alternatives plus existing original.
+ * All dots in the main dial belong to actual new jobs. Miniature theme swatches
+ * intentionally contain zero target dots and are decorative design samples.
+ */
+#mode-radar .radar-targets{position:absolute;inset:0;z-index:3;pointer-events:none}
+#mode-radar .radar-target{position:absolute;width:var(--target-size,7px);height:var(--target-size,7px);
+ border-radius:50%;transform:translate(-50%,-50%);background:#496e4e;
+ border:1px solid #eef1db;box-shadow:0 0 6px #52795e80;
+ animation:radar-target-glow 4s ease-in-out infinite;animation-delay:var(--target-delay,0s)}
+#mode-radar .radar-dial .radar-cross{z-index:4;width:17px;height:17px;border:0;background:none;
+ box-shadow:none;pointer-events:none}
+#mode-radar .radar-dial .radar-cross:before,#mode-radar .radar-dial .radar-cross:after{
+ content:"";position:absolute;background:#557759;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:1px}
+#mode-radar .radar-dial .radar-cross:before{width:15px;height:2px}
+#mode-radar .radar-dial .radar-cross:after{height:15px;width:2px}
+#mode-radar .radar-target-summary{display:flex;gap:6px;align-items:baseline;justify-content:center;
+ color:#537051;font-size:.76rem;margin-top:7px}
+#mode-radar .radar-target-summary strong{font-size:1.2rem;font-variant-numeric:tabular-nums;color:#405f43}
+#mode-radar .radar-not-live#radarTargetNote{max-width:300px;margin:6px auto 0;line-height:1.4}
+#mode-radar .radar-time-controls{display:flex;gap:6px;margin-top:12px;align-items:center;justify-content:center}
+#mode-radar button.radar-period-button{min-height:37px;border:1px solid #c8bca7;color:#675542;
+ background:#f9f2e8;border-radius:8px;padding:7px 13px;font-size:.75rem;font-weight:700}
+#mode-radar button.radar-period-button[aria-pressed=true]{background:#e0ebdb;border-color:#94ad8b;color:#3c5e43}
+#mode-radar button.radar-period-button:hover{border-color:#688464}
+#mode-radar .radar-design-heading{margin:24px 0 10px;display:flex;align-items:baseline;
+ gap:5px;justify-content:space-between;flex-wrap:wrap}
+#mode-radar .radar-design-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+#mode-radar button.radar-design-button{display:flex;flex-direction:column;align-items:center;gap:3px;
+ min-width:0;background:#fdf8ef;border:1px solid #d8c5ab;border-radius:10px;padding:9px 4px 8px;
+ text-align:center;color:#5d4b3b;transition:border-color .18s,transform .18s,background .18s}
+#mode-radar button.radar-design-button:hover{border-color:#7d9876;transform:translateY(-2px)}
+#mode-radar button.radar-design-button[aria-pressed=true]{background:#e8eee3;border:2px solid #73946d;padding:8px 3px 7px}
+#mode-radar .radar-design-label{font-size:.72rem;font-weight:750}
+#mode-radar .radar-design-hint{font-size:.64rem;color:#826d57;line-height:1.25}
+#mode-radar .radar-design-swatch{display:block;position:relative;overflow:hidden;width:49px;height:49px;
+ aspect-ratio:1;border-radius:50%;border:1px solid #b2c0ad;flex:none;margin-bottom:4px;
+ background:repeating-radial-gradient(circle,transparent 0 8px,#94b08d63 9px 10px,transparent 11px 18px),#e6ecde}
+#mode-radar .radar-design-swatch:before{content:"";position:absolute;inset:0;opacity:.6;
+ background:linear-gradient(90deg,transparent 49%,#9db39a 50%,transparent 51%),
+  linear-gradient(0deg,transparent 49%,#9db39a 50%,transparent 51%)}
+#mode-radar .radar-design-swatch-sweep{position:absolute;inset:0;border-radius:50%;
+ background:conic-gradient(from 0deg,transparent 0 265deg,#799a7a7a 350deg,transparent 360deg);
+ animation:radar-turn 7s linear infinite}
+/* One visual system / six possible treatments: all use the same target data. */
+#mode-radar :is(.radar-dial,.radar-design-swatch)[data-design=sonar]{
+ border-color:#4b6e59;box-shadow:inset 0 0 18px #132f27aa,0 0 0 4px #d8e2cf;
+ background:repeating-radial-gradient(circle at center,transparent 0 11%,#90b99d55 11.4% 11.9%,transparent 12.2% 22%),
+  radial-gradient(circle at 50% 50%,#3f6a52,#213a33)}
+#mode-radar .radar-dial[data-design=sonar] .radar-sweep,
+#mode-radar .radar-design-swatch[data-design=sonar] .radar-design-swatch-sweep{
+ background:conic-gradient(from -100deg,transparent 0 278deg,#a5f0b700 280deg,#a5f0b722 310deg,#b7f6c59e 353deg,transparent 360deg);
+ animation-duration:5s}
+#mode-radar .radar-dial[data-design=sonar] .radar-target{background:#c4f4c7;border-color:#294f41;box-shadow:0 0 7px #a9f8b9}
+#mode-radar .radar-dial[data-design=sonar] .radar-cross:before,#mode-radar .radar-dial[data-design=sonar] .radar-cross:after{background:#c0e7b9}
+#mode-radar :is(.radar-dial,.radar-design-swatch)[data-design=topography]{
+ border-color:#9aaf8e;background:
+ radial-gradient(ellipse 45% 65% at 37% 55%,transparent 64%,#9eb68f92 65% 66%,transparent 67%),
+ radial-gradient(ellipse 68% 52% at 58% 41%,transparent 59%,#a5ba9991 60% 61%,transparent 62%),
+ repeating-radial-gradient(ellipse at 40% 60%,transparent 0 13px,#a9bd9a80 14px 15px,transparent 16px 30px),
+ linear-gradient(145deg,#ede8d6,#dce6d4)}
+#mode-radar .radar-dial[data-design=topography] .radar-sweep,
+#mode-radar .radar-design-swatch[data-design=topography] .radar-design-swatch-sweep{
+ background:conic-gradient(from 90deg,transparent 0 295deg,#ad86551b 330deg,#7b956f80 354deg,transparent 360deg);
+ animation-duration:12s}
+#mode-radar .radar-dial[data-design=topography] .radar-target{background:#9b7044;border-color:#fdf0d9;box-shadow:0 0 6px #946f5580}
+#mode-radar :is(.radar-dial,.radar-design-swatch)[data-design=orbit]{
+ background:
+ repeating-radial-gradient(circle at 50% 50%,transparent 0 18px,#728e8566 19px 20px,transparent 21px 39px),
+ radial-gradient(circle at 50% 50%,#e8eee4,#cfdcd5);
+ border:2px solid #78918a;box-shadow:inset 0 0 0 4px #fbfdf9,0 0 0 6px #e1e8df}
+#mode-radar .radar-dial[data-design=orbit] .radar-sweep,
+#mode-radar .radar-design-swatch[data-design=orbit] .radar-design-swatch-sweep{
+ background:conic-gradient(from -90deg,transparent 0 305deg,#749e9250 345deg,#749e92a0 351deg,transparent 353deg);
+ animation-duration:10s}
+#mode-radar .radar-dial[data-design=orbit] .radar-target{background:#3d7970;border-color:#f7f9ed}
+#mode-radar :is(.radar-dial,.radar-design-swatch)[data-design=sectors]{
+ background:repeating-radial-gradient(circle,transparent 0 25px,#a6b7aa81 26px 27px,transparent 28px 50px),
+ repeating-conic-gradient(from 0deg,#d7e2d3 0 29deg,#a8b9ac 30deg 30.5deg,#e6edde 31deg 59.5deg,#9fb4a5 60deg 60.5deg);
+ border-color:#819e8d}
+#mode-radar .radar-dial[data-design=sectors] .radar-sweep,
+#mode-radar .radar-design-swatch[data-design=sectors] .radar-design-swatch-sweep{
+ background:conic-gradient(from -45deg,transparent 0 295deg,#638b7440 325deg,#5e806c96 353deg,transparent 355deg);
+ animation-duration:6.5s}
+#mode-radar .radar-dial[data-design=sectors] .radar-target{background:#476f5a;border-color:#eff8e9}
+#mode-radar :is(.radar-dial,.radar-design-swatch)[data-design=minimal]{
+ background:repeating-radial-gradient(circle,transparent 0 43px,#c3d0bcaa 44px 44.7px,transparent 45px 88px),
+ #fffaf0;border-color:#bccbb7;box-shadow:0 0 0 7px #f2ede3}
+#mode-radar .radar-dial[data-design=minimal] .radar-sweep,
+#mode-radar .radar-design-swatch[data-design=minimal] .radar-design-swatch-sweep{
+ background:conic-gradient(from 20deg,transparent 0 310deg,#89aa8833 353deg,transparent 360deg);
+ animation-duration:14s}
+#mode-radar .radar-dial[data-design=minimal] .radar-target{background:#55785a;border-color:#fffaf0;box-shadow:none}
+#mode-radar .radar-metric.is-active-period{border-color:#95ab8b;background:#eff4e9}
+@keyframes radar-target-glow{0%,100%{opacity:.92}50%{opacity:.63}}
+@media(max-width:520px){
+ #mode-radar .radar-design-options{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ #mode-radar .radar-design-hint{font-size:.59rem}
+ #mode-radar button.radar-design-button{padding:8px 3px}
+ #mode-radar .radar-design-swatch{width:42px;height:42px}
+}
+@media(prefers-reduced-motion:reduce){
+ #mode-radar .radar-target{animation:none}
+ #mode-radar .radar-design-swatch-sweep{animation:none}
+}
