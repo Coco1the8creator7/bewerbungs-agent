@@ -157,3 +157,22 @@ test("pulse design switch changes CSS only; targets and jobs stay untouched",()=
  assert.equal(zenSwatch.children.length,2);
  assert.equal(zenSwatch.children[1].children.length,4);
 });
+
+test("published Zen assets have matching cache-busting versions and highest stylesheet priority",()=>{
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const version="20261027-zen-live-3";
+ for(const src of ["radar-model.js","radar-designs.js","radar.js"]){
+  assert.ok(html.includes('src="./'+src+'?v='+version+'"'),src+" must bypass stale browser cache");
+ }
+ for(const src of ["radar.css","radar-designs.css"]){
+  assert.ok(html.includes('href="./'+src+'?v='+version+'"'),src+" must bypass stale browser cache");
+ }
+ const zen=html.indexOf('href="./radar-designs.css?v='+version+'"');
+ const base=html.indexOf('href="./radar.css?v='+version+'"');
+ const others=html.indexOf('href="./notifications.css');
+ assert.ok(zen>base&&zen>others,"Pulse stylesheet must be last to override classic styles");
+ const dial=html.match(/id="radarDial"[^>]+/);
+ assert.match(dial?.[0]||"",/data-design="zen"/);
+ assert.doesNotMatch(html,/href="\.\/radar-designs\.css"/);
+ assert.doesNotMatch(html,/src="\.\/radar-designs\.js"/);
+});
