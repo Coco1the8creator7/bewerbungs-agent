@@ -393,11 +393,6 @@ header .sub,.section-heading p{color:#6b5744}
       </div>
       <p class="route-caption" id="routeCaption">Radar aktiv · erste Stellen entdecken.</p>
     </section>
-    <section class="mission-card" aria-labelledby="questsTitle">
-      <div class="mission-heading"><div><span class="mission-label">★ QUEST LOG</span><h3 id="questsTitle">Wochenmissionen</h3><p id="questWeek">Diese Woche</p></div></div>
-      <div id="questList" class="quest-list" aria-live="polite"></div>
-      <p class="quest-foot">Fortschritt durch dokumentierte Statuswechsel und Follow-ups. Aktionen zählen ab jetzt; keine erfundenen Erfolge oder Fit-Scores.</p>
-    </section>
   </div>
 </section>
 <section class="section" aria-labelledby="pipelineTitle">
@@ -690,6 +685,14 @@ header .sub,.section-heading p{color:#6b5744}
    <div id="agencyMap" class="agency-map"></div>
   </div>
   <section class="agency-inspector" id="agencyInspector" aria-live="polite"></section>
+  <section class="agency-weekly-missions" aria-labelledby="questsTitle">
+    <div class="agency-weekly-heading">
+      <div><span class="agency-kicker">★ QUEST LOG</span><h3 id="questsTitle">Wochenmissionen</h3></div>
+      <span class="agency-week-period" id="questWeek">Diese Woche</span>
+    </div>
+    <div id="questList" class="quest-list" aria-live="polite"></div>
+    <p class="quest-foot">Es zählen echte Relevanzbewertungen, versendete Bewerbungen und dokumentierte Follow-ups. Jede Stelle zählt pro Wochenziel einmal.</p>
+  </section>
   <h3>AGENTEN-AUSZEICHNUNGEN</h3>
   <div id="agencyAwards" class="agency-awards"></div>
   <p class="agency-disclaimer">Die Inselwelt speichert keine eigenen persönlichen Daten. Die Analysis-Insel zählt nur deine gespeicherten manuellen Relevanzbewertungen, keine KI-Scores. Andere Level-Schwellen sind vorläufig; ältere Statusverläufe können unvollständig sein.</p>
@@ -732,7 +735,7 @@ const seniorityCodes=new Set(seniorityOptions.map(([x])=>x));
 let detailDraftFeedback={aspects:{},field_relation:null,seniority_assessment:null};
 let reviewListView="unrated";
 
-const activityTypes=new Set(["screened","preparing","applied","follow_up","interview","interview2","offer","accepted"]);
+const activityTypes=new Set(["screened","rated","preparing","applied","follow_up","interview","interview2","offer","accepted"]);
 let activityLog=[]; // Personal data; only in local workspace / personal exports.
 function validateActivityLog(records){
  if(records==null)return [];
@@ -757,6 +760,19 @@ function weekActivity(type){
  const since=weekStart(),until=new Date(since);
  until.setDate(until.getDate()+7);
  return new Set(activityLog.filter(e=>e.type===type&&validDate(e.at)>=since&&validDate(e.at)<until.getTime()&&(!demoMode||e.job_id.startsWith("DEMO-"))).map(e=>e.job_id));
+}
+// Only actual manual scores count as a rated application. Older workspace files
+// stored "screened" events, so those can be credited only when a valid score
+// was also saved during this week; pure status changes never qualify.
+function weekRatedJobs(){
+ const rated=weekActivity("rated");
+ const since=weekStart(),until=new Date(since);
+ until.setDate(until.getDate()+7);
+ for(const id of weekActivity("screened")){
+  const rating=ratingOf(id),timestamp=validDate(rating?.updated_at);
+  if(Number.isInteger(rating?.score)&&rating.score>=1&&rating.score<=100&&timestamp!==null&&timestamp>=since&&timestamp<until.getTime())rated.add(id);
+ }
+ return rated;
 }
 function toggleFollowUp(jobId){
  if(!["applied","interview","interview2"].includes(stageOf(jobId)))return;
@@ -818,13 +834,13 @@ function renderMission(){
  to.setDate(to.getDate()+6);
  el("questWeek").textContent=locale.format(from)+" – "+locale.format(to);
  const quests=[
-  {type:"screened",title:"3 Inserate beurteilen",target:3},
-  {type:"applied",title:"1 Bewerbung als versendet erfassen",target:1},
-  {type:"follow_up",title:"5 Stellen nachfassen",target:5}
+  {type:"rated",title:"10 Inserate bewerten",target:10},
+  {type:"applied",title:"1 Bewerbung versenden",target:1},
+  {type:"follow_up",title:"2 Bewerbungen nachfassen",target:2}
  ];
  const target=el("questList");target.replaceChildren();
  for(const quest of quests){
-  const amount=Math.min(quest.target,weekActivity(quest.type).size);
+  const amount=Math.min(quest.target,(quest.type==="rated"?weekRatedJobs():weekActivity(quest.type)).size);
   const container=document.createElement("div");container.className="quest"+(amount===quest.target?" done":"");
   const top=document.createElement("div");top.className="quest-top";
   top.append(node("span",quest.title,"quest-title"),node("span",amount+" / "+quest.target+(amount===quest.target?" ✓":""),"quest-count"));
@@ -1032,8 +1048,9 @@ function updateRating(id,score,reasons,note,feedback){
  const job=jobs.find(j=>j.id===id);
  // Eine erstmalig vergebene Relevanzzahl zählt als abgeschlossene Beurteilung.
  // Keine erneuten Punkte bei Anpassungen derselben Stelle oder erneutem Speichern.
- if(previous?.score==null&&nextScore!==null&&!activityLog.some(e=>e.type==="screened"&&e.job_id===id)){
-  logActivity("screened",id);
+ if(previous?.score==null&&nextScore!==null){
+  if(!activityLog.some(e=>e.type==="screened"&&e.job_id===id))logActivity("screened",id);
+  if(!activityLog.some(e=>e.type==="rated"&&e.job_id===id))logActivity("rated",id);
  }
  relevanceRatings.set(id,{score:nextScore,reasons:nextReasons,reason:nextReasons[0]||"",note:nextNote,
   ...nextFeedback,updated_at:new Date().toISOString(),
