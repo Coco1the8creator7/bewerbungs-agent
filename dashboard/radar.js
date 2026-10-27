@@ -182,6 +182,26 @@
     article.append(excerpt);
    }
   }
+  if(market()==="career"&&window.AgentCareerFeedback){
+   const relevance=make("div",undefined,"radar-main-relevance");
+   const header=make("div",undefined,"radar-main-relevance-head");
+   const current=window.AgentCareerFeedback.getScore(job.id);
+   const output=make("output",current===null?"Noch kein 1–100-Score":current+" / 100");
+   header.append(make("span","Gesamtrelevanz · gleicher Wert wie auf der Startseite"),output);
+   const slider=make("input");slider.type="range";slider.min="1";slider.max="100";slider.step="1";
+   slider.value=String(current??50);
+   slider.setAttribute("aria-label","Gesamtrelevanz 1 bis 100 für "+job.title);
+   slider.addEventListener("input",()=>{output.textContent=slider.value+" / 100";});
+   slider.addEventListener("change",()=>{
+    try{
+     window.AgentCareerFeedback.setScore(job.id,Number(slider.value));
+     output.textContent=slider.value+" / 100";
+     message("Relevanzbewertung aktualisiert. Für dauerhafte GitHub-Sicherung auf der Startseite «Bewertungen speichern» verwenden.");
+    }catch(err){message("Relevanz konnte nicht gespeichert werden: "+err.message);}
+   });
+   relevance.append(header,slider);
+   article.append(relevance);
+  }
   const details=make("details");details.append(make("summary","Mit meinen Kriterien bewerten"));
   const grid=make("div",undefined,"radar-grade-grid");
   const existing=bucket().ratings[job.id]||{scores:{},note:""};
