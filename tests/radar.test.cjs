@@ -122,3 +122,34 @@ test("Radar uses original public jobs.json and keeps legacy CRM intact",()=>{
  assert.match(nav,/hashchange/);
  assert.match(html,/id="newJobsList"/);
 });
+
+
+test("v2 preserves access to all excluded careers through Radar even if wishlist restricts candidates",()=>{
+ const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const filter=fs.readFileSync(path.join(root,"dashboard/career-filter.js"),"utf8");
+ for(const id of ["radarReviewScope","radarReviewScopeGroup","radarReviewMore","radarReviewList"]){
+  assert.ok(html.includes('id="'+id+'"'),"Missing "+id);
+ }
+ assert.match(html,/value="filtered">Zurückgestellt/);
+ assert.match(radar,/mode==="filtered"\?!isVisible\(j\)/);
+ assert.match(radar,/adult&&mode==="filtered"\?true/);
+ assert.match(radar,/reviewLimit\+=50/);
+ assert.match(radar,/Originale Stellenbeschreibung anzeigen/);
+ assert.match(radar,/Mit meinen Kriterien bewerten/);
+ assert.match(filter,/career-preselector-v2/);
+ assert.match(filter,/const isVisible = job => classify\(job\)\.visible/);
+ assert.match(html,/value="priority" selected/);
+ assert.doesNotMatch(radar,/\.splice\([^)]*jobs/);
+});
+
+
+test("career Radar shares explicit overall score with the CRM, not proxy criterion ratings",()=>{
+ const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ assert.match(html,/window\.AgentCareerFeedback=Object\.freeze/);
+ assert.match(html,/setScore:\(id,score\)=>/);
+ assert.match(radar,/window\.AgentCareerFeedback\.getScore\(job\.id\)/);
+ assert.match(radar,/window\.AgentCareerFeedback\.setScore\(job\.id,Number\(slider\.value\)\)/);
+ assert.match(radar,/if\(market\(\)==="career"&&window\.AgentCareerFeedback\)/);
+});

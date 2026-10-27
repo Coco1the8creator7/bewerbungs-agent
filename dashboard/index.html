@@ -410,7 +410,7 @@ header .sub,.section-heading p{color:#6b5744}
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
     <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
-    <div><label for="sort">Sortierung</label><select id="sort"><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
+    <div><label for="sort">Sortierung</label><select id="sort"><option value="priority" selected>Vorselektion v2 · Priorität</option><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
   </div>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
   <div id="mobileJobSentinel" class="mobile-load" hidden><span id="mobileJobCount"></span><button type="button" class="secondary" onclick="appendJobBatch();observeMobileJobs()">Weitere 5 anzeigen</button></div>
@@ -567,12 +567,20 @@ header .sub,.section-heading p{color:#6b5744}
       <div class="radar-block-title"><div><span class="radar-kicker">DEINE ENTSCHEIDUNG / UNTERSTÜTZT</span><h3 id="radarReviewTitle">Stellen beurteilen</h3></div><span class="radar-small" id="radarReviewCount">0 reale Kandidaten</span></div>
       <p id="radarReviewIntro" class="radar-small">Bewerte freiwillig einzelne Kriterien von 1 bis 5. Leere Kriterien werden nicht mitgerechnet.</p>
       <div class="radar-review-tools">
+        <label id="radarReviewScopeGroup" class="radar-review-scope">Vorselektion
+          <select id="radarReviewScope" aria-label="Inserate nach Vorauswahl anzeigen">
+            <option value="selected">Vorausgewählt · Startseite</option>
+            <option value="filtered">Zurückgestellt · trotzdem bewerten</option>
+            <option value="all">Alle Inserate</option>
+          </select>
+        </label>
         <label><input type="checkbox" id="radarStrictOccupation">Nur meine Wunschberufe</label>
         <label><input type="checkbox" id="radarStrictRegion">Nur meine Wunschregion</label>
         <button type="button" class="secondary compact-button" id="radarToggleDemo" hidden>3 fiktive Beispiele anzeigen</button>
       </div>
       <p id="radarFilterHelp" class="radar-small">Die Quellenwahl und deine Suchwünsche filtern nur den Radar. Der bisherige Stellenimport und die Startseite bleiben unverändert.</p>
       <div id="radarReviewList" class="radar-review-list" aria-live="polite"></div>
+      <button type="button" class="secondary compact-button radar-review-more" id="radarReviewMore" hidden>Weitere Inserate anzeigen</button>
       <p id="radarReviewNotice" class="radar-notice">Radar-Testbewertungen sind von deinen bestehenden CRM-Bewertungen getrennt. Es gibt keinen Export nach GitHub, kein automatisches KI-Training und keine Rückwirkung auf bestehende Inserate.</p>
     </section>
   </div>
@@ -1064,6 +1072,17 @@ function setRating(id,score,reasons){
  if(!Number.isInteger(n)||n<1||n>100)throw Error("Ganze Zahl von 1 bis 100 erforderlich.");
  updateRating(id,n,reasons);
 }
+// Adult Radar and the start page share one explicit 1–100 relevance label.
+ // Radar's optional 1–5 criterion notes remain separate and do not create labels.
+ window.AgentCareerFeedback=Object.freeze({
+  getScore:id=>ratingOf(id)?.score??null,
+  setScore:(id,score)=>{
+   if(!jobs.some(j=>j.id===id))throw Error("Unbekannte Inserat-ID.");
+   setRating(id,score);
+   render();
+   window.dispatchEvent(new CustomEvent("career-relevance-changed",{detail:{job_id:id}}));
+  }
+ });
 function setReasons(id,reasons){updateRating(id,undefined,reasons);}
 function setRatingNote(id,note){updateRating(id,undefined,undefined,note);}
 function setFeedback(id,feedback){updateRating(id,undefined,undefined,undefined,feedback);}
@@ -1453,7 +1472,15 @@ function renderNewJobs(){
   const hay=[j.title,j.company,j.location,j.source,...categories].map(text).join(" ").toLocaleLowerCase("de-CH");
   return (!query||hay.includes(query))&&(!category||categories.includes(category))&&(!source||j.source===source);
  });
- filtered.sort((a,b)=>el("sort").value==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):(validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0));
+ filtered.sort((a,b)=>{
+  const mode=el("sort").value;
+  if(mode==="priority"&&window.AgentCareerFilter){
+   const gap=window.AgentCareerFilter.classify(b).priority-window.AgentCareerFilter.classify(a).priority;
+   if(gap)return gap;
+  }
+  return mode==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):
+   (validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0);
+ });
  el("newSummary").textContent=(reviewListView==="reviewed"?"Bearbeitete Inserate: ":"Noch unbewertet: ")+allNew.length+" · "+filtered.length+" angezeigt";
  updateMarkedSummary();
  const signature=JSON.stringify([reviewListView,query,category,source,el("sort").value,filtered.map(j=>j.id)]);
@@ -1482,7 +1509,12 @@ function renderNewJobs(){
   const footer=document.createElement("div");footer.className="card-footer";
   const actions=document.createElement("div");actions.className="card-actions";
   actions.append(actionButton(j));footer.append(actions);
-   if(Number.isInteger(j.selection?.suggested_score))footer.append(node("span","Vorschlag "+j.selection.suggested_score+"/100","job-meta"));
+   if(window.AgentCareerFilter){
+   const pre=window.AgentCareerFilter.classify(j);
+   footer.append(node("span","V2-Priorität "+pre.priority+"/100 · regelbasiert","job-meta"));
+  }else if(Number.isInteger(j.selection?.suggested_score)){
+   footer.append(node("span","Vorschlag "+j.selection.suggested_score+"/100","job-meta"));
+  }
   
   card.append(footer);if(mobileJobQuery.matches&&target.children.length>=mobileJobLimit)card.hidden=true;target.append(card);
  }
@@ -1499,7 +1531,7 @@ function loadJobs(rows,name,asDemo=false){
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(visibleJobs().flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
  refill(el("source"),unique(visibleJobs().map(j=>j.source)),"Alle Quellen");
- el("message").textContent=visibleJobs().length+" Inserate sichtbar ("+(jobs.length-visibleJobs().length)+" nach deiner Gesundheits-/IT-Regel ausgeblendet). Die Originaldaten und Bewertungen bleiben erhalten.";
+ el("message").textContent=visibleJobs().length+" Inserate in der Vorauswahl ("+(jobs.length-visibleJobs().length)+" zurückgestellt · Radar > Bewertungs-Hub). Alle Originaldaten und Bewertungen bleiben erhalten.";
  render();
  saveChanges();
 }
@@ -1778,7 +1810,7 @@ async function initialize(){
    }else{
     githubStatus("Lokaler Arbeitsstand vorhanden. Automatisches Überschreiben durch GitHub unterdrückt.");
    }
-   el("message").textContent=visibleJobs().length+" passende Inserate sichtbar; "+(jobs.length-visibleJobs().length)+" ausgeblendet. Persönliche Bewertungen und Inseratdaten bleiben erhalten.";
+   el("message").textContent=visibleJobs().length+" Inserate vorausgewählt; "+(jobs.length-visibleJobs().length)+" im Radar zur Prüfung zurückgestellt. Bewertungen und Inseratdaten bleiben erhalten.";
    return;
   }
  }catch(err){

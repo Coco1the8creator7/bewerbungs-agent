@@ -97,3 +97,19 @@
 #mode-radar button.radar-market[aria-pressed="true"]{background:#e1ebdc;border-color:#93a789;color:#38533b}
 #mode-radar [hidden]{display:none!important}
 @media(max-width:520px){#mode-radar .radar-markets{gap:7px}#mode-radar button.radar-market{flex:1 1 150px;text-align:center}}
+
+
+/* V2 preselector: a reversible, readable parked-job review queue. */
+#mode-radar .radar-review-scope{display:flex;align-items:center;gap:9px;font-size:.8rem}
+#mode-radar .radar-review-scope select{width:auto;max-width:100%;min-width:220px;padding:9px}
+#mode-radar .radar-review-more{display:block;margin:14px auto 0}
+#mode-radar .radar-job-filtered{border-color:#c7ab92;background:#f7ede1}
+#mode-radar .radar-prefilter-reason{display:inline-block;color:#80513b;font-size:.73rem;font-weight:700;margin:8px 0 0;line-height:1.5}
+#mode-radar .radar-description{white-space:pre-wrap;overflow-wrap:anywhere;max-height:340px;overflow-y:auto;color:#594c3f;font-size:.8rem;line-height:1.55;margin:11px 0 0}
+#mode-radar .radar-original{border-top:1px solid #e3d4c1;margin-top:12px;padding-top:10px}
+@media(max-width:520px){#mode-radar .radar-review-scope{width:100%;align-items:stretch;flex-direction:column}#mode-radar .radar-review-scope select{width:100%;min-width:0}}
+
+#mode-radar .radar-main-relevance{margin-top:13px;padding:12px 13px;background:#efe9dc;border:1px solid #d4c2a9;border-radius:9px}
+#mode-radar .radar-main-relevance-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;color:#624b35;font-size:.77rem;font-weight:700}
+#mode-radar .radar-main-relevance input[type="range"]{width:100%;margin:11px 0 0;accent-color:#617d5b;cursor:ew-resize}
+#mode-radar .radar-main-relevance output{font-variant-numeric:tabular-nums}

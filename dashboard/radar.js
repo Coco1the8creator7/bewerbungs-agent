@@ -14,6 +14,7 @@
  };
  const state=model.normalizedState(null);
  let jobs=[],feedLoaded=false,feedBusy=false,showDemo=false,persistent=false,pending=Promise.resolve();
+ let reviewLimit=50;
  const market=()=>state.market;
  const bucket=()=>market()==="career"?state.career:state;
  const profile=()=>bucket().profile;
@@ -56,7 +57,7 @@
    cb.addEventListener("change",()=>{
     if(cb.checked&&!bucket().selectedSources.includes(src.id))bucket().selectedSources.push(src.id);
     if(!cb.checked)bucket().selectedSources=bucket().selectedSources.filter(id=>id!==src.id);
-    updateSourcesCount();renderReviews();changed();
+    updateSourcesCount();reviewLimit=50;renderReviews();changed();
    });
    label.append(cb,details);host.append(label);
   }
@@ -101,12 +102,12 @@
   for(const key of ["occupations","region","level","startYear","example"]){
    get("radar-"+key).addEventListener("input",e=>{
     profile()[key]=e.target.value;
-    if(["occupations","region","level"].includes(key))renderReviews();
+    if(["occupations","region","level"].includes(key)){reviewLimit=50;renderReviews();}
     changed();
    });
   }
   for(const [id,key] of [["radarStrictOccupation","strictOccupation"],["radarStrictRegion","strictRegion"]]){
-   get(id).addEventListener("change",e=>{profile()[key]=e.target.checked;renderReviews();changed();});
+   get(id).addEventListener("change",e=>{profile()[key]=e.target.checked;reviewLimit=50;renderReviews();changed();});
   }
  }
  function addSkill(){
@@ -160,8 +161,47 @@
   }else title.textContent=job.title;
   info.append(title,make("p",[job.company,job.location].filter(Boolean).join(" · "),"radar-small"));
   const badge=make("span","Noch unbewertet","radar-grade");
+  const decision=market()==="career"&&window.AgentCareerFilter?window.AgentCareerFilter.classify(job):null;
+  if(decision&&!decision.visible){
+   article.classList.add("radar-job-filtered");
+   const reasons={
+    healthcare_role:"Gesundheitsberuf",
+    it_role:"klassischer IT-Beruf",
+    healthcare_employer:"Gesundheitsbetrieb ohne nachgewiesenen Technikbezug",
+    out_of_scope_role:"fachfremde Tätigkeit"
+   };
+   info.append(make("p","ZURÜCKGESTELLT · "+(reasons[decision.reason]||"Berufsfeld ausserhalb der Vorauswahl"),"radar-prefilter-reason"));
+  }
   heading.append(info,badge);article.append(heading);
-  if(job.id.startsWith("DEMO-"))article.append(make("p",job.description,"radar-small"));
+  if(typeof job.description==="string"&&job.description.trim()){
+   if(job.id.startsWith("DEMO-"))article.append(make("p",job.description,"radar-small"));
+   else {
+    const excerpt=make("details",undefined,"radar-original");
+    excerpt.append(make("summary","Originale Stellenbeschreibung anzeigen"));
+    excerpt.append(make("p",job.description.slice(0,30000),"radar-description"));
+    article.append(excerpt);
+   }
+  }
+  if(market()==="career"&&window.AgentCareerFeedback){
+   const relevance=make("div",undefined,"radar-main-relevance");
+   const header=make("div",undefined,"radar-main-relevance-head");
+   const current=window.AgentCareerFeedback.getScore(job.id);
+   const output=make("output",current===null?"Noch kein 1–100-Score":current+" / 100");
+   header.append(make("span","Gesamtrelevanz · gleicher Wert wie auf der Startseite"),output);
+   const slider=make("input");slider.type="range";slider.min="1";slider.max="100";slider.step="1";
+   slider.value=String(current??50);
+   slider.setAttribute("aria-label","Gesamtrelevanz 1 bis 100 für "+job.title);
+   slider.addEventListener("input",()=>{output.textContent=slider.value+" / 100";});
+   slider.addEventListener("change",()=>{
+    try{
+     window.AgentCareerFeedback.setScore(job.id,Number(slider.value));
+     output.textContent=slider.value+" / 100";
+     message("Relevanzbewertung aktualisiert. Für dauerhafte GitHub-Sicherung auf der Startseite «Bewertungen speichern» verwenden.");
+    }catch(err){message("Relevanz konnte nicht gespeichert werden: "+err.message);}
+   });
+   relevance.append(header,slider);
+   article.append(relevance);
+  }
   const details=make("details");details.append(make("summary","Mit meinen Kriterien bewerten"));
   const grid=make("div",undefined,"radar-grade-grid");
   const existing=bucket().ratings[job.id]||{scores:{},note:""};
@@ -201,23 +241,32 @@
  function renderReviews(){
   const host=get("radarReviewList");host.replaceChildren();
   const adult=market()==="career";
-  const available=jobs.filter(j=>adult?
-    (!model.isApprenticeship(j)&&(!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j))):model.isApprenticeship(j));
-  const matching=available.filter(j=>model.matchesPreferences(j,profile(),bucket().selectedSources,market()))
+  const mode=adult?get("radarReviewScope").value:"selected";
+  const isVisible=j=>!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j);
+  const candidates=jobs.filter(j=>adult?!model.isApprenticeship(j):model.isApprenticeship(j));
+  const parked=adult?candidates.filter(j=>!isVisible(j)):[];
+  const available=adult?candidates.filter(j=>mode==="filtered"?!isVisible(j):mode==="all"||isVisible(j)):candidates;
+  // The audit view intentionally ignores optional source and wish filters.
+  // All prefiltered vacancies must remain accessible for manual review.
+  const matching=available.filter(j=>adult&&mode==="filtered"?true:
+   model.matchesPreferences(j,profile(),bucket().selectedSources,market()))
    .sort((a,b)=>(Date.parse(b.first_seen_at)||0)-(Date.parse(a.first_seen_at)||0));
-  const selected=matching.slice(0,50),examples=!adult&&showDemo?sampleJobs:[];
-  get("radarReviewCount").textContent=matching.length+" echte Stellen"+(examples.length?" · 3 Beispiele":"");
+  const selected=matching.slice(0,reviewLimit),examples=!adult&&showDemo?sampleJobs:[];
+  get("radarReviewCount").textContent=matching.length+" echte Stellen"+(adult?" · "+parked.length+" zurückgestellt":"")+(examples.length?" · 3 Beispiele":"");
+  get("radarReviewScopeGroup").hidden=!adult;
+  const more=get("radarReviewMore");more.hidden=matching.length<=reviewLimit;
+  more.textContent="Weitere "+Math.min(50,matching.length-reviewLimit)+" anzeigen · "+selected.length+" von "+matching.length;
   if(!selected.length&&!examples.length){
    const empty=make("div",undefined,"radar-empty");
-   empty.append(make("strong",!feedLoaded?"Stellenimport wird geladen …":available.length?
+   empty.append(make("strong",!feedLoaded?"Stellenimport wird geladen …":mode==="filtered"?
+    "Keine zurückgestellten Inserate.":available.length?
     "Keine Stellen passen zu den gewählten Filtern.":"Keine "+(adult?"Berufsstellen":"Lehrstellen")+" im bisherigen Import."));
    empty.append(make("p",adult?
-    "Die bisherigen Stellenabos bleiben aktiv. Passe hier nur Quellen oder optionale Radar-Filter an.":
+    "Unter «Zurückgestellt» sind auch die aus der Startseite ausgeblendeten Inserate vollständig erreichbar. Die Importdaten bleiben erhalten.":
     "Die Jugend-Lehrstellenquellen werden erst später angebunden. Drei fiktive Beispiele stehen zum Testen bereit."));
    host.append(empty);
   }else{
    for(const job of [...selected,...examples])host.append(jobCard(job));
-   if(matching.length>50)host.append(make("p","Die ersten 50 Treffer nach Importdatum. Engere Filter helfen bei der Auswahl.","radar-small"));
   }
   get("radarToggleDemo").hidden=adult;
   get("radarToggleDemo").textContent=showDemo?"Beispiele ausblenden":"3 fiktive Beispiele anzeigen";
@@ -239,9 +288,9 @@
   get("radarWishesIntro").textContent=adult?"Deine Wünsche filtern nur die Radar-Vorschau, nicht deine bestehenden Abos.":
    "Deine Wünsche helfen künftig bei der Lehrstellensuche und bei den Unterlagen.";
   get("radarReviewTitle").textContent=adult?"Berufsstellen beurteilen":"Lehrstellen beurteilen";
-  get("radarReviewIntro").textContent=adult?"Fünf Kriterien von 1 bis 5, freiwillig und unabhängig vom bisherigen CRM. Leere Kriterien zählen nicht.":
+  get("radarReviewIntro").textContent=adult?"Vorauswahl v2: klare Fehlpassungen stehen unter «Zurückgestellt», bleiben jedoch bewertbar. Fünf freiwillige Kriterien (1–5).":
    "Vier Kriterien von 1 bis 5, freiwillig. Leere Kriterien zählen nicht.";
-  get("radarFilterHelp").textContent=adult?"Die Quellen- und Suchfilter wirken nur im Radar. Startseite, Abos und Import bleiben unverändert.":
+  get("radarFilterHelp").textContent=adult?"Die Ansicht «Zurückgestellt» zeigt sämtliche ausgeblendeten Inserate – unabhängig von Radar-Suchwünschen. Nichts wird beim Import gelöscht.":
    "Wunschquellen und EFZ-/EBA-Abschluss filtern nur bereits importierte Lehrstellen.";
   get("radarSourcesInfo").textContent=adult?
    "Diese Quellen stammen direkt aus deinem bestehenden Gmail-/URL-Import. Die Quellenwahl wirkt nur auf den Radar-Bewertungs-Hub – nicht auf Importer oder CRM.":
@@ -254,9 +303,9 @@
   get("radar-example").placeholder=adult?"Ein Projekt, das deine fachlichen Kompetenzen zeigt.":
    "Ein Schulprojekt, ein Hobby oder eine Schnupperlehre.";
   get("radarReviewNotice").textContent=adult?
-   "Radar-Testbewertungen bleiben von den bisherigen CRM-Bewertungen getrennt. Kein GitHub-Upload und kein KI-Training. Die Stellenabos laufen unverändert weiter.":
+   "Radar-Kriterienbewertungen bleiben separat und werden nur bei aktivierter Gerätespeicherung dauerhaft gespeichert. Sie verändern den Vorselektor nicht automatisch und werden nicht ins CRM oder GitHub übertragen.":
    "Lehrstellen-Bewertungen bleiben vom Erwachsenen-CRM getrennt. Für den produktiven Einsatz mit Jugendlichen braucht es zuerst geschützte Benutzerkonten.";
-  updateForm();renderSkills();renderSources();updateStats();renderReviews();
+  reviewLimit=50;updateForm();renderSkills();renderSources();updateStats();renderReviews();
   window.CareerRadarExplorer?.render();
  }
  function switchTab(id){
@@ -317,6 +366,8 @@
  get("radarAddSkill").addEventListener("click",addSkill);
  get("radarRefresh").addEventListener("click",()=>loadFeed(true));
  get("radarToggleDemo").addEventListener("click",()=>{showDemo=!showDemo;renderReviews();});
+ get("radarReviewScope").addEventListener("change",()=>{reviewLimit=50;renderReviews();});
+ get("radarReviewMore").addEventListener("click",()=>{reviewLimit+=50;renderReviews();});
  get("radarExport").addEventListener("click",exportProfile);
  get("radarForget").addEventListener("click",forget);
  get("radarSaveOptIn").addEventListener("change",async e=>{

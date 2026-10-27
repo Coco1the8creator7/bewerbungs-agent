@@ -34,20 +34,59 @@
   const hospitalEngineering = /\b(?:bauleiter\w*|bauprojekt\w*|bauingenieur\w*|hochbau|tiefbau|baumanagement|bauentwicklungsplanung|bau[- ]?entwicklungsplanung|bauherrenvertret\w*|gebaeudetechnik|haustechnik|technisch\w* hauswart|hauswart\w*|facility\w*|hlk|hlks|tga|heizung\w*|lueftung\w*|kaelte\w*|energieversorgung\w*|energiekonzept\w*|energieberatung\w*|energieplanung\w*|energieprojekt\w*|betriebstechnik|betriebsingenieur\w*|versorgungstechnik|facility management|technisch\w* dienst|medizintechnik|medizin[- ]?technik)\b/;
   const fold = v => String(v || "").toLocaleLowerCase("de").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[\u0300-\u036f]/g,"").replace(/[\s_]+/g," ").trim();
   const matches = (patterns, title) => patterns.some(re => re.test(title));
+  // V2: transparent and intentionally conservative. Learned *directions* from
+  // explicit manual feedback, not fitted coefficients or an applicant CV.
+  // A low priority score NEVER removes a job; only unambiguous occupation
+  // families are parked for inspection in Radar > Bewertungs-Hub.
+  const outOfScope = [
+    /\b(?:koch|koechin|kuechenhilfe|kuechenmitarbeiter\w*|gastronomiefach\w*|servicemitarbeiter\w* gastronomie|restaurationsfach\w*)\b/,
+    /\b(?:coiffeur\w*|friseur\w*|florist\w*|kosmetiker\w*|nageldesign\w*|tierpfleger\w*)\b/,
+    /\b(?:reinigungskraft\w*|reinigungsmitarbeiter\w*|zimmermaedchen|housekeeping|hauswirtschaftsmitarbeiter\w*)\b/,
+    /\b(?:chauffeur\w*|lieferfahrer\w*|paketzusteller\w*|kassierer\w*|detailhandelsfach\w*|verkaufsmitarbeiter\w* detailhandel)\b/,
+    /\b(?:cleanroom fabrication|quantum device|quantenphysik|quantencomput\w*|mikrofabrikation)\b/
+  ];
+  const careerSignals = [
+    ["thermal_networks", /\b(?:fernwaerm\w*|waermenetz\w*|thermisch\w* netz\w*|rohrleitungsbau|waermeversorgung\w*)\b/, 33],
+    ["project_management", /\b(?:projektleit\w*|projektmanag\w*|projektkoordin\w*|fachbauleit\w*|bauleit\w*|bauherrenvertret\w*)\b/, 19],
+    ["energy", /\b(?:energieberat\w*|energiecontroll\w*|energiekonzept\w*|energieplanung\w*|energietechnik\w*|energieversorg\w*|waermepump\w*)\b/, 21],
+    ["infrastructure", /\b(?:infrastrukt\w*|tiefbau\w*|gebaeudetechnik\w*|hlks|heizung\w*|kaeltetechnik\w*|netzentwickl\w*)\b/, 13],
+    ["climate_environment", /\b(?:klima\w*|umwelt\w*|nachhaltig\w*|erneuerbar\w*|energiewend\w*|dekarbonisier\w*|foerderprogramm\w*)\b/, 13],
+    ["technical_sales", /\b(?:technisch\w* vertrieb\w*|technisch\w* verkauf\w*|sales engineer\w*|account manager\w*|kundenberat\w*|verkaufsberat\w*)\b/, 10],
+    ["career_adjacency", /\b(?:projektingenieur\w*|projektadministration\w*|projektassistenz\w*|lichtdesign\w*|gis\b|cad\b|kommunal\w* projekt\w*)\b/, 9]
+  ];
+  const advancedSeniority = /\b(?:geschaeftsfuehr\w*|geschaeftsleit\w*|direktor\w*|chief\b|head of\b|leitung \w+region|leiter\w* strassenregion)\b/;
+  const transferableOverride = /\b(?:projektleit\w*|projektmanag\w*|bauleit\w*|energie\w*|technisch\w*|infrastruktur\w*)\b/;
   function classify(job) {
     const title = fold(job && job.title);
     const company = fold(job && job.company);
-    if (!title) return {visible:true, reason:null};
-    if (matches(agentInnovation, title)) return {visible:true, reason:"agent_innovation_exception"};
-    if (hospitalContext.test(title + " " + company) && hospitalEngineering.test(title))
-      return {visible:true, reason:"hospital_engineering_exception"};
-    // Technical medical-device engineering is engineering, not patient care.
-    if (hospitalEngineering.test(title) && /\b(?:medizintechnik|medizin[- ]?technik)\b/.test(title))
-      return {visible:true, reason:"medical_engineering_exception"};
-    if (matches(clinical,title)) return {visible:false, reason:"healthcare_role"};
-    if (matches(classicalIT,title)) return {visible:false, reason:"it_role"};
-    if (hospitalContext.test(title + " " + company)) return {visible:false, reason:"healthcare_employer"};
-    return {visible:true, reason:null};
+    const description = fold(job && job.description);
+    if (!title) return {visible:true,reason:null,priority:40,reason_codes:[],version:"career-preselector-v2",exclusion:false};
+    const innovation = matches(agentInnovation, title);
+    const hospitalRole = hospitalContext.test(title + " " + company) && hospitalEngineering.test(title);
+    const medicalEngineering = hospitalEngineering.test(title) && /\b(?:medizintechnik|medizin[- ]?technik)\b/.test(title);
+    let reason = null;
+    if (!innovation && !hospitalRole && !medicalEngineering) {
+      if (matches(clinical, title)) reason = "healthcare_role";
+      else if (matches(classicalIT, title)) reason = "it_role";
+      else if (hospitalContext.test(title + " " + company)) reason = "healthcare_employer";
+    }
+    if (!reason && matches(outOfScope, title) && !transferableOverride.test(title)) reason = "out_of_scope_role";
+    let priority = 37;
+    const reason_codes = [];
+    let descriptionBonus = 0;
+    for (const [code, pattern, weight] of careerSignals) {
+      if (pattern.test(title)) {priority += weight;reason_codes.push(code);}
+      else if (pattern.test(description)) {descriptionBonus += Math.ceil(weight / 4);reason_codes.push(code + "_context");}
+    }
+    priority += Math.min(12,descriptionBonus);
+    if (advancedSeniority.test(title)) {priority -= 14;reason_codes.push("advanced_seniority");}
+    // Unknown or incomplete job descriptions stay reviewable.
+    priority = Math.max(1,Math.min(99,priority));
+    if (reason) priority = Math.min(priority,19);
+    if (innovation) reason_codes.push("agent_innovation_exception");
+    if (hospitalRole) reason_codes.push("hospital_engineering_exception");
+    if (medicalEngineering) reason_codes.push("medical_engineering_exception");
+    return {visible:!reason,reason,priority,reason_codes,version:"career-preselector-v2",exclusion:!!reason};
   }
   const isVisible = job => classify(job).visible;
   const api = Object.freeze({classify,isVisible});
