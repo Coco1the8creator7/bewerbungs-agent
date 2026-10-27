@@ -391,6 +391,22 @@
  });
  // The explorer reads only this audience's opt-in local profile, not shared CRM ratings.
  window.CareerRadarBridge=Object.freeze({market,profile,changed});
- window.addEventListener("hashchange",()=>{if(window.location.hash==="#radar")loadFeed();});
+ // Re-evaluate calendar boundaries and import changes while the dashboard stays open.
+ // Browser timers may be paused in background tabs; visibility/focus restores accuracy.
+ function scheduleMidnight(){
+  const now=new Date(),next=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1);
+  window.setTimeout(()=>{updateStats();scheduleMidnight();},Math.max(1000,next-now+100));
+ }
+ scheduleMidnight();
+ window.addEventListener("hashchange",()=>{
+  if(window.location.hash==="#radar"){updateStats();loadFeed(true);}
+ });
+ document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden&&window.location.hash==="#radar"){updateStats();loadFeed(true);}
+ });
+ window.addEventListener("pageshow",()=>{if(feedLoaded)updateStats();});
+ window.setInterval(()=>{
+  if(!document.hidden&&window.location.hash==="#radar")loadFeed(true);
+ },15*60*1000);
  initialize();
 })();
