@@ -349,6 +349,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./landing-cards.css?v=20261027-compact-cards-1">
 <link rel="stylesheet" href="./urban-mono-magenta.css?v=20261027-muted-2">
 <link rel="stylesheet" href="./radar-designs.css?v=20261027-zen-magenta-1">
+<link rel="stylesheet" href="./landing-cleanup.css?v=20261027-cleanup-1">
 </head>
 <body data-active-mode="startseite">
 <div id="modeNavBackdrop" class="mode-nav-backdrop" hidden></div>
@@ -406,7 +407,6 @@ header .sub,.section-heading p{color:#6b5744}
         <div class="route-node" data-milestone="3"><span class="mission-route-art" aria-hidden="true"></span><small>Gespräche</small></div>
         <div class="route-node" data-milestone="4"><span class="mission-route-art" aria-hidden="true"></span><small>Angebot</small></div>
       </div>
-      <p class="route-caption" id="routeCaption">Radar aktiv · erste Stellen entdecken.</p>
     </section>
   </div>
 </section>
@@ -419,14 +419,8 @@ header .sub,.section-heading p{color:#6b5744}
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
-  <div class="section-heading"><div><h2 id="newJobsTitle">Meine Inserate</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><div class="headline-actions"><span id="markedSummary" class="marked-summary">0 für Export markiert</span><button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button><button type="button" id="saveGithubFeedback">💾 Bewertungen speichern</button></div></div>
-  <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Unbewertet (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button></div>
-  <div class="panel filters" role="search" aria-label="Inserate filtern">
-    <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
-    <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
-    <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
-    <div><label for="sort">Sortierung</label><select id="sort"><option value="priority" selected>Priorität</option><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
-  </div>
+  <div class="section-heading"><h2 id="newJobsTitle">Meine Inserate</h2></div>
+  <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Offen (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button></div>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
   <div id="mobileJobSentinel" class="mobile-load" hidden><span id="mobileJobCount"></span><button type="button" class="secondary" onclick="appendJobBatch();observeMobileJobs()">Weitere 5 anzeigen</button></div>
 </section>
@@ -446,6 +440,20 @@ header .sub,.section-heading p{color:#6b5744}
       <button type="button" class="secondary" id="importWorkspace">Gesamtsicherung laden</button>
       <button type="button" class="secondary" id="addJob">Inserat manuell erfassen</button>
     </div>
+    <div class="buttons crm-export-actions">
+      <span id="markedSummary" class="marked-summary">0 für Export markiert</span>
+      <button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button>
+      <button type="button" id="saveGithubFeedback">Bewertungen in GitHub speichern</button>
+    </div>
+    <details class="crm-advanced-filters">
+      <summary>Erweiterte Inseratesuche und Sortierung</summary>
+  <div class="panel filters" role="search" aria-label="Inserate filtern">
+    <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
+    <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
+    <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
+    <div><label for="sort">Sortierung</label><select id="sort"><option value="priority" selected>Priorität</option><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
+  </div>
+    </details>
     <div class="persist-panel"><strong>GitHub-Synchronisation</strong><p>Fine-grained Token mit Zugriff nur auf dieses Repository (Contents: Read and write). Der Token bleibt auf diesem Gerät im Browser gespeichert. Nie auf gemeinsam genutzten Geräten einrichten.</p><label for="githubToken">GitHub-Token</label><input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_…" style="margin:8px 0"><div class="buttons"><button type="button" id="connectGithub">Token auf diesem Gerät speichern</button><button type="button" class="secondary" id="loadGithubFeedback">GitHub-Bewertungen laden</button><button type="button" class="secondary" id="disconnectGithub">Token entfernen</button></div><div class="data-state" id="githubStatus" role="status" aria-live="polite">Nicht verbunden</div></div>
     <div class="persist-panel">
       <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
@@ -850,7 +858,6 @@ function renderMission(){
  el("routeLine").style.width=width+"%";
 
  el("routeMap").setAttribute("aria-label","Agency World öffnen · "+names[level]);
- el("routeCaption").textContent=(level===4&&(history.some(e=>e.type==="accepted")||visibleJobs().some(j=>stageOf(j.id)==="accepted"))?"Zusage bestätigt ✦":names[level])+". Die Route zeigt deinen weitesten dokumentierten Meilenstein, nicht die Wahrscheinlichkeit einer Zusage. Tippe auf die Karte für deine Inselwelt.";
  for(const marker of document.querySelectorAll("[data-milestone]")){
   const n=Number(marker.dataset.milestone);
   marker.classList.toggle("reached",n<=level);
@@ -1511,7 +1518,7 @@ function renderNewJobs(){
  const query=el("query").value.trim().toLocaleLowerCase("de-CH");
  const category=el("category").value,source=el("source").value;
  const unreviewed=unratedJobs(),reviewed=reviewedJobs();
-  el("viewUnrated").textContent="Unbewertet ("+unreviewed.length+")";
+  el("viewUnrated").textContent="Offen ("+unreviewed.length+")";
   el("viewReviewed").textContent="Bearbeitet ("+reviewed.length+")";
   el("viewUnrated").setAttribute("aria-pressed",String(reviewListView==="unrated"));
   el("viewReviewed").setAttribute("aria-pressed",String(reviewListView==="reviewed"));
@@ -1530,7 +1537,6 @@ function renderNewJobs(){
   return mode==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):
    (validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0);
  });
- el("newSummary").textContent=(reviewListView==="reviewed"?"Bearbeitete Inserate: ":"Noch unbewertet: ")+allNew.length+" · "+filtered.length+" angezeigt";
  updateMarkedSummary();
  const signature=JSON.stringify([reviewListView,query,category,source,el("sort").value,filtered.map(j=>j.id)]);
  if(signature!==mobileJobSignature){mobileJobLimit=5;mobileJobSignature=signature;}
