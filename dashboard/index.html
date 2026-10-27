@@ -345,6 +345,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./radar-designs.css">
 <link rel="stylesheet" href="./radar-explorer.css">
 <link rel="stylesheet" href="./dossiers.css?v=20261027-dossiers-1">
+<link rel="stylesheet" href="./notifications.css?v=20261027-notifications-1">
 </head>
 <body data-active-mode="startseite">
 <div id="modeNavBackdrop" class="mode-nav-backdrop" hidden></div>
@@ -366,22 +367,30 @@ header .sub,.section-heading p{color:#6b5744}
 </aside>
 <main>
 <header class="career-app-header">
-  <button id="openModeSidebar" class="mode-menu-button" type="button" aria-controls="modeSidebar" aria-expanded="false" aria-label="Menü öffnen">
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-  </button>
-  <div><h1>Career.Agency<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben, Karriere machen.</p></div>
+  <div class="career-header-actions">
+    <button id="openModeSidebar" class="mode-menu-button" type="button" aria-controls="modeSidebar" aria-expanded="false" aria-label="Menü öffnen">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <div class="career-header-notifications">
+      <button id="notificationBell" class="notification-bell" type="button" aria-label="Benachrichtigungen öffnen" aria-controls="notificationPanel" aria-expanded="false" aria-haspopup="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
+        <span id="notificationBadge" class="notification-badge" aria-hidden="true" hidden></span>
+      </button>
+      <section id="notificationPanel" class="notification-panel" aria-label="Aktuelle Benachrichtigungen" hidden>
+        <div class="notification-header">
+          <strong>Benachrichtigungen</strong>
+          <button id="notificationClose" type="button" aria-label="Benachrichtigungen schliessen">✕</button>
+        </div>
+        <p id="notificationContext" class="notification-context">Aktuelle Hinweise</p>
+        <div id="notificationList" class="notification-list" aria-live="polite"></div>
+        <p id="notificationEmpty" class="notification-empty">Derzeit keine aktuellen Hinweise.</p>
+        <p class="notification-note">Aktuelle Ereignisse, keine dauerhaft als ungelesen gespeicherten Nachrichten.</p>
+      </section>
+    </div>
+  </div>
+  <div class="career-header-copy"><h1>Career.Agency<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben, Karriere machen.</p></div>
 </header>
 <div id="mode-startseite" class="career-mode-view" data-mode-page="startseite">
-<section class="section" aria-labelledby="overviewTitle">
-  <div class="section-heading"><h2 id="overviewTitle">Statusübersicht</h2></div>
-  <div class="stats" aria-label="Kennzahlen">
-    <div class="stat"><div class="name">Neue Inserate</div><strong id="newCount">0</strong><small id="newCountWindow">Seit gestern · Besuchsverlauf wird geladen</small></div>
-    <div class="stat"><div class="name">Unbewertete Inserate</div><strong id="unratedCount">0</strong><small>Aktuell im Reiter «Unbewertet»</small></div>
-    <div class="stat"><div class="name">Total in Prüfung</div><strong id="reviewTotalCount">0</strong><small>Aktuell im Status «In Prüfung»</small></div>
-    <div class="stat"><div class="name">Absagen neu</div><strong id="declinedNewCount">0</strong><small>In den letzten 7 Tagen erfasst</small></div>
-  </div>
-</section>
-
 <section class="section" aria-labelledby="missionTitle">
   <div class="section-heading"><h2 id="missionTitle">Mission Control</h2></div>
   <div class="mission-grid">
@@ -708,6 +717,15 @@ header .sub,.section-heading p{color:#6b5744}
    <div id="agencyMap" class="agency-map"></div>
   </div>
   <section class="agency-inspector" id="agencyInspector" aria-live="polite"></section>
+  <section class="section agency-status-overview" aria-labelledby="overviewTitle">
+  <div class="section-heading"><h2 id="overviewTitle">Statusübersicht</h2></div>
+  <div class="stats" aria-label="Kennzahlen">
+    <div class="stat"><div class="name">Neue Inserate</div><strong id="newCount">0</strong><small id="newCountWindow">Seit gestern · Besuchsverlauf wird geladen</small></div>
+    <div class="stat"><div class="name">Unbewertete Inserate</div><strong id="unratedCount">0</strong><small>Aktuell im Reiter «Unbewertet»</small></div>
+    <div class="stat"><div class="name">Total in Prüfung</div><strong id="reviewTotalCount">0</strong><small>Aktuell im Status «In Prüfung»</small></div>
+    <div class="stat"><div class="name">Absagen neu</div><strong id="declinedNewCount">0</strong><small>In den letzten 7 Tagen erfasst</small></div>
+  </div>
+</section>
   <section class="agency-weekly-missions" aria-labelledby="questsTitle">
     <div class="agency-weekly-heading">
       <div><span class="agency-kicker">★ QUEST LOG</span><h3 id="questsTitle">Wochenmissionen</h3></div>
@@ -729,6 +747,7 @@ header .sub,.section-heading p{color:#6b5744}
 <script src="./agency-world.js"></script>
 <script src="./github-sync.js"></script>
 <script src="./career-filter.js"></script>
+<script src="./notifications.js?v=20261027-notifications-1"></script>
 <script>
 "use strict";
 // Kein Browser-Dauerspeicher: private Status-/Notizdaten liegen nur im aktuellen Tab.
@@ -1402,10 +1421,14 @@ function startNewJob(){
 let newJobDraft=null;
 function actionButton(job){const b=node("button","Details","secondary compact-button");b.type="button";b.addEventListener("click",()=>openDetails(job.id));return b;}
 function renderStats(){
- el("newCount").textContent=countNewArrivals(visibleJobs(),incomingWindow.cutoff);
+ const currentJobs=visibleJobs();
+ const newArrivals=countNewArrivals(currentJobs,incomingWindow.cutoff);
+ const declinedRecent=currentJobs.filter(j=>stageOf(j.id)==="declined"&&recent(stageChangedAt(j.id))).length;
+ el("newCount").textContent=newArrivals;
  el("unratedCount").textContent=unratedJobs().length;
- el("reviewTotalCount").textContent=visibleJobs().filter(j=>stageOf(j.id)==="review").length;
- el("declinedNewCount").textContent=visibleJobs().filter(j=>stageOf(j.id)==="declined"&&recent(stageChangedAt(j.id))).length;
+ el("reviewTotalCount").textContent=currentJobs.filter(j=>stageOf(j.id)==="review").length;
+ el("declinedNewCount").textContent=declinedRecent;
+ window.CareerNotifications?.update({newArrivals,declinedRecent,windowLabel:incomingWindow.label,demoMode});
 }
 function renderPipeline(){
  const active=visibleJobs().filter(j=>activeStages.has(stageOf(j.id))).sort((a,b)=>(validDate(stageChangedAt(b.id))||0)-(validDate(stageChangedAt(a.id))||0));
