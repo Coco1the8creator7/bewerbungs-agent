@@ -10,7 +10,7 @@ Die bereits vorhandenen Berufsfeld-Ausschlüsse werden um wenige eindeutige fach
 Alle importierten Stellen bleiben unter derselben ID in `dashboard/jobs.json`. In `Radar > Bewertungs-Hub > Zurückgestellt` stehen alle in der Erwachsenen-Startseite ausgeblendeten Inserate zur Verfügung, inklusive Quelle, Link, Stellenbeschreibung und fakultativer Kriterienbewertung. Diese Audit-Ansicht ignoriert optionale Wunschberufe, Wunschregionen und Quellenfilter, damit kein ausgeschiedenes Inserat verborgen bleibt. Bei mehr als 50 Treffern können weitere Datensätze nachgeladen werden. Die Lehrstellenansicht bleibt unverändert.
 
 ## Grenzen
-- Die Radar-Kriterienbewertungen (1–5) sind aktuell **vom CRM-Relevanzscore (1–100) getrennt**. Sie werden nicht stillschweigend umgerechnet, nicht zur Filteränderung verwendet und nicht automatisch in das Lernsystem übernommen.
+- Die Radar-Kriterienbewertungen (1–5) bleiben **vom CRM-Relevanzscore (1–100) getrennt** und werden nicht umgerechnet. Die Erwachsenen-Radaransicht bietet deshalb zusätzlich einen ausdrücklichen 1–100-Regler, der denselben Relevanzeintrag wie die Startseite aktualisiert. Dauerhafte GitHub-Sicherung erfolgt weiterhin über «Bewertungen speichern» (öffentliches Repository). Kriterienbewertungen werden nicht automatisch in das Lernsystem übernommen.
 - Die beim Import gespeicherten `selection.suggested_score`-Felder bleiben zunächst auf `heuristic-v1`; die V2-Priorität ist bewusst eine gesonderte, rein lokale Darstellungshilfe.
 - Kein Löschen, kein automatischer Versand, keine kostenpflichtige KI-API und kein Training auf unbearbeiteten Kriterien.
 - Die Filter- und Prioritätsregeln sind versioniert und können unabhängig vom Rohdatenbestand angepasst beziehungsweise zurückgenommen werden.
