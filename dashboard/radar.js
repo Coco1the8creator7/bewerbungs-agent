@@ -120,7 +120,16 @@
   input.value="";renderSkills();changed();
  }
  function updateStats(){
-  const summary=model.summarize(jobs,new Date(),market());
+  const now=new Date(),summary=model.summarize(jobs,now,market());
+  const period=window.CareerRadarDesigns?.getPeriod()||"yesterday";
+  // The KPI and one-marker-per-job artwork share this exact newJobs selector,
+  // including market, unique ID, first_seen_at and local calendar boundaries.
+  const newJobs=model.newJobs(jobs,now,market(),period);
+  window.CareerRadarDesigns?.setPoints(newJobs,period==="week"?"in dieser Woche":"seit gestern");
+  for(const id of ["radarSinceYesterday","radarWeek"]){
+   get(id).closest(".radar-metric").classList.toggle("is-active-period",
+    id===(period==="week"?"radarWeek":"radarSinceYesterday"));
+  }
   const visibleAdult=jobs.filter(j=>!model.isApprenticeship(j)&&(!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j)));
   const count=market()==="career"?visibleAdult.length:summary.apprenticeships;
   for(const [id,value] of [["radarTotal",summary.total],["radarSinceYesterday",summary.sinceYesterday],
@@ -365,6 +374,7 @@
  get("radarCustomSkill").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addSkill();}});
  get("radarAddSkill").addEventListener("click",addSkill);
  get("radarRefresh").addEventListener("click",()=>loadFeed(true));
+ get("radarDial").addEventListener("radar-period-changed",updateStats);
  get("radarToggleDemo").addEventListener("click",()=>{showDemo=!showDemo;renderReviews();});
  get("radarReviewScope").addEventListener("change",()=>{reviewLimit=50;renderReviews();});
  get("radarReviewMore").addEventListener("click",()=>{reviewLimit+=50;renderReviews();});
