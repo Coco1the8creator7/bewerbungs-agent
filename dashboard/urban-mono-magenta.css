@@ -476,3 +476,47 @@ dialog::backdrop { background: #262A3180; }
     box-shadow: 0 0 0 4px var(--ca-paper);
   }
 }
+
+/* Notifications were introduced alongside the new theme: keep the bell and
+   flyout in the same neutral/magenta system without modifying its behaviour. */
+.notification-bell {
+  background: var(--ca-paper);
+  color: var(--ca-ink);
+  border-color: var(--ca-line);
+}
+.notification-bell:hover, .notification-bell[aria-expanded="true"] {
+  background: var(--ca-accent-soft);
+  color: var(--ca-accent);
+}
+.notification-badge {
+  background: var(--ca-accent);
+  color: #fff;
+  border-color: var(--ca-paper);
+}
+.notification-panel {
+  background: var(--ca-paper);
+  color: var(--ca-ink);
+  border-color: var(--ca-line);
+  box-shadow: 0 18px 48px #262A3126;
+}
+.notification-header #notificationClose {
+  background: #F1F2F4;
+  color: var(--ca-ink);
+}
+.notification-header #notificationClose:hover { background: var(--ca-accent-soft); }
+.notification-context, .notification-empty,
+.notification-note, .notification-item-copy small { color: var(--ca-muted); }
+.notification-item {
+  background: var(--ca-paper-soft);
+  border-color: var(--ca-line);
+}
+.notification-item-icon {
+  background: var(--ca-accent-soft);
+  color: var(--ca-accent);
+}
+.notification-declines .notification-item-icon {
+  background: #F9ECEF;
+  color: var(--ca-danger);
+}
+.notification-item-copy strong { color: var(--ca-ink); }
+.notification-note { border-color: var(--ca-line); }
