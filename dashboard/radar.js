@@ -257,6 +257,7 @@
    "Radar-Testbewertungen bleiben von den bisherigen CRM-Bewertungen getrennt. Kein GitHub-Upload und kein KI-Training. Die Stellenabos laufen unverändert weiter.":
    "Lehrstellen-Bewertungen bleiben vom Erwachsenen-CRM getrennt. Für den produktiven Einsatz mit Jugendlichen braucht es zuerst geschützte Benutzerkonten.";
   updateForm();renderSkills();renderSources();updateStats();renderReviews();
+  window.CareerRadarExplorer?.render();
  }
  function switchTab(id){
   for(const tab of root.querySelectorAll(".radar-tab")){
@@ -327,6 +328,8 @@
    catch(err){message("Lokale Daten konnten nicht gelöscht werden: "+err.message);}
   }
  });
+ // The explorer reads only this audience's opt-in local profile, not shared CRM ratings.
+ window.CareerRadarBridge=Object.freeze({market,profile,changed});
  window.addEventListener("hashchange",()=>{if(window.location.hash==="#radar")loadFeed();});
  initialize();
 })();
