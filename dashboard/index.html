@@ -338,6 +338,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./agency-theme-beige.css">
 <link rel="stylesheet" href="./mode-nav.css?v=20261024-nav-access-1">
 <link rel="stylesheet" href="./radar.css">
+<link rel="stylesheet" href="./dossiers.css?v=20261027-dossiers-1">
 </head>
 <body data-active-mode="startseite">
 <div id="modeNavBackdrop" class="mode-nav-backdrop" hidden></div>
@@ -538,8 +539,35 @@ header .sub,.section-heading p{color:#6b5744}
     </section>
   </div>
 </section>
-<section id="mode-dossiers" class="career-mode-placeholder" data-mode-page="dossiers" aria-labelledby="mode-dossiers-title" hidden>
-  <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / DOSSIERS</span><h2 id="mode-dossiers-title">Dossiers</h2><p>Hier entsteht der Dossiers-Modus. Seine Oberfläche und Funktionen definieren wir separat.</p></div>
+<section id="mode-dossiers" class="career-mode-view" data-mode-page="dossiers" aria-labelledby="mode-dossiers-title" hidden>
+  <div class="dossier-heading">
+    <div><span class="dossier-kicker">CAREER.AGENCY / DOSSIERS</span><h2 id="mode-dossiers-title">Deine Bewerbungsdossiers</h2>
+      <p class="dossier-intro">Alle Dokumente für deine Bewerbungen an einem Ort. Dossiers vorbereiten, bestehende Unterlagen zuordnen und Dateien direkt öffnen oder herunterladen.</p>
+    </div>
+    <div class="dossier-actions"><button type="button" id="dossierUpload" class="dossier-secondary">↑ Unterlagen hochladen</button><button type="button" id="dossierCreate" class="dossier-primary">＋ Dossier vorbereiten</button></div>
+  </div>
+  <div class="dossier-stats" aria-label="Dossier-Statistik">
+    <div class="dossier-stat"><span>Deine Dossiers</span><strong id="dossierCount">0</strong><small>Stellenbezogene Sammlungen</small></div>
+    <div class="dossier-stat"><span>Deine Dateien</span><strong id="dossierFileCount">0</strong><small>Dokumente in dieser Ablage</small></div>
+    <div class="dossier-stat"><span>Speicherort</span><strong>Dieses Gerät</strong><small>Privat · kein Cloud-Sync</small></div>
+  </div>
+  <div class="dossier-tabs" role="tablist" aria-label="Dossiers Bereiche">
+    <button type="button" class="dossier-tab" role="tab" aria-selected="true" aria-controls="dossierOverviewPanel" id="dossierOverviewTab">Übersicht <span id="dossierTabCount">(0)</span></button>
+  </div>
+  <div id="dossierOverviewPanel" role="tabpanel" aria-labelledby="dossierOverviewTab">
+    <div class="dossier-toolbar"><label for="dossierSearch">Erstellte Dossiers</label><input id="dossierSearch" type="search" autocomplete="off" placeholder="Stelle oder Unternehmen suchen …"></div>
+    <div id="dossierList" class="dossier-list" aria-live="polite"><div class="dossier-empty">Lade deine lokal gespeicherten Dossiers …</div></div>
+    <section class="dossier-library" aria-labelledby="dossierLibraryTitle">
+      <div class="dossier-library-head">
+        <div><h3 id="dossierLibraryTitle">Basisunterlagen</h3><p>Bestehende Dokumente ohne feste Stellenzuordnung · <span id="dossierLibraryCount">0 Dateien</span></p></div>
+        <button type="button" id="dossierLibraryUpload" class="dossier-secondary">Datei hinzufügen</button>
+      </div>
+      <div id="dossierLibrary"></div>
+    </section>
+  </div>
+  <p class="dossier-info"><strong>Privater Prototyp:</strong> Hochgeladene Dateien und Dossier-Einstellungen werden nur im Browser dieses Geräts gespeichert. Es gibt noch keine Anmeldung, keine Synchronisation auf andere Geräte und keine KI-generierten Dokumente. Browserdaten nicht löschen, bevor wichtige Dateien gesichert sind.</p>
+  <p id="dossierMessage" class="dossier-message" role="status" aria-live="polite"></p>
+  <input id="dossierFileInput" type="file" accept=".pdf,.doc,.docx,.odt,.txt,.png,.jpg,.jpeg" multiple hidden aria-label="Bewerbungsunterlagen auswählen">
 </section>
 <section id="mode-agency" class="career-mode-placeholder" data-mode-page="agency" aria-labelledby="mode-agency-title" hidden>
   <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / AGENCY</span><h2 id="mode-agency-title">Agency</h2><p>Die eigenständige Modus-Oberfläche folgt später. Die bestehende Agency World bleibt erreichbar.</p><button id="modeLaunchAgency" type="button">Bestehende Agency World öffnen ↗</button></div>
@@ -550,6 +578,24 @@ header .sub,.section-heading p{color:#6b5744}
 <section id="mode-einstellungen" class="career-mode-placeholder" data-mode-page="einstellungen" aria-labelledby="mode-einstellungen-title" hidden>
   <div class="career-mode-coming"><span class="career-mode-kicker">CAREER.AGENCY / EINSTELLUNGEN</span><h2 id="mode-einstellungen-title">Einstellungen</h2><p>Hier entsteht die zentrale Einstellungsansicht. Die bisherigen Daten- und Synchronisationsfunktionen bleiben vorerst auf der Startseite.</p></div>
 </section>
+<dialog id="dossierDialog" class="dossier-dialog" aria-labelledby="dossierDialogTitle">
+  <form id="dossierForm">
+    <span class="dossier-kicker">DOSSIERS / VORBEREITUNG</span>
+    <h2 id="dossierDialogTitle">Dossier vorbereiten</h2>
+    <p>Lege die Eckdaten für die spätere Generierung fest. Deine Eingaben bleiben auf diesem Gerät.</p>
+    <label for="dossierJobSelect">Mit Inserat verknüpfen</label><select id="dossierJobSelect"><option value="">Ohne verknüpftes Inserat</option></select>
+    <label for="dossierTitleInput">Stellenbezeichnung *</label><input id="dossierTitleInput" required maxlength="250" placeholder="z. B. Projektleiter thermische Netze">
+    <label for="dossierCompanyInput">Unternehmen</label><input id="dossierCompanyInput" maxlength="250" placeholder="z. B. Energieversorger">
+    <div class="dossier-dialog-grid">
+      <div><label for="dossierTone">Tonalität</label><select id="dossierTone"><option value="klar">Klar &amp; professionell</option><option value="persoenlich">Persönlich &amp; motiviert</option><option value="sachlich">Sachlich &amp; kompakt</option></select></div>
+      <div><label for="dossierLength">Umfang Motivationsschreiben</label><select id="dossierLength"><option value="standard">Standard · 1 Seite</option><option value="kurz">Kurz · ½ Seite</option></select></div>
+    </div>
+    <label for="dossierFocus">Schwerpunkt / Hinweise (optional)</label>
+    <textarea id="dossierFocus" maxlength="1000" rows="3" placeholder="Welche Erfahrungen oder Stärken sollen besonders hervorgehoben werden?"></textarea>
+    <p class="dossier-disclaimer">Die Maske speichert vorerst eine Vorbereitung – sie erstellt noch kein Bewerbungsschreiben. Die spätere Generierung erfolgt erst nach ausdrücklicher Freigabe.</p>
+    <div class="dossier-dialog-actions"><button type="button" id="dossierCancel" class="dossier-secondary">Abbrechen</button><button type="submit" id="dossierSubmit" class="dossier-primary">Vorbereitung speichern</button></div>
+  </form>
+</dialog>
 <dialog id="details" aria-labelledby="detailTitle">
   <div class="detail-top"><h2 id="detailTitle">Inserat</h2><button type="button" id="dismissDetails" class="secondary compact-button" aria-label="Detailansicht schliessen">✕</button></div><p id="detailMeta" class="muted"></p>
   <section class="dialog-field" aria-label="Stellenbeschreibung"><div id="detailDescription"></div></section>
@@ -583,7 +629,7 @@ header .sub,.section-heading p{color:#6b5744}
     </div>
   </details>
   <p id="detailError" class="status-message" style="color:#8a3e2b" role="alert"></p>
-  <div class="dialog-actions"><button type="button" id="closeDetails" class="secondary">Abbrechen</button><button type="button" id="saveDetails">Änderungen übernehmen</button></div>
+  <div class="dialog-actions"><button type="button" id="detailPrepareDossier" class="secondary">Dossier vorbereiten</button><button type="button" id="closeDetails" class="secondary">Abbrechen</button><button type="button" id="saveDetails">Änderungen übernehmen</button></div>
 </dialog>
 <dialog class="agency-world" id="agencyWorld" aria-labelledby="agencyTitle">
  <header class="agency-world-top">
@@ -1229,7 +1275,7 @@ function openDetails(id){
  detailDraftFeedback=normalizeReasonFeedback(ratingOf(id));
  el("detailRatingNote").value=ratingOf(id)?.note||"";
  el("detailReasons").replaceChildren(makeReasonButtons(detailDraftFeedback,value=>{detailDraftFeedback=value;}));
- el("closeDetails").textContent="Schliessen";
+ el("closeDetails").textContent="Schliessen";el("detailPrepareDossier").hidden=j.id.startsWith("DEMO-");
  el("details").showModal();el("details").scrollTop=0;
 }
 function startNewJob(){
@@ -1248,7 +1294,7 @@ function startNewJob(){
  newJobDraft=j;
  el("detailTitle").textContent="Neues Inserat erfassen";
  el("detailReviewHost").hidden=true;el("detailReviewHost").replaceChildren();el("detailLegacyRating").hidden=false;
- el("closeDetails").textContent="Abbrechen";
+ el("closeDetails").textContent="Abbrechen";el("detailPrepareDossier").hidden=true;
  el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
  el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
  el("detailDecision").value="open";el("detailNote").value="";el("detailScore").value="";
@@ -1692,10 +1738,19 @@ window.addEventListener("scroll",updateFloatingSaveVisibility,{passive:true});
 window.addEventListener("resize",updateFloatingSaveVisibility);
 document.addEventListener("close",updateFloatingSaveVisibility,true);
 updateFloatingSaveVisibility();
+// Expose public job metadata only, never private reviews or notes.
+window.CareerDossierJobs=()=>jobs.map(j=>({id:j.id,title:j.title,company:j.company,location:j.location}));
+el("detailPrepareDossier").addEventListener("click",()=>{
+ const j=jobs.find(job=>job.id===currentJobId);
+ if(!j||j.id.startsWith("DEMO-"))return;
+ el("details").close();
+ window.CareerDossiers?.prepare({id:j.id,title:j.title,company:j.company,location:j.location});
+});
 initialize();
 </script>
 <script src="./radar-model.js"></script>
 <script src="./radar.js"></script>
+<script src="./dossiers.js?v=20261027-dossiers-1"></script>
 <script src="./mode-nav.js?v=20261027-agency-direct-1"></script>
 </body>
 </html>

@@ -1,0 +1,77 @@
+/* Dossiers: the same warm, minimal visual language as Radar and The Agency. */
+#mode-dossiers{color:#49392b;min-height:68vh;padding:24px 0 64px}
+#mode-dossiers *{box-sizing:border-box}
+#mode-dossiers .dossier-kicker{color:#927555;font:700 .7rem/1.5 ui-monospace,monospace;letter-spacing:.13em}
+#mode-dossiers .dossier-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:22px;flex-wrap:wrap;margin-bottom:24px}
+#mode-dossiers h2{font-size:clamp(1.85rem,3.4vw,2.6rem);letter-spacing:-.04em;color:#423225;margin:5px 0}
+#mode-dossiers .dossier-intro{max-width:650px;margin:3px 0 0;color:#725d48;line-height:1.6;font-size:.91rem}
+#mode-dossiers .dossier-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+#mode-dossiers button,.dossier-dialog button{font-weight:700;border-radius:10px}
+#mode-dossiers .dossier-primary,.dossier-dialog .dossier-primary{background:#604a37;color:#fff8ed;border:1px solid #604a37}
+#mode-dossiers .dossier-primary:hover,.dossier-dialog .dossier-primary:hover{background:#463525}
+#mode-dossiers .dossier-secondary,.dossier-dialog .dossier-secondary{background:#f6ecdd;color:#554332;border:1px solid #d8c5ae}
+#mode-dossiers .dossier-secondary:hover,.dossier-dialog .dossier-secondary:hover{background:#edddca}
+#mode-dossiers button:focus-visible,.dossier-dialog button:focus-visible{outline:3px solid #c8a87e;outline-offset:3px}
+#mode-dossiers .dossier-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:24px}
+#mode-dossiers .dossier-stat{background:#fcf6eb;border:1px solid #ddcbb5;border-radius:15px;padding:19px 21px;min-height:106px}
+#mode-dossiers .dossier-stat span{display:block;color:#76614b;font-size:.81rem}
+#mode-dossiers .dossier-stat strong{display:block;margin-top:8px;font-size:1.65rem;line-height:1.15;font-weight:780;letter-spacing:-.035em;color:#443425}
+#mode-dossiers .dossier-stat small{display:block;font-size:.73rem;margin-top:5px;color:#8e7963}
+#mode-dossiers .dossier-tabs{display:flex;border-bottom:1px solid #d4c3ae;gap:15px;margin-bottom:18px}
+#mode-dossiers .dossier-tab{position:relative;border:0!important;background:none!important;color:#463526!important;border-radius:0;padding:12px 15px;font-size:.91rem}
+#mode-dossiers .dossier-tab:after{content:"";position:absolute;left:12px;right:12px;bottom:0;background:#809475;height:3px;border-radius:3px}
+#mode-dossiers .dossier-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:15px 0;flex-wrap:wrap}
+#mode-dossiers .dossier-toolbar label{font-weight:750;color:#5c4938;margin:0}
+#mode-dossiers .dossier-toolbar input{width:min(100%,330px);border:1px solid #d8c8b2;background:#fffaf2;color:#4b3a2b}
+#mode-dossiers .dossier-list{display:grid;gap:12px}
+#mode-dossiers .dossier-card,#mode-dossiers .dossier-library{background:#fcf7ef;border:1px solid #ddcbb4;border-radius:15px;padding:21px;min-width:0}
+#mode-dossiers .dossier-card-head{display:flex;justify-content:space-between;align-items:start;gap:13px}
+#mode-dossiers .dossier-card h3{font-size:1.08rem;line-height:1.35;letter-spacing:-.025em;color:#473528;margin:0}
+#mode-dossiers .dossier-card-head p{margin:5px 0 0;font-size:.82rem;color:#826b54}
+#mode-dossiers .dossier-status{flex-shrink:0;display:inline-flex;background:#e9e6db;border:1px solid #d1cbb9;border-radius:50px;padding:6px 10px;font-size:.7rem;font-weight:750;color:#66765e}
+#mode-dossiers .dossier-card-detail{font-size:.76rem;margin:14px 0 13px;color:#8c735c}
+#mode-dossiers .dossier-card-actions{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#mode-dossiers .dossier-button-quiet{background:#f2e7d6;color:#584632;border:1px solid #e1cfb8}
+#mode-dossiers .dossier-button-quiet:hover{background:#e7d7c3;color:#403021}
+#mode-dossiers .dossier-card-actions button{font-size:.78rem;padding:8px 11px}
+#mode-dossiers .dossier-attachments{border-top:1px solid #e9dbca;padding-top:10px}
+#mode-dossiers .dossier-file{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0}
+#mode-dossiers .dossier-file + .dossier-file{border-top:1px solid #eee3d5}
+#mode-dossiers .dossier-file-info{min-width:0;overflow-wrap:anywhere}
+#mode-dossiers .dossier-file-info strong{display:block;font-size:.83rem;color:#514030}
+#mode-dossiers .dossier-file-info small{display:block;font-size:.72rem;color:#927b63;margin-top:3px}
+#mode-dossiers .dossier-file-actions{display:flex;gap:6px;flex-wrap:wrap}
+#mode-dossiers .dossier-file-actions button{padding:6px 9px;font-size:.72rem}
+#mode-dossiers .dossier-empty{border:1px dashed #d3bea2;background:#f9f0e2;color:#766049;border-radius:15px;padding:35px 23px;line-height:1.6}
+#mode-dossiers .dossier-quiet{color:#927b63;font-size:.82rem;line-height:1.55;margin:8px 0}
+#mode-dossiers .dossier-library{margin-top:24px}
+#mode-dossiers .dossier-library-head{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:5px}
+#mode-dossiers .dossier-library h3{margin:0;color:#4b382a;font-size:1.05rem}
+#mode-dossiers .dossier-library-head p{margin:4px 0 0;color:#846d56;font-size:.79rem}
+#mode-dossiers .dossier-info{font-size:.77rem;line-height:1.6;color:#7f6952;margin:15px 0}
+#mode-dossiers .dossier-info strong{color:#67503a}
+#mode-dossiers .dossier-message{font-size:.82rem;color:#5c7158;min-height:1.2em;margin:10px 0}
+#mode-dossiers .dossier-message.is-error{color:#9c4631}
+.dossier-dialog{background:#fcf7ed;color:#4b3929;border:1px solid #d6c4ad;border-radius:16px;padding:26px;width:min(590px,calc(100vw - 26px))}
+.dossier-dialog h2{color:#473527;font-size:1.36rem;letter-spacing:-.03em}
+.dossier-dialog p{font-size:.84rem;line-height:1.6;color:#7c6853}
+.dossier-dialog label{display:block;color:#5a4634;font-size:.82rem;font-weight:700;margin:16px 0 5px}
+.dossier-dialog input,.dossier-dialog select,.dossier-dialog textarea{color:#443528;background:#fffaf1;border:1px solid #d7c5b0}
+.dossier-dialog .dossier-dialog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 13px}
+.dossier-dialog .dossier-dialog-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:23px}
+.dossier-dialog .dossier-disclaimer{border-top:1px solid #e6d6bf;padding-top:13px;margin-top:16px}
+@media(max-width:660px){
+ #mode-dossiers{padding-top:20px}
+ #mode-dossiers .dossier-heading{align-items:stretch}
+ #mode-dossiers .dossier-actions{width:100%}
+ #mode-dossiers .dossier-actions button{flex:1}
+ #mode-dossiers .dossier-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #mode-dossiers .dossier-stats .dossier-stat:last-child{grid-column:1/-1}
+ #mode-dossiers .dossier-stat{padding:16px}
+ #mode-dossiers .dossier-card,#mode-dossiers .dossier-library{padding:17px}
+ #mode-dossiers .dossier-card-head{align-items:flex-start;flex-wrap:wrap}
+ #mode-dossiers .dossier-file{display:block}
+ #mode-dossiers .dossier-file-actions{margin-top:8px}
+ #mode-dossiers .dossier-toolbar input{width:100%}
+ .dossier-dialog .dossier-dialog-grid{grid-template-columns:1fr}
+}
