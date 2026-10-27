@@ -64,10 +64,18 @@
   return {total:entries.length,sinceYesterday:since(yesterday),thisWeek:since(week),
    apprenticeships:entries.filter(isApprenticeship).length,missingDates:entries.filter(j=>!Number.isFinite(Date.parse(j.first_seen_at))).length};
  }
+ function normalizedExplorer(raw){
+  const o=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw:{},choices={};
+  if(o.choices&&typeof o.choices==="object"&&!Array.isArray(o.choices))
+   for(const [id,value] of Object.entries(o.choices))
+    if(/^[a-z][a-z0-9_-]{0,32}$/.test(id)&&(value==="like"||value==="no"))choices[id]=value;
+  return {choices,favorites:[...new Set((Array.isArray(o.favorites)?o.favorites:[])
+   .filter(v=>typeof v==="string"&&v.length<=120))].slice(0,25)};
+ }
  const initialProfile=(market="apprentice")=>({skills:market==="career"?
    {fachwissen:[],staerken:[],berufserfahrung:[],interessen:[]}:
    {schule:[],staerken:[],erfahrungen:[],interessen:[]},extraSkills:[],
-  occupations:"",region:"",level:"any",startYear:"",example:"",strictOccupation:false,strictRegion:false});
+  occupations:"",region:"",level:"any",startYear:"",example:"",strictOccupation:false,strictRegion:false,explorer:{choices:{},favorites:[]}});
  function normalizedProfile(raw,market="apprentice"){
   const base=initialProfile(market),o=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw:{};
   const skills=o.skills&&typeof o.skills==="object"?o.skills:{};
@@ -84,6 +92,7 @@
   for(const [key,max] of [["occupations",250],["region",80],["example",500]])base[key]=typeof o[key]==="string"?o[key].slice(0,max):"";
   base.level=["any","EFZ","EBA"].includes(o.level)?o.level:"any";
   base.startYear=/^20\d{2}$/.test(String(o.startYear||""))?String(o.startYear):"";
+  base.explorer=normalizedExplorer(o.explorer);
   base.strictOccupation=o.strictOccupation===true;
   base.strictRegion=o.strictRegion===true;
   return base;
