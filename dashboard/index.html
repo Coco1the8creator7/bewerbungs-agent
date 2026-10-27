@@ -495,6 +495,47 @@ header .sub,.section-heading p{color:#6b5744}
     </section>
   </div>
   <div class="radar-panel" role="tabpanel" id="radarPanelProfile" data-panel="profile" aria-labelledby="radarTabProfile" hidden>
+    <section id="radarExplorer" class="radar-surface radar-explorer" aria-labelledby="radarExplorerTitle">
+      <div class="radar-explorer-heading">
+        <div><span class="radar-kicker">01 / ENTDECKEN</span>
+          <h3 id="radarExplorerTitle">Was macht dir wirklich Spass?</h3>
+          <p id="radarExplorerIntro" class="radar-small">Ordne Tätigkeiten danach, ob sie dich interessieren. Du kannst deine Meinung jederzeit ändern.</p></div>
+        <span id="radarExplorerCount" class="radar-explorer-counter" aria-live="polite">0 von 32</span>
+      </div>
+      <div class="radar-explorer-track" role="progressbar" aria-label="Bearbeitete Interessen" aria-valuemin="0" aria-valuemax="32" aria-valuenow="0" id="radarExplorerProgress">
+        <span id="radarExplorerFill"></span></div>
+      <div class="radar-explorer-board" aria-label="Interessen sortieren">
+        <section class="radar-explorer-drop radar-explorer-yes" id="radarExplorerYesZone" data-answer="like" aria-labelledby="radarExplorerYesTitle">
+          <div class="radar-explorer-column-head"><span class="radar-explorer-symbol">♥</span><div><h4 id="radarExplorerYesTitle">Das interessiert mich</h4><p id="radarExplorerYesCount">0 Tätigkeiten</p></div></div>
+          <div id="radarExplorerLikes" class="radar-explorer-pills"></div>
+        </section>
+        <div class="radar-explorer-center">
+          <span class="radar-explorer-overline">DEINE NÄCHSTE TÄTIGKEIT</span>
+          <div id="radarExplorerCard" aria-live="polite" aria-atomic="true"></div>
+          <div class="radar-explorer-actions">
+            <button type="button" id="radarExplorerNo" class="radar-explorer-action no">✕ <span>Eher nicht</span></button>
+            <button type="button" id="radarExplorerSkip" class="radar-explorer-action skip">Später</button>
+            <button type="button" id="radarExplorerYes" class="radar-explorer-action yes">♥ <span>Gefällt mir</span></button>
+          </div>
+          <p class="radar-explorer-helper">Auf Mobilgeräten per Tippen, am Computer auch durch Ziehen nach links oder rechts.</p>
+        </div>
+        <section class="radar-explorer-drop radar-explorer-no" id="radarExplorerNoZone" data-answer="no" aria-labelledby="radarExplorerNoTitle">
+          <div class="radar-explorer-column-head"><span class="radar-explorer-symbol">×</span><div><h4 id="radarExplorerNoTitle">Eher nichts für mich</h4><p id="radarExplorerNoCount">0 Tätigkeiten</p></div></div>
+          <div id="radarExplorerDislikes" class="radar-explorer-pills"></div>
+        </section>
+      </div>
+      <div class="radar-explorer-results" aria-labelledby="radarExplorerMatchesTitle">
+        <div class="radar-block-title"><div><span class="radar-kicker">02 / ERKUNDEN</span><h3 id="radarExplorerMatchesTitle">Deine Berufsideen</h3></div>
+          <span id="radarExplorerResultCount" class="radar-small"></span></div>
+        <p class="radar-small">Ab drei positiven Antworten zeigen wir dir mögliche Berufsfelder oder Berufe. Das sind vorläufige Ideen aus einem kleinen Beispielkatalog, keine Eignungsdiagnose und keine offizielle Empfehlung.</p>
+        <div id="radarExplorerResults" class="radar-explorer-matches" aria-live="polite"></div>
+      </div>
+      <div class="radar-explorer-foot">
+        <button id="radarExplorerReset" class="secondary compact-button" type="button">Diese Auswahl zurücksetzen</button>
+        <span class="radar-small">Deine Angaben werden nur mit aktivierter Gerätespeicherung dauerhaft abgelegt. Kein GitHub-Upload.</span>
+      </div>
+    </section>
+    <div class="radar-explorer-manual-heading"><span class="radar-kicker">03 / VERTIEFEN</span><h3>Deine Fähigkeiten & Suchwünsche</h3><p class="radar-small">Hier kannst du weiterhin konkrete Kompetenzen, Erfahrungen und Stellenwünsche ergänzen.</p></div>
     <div class="radar-form-grid">
       <section class="radar-surface" aria-labelledby="radarSkillsTitle">
         <span class="radar-kicker">DEIN PROFIL / SKILLS</span><h3 id="radarSkillsTitle">Deine Kompetenzen</h3>
@@ -1748,8 +1789,10 @@ el("detailPrepareDossier").addEventListener("click",()=>{
 });
 initialize();
 </script>
+<script src="./radar-explorer-model.js"></script>
 <script src="./radar-model.js"></script>
 <script src="./radar.js"></script>
+<script src="./radar-explorer-ui.js"></script>
 <script src="./dossiers.js?v=20261027-dossiers-1"></script>
 <script src="./mode-nav.js?v=20261027-agency-direct-1"></script>
 </body>
