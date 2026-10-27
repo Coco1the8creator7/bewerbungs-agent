@@ -46,23 +46,36 @@
 
  }
  function startOfLocalDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();}
- function summarize(rows,now=new Date(),market="all"){
+ function uniqueJobs(rows,market="all"){
   const seen=new Set();
-  const unique=(Array.isArray(rows)?rows:[]).filter(j=>{
-   if(!j||typeof j.id!=="string"||!j.id||j.id.startsWith("DEMO-")||j.id.startsWith("MANUAL-")||seen.has(j.id))return false;
-   seen.add(j.id);return true;
+  return (Array.isArray(rows)?rows:[]).filter(job=>{
+   if(!job||typeof job.id!=="string"||!job.id||job.id.startsWith("DEMO-")||
+      job.id.startsWith("MANUAL-")||seen.has(job.id))return false;
+   seen.add(job.id);
+   return market==="career"?!isApprenticeship(job):
+    market==="apprentice"?isApprenticeship(job):true;
   });
-  const entries=market==="career"?unique.filter(j=>!isApprenticeship(j)):market==="apprentice"?unique.filter(isApprenticeship):unique;
-  const yesterday=new Date(now.getFullYear(),now.getMonth(),now.getDate()-1).getTime();
-  const weekday=(now.getDay()+6)%7;
-  const week=new Date(now.getFullYear(),now.getMonth(),now.getDate()-weekday).getTime();
+ }
+ // Shared definition of "new": the first_seen_at timestamp is on or after
+ // yesterday's local midnight or Monday's local midnight, and no later than now.
+ // No separate count logic is allowed in the visual renderer.
+ function newJobs(rows,now=new Date(),market="all",period="yesterday"){
+  const from=period==="week"?
+   new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7)).getTime():
+   new Date(now.getFullYear(),now.getMonth(),now.getDate()-1).getTime();
   const end=now.getTime();
-  const since=start=>entries.filter(j=>{
-   const ms=Date.parse(j.first_seen_at);
-   return Number.isFinite(ms)&&ms>=start&&ms<=end;
-  }).length;
-  return {total:entries.length,sinceYesterday:since(yesterday),thisWeek:since(week),
-   apprenticeships:entries.filter(isApprenticeship).length,missingDates:entries.filter(j=>!Number.isFinite(Date.parse(j.first_seen_at))).length};
+  return uniqueJobs(rows,market).filter(job=>{
+   const at=Date.parse(job.first_seen_at);
+   return Number.isFinite(at)&&at>=from&&at<=end;
+  });
+ }
+ function summarize(rows,now=new Date(),market="all"){
+  const entries=uniqueJobs(rows,market);
+  const yesterday=newJobs(rows,now,market,"yesterday");
+  const week=newJobs(rows,now,market,"week");
+  return {total:entries.length,sinceYesterday:yesterday.length,thisWeek:week.length,
+   apprenticeships:entries.filter(isApprenticeship).length,
+   missingDates:entries.filter(j=>!Number.isFinite(Date.parse(j.first_seen_at))).length};
  }
  function normalizedExplorer(raw){
   const o=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw:{},choices={};
@@ -148,7 +161,7 @@
   return nums.length?{value:nums.reduce((a,b)=>a+b,0)/nums.length,count:nums.length}:null;
  }
  const api=Object.freeze({sources,skillGroups,careerSkillGroups,criteria,careerCriteria,isApprenticeship,summarize,initialProfile,
-  normalizedProfile,normalizedState,matchesPreferences,ratingAverage});
+  normalizedProfile,normalizedState,matchesPreferences,ratingAverage,uniqueJobs,newJobs});
  root.CareerRadarModel=api;
  if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);
