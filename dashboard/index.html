@@ -1072,6 +1072,17 @@ function setRating(id,score,reasons){
  if(!Number.isInteger(n)||n<1||n>100)throw Error("Ganze Zahl von 1 bis 100 erforderlich.");
  updateRating(id,n,reasons);
 }
+// Adult Radar and the start page share one explicit 1–100 relevance label.
+ // Radar's optional 1–5 criterion notes remain separate and do not create labels.
+ window.AgentCareerFeedback=Object.freeze({
+  getScore:id=>ratingOf(id)?.score??null,
+  setScore:(id,score)=>{
+   if(!jobs.some(j=>j.id===id))throw Error("Unbekannte Inserat-ID.");
+   setRating(id,score);
+   render();
+   window.dispatchEvent(new CustomEvent("career-relevance-changed",{detail:{job_id:id}}));
+  }
+ });
 function setReasons(id,reasons){updateRating(id,undefined,reasons);}
 function setRatingNote(id,note){updateRating(id,undefined,undefined,note);}
 function setFeedback(id,feedback){updateRating(id,undefined,undefined,undefined,feedback);}
