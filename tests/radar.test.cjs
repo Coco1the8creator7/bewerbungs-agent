@@ -142,3 +142,14 @@ test("v2 preserves access to all excluded careers through Radar even if wishlist
  assert.match(html,/value="priority" selected/);
  assert.doesNotMatch(radar,/\.splice\([^)]*jobs/);
 });
+
+
+test("career Radar shares explicit overall score with the CRM, not proxy criterion ratings",()=>{
+ const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ assert.match(html,/window\.AgentCareerFeedback=Object\.freeze/);
+ assert.match(html,/setScore:\(id,score\)=>/);
+ assert.match(radar,/window\.AgentCareerFeedback\.getScore\(job\.id\)/);
+ assert.match(radar,/window\.AgentCareerFeedback\.setScore\(job\.id,Number\(slider\.value\)\)/);
+ assert.match(radar,/if\(market\(\)==="career"&&window\.AgentCareerFeedback\)/);
+});
