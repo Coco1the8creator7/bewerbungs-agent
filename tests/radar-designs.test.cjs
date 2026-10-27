@@ -165,7 +165,8 @@ test("published Zen assets have matching cache-busting versions and highest styl
   assert.ok(html.includes('src="./'+src+'?v='+version+'"'),src+" must bypass stale browser cache");
  }
  for(const src of ["radar.css","radar-designs.css"]){
-  assert.ok(html.includes('href="./'+src+'?v='+version+'"'),src+" must bypass stale browser cache");
+  const assetVersion=src==="radar.css"?"20261027-radar-clean-1":version;
+  assert.ok(html.includes('href="./'+src+'?v='+assetVersion+'"'),src+" must bypass stale browser cache");
  }
  const zen=html.indexOf('href="./radar-designs.css?v='+version+'"');
  const base=html.indexOf('href="./radar.css?v=20261027-radar-clean-1"');
