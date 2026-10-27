@@ -1,0 +1,32 @@
+/* Original Career.Agency vector pictograms, October 2026.
+ * 37 hand-drawn 64x64 outline motifs. No borrowed photos, icon assets or image URLs.
+ * Render as inline SVG using trusted shape definitions and the SVG DOM.
+ */
+(function(root){
+ "use strict";
+ const shapes={"outside":["M9 46Q18 37 28 44T53 40M13 50H52M13 21L11 16M20 15L21 9M30 16L34 12","M15 30a9 9 0 1 0 18 0a9 9 0 1 0-18 0M40 20L49 20M40 27L52 27"],"independent":["M15 51L15 41Q16 34 24 34H40Q48 34 49 41V51M32 27a9 9 0 1 0 0-18a9 9 0 1 0 0 18","M20 42L26 47L38 37M41 15L46 10L52 16"],"plan":["M13 51L14 14L50 14L50 51ZM18 46H45L45 19ZM23 31L40 31M32 22V41","M12 9H29M35 53H53"],"hours":["M32 10A22 22 0 1 1 31.9 10M32 18V32L41 38","M32 6V10M32 54V58M6 32H10M54 32H58"],"active":["M34 12A5 5 0 1 0 34 22A5 5 0 1 0 34 12M26 33L37 26L45 32M37 26L30 43L20 50M30 43L43 51M23 31L15 37","M12 54H28M46 52H55"],"drive":["M32 10A22 22 0 1 0 31.9 10M13 30H51M32 52V33M26 29L32 37L38 29","M17 17L24 23M47 17L40 23"],"inform":["M12 27L28 27L49 15V44L28 36H12ZM20 37L23 49H32L28 36","M52 22L57 20M51 35L57 37"],"metal":["M10 39H53V49H10ZM17 32L44 14L49 21L22 39","M13 16L16 11M23 13L25 7M40 49V54"],"machines":["M32 14L36 20L44 18L46 26L53 29L49 36L52 43L44 47L40 53L32 49L24 53L20 47L12 44L15 36L11 29L19 25L21 18L29 20ZM32 26A7 7 0 1 0 32 40A7 7 0 1 0 32 26","M7 16L14 19M49 11L54 15"],"travel":["M32 52S14 33 14 24A18 18 0 0 1 50 24C50 34 32 52 32 52ZM32 18A7 7 0 1 0 32 32A7 7 0 1 0 32 18","M14 48L8 53H24"],"textiles":["M13 13H43V49H13ZM19 20H37M19 27H35M19 34H33M19 41H29","M50 11Q56 26 50 38L47 48M46 48L54 48"],"care":["M13 36Q20 26 27 34L32 39L37 34Q44 26 51 36L32 53Z","M32 12C27 7 18 11 18 18C18 24 32 32 32 32S46 24 46 18C46 11 37 7 32 12"],"hands":["M13 49V32Q13 28 17 28V19Q17 15 21 15V29L25 11Q29 8 31 13L29 31M29 31L35 14Q39 11 41 16L36 33M36 33L43 22Q48 20 49 25L44 40Q41 51 29 52H24Q18 52 13 49Z","M13 31L8 29"],"code":["M11 17H53V45H11ZM7 50H57M24 25L18 31L24 37M40 25L46 31L40 37","M35 23L29 39"],"research":["M24 9H40M28 9V28L15 49Q12 53 19 54H45Q52 53 49 49L36 28V9M22 42H42","M25 38L31 34M38 46H39"],"animals":["M21 33Q11 36 14 47Q17 56 30 49Q33 47 36 49Q49 55 51 45Q53 36 44 33Q41 28 37 27Q32 24 28 27Z","M13 24A5 5 0 1 0 13 34A5 5 0 1 0 13 24M27 15A5 5 0 1 0 27 25A5 5 0 1 0 27 15M43 19A5 5 0 1 0 43 29A5 5 0 1 0 43 19"],"precision":["M32 10A22 22 0 1 0 32 54A22 22 0 1 0 32 10M32 20A12 12 0 1 0 32 44A12 12 0 1 0 32 20M32 28A4 4 0 1 0 32 36A4 4 0 1 0 32 28","M32 5V13M32 51V59"],"indoor":["M10 29L32 11L54 29V53H10ZM20 53V36H44V53M19 29H26","M38 27H45"],"write":["M14 13H42L50 21V53H14ZM42 13V22H50M21 29H39M21 36H35M21 43H31","M46 35L53 28L58 34L51 42L45 44Z"],"music":["M29 12V45A7 7 0 1 1 22 38Q25 38 29 40V18L48 13V40A7 7 0 1 1 41 33Q44 33 48 35","M33 20L48 17"],"teaching":["M11 14H53V41H11ZM32 41V53M21 53H43M18 32L26 24L32 30L44 20","M15 18H24"],"technical":["M17 47L38 26M39 17Q47 12 52 19L45 25L47 31Q42 40 33 35L21 51Q16 56 12 51Q8 47 12 43L17 38","M14 46L19 50"],"food":["M13 12V29Q13 35 20 35V52M20 12V52M27 12V29Q27 35 20 35M43 52V18Q51 20 51 29V40H43","M39 11Q47 6 53 12"],"stone":["M13 40L24 18L45 19L53 39L42 52H21ZM24 18L32 38L53 39M32 38L21 52","M46 12L53 12"],"advise":["M11 14H43V38H25L15 47V38H11ZM33 29H54V47H47L53 55V47","M18 22H35M18 28H30"],"numbers":["M11 12H53V52H11ZM18 20H46M20 27H27M37 27H44M21 36H27M37 36H44M21 45H27M37 45H44","M32 20V52"],"electric":["M24 13V26M40 13V26M20 26H44V34Q44 44 32 44V53M26 33L35 33L30 41L39 41","M34 6L29 12"],"lead":["M14 52V21L32 12L50 21V52M22 52V40H42V52M24 27L28 33L33 25L38 33L42 27","M32 8V12"],"wood":["M13 22H48V42H13ZM19 22V42M30 22V42M41 22V42M13 32H48","M9 18L20 13M44 46L55 52"],"team":["M14 44Q14 37 22 36H42Q50 37 50 44V50H14ZM32 16A10 10 0 1 0 32 36A10 10 0 1 0 32 16","M12 25A6 6 0 1 0 12 37M52 25A6 6 0 1 1 52 37"],"languages":["M9 14H45V39H27L17 48V39H9ZM30 29H55V50H46L52 57V50","M16 22H36M16 29H31"],"plants":["M32 55V29Q19 30 16 16Q30 14 32 29Q36 12 50 16Q48 32 32 29M23 53H41","M26 38L31 42"],"children":["M22 24A8 8 0 1 0 22 40A8 8 0 1 0 22 24M46 13A7 7 0 1 0 46 27A7 7 0 1 0 46 13M12 53V46Q13 40 22 40Q32 40 33 48V53M38 52V33Q38 27 46 27Q54 27 55 34V52","M33 34L38 30"],"organise":["M18 11H46V53H18ZM24 21L27 24L32 18M35 22H41M24 34L27 37L32 31M35 35H41M25 45H41","M14 18H18M14 35H18"],"reading":["M10 17Q21 13 32 21Q42 13 54 17V49Q42 45 32 52Q21 45 10 49ZM32 21V52M16 25L25 28M39 28L48 25","M16 34L25 37M39 37L48 34"],"creative":["M32 12Q11 12 10 32Q10 53 32 53H37Q42 51 39 45Q36 40 43 39Q54 37 54 29Q54 12 32 12ZM24 24A3 3 0 1 0 24 30A3 3 0 1 0 24 24M37 18A3 3 0 1 0 37 24A3 3 0 1 0 37 18","M18 37A3 3 0 1 0 18 43A3 3 0 1 0 18 37"],"contact":["M19 15A8 8 0 1 0 19 31A8 8 0 1 0 19 15M46 15A8 8 0 1 0 46 31A8 8 0 1 0 46 15M8 51V42Q9 34 19 34Q30 34 31 44M33 45Q34 34 46 34Q56 34 56 43V51","M26 12L37 12M31 8V16"]};
+ const adultMap={"manage":"organise","analyze":"numbers","energy":"electric","buildings":"plan","design":"plan","advise":"advise","sell":"contact","people":"team","software":"code","outdoors":"outside","details":"precision","creative":"creative","hands":"hands","teaching":"teaching","independent":"independent","data":"numbers"};
+ const NS="http://www.w3.org/2000/svg";
+ function svgNode(tag,props){
+  const el=document.createElementNS(NS,tag);
+  for(const [name,value] of Object.entries(props||{}))el.setAttribute(name,String(value));
+  return el;
+ }
+ function create(id,options={}){
+  const chosen=Object.hasOwn(shapes,id)?id:(adultMap[id]||"technical");
+  const [outline,details]=shapes[chosen];
+  const svg=svgNode("svg",{"viewBox":"0 0 64 64",role:"img","aria-hidden":"true",
+   class:"radar-custom-pictogram"});
+  const g=svgNode("g",{fill:"none",stroke:"#526b56","stroke-width":"2.6",
+   "stroke-linecap":"round","stroke-linejoin":"round"});
+  g.append(svgNode("path",{d:outline}));
+  svg.append(g);
+  if(details)svg.append(svgNode("path",{d:details,fill:"none",stroke:"#b18259",
+   "stroke-width":"2.7","stroke-linecap":"round","stroke-linejoin":"round"}));
+  if(options.label){svg.setAttribute("aria-hidden","false");svg.setAttribute("aria-label",options.label);}
+  return svg;
+ }
+ const api=Object.freeze({create,keys:Object.freeze(Object.keys(shapes)),adultMap});
+ root.CareerRadarPictograms=api;
+ if(typeof module!=="undefined"&&module.exports)module.exports=api;
+})(typeof globalThis!=="undefined"?globalThis:this);
