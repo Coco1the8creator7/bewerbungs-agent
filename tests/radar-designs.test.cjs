@@ -160,7 +160,7 @@ test("pulse design switch changes CSS only; targets and jobs stay untouched",()=
 
 test("published Zen assets have matching cache-busting versions and highest stylesheet priority",()=>{
  const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
- const version="20261027-zen-live-3";
+ const version="20261027-zen-magenta-1";
  for(const src of ["radar-model.js","radar-designs.js","radar.js"]){
   assert.ok(html.includes('src="./'+src+'?v='+version+'"'),src+" must bypass stale browser cache");
  }
@@ -169,8 +169,8 @@ test("published Zen assets have matching cache-busting versions and highest styl
  }
  const zen=html.indexOf('href="./radar-designs.css?v='+version+'"');
  const base=html.indexOf('href="./radar.css?v='+version+'"');
- const others=html.indexOf('href="./notifications.css');
- assert.ok(zen>base&&zen>others,"Pulse stylesheet must be last to override classic styles");
+ const others=html.indexOf('href="./urban-mono-magenta.css');
+ assert.ok(zen>base&&zen>others,"Pulse stylesheet must be last, after the global magenta theme");
  const dial=html.match(/id="radarDial"[^>]+/);
  assert.match(dial?.[0]||"",/data-design="zen"/);
  assert.doesNotMatch(html,/href="\.\/radar-designs\.css"/);
@@ -188,4 +188,27 @@ test("design-picker visibility: hidden previews, with Zen, time windows and live
  assert.match(html,/data-period="week"/);
  const css=fs.readFileSync(path.join(root,"dashboard/radar.css"),"utf8");
  assert.match(css,/#mode-radar \[hidden\]\{display:none!important\}/);
+});
+
+test("Zen radar palette matches the existing global muted-magenta accent without changing job targets",()=>{
+ const palette=fs.readFileSync(path.join(root,"dashboard/urban-mono-magenta.css"),"utf8");
+ const css=fs.readFileSync(path.join(root,"dashboard/radar-designs.css"),"utf8");
+ assert.match(palette,/--ca-accent: #95516E;/);
+ assert.match(palette,/--ca-accent-hover: #793E58;/);
+ assert.match(palette,/--ca-accent-soft: #F7EEF2;/);
+ assert.match(palette,/--ca-accent-line: #E8D5DF;/);
+ const zen=css.slice(css.indexOf("/* Design 07 / Zen Radar"));
+ assert.ok(zen.length>1500);
+ assert.match(zen,/--zen-ink:var\(--ca-accent,#95516E\)/);
+ assert.match(zen,/--zen-line:var\(--ca-accent-line,#E8D5DF\)/);
+ assert.match(zen,/\.radar-dial\[data-design="zen"\] \.radar-target/);
+ assert.match(zen,/\.radar-pulse-wave:nth-child\(4\)/);
+ assert.match(zen,/\.radar-metric\.is-active-period/);
+ assert.doesNotMatch(zen,/#(?:668269|54705b|58775d|c2cdb9|faf7f0)\b/i);
+ const {window,nodes}=fakeUI();
+ for(const n of [0,1,12,300]){
+  const jobs=Array.from({length:n},(_,i)=>({id:"job-"+i,title:"Teststelle "+i}));
+  assert.equal(window.CareerRadarDesigns.setPoints(jobs,"seit gestern"),n);
+  assert.equal(nodes.radarTargets.children.length,n);
+ }
 });
