@@ -113,3 +113,16 @@
 #mode-radar .radar-main-relevance-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;color:#624b35;font-size:.77rem;font-weight:700}
 #mode-radar .radar-main-relevance input[type="range"]{width:100%;margin:11px 0 0;accent-color:#617d5b;cursor:ew-resize}
 #mode-radar .radar-main-relevance output{font-variant-numeric:tabular-nums}
+
+
+/* Career.Agency cleanup guidance (27 Oct 2026):
+ * Screenshot-marked chrome is removed from Radar, not from the start page.
+ * The landing-page notification bell remains functional in its own context.
+ */
+body[data-active-mode="radar"] .career-header-notifications{display:none!important}
+#mode-radar .radar-heading{margin-bottom:18px}
+#mode-radar .radar-metrics{margin-top:0}
+#mode-radar .radar-surface[aria-label="Statistik importierter Stellen"]{display:flex;flex-direction:column;justify-content:center}
+#mode-radar .radar-surface[aria-label="Statistik importierter Stellen"] #radarFeedStatus:not([hidden]){
+ margin-top:12px;
+}
