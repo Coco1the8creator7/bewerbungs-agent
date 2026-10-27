@@ -1275,7 +1275,7 @@ function openDetails(id){
  detailDraftFeedback=normalizeReasonFeedback(ratingOf(id));
  el("detailRatingNote").value=ratingOf(id)?.note||"";
  el("detailReasons").replaceChildren(makeReasonButtons(detailDraftFeedback,value=>{detailDraftFeedback=value;}));
- el("closeDetails").textContent="Schliessen";el("detailPrepareDossier").hidden=false;
+ el("closeDetails").textContent="Schliessen";el("detailPrepareDossier").hidden=j.id.startsWith("DEMO-");
  el("details").showModal();el("details").scrollTop=0;
 }
 function startNewJob(){
