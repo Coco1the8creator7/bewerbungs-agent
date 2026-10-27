@@ -102,3 +102,64 @@
  #mode-radar .radar-target{animation:none}
  #mode-radar .radar-design-swatch-sweep{animation:none}
 }
+
+/* Design 07 / Zen Radar — chosen as the default.
+ * Quiet outward-propagating concentric waves, olive/sage on warm ivory.
+ * These waves are not job markers. The target layer remains data-driven.
+ */
+#mode-radar .radar-dial[data-design="zen"]{
+ border:1px solid #c2cdb9;
+ background:repeating-radial-gradient(circle at center,transparent 0 39px,#c6d2be60 40px 40.7px,transparent 41px 79px),#faf7f0;
+ box-shadow:inset 0 0 0 1px #fffdf6,0 0 0 7px #f2ede3;
+}
+#mode-radar .radar-dial[data-design="zen"]::before{opacity:.3}
+#mode-radar .radar-dial[data-design="zen"] .radar-sweep{display:none}
+#mode-radar .radar-pulse-waves{display:none;position:absolute;inset:0;overflow:hidden;z-index:2;pointer-events:none;border-radius:50%}
+#mode-radar .radar-dial[data-design="zen"] .radar-pulse-waves{display:block}
+#mode-radar .radar-pulse-wave{
+ display:block;position:absolute;inset:0;border:1px solid #668269;border-radius:50%;
+ opacity:0;transform:scale(.035);transform-origin:50% 50%;
+ animation:radar-zen-expand 6.8s linear infinite;pointer-events:none
+}
+#mode-radar .radar-pulse-wave:nth-child(1){animation-delay:-5.1s}
+#mode-radar .radar-pulse-wave:nth-child(2){animation-delay:-3.4s}
+#mode-radar .radar-pulse-wave:nth-child(3){animation-delay:-1.7s}
+#mode-radar .radar-pulse-wave:nth-child(4){animation-delay:0s}
+#mode-radar .radar-dial[data-design="zen"] .radar-cross{
+ width:9px;height:9px;background:#54705b;border:2px solid #f9f9f0;
+ border-radius:50%;box-shadow:0 0 0 4px #73947722;
+}
+#mode-radar .radar-dial[data-design="zen"] .radar-cross::before,
+#mode-radar .radar-dial[data-design="zen"] .radar-cross::after{display:none}
+#mode-radar .radar-dial[data-design="zen"] .radar-target{
+ background:#58775d;border:1px solid #fffaf0;box-shadow:0 0 4px #77957e70
+}
+/* Miniature preview of the actual pulse treatment — strictly no job contacts. */
+#mode-radar .radar-design-swatch[data-design="zen"]{
+ border:1px solid #c2cdb9;background:repeating-radial-gradient(circle,transparent 0 15px,#c6d2be64 16px 16.5px,transparent 17px 34px),#faf7f0;
+ box-shadow:0 0 0 3px #f2ede3
+}
+#mode-radar .radar-design-swatch[data-design="zen"]::before{opacity:.3}
+#mode-radar .radar-design-swatch[data-design="zen"] .radar-design-swatch-sweep{display:none}
+#mode-radar .radar-design-swatch-pulses{display:block;position:absolute;inset:0;overflow:hidden;border-radius:50%}
+#mode-radar .radar-design-swatch-pulse{
+ display:block;position:absolute;inset:0;border:1px solid #668269;border-radius:50%;
+ transform:scale(.035);opacity:0;animation:radar-zen-expand 6.8s linear infinite;
+}
+#mode-radar .radar-design-swatch-pulse:nth-child(1){animation-delay:-5.1s}
+#mode-radar .radar-design-swatch-pulse:nth-child(2){animation-delay:-3.4s}
+#mode-radar .radar-design-swatch-pulse:nth-child(3){animation-delay:-1.7s}
+#mode-radar .radar-design-swatch-pulse:nth-child(4){animation-delay:0s}
+@keyframes radar-zen-expand{
+ 0%{transform:scale(.035);opacity:0}
+ 9%{opacity:.8}
+ 62%{opacity:.42}
+ 100%{transform:scale(.99);opacity:0}
+}
+@media(prefers-reduced-motion:reduce){
+ #mode-radar .radar-pulse-wave,#mode-radar .radar-design-swatch-pulse{animation:none;opacity:.22}
+ #mode-radar .radar-pulse-wave:nth-child(1),#mode-radar .radar-design-swatch-pulse:nth-child(1){transform:scale(.25)}
+ #mode-radar .radar-pulse-wave:nth-child(2),#mode-radar .radar-design-swatch-pulse:nth-child(2){transform:scale(.5)}
+ #mode-radar .radar-pulse-wave:nth-child(3),#mode-radar .radar-design-swatch-pulse:nth-child(3){transform:scale(.75)}
+ #mode-radar .radar-pulse-wave:nth-child(4),#mode-radar .radar-design-swatch-pulse:nth-child(4){transform:scale(.98)}
+}
