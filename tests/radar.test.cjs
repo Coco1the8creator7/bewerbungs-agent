@@ -58,7 +58,7 @@ test("radar is isolated from adult CRM and uses opt-in local persistence",()=>{
  }
  assert.match(html,/src="\.\/radar-model\.js\?v=20261027-zen-magenta-1"/);
  assert.match(html,/src="\.\/radar\.js\?v=20261027-zen-magenta-1"/);
- assert.match(html,/href="\.\/radar\.css\?v=20261027-zen-magenta-1"/);
+ assert.match(html,/href="\.\/radar\.css\?v=20261027-radar-clean-1"/);
  assert.match(js,/AgentStore\.saveRadar/);
  assert.match(js,/AgentStore\.clearRadar/);
  assert.match(store,/RADAR_KEY/);
@@ -112,7 +112,7 @@ test("Radar uses original public jobs.json and keeps legacy CRM intact",()=>{
  const nav=fs.readFileSync(path.join(root,"dashboard/mode-nav.js"),"utf8");
  assert.match(html,/data-market="career"/);
  assert.match(html,/data-market="apprentice"/);
- assert.match(html,/id="radarSourcesInfo"/);
+ assert.doesNotMatch(html,/id="radarSourcesInfo"/);
  assert.match(radar,/fetch\("\.\/jobs\.json"/);
  assert.match(radar,/model\.careerCriteria/);
  assert.match(radar,/model\.matchesPreferences/);
@@ -152,4 +152,42 @@ test("career Radar shares explicit overall score with the CRM, not proxy criteri
  assert.match(radar,/window\.AgentCareerFeedback\.getScore\(job\.id\)/);
  assert.match(radar,/window\.AgentCareerFeedback\.setScore\(job\.id,Number\(slider\.value\)\)/);
  assert.match(radar,/if\(market\(\)==="career"&&window\.AgentCareerFeedback\)/);
+});
+
+test("screenshot decluttering keeps only actionable Radar overview content",()=>{
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const js=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
+ const css=fs.readFileSync(path.join(root,"dashboard/radar.css"),"utf8");
+ const begin=html.indexOf('id="mode-radar"');
+ const end=html.indexOf('id="radarPanelProfile"',begin);
+ const overview=html.slice(begin,end);
+ assert.ok(begin>=0&&end>begin);
+ for(const text of [
+  "CAREER.AGENCY / STELLEN-RADAR",
+  "PERSÖNLICHER TEST · 0.2",
+  "SCAN / 01",
+  "Was dein Radar bisher gefunden hat",
+  "Alle Inserate im aktuellen öffentlichen Feed",
+  "Erstmals erfasst ab gestern 00:00",
+  "Erstmals erfasst seit Montag 00:00",
+  "QUELLEN / AUSWAHL",
+  "Alle verfügbaren Quellen · keine Einschränkung",
+  "Kein Live-Crawler"
+ ])assert.ok(!overview.includes(text),text+" must not be on the Radar overview");
+ assert.doesNotMatch(overview,/>0[123]&nbsp; /);
+ for(const id of ["radarAudienceBadge","radarLiveLabel","radarTargetNote",
+   "radarRefresh","radarSourceCount","radarSourcesInfo"])
+  assert.ok(!overview.includes('id="'+id+'"'),id+" should be removed");
+ assert.match(overview,/id="radarDial" data-design="zen"/);
+ assert.match(overview,/id="radarTargets"/);
+ assert.match(overview,/id="radarTargetCount"/);
+ assert.match(overview,/id="radarPeriodControls"/);
+ assert.match(overview,/id="radarSources"/);
+ assert.match(overview,/id="radarSinceYesterday"/);
+ assert.match(overview,/id="radarWeek"/);
+ assert.match(overview,/id="radarFeedStatus"[^>]*hidden/);
+ assert.match(js,/window\.setInterval\(/); // Automatic feed refresh stays.
+ assert.doesNotMatch(js,/get\("(radarRefresh|radarSourcesInfo|radarLiveLabel|radarAudienceBadge)"\)/);
+ assert.match(css,/body\[data-active-mode="radar"\] \.career-header-notifications\{display:none!important\}/);
+ assert.match(html,/id="notificationBell"/); // Still available on the Startseite.
 });
