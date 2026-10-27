@@ -57,15 +57,10 @@
    cb.addEventListener("change",()=>{
     if(cb.checked&&!bucket().selectedSources.includes(src.id))bucket().selectedSources.push(src.id);
     if(!cb.checked)bucket().selectedSources=bucket().selectedSources.filter(id=>id!==src.id);
-    updateSourcesCount();reviewLimit=50;renderReviews();changed();
+    reviewLimit=50;renderReviews();changed();
    });
    label.append(cb,details);host.append(label);
   }
-  updateSourcesCount();
- }
- function updateSourcesCount(){
-  const n=bucket().selectedSources.length;
-  get("radarSourceCount").textContent=n? n+" Quelle"+(n===1?"":"n")+" gewählt":"Alle verfügbaren Quellen · keine Einschränkung";
  }
  function chip(group,skill,custom=false){
   const target=custom?profile().extraSkills:profile().skills[group];
@@ -135,17 +130,14 @@
   for(const [id,value] of [["radarTotal",summary.total],["radarSinceYesterday",summary.sinceYesterday],
     ["radarWeek",summary.thisWeek],["radarApprenticeships",count]])
    get(id).textContent=value.toLocaleString("de-CH");
-  const explanation=market()==="career"?
-   "Deine bestehenden Gmail-/URL-Stellenabos liefern weiterhin die Inserate. "+visibleAdult.length+" davon sind mit den bisherigen Anzeige-Regeln sichtbar.":
-   (summary.apprenticeships?"Einige Titel sehen nach Lehrstellen aus. Bitte Einträge prüfen.":"Die bisherigen Stellenabos liefern noch keine eindeutig erkannten Lehrstellen.");
-  get("radarFeedStatus").textContent=explanation+
-   (summary.missingDates?" "+summary.missingDates+" Inserate ohne Erstimportdatum zählen nicht als neu.":"");
-  get("radarLiveLabel").textContent=feedLoaded?"IMPORT GELESEN · "+jobs.length+" EINTRÄGE":"IMPORT NOCH NICHT GELADEN";
+  // Normal import metadata is already conveyed by the counters. Keep the
+  // inline status hidden unless the import itself fails (actionable error).
+  get("radarFeedStatus").hidden=true;
  }
  async function loadFeed(force=false){
   if(feedBusy||(feedLoaded&&!force))return;
-  feedBusy=true;get("radarRefresh").disabled=true;
-  get("radarFeedStatus").textContent="Bestehenden Inserate-Import lesen …";
+  feedBusy=true;
+  get("radarFeedStatus").hidden=true;
   try{
    const response=await fetch("./jobs.json",{cache:"no-store"});
    if(!response.ok)throw Error("HTTP "+response.status);
@@ -154,8 +146,9 @@
    jobs=rows.filter(j=>j&&typeof j.id==="string"&&typeof j.title==="string");
    feedLoaded=true;updateStats();renderSources();
   }catch(err){
-   get("radarFeedStatus").textContent="Bestehender Feed vorübergehend nicht verfügbar: "+err.message;
-  }finally{feedBusy=false;get("radarRefresh").disabled=false;renderReviews();}
+   get("radarFeedStatus").textContent="Stellen konnten nicht geladen werden. Bitte Seite erneut öffnen: "+err.message;
+   get("radarFeedStatus").hidden=false;
+  }finally{feedBusy=false;renderReviews();}
  }
  function jobCard(job){
   const article=make("article",undefined,"radar-job");
@@ -283,7 +276,6 @@
  function renderMarket(){
   const adult=market()==="career";
   for(const b of root.querySelectorAll(".radar-market"))b.setAttribute("aria-pressed",String(b.dataset.market===market()));
-  get("radarAudienceBadge").textContent=adult?"PERSÖNLICHER TEST · 0.2":"LEHRSTELLEN-VORSCHAU · 0.2";
   get("radarIntro").textContent=adult?
    "Deine bestehenden Stellenabos liefern weiterhin aktuelle Inserate. Teste hier das Radar mit deinen eigenen Stellen.":
    "Entdecke deine Stärken, Wunschberufe und spätere Lehrstellenquellen. Noch im Prototyp ohne eigenständigen Lehrstellenimport.";
@@ -301,9 +293,6 @@
    "Vier Kriterien von 1 bis 5, freiwillig. Leere Kriterien zählen nicht.";
   get("radarFilterHelp").textContent=adult?"Die Ansicht «Zurückgestellt» zeigt sämtliche ausgeblendeten Inserate – unabhängig von Radar-Suchwünschen. Nichts wird beim Import gelöscht.":
    "Wunschquellen und EFZ-/EBA-Abschluss filtern nur bereits importierte Lehrstellen.";
-  get("radarSourcesInfo").textContent=adult?
-   "Diese Quellen stammen direkt aus deinem bestehenden Gmail-/URL-Import. Die Quellenwahl wirkt nur auf den Radar-Bewertungs-Hub – nicht auf Importer oder CRM.":
-   "Lehrstellenportale sind als Wunschquellen vorbereitet. Noch kein neuer Crawler: Die Auswahl wirkt nur auf bereits importierte Treffer.";
   get("radarLevelGroup").hidden=adult;get("radarYearGroup").hidden=adult;
   const labels=adult?["Fachwissen","Persönliche Stärken","Berufliche Erfahrung","Interessen"]:
    ["Schule & Lernen","Persönliche Stärken","Erste Erfahrungen","Interessen"];
@@ -373,7 +362,6 @@
  setupForm();
  get("radarCustomSkill").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addSkill();}});
  get("radarAddSkill").addEventListener("click",addSkill);
- get("radarRefresh").addEventListener("click",()=>loadFeed(true));
  get("radarDial").addEventListener("radar-period-changed",updateStats);
  get("radarToggleDemo").addEventListener("click",()=>{showDemo=!showDemo;renderReviews();});
  get("radarReviewScope").addEventListener("change",()=>{reviewLimit=50;renderReviews();});
