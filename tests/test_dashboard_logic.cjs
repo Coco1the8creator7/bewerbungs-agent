@@ -193,3 +193,4 @@ const document = {
 vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone,window:{matchMedia:()=>({matches:false})},document});
 console.log("Dashboard logic checks passed");
 require("./test_mode_navigation.cjs");
+require("./test_notifications.cjs");

@@ -188,3 +188,39 @@
  .agency-world .agency-weekly-missions{padding:15px}
  .agency-world .agency-weekly-missions .quest-list{grid-template-columns:1fr}
 }
+
+/* Preserve the four existing CRM status counters inside Agency World.
+   Island map / inspector → Statusübersicht → Wochenmissionen. */
+.agency-world .agency-status-overview{
+ margin:0 0 20px;padding:18px 20px;
+ background:#fff9ef;border:1px solid #dbcbb6;border-radius:12px;
+}
+.agency-world .agency-status-overview .section-heading{margin-bottom:14px}
+.agency-world .agency-status-overview h2{
+ margin:0;color:#534a41;font-size:1rem;letter-spacing:0;
+}
+.agency-world .agency-status-overview .stats{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;
+}
+.agency-world .agency-status-overview .stat{
+ min-width:0;min-height:117px;padding:13px 14px;
+ border:1px solid #e4d4bf;background:#f8f0e4;border-radius:9px;
+ box-shadow:none;
+}
+.agency-world .agency-status-overview .stat .name{color:#786451;font-size:.78rem}
+.agency-world .agency-status-overview .stat strong{
+ color:#493b2f;font-size:1.95rem;margin:9px 0 6px;
+}
+.agency-world .agency-status-overview .stat small{
+ color:#796d60;font-size:.71rem;line-height:1.4;overflow-wrap:anywhere;
+}
+@media(max-width:950px){
+ .agency-world .agency-status-overview .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ .agency-world .agency-status-overview{padding:15px}
+ .agency-world .agency-status-overview .stat{padding:12px 11px;min-height:117px}
+}
+@media(max-width:350px){
+ .agency-world .agency-status-overview .stats{grid-template-columns:1fr}
+}
