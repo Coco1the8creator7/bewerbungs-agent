@@ -37,7 +37,7 @@ test("private documents never use public repository or unprotected remote endpoi
  assert.match(js,/MAX_BYTES=15\*1024\*1024/);
  assert.doesNotMatch(js,/\bfetch\s*\(|GithubFeedback|localStorage|innerHTML|\.github\.com\/.*api/);
  assert.match(html,/nur im Browser dieses Geräts gespeichert/);
- assert.match(html,/noch keine KI-generierten Dokumente/);
+ assert.match(html,/keine KI-generierten Dokumente/);
 });
 
 test("deleting a dossier preserves uploaded documents; files require confirmation",()=>{
