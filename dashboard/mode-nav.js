@@ -28,8 +28,22 @@
   if(open)close.focus();
   else toggle.focus({preventScroll:true});
  }
+ // Reuse the existing CRM button, so Agency opens its real modal rather
+ // than a second, intermediate mode screen.
+ function launchAgencyWorld(){
+  const entry=document.getElementById("openAgency");
+  if(!entry)return false;
+  entry.click();
+  return true;
+ }
  function showMode(mode,scrollToTop=true){
-  const selected=modes.has(mode)?mode:fallbackMode;
+  const requested=modes.has(mode)?mode:fallbackMode;
+  const agencyShortcut=requested==="agency"&&!!document.getElementById("openAgency");
+  // A direct #agency URL opens the World over the current (or start) page.
+  const previous=document.body.dataset.activeMode;
+  const selected=agencyShortcut
+   ?(modes.has(previous)&&previous!=="agency"?previous:fallbackMode)
+   :requested;
   document.body.dataset.activeMode=selected;
   for(const page of pages)page.hidden=page.dataset.modePage!==selected;
   for(const link of links){
@@ -41,6 +55,7 @@
   if(scrollToTop)window.scrollTo(0,0);
   // Existing floating-save behaviour only applies to the CRM start page.
   window.dispatchEvent(new Event("scroll"));
+  if(agencyShortcut)launchAgencyWorld();
  }
  toggle.addEventListener("click",()=>setMenuOpen(!menu.classList.contains("is-open")));
  close.addEventListener("click",()=>setMenuOpen(false));
@@ -58,8 +73,14 @@
   }
  });
  for(const link of links){
-  link.addEventListener("click",()=>{
+  link.addEventListener("click",event=>{
    setMenuOpen(false);
+   // Agency is an overlay action: keep the underlying view and URL unchanged.
+   if(link.dataset.mode==="agency"&&document.getElementById("openAgency")){
+    event.preventDefault();
+    launchAgencyWorld();
+    return;
+   }
    if(window.location.hash==="#"+link.dataset.mode)showMode(link.dataset.mode);
   });
  }
