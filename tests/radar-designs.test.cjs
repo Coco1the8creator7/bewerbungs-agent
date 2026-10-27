@@ -168,7 +168,7 @@ test("published Zen assets have matching cache-busting versions and highest styl
   assert.ok(html.includes('href="./'+src+'?v='+version+'"'),src+" must bypass stale browser cache");
  }
  const zen=html.indexOf('href="./radar-designs.css?v='+version+'"');
- const base=html.indexOf('href="./radar.css?v='+version+'"');
+ const base=html.indexOf('href="./radar.css?v=20261027-radar-clean-1"');
  const others=html.indexOf('href="./urban-mono-magenta.css');
  assert.ok(zen>base&&zen>others,"Pulse stylesheet must be last, after the global magenta theme");
  const dial=html.match(/id="radarDial"[^>]+/);
