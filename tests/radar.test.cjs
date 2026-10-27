@@ -56,9 +56,9 @@ test("radar is isolated from adult CRM and uses opt-in local persistence",()=>{
  for(const marker of ["radarTabOverview","radarTabProfile","radarTabReview","radarSkills-interessen","radarSources","radarReviewList","radarSaveOptIn"]){
   assert.ok(html.includes('id="'+marker+'"'),marker);
  }
- assert.match(html,/src="\.\/radar-model\.js"/);
- assert.match(html,/src="\.\/radar\.js"/);
- assert.match(html,/href="\.\/radar\.css"/);
+ assert.match(html,/src="\.\/radar-model\.js\?v=20261027-zen-live-3"/);
+ assert.match(html,/src="\.\/radar\.js\?v=20261027-zen-live-3"/);
+ assert.match(html,/href="\.\/radar\.css\?v=20261027-zen-live-3"/);
  assert.match(js,/AgentStore\.saveRadar/);
  assert.match(js,/AgentStore\.clearRadar/);
  assert.match(store,/RADAR_KEY/);
