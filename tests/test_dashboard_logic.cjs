@@ -195,3 +195,4 @@ console.log("Dashboard logic checks passed");
 require("./test_mode_navigation.cjs");
 require("./test_notifications.cjs");
 require("./test_landing_cards.cjs");
+require("./test_landing_cleanup.cjs");

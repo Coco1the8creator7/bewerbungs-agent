@@ -1,0 +1,75 @@
+/* Career.Agency landing clean-up (27 Oct 2026).
+   Structural overrides loaded after the global theme and mode styles.
+   Bell is intentionally positioned independently from title width. */
+header.career-app-header{
+ position:relative;
+ display:grid;
+ grid-template-columns:44px minmax(0,1fr);
+ align-items:center;
+ column-gap:14px;
+ padding-right:80px;
+ width:100%;
+}
+header.career-app-header > #openModeSidebar{
+ grid-column:1;grid-row:1;margin:0;
+}
+header.career-app-header > .career-header-copy{
+ grid-column:2;grid-row:1;min-width:0;
+}
+header.career-app-header > .career-header-notifications{
+ position:absolute;
+ top:17px;right:20px;
+ margin:0;width:44px;height:44px;
+}
+header.career-app-header .notification-panel{
+ left:auto;right:0;
+ max-width:calc(100vw - 36px);
+}
+#mode-startseite .mission-card{padding-bottom:20px}
+#mode-startseite .review-tabs{margin-top:12px}
+/* Keep advanced search and batch operations accessible, but not on the landing surface. */
+#mode-startseite .crm-export-actions{
+ display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+ padding-top:14px;margin-top:14px;
+ border-top:1px solid var(--ca-line,#e1e5e9);
+}
+#mode-startseite .crm-export-actions .marked-summary{
+ margin-right:auto;color:var(--ca-muted,#636b76);
+}
+#mode-startseite .crm-advanced-filters{
+ margin-top:12px;padding:12px 14px;
+ border:1px solid var(--ca-line,#e1e5e9);
+ border-radius:11px;background:var(--ca-paper-soft,#fafbfc);
+}
+#mode-startseite .crm-advanced-filters > summary{
+ color:var(--ca-ink,#262a31);font-weight:650;
+ cursor:pointer;width:auto;
+}
+#mode-startseite .crm-advanced-filters .panel.filters{
+ margin:14px 0 0;
+ background:var(--ca-paper,#fff);
+}
+#mode-startseite .crm-advanced-filters:not([open]) > .panel.filters{display:none}
+/* The large floating save is removed from the landing; the full GitHub
+   save action remains available under Data & Development. */
+#floatingSaveGithubFeedback,
+#floatingSaveStatus{display:none!important}
+@media(max-width:650px){
+ header.career-app-header{
+  grid-template-columns:44px minmax(0,1fr);
+  grid-template-rows:44px auto;
+  column-gap:10px;row-gap:11px;
+  padding-right:12px;
+ }
+ header.career-app-header > #openModeSidebar{
+  grid-column:1;grid-row:1;align-self:start;
+ }
+ header.career-app-header > .career-header-copy{
+  grid-column:1/-1;grid-row:2;
+ }
+ header.career-app-header > .career-header-notifications{
+  top:14px;right:12px;
+ }
+ #mode-startseite .crm-export-actions{align-items:stretch}
+ #mode-startseite .crm-export-actions .marked-summary{flex-basis:100%}
+}
