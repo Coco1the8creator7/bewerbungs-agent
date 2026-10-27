@@ -10,6 +10,7 @@
  const options=document.getElementById("radarDesignOptions");
  if(!dial||!container||!options)return;
  const choices=Object.freeze([
+  {id:"zen",name:"Zen Radar",note:"Puls vom Zentrum"},
   {id:"classic",name:"Klassisch",note:"Bisheriges Radar"},
   {id:"sonar",name:"Sonar",note:"Leuchtender Scan"},
   {id:"topography",name:"Topografie",note:"Geländelinien"},
@@ -17,7 +18,7 @@
   {id:"sectors",name:"Sektoren",note:"Winkelraster"},
   {id:"minimal",name:"Minimal",note:"Feines Fadenkreuz"}
  ]);
- let selected="classic",period="yesterday",last=[];
+ let selected="zen",period="yesterday",last=[];
  const wrap=Math.PI*2,golden=Math.PI*(3-Math.sqrt(5));
  function positions(jobs){
   // Golden-angle spiral yields one unique coordinate for each item, even
@@ -71,12 +72,24 @@
   art.setAttribute("aria-hidden","true");
   const sweep=document.createElement("span");sweep.className="radar-design-swatch-sweep";
   art.append(sweep);
+  if(choice.id==="zen"){
+   const waves=document.createElement("span");
+   waves.className="radar-design-swatch-pulses";
+   for(let index=0;index<4;index++){
+    const ring=document.createElement("span");
+    ring.className="radar-design-swatch-pulse";
+    waves.append(ring);
+   }
+   art.append(waves);
+  }
   const label=document.createElement("span");label.className="radar-design-label";label.textContent=choice.name;
   const hint=document.createElement("span");hint.className="radar-design-hint";hint.textContent=choice.note;
   button.append(art,label,hint);
   button.addEventListener("click",()=>selectDesign(choice.id));
   options.append(button);
  }
+ // Keep the initial HTML, selected picker button and dial theme synchronized.
+ selectDesign(selected);
  for(const button of document.querySelectorAll("#radarPeriodControls [data-period]")){
   button.addEventListener("click",()=>{
    if(period===button.dataset.period)return;
