@@ -44,6 +44,9 @@ jobs:
           node --check dashboard/agency-world.js
           node --check dashboard/radar-model.js
           node --check dashboard/radar.js
+          node --check dashboard/radar-explorer-model.js
+          node --check dashboard/radar-explorer-ui.js
+          node --test tests/radar-explorer.test.cjs
           node --check dashboard/dossiers.js
           node --test tests/dossiers.test.cjs
           node --test tests/radar.test.cjs
