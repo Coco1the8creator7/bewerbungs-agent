@@ -338,6 +338,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./agency-theme-beige.css">
 <link rel="stylesheet" href="./mode-nav.css?v=20261024-nav-access-1">
 <link rel="stylesheet" href="./radar.css">
+<link rel="stylesheet" href="./radar-designs.css">
 <link rel="stylesheet" href="./radar-explorer.css">
 <link rel="stylesheet" href="./dossiers.css?v=20261027-dossiers-1">
 </head>
@@ -464,13 +465,23 @@ header .sub,.section-heading p{color:#6b5744}
       <section class="radar-surface soft" aria-label="Animierter Inserate-Radar">
         <div class="radar-surface-head"><div><div class="radar-kicker">SCAN / 01</div><h3>Stellenradar</h3></div><span class="radar-scope">SCHWEIZ</span></div>
         <div class="radar-display">
-          <div class="radar-dial" role="img" aria-label="Dekorative Radar-Animation, kein aktiver Live-Crawler">
-            <span class="radar-sweep" aria-hidden="true"></span><span class="radar-cross" aria-hidden="true"></span>
-            <span class="radar-ping a" aria-hidden="true"></span><span class="radar-ping b" aria-hidden="true"></span><span class="radar-ping c" aria-hidden="true"></span>
+          <div class="radar-dial" id="radarDial" data-design="classic" role="img" aria-label="Noch keine neuen Stellen geladen">
+            <span class="radar-sweep" aria-hidden="true"></span>
+            <span class="radar-cross" aria-hidden="true"></span>
+            <div class="radar-targets" id="radarTargets" aria-hidden="true"></div>
           </div>
-          <div><div class="radar-live" id="radarLiveLabel">IMPORT NOCH NICHT GELADEN</div>
-          <div class="radar-not-live">Illustration · kein automatischer Suchlauf durch die Animation</div></div>
+          <div>
+            <div class="radar-live" id="radarLiveLabel">IMPORT NOCH NICHT GELADEN</div>
+            <div class="radar-target-summary"><strong id="radarTargetCount">0</strong><span id="radarTargetPeriod">Ortungen seit gestern</span></div>
+            <p id="radarTargetNote" class="radar-not-live">Jeder Punkt entspricht genau einem neuen Inserat aus dem Import. Kein Live-Crawler.</p>
+          </div>
         </div>
+        <div class="radar-time-controls" id="radarPeriodControls" role="group" aria-label="Zeitraum für Ortungen">
+          <button class="radar-period-button" data-period="yesterday" type="button" aria-pressed="true">Seit gestern</button>
+          <button class="radar-period-button" data-period="week" type="button" aria-pressed="false">Diese Woche</button>
+        </div>
+        <div class="radar-design-heading"><span class="radar-kicker">RADAR-DESIGNS / 6 VARIANTEN</span><span class="radar-small">Design auswählen · bestehendes Radar bleibt erhalten</span></div>
+        <div class="radar-design-options" id="radarDesignOptions" role="group" aria-label="Radar-Design auswählen"></div>
       </section>
       <section class="radar-surface" aria-label="Statistik importierter Stellen">
         <div class="radar-surface-head"><div><span class="radar-kicker">IMPORT / STATUS</span><h3>Was dein Radar bisher gefunden hat</h3></div>
@@ -1842,6 +1853,7 @@ initialize();
 </script>
 <script src="./radar-explorer-model.js"></script>
 <script src="./radar-model.js"></script>
+<script src="./radar-designs.js"></script>
 <script src="./radar.js"></script>
 <script src="./radar-interest-pictograms.js"></script>
 <script src="./radar-explorer-ui.js"></script>
