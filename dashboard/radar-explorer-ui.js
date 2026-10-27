@@ -150,6 +150,7 @@
  function render(){
   normalizeSavedAnswers();
   const m=market(),count=data.progress(selection(),m);
+  el("radarExplorerAttribution").hidden=m==="career";
   el("radarExplorerIntro").textContent=m==="career"?
    "Wähle Arbeitsaufgaben, die dir Freude machen. Die Vorschläge sind von deinen bisherigen Stellenbewertungen unabhängig.":
    "Wähle Tätigkeiten, die du gern einmal ausprobieren würdest – ohne Noten und ohne richtige oder falsche Antworten.";
