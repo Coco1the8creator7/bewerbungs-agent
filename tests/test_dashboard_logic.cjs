@@ -6,6 +6,13 @@ const vm = require("node:vm");
 const html = fs.readFileSync("dashboard/index.html", "utf8");
 assert.match(html, /id="exportMarkedJobs"/);
 assert.match(html, /type="range"/); // Created dynamically by ratingPanel
+const worldStart=html.indexOf('<dialog class="agency-world"');
+const questStart=html.indexOf('id="questList"');
+assert.ok(worldStart>=0 && questStart>worldStart, "weekly missions must live inside Agency World");
+assert.equal(html.match(/id="questList"/g)?.length,1,"only one weekly mission list");
+assert.match(html, /type:"rated",title:"10 Inserate bewerten",target:10/);
+assert.match(html, /type:"applied",title:"1 Bewerbung versenden",target:1/);
+assert.match(html, /type:"follow_up",title:"2 Bewerbungen nachfassen",target:2/);
 const match = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(match, "expected inline script");
 const end = match[1].indexOf('el("choose").addEventListener');
@@ -69,6 +76,8 @@ const fixture = [
   'assert.throws(()=>validateOverrides([{id:"abc",patch:{unexpected:1}}]));',
   'setAnnotation("quest-job","review","");',
   'assert.ok(weekActivity("screened").has("quest-job"));',
+  'assert.ok(!weekRatedJobs().has("quest-job"),"status changes must not count as actual ratings");',
+  'assert.ok(activityTypes.has("rated"));',
   'setAnnotation("quest-job","applied","");',
   'assert.ok(weekActivity("applied").has("quest-job"));',
   'toggleFollowUp("quest-job");',
@@ -88,6 +97,10 @@ const fixture = [
   'assert.equal(buildRelevancePayload().ratings.length,0);',
   'setRating("sample-1",72);',
   'assert.equal(ratingOf("sample-1").score,72);',
+  'assert.ok(weekRatedJobs().has("sample-1"),"manual rating must count");',
+  'assert.equal(activityLog.filter(e=>e.type==="rated"&&e.job_id==="sample-1").length,1);',
+  'setRating("sample-1",72);',
+  'assert.equal(activityLog.filter(e=>e.type==="rated"&&e.job_id==="sample-1").length,1,"re-rating must not duplicate a mission");',
   'assert.equal(storedReasons(ratingOf("sample-1")).join(","),"field,tasks");',
   'assert.equal(ratingOf("sample-1").suggested_score_at_rating,53);',
   'setReasons("sample-1",["distance","seniority"]);',
