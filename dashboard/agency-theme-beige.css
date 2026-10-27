@@ -155,3 +155,36 @@
   animation:none!important;transition:none!important;
  }
 }
+
+/* Weekly missions live inside the Agency World, not the CRM home panel. */
+#mode-startseite .mission-grid{grid-template-columns:minmax(0,1fr)}
+.agency-world .agency-weekly-missions{
+ margin:0 0 22px;padding:18px 20px;background:#fff9ef;
+ border:1px solid #dbcbb6;border-radius:12px;
+}
+.agency-world .agency-weekly-heading{
+ display:flex;justify-content:space-between;align-items:end;gap:10px;
+ flex-wrap:wrap;margin-bottom:14px;
+}
+.agency-world .agency-weekly-heading h3{margin:5px 0 0;font-size:1rem;letter-spacing:0}
+.agency-world .agency-week-period{color:#756452;font-size:.79rem}
+.agency-world .agency-weekly-missions .quest-list{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;
+}
+.agency-world .agency-weekly-missions .quest{
+ background:#f8f0e4;border:1px solid #e4d4bf;border-radius:9px;
+ padding:13px 14px;min-width:0;
+}
+.agency-world .agency-weekly-missions .quest.done{
+ border-color:#a9b89b;background:#f0f3e8;
+}
+.agency-world .agency-weekly-missions .quest-title{color:#514538}
+.agency-world .agency-weekly-missions .quest-count{color:#79644e}
+.agency-world .agency-weekly-missions .quest.done .quest-count{color:#446244}
+.agency-world .agency-weekly-missions .quest-track{background:#e1d4c2}
+.agency-world .agency-weekly-missions .quest-fill{background:#80977b}
+.agency-world .agency-weekly-missions .quest-foot{color:#796e60;margin:12px 0 0}
+@media(max-width:780px){
+ .agency-world .agency-weekly-missions{padding:15px}
+ .agency-world .agency-weekly-missions .quest-list{grid-template-columns:1fr}
+}
