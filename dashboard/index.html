@@ -346,6 +346,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./radar-explorer.css">
 <link rel="stylesheet" href="./dossiers.css?v=20261027-dossiers-1">
 <link rel="stylesheet" href="./notifications.css?v=20261027-notifications-1">
+<link rel="stylesheet" href="./landing-cards.css?v=20261027-compact-cards-1">
 <link rel="stylesheet" href="./urban-mono-magenta.css?v=20261027-muted-2">
 <link rel="stylesheet" href="./radar-designs.css?v=20261027-zen-magenta-1">
 </head>
@@ -369,11 +370,11 @@ header .sub,.section-heading p{color:#6b5744}
 </aside>
 <main>
 <header class="career-app-header">
-  <div class="career-header-actions">
-    <button id="openModeSidebar" class="mode-menu-button" type="button" aria-controls="modeSidebar" aria-expanded="false" aria-label="Menü öffnen">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-    <div class="career-header-notifications">
+  <button id="openModeSidebar" class="mode-menu-button" type="button" aria-controls="modeSidebar" aria-expanded="false" aria-label="Menü öffnen">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="career-header-copy"><h1>Career.Agency<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben, Karriere machen.</p></div>
+  <div class="career-header-notifications">
       <button id="notificationBell" class="notification-bell" type="button" aria-label="Benachrichtigungen öffnen" aria-controls="notificationPanel" aria-expanded="false">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>
         <span id="notificationBadge" class="notification-badge" aria-hidden="true" hidden></span>
@@ -388,9 +389,7 @@ header .sub,.section-heading p{color:#6b5744}
         <p id="notificationEmpty" class="notification-empty">Derzeit keine aktuellen Hinweise.</p>
         <p class="notification-note">Aktuelle Ereignisse, keine dauerhaft als ungelesen gespeicherten Nachrichten.</p>
       </section>
-    </div>
   </div>
-  <div class="career-header-copy"><h1>Career.Agency<span aria-hidden="true"> ✦</span></h1><p class="sub">Deine nächste Mission: Chancen entdecken, bewerben, dranbleiben, Karriere machen.</p></div>
 </header>
 <div id="mode-startseite" class="career-mode-view" data-mode-page="startseite">
 <section class="section" aria-labelledby="missionTitle">
@@ -420,13 +419,13 @@ header .sub,.section-heading p{color:#6b5744}
   </div>
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
-  <div class="section-heading"><div><h2 id="newJobsTitle">Inserate beurteilen</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><div class="headline-actions"><span id="markedSummary" class="marked-summary">0 für Export markiert</span><button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button><button type="button" id="saveGithubFeedback">💾 Bewertungen speichern</button></div></div>
+  <div class="section-heading"><div><h2 id="newJobsTitle">Meine Inserate</h2><p id="newSummary">0 ungeprüfte Stellen</p></div><div class="headline-actions"><span id="markedSummary" class="marked-summary">0 für Export markiert</span><button type="button" class="secondary" id="exportMarkedJobs" disabled>Markierte Inserate exportieren</button><button type="button" id="saveGithubFeedback">💾 Bewertungen speichern</button></div></div>
   <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Unbewertet (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button></div>
   <div class="panel filters" role="search" aria-label="Inserate filtern">
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
     <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
-    <div><label for="sort">Sortierung</label><select id="sort"><option value="priority" selected>Vorselektion v2 · Priorität</option><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
+    <div><label for="sort">Sortierung</label><select id="sort"><option value="priority" selected>Priorität</option><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
   </div>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
   <div id="mobileJobSentinel" class="mobile-load" hidden><span id="mobileJobCount"></span><button type="button" class="secondary" onclick="appendJobBatch();observeMobileJobs()">Weitere 5 anzeigen</button></div>
@@ -670,6 +669,7 @@ header .sub,.section-heading p{color:#6b5744}
 </dialog>
 <dialog id="details" aria-labelledby="detailTitle">
   <div class="detail-top"><h2 id="detailTitle">Inserat</h2><button type="button" id="dismissDetails" class="secondary compact-button" aria-label="Detailansicht schliessen">✕</button></div><p id="detailMeta" class="muted"></p>
+  <div id="detailExportMarkHost" class="detail-export-mark"></div>
   <section class="dialog-field" aria-label="Stellenbeschreibung"><div id="detailDescription"></div></section>
   <section id="detailReviewHost" class="dialog-field" aria-label="Relevanzbewertung"></section>
   <div id="detailLegacyRating">
@@ -1242,17 +1242,32 @@ function linkedTitle(j,tag="h3"){
  button.addEventListener("click",()=>openDetails(j.id));
  h.append(button);return h;
 }
-function exportMarkButton(j){
- const b=document.createElement("button");b.type="button";b.className="mark-button";
- b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4z"/><path d="M8 3v6h8V3M7 21v-9h10v9M10 16h4"/></svg>';
+function detailExportMarkButton(j){
+ const b=document.createElement("button");b.type="button";b.className="secondary compact-button detail-export-button";
  const update=()=>{
   const active=selectedJobIds.has(j.id);
   b.setAttribute("aria-pressed",String(active));
   b.setAttribute("aria-label",(active?"Exportmarkierung entfernen: ":"Für Export markieren: ")+j.title);
-  b.title=active?"Für Export ausgewählt (erneut klicken zum Entfernen)":"Für späteren Inserate-Export auswählen";
+  b.textContent=active?"✓ Für Export markiert":"Für Export markieren";
  };
  update();
- b.addEventListener("click",()=>{toggleExportSelection(j.id);update();b.closest(".card")?.classList.toggle("export-marked",selectedJobIds.has(j.id));updateMarkedSummary();});
+ b.addEventListener("click",()=>{toggleExportSelection(j.id);update();renderNewJobs();});
+ return b;
+}
+// Only the user's explicit 1–100 rating is displayed. Never show
+// the importer priority or estimated suitability as a personal rating.
+function cardRatingButton(j){
+ const score=ratingOf(j.id)?.score;
+ const rated=Number.isInteger(score)&&score>=1&&score<=100;
+ const b=document.createElement("button");b.type="button";
+ b.className="card-rating"+(rated?" rated":" unrated");
+ b.textContent=rated?score+" / 100":"Bewerten";
+ b.setAttribute("aria-label",rated?"Eigene Bewertung "+score+" von 100 ändern: "+j.title:"Inserat bewerten: "+j.title);
+ b.title="Eigene Relevanzbewertung (1–100) öffnen";
+ b.addEventListener("click",()=>{
+  openDetails(j.id);
+  el("detailReviewHost").querySelector(".relevance-slider")?.focus();
+ });
  return b;
 }
 function ratingPanel(j){
@@ -1265,7 +1280,7 @@ function ratingPanel(j){
  input.value=String(rating?.score??50);
  input.setAttribute("aria-label","Relevanz 1 bis 100 für "+j.title);
  input.addEventListener("input",()=>{output.textContent=input.value+" / 100";output.classList.remove("unrated");});
- input.addEventListener("change",()=>{setRating(j.id,input.value);el("message").textContent="Relevanz "+input.value+"/100 übernommen. Feedback-JSON für das Training separat exportieren.";});
+ input.addEventListener("change",()=>{setRating(j.id,input.value);renderNewJobs();el("message").textContent="Relevanz "+input.value+"/100 übernommen. Feedback-JSON für das Training separat exportieren.";});
  const scale=document.createElement("div");scale.className="review-scale";scale.append(node("span","1 · gering"),node("span","100 · hoch"));
  const reasons=document.createElement("div");
  reasons.append(node("div","Wie beeinflussen einzelne Kriterien deine Bewertung?","review-reasons-label"),
@@ -1382,6 +1397,7 @@ function openDetails(id){
   title.append(link);
  }else title.textContent=j.title;
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
+ el("detailExportMarkHost").replaceChildren(detailExportMarkButton(j));
  el("detailDescription").textContent=cleanDescription(j.description);
  el("detailReviewHost").hidden=false;el("detailReviewHost").replaceChildren(ratingPanel(j));
  el("detailLegacyRating").hidden=true;
@@ -1411,6 +1427,7 @@ function startNewJob(){
  el("detailReviewHost").hidden=true;el("detailReviewHost").replaceChildren();el("detailLegacyRating").hidden=false;
  el("closeDetails").textContent="Abbrechen";el("detailPrepareDossier").hidden=true;
  el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
+ el("detailExportMarkHost").replaceChildren();
  el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
  el("detailDecision").value="open";el("detailNote").value="";el("detailScore").value="";
  detailDraftFeedback=normalizeReasonFeedback(null);
@@ -1490,14 +1507,6 @@ function jobTaskPreview(description){
  const summary=candidates.slice(0,3).join(" ").slice(0,360);
  return summary||"Aufgabenbereich im Inserat nicht näher beschrieben.";
 }
-function jobSalaryLabel(j){
- const min=Number(j.salary_chf_year_min),max=Number(j.salary_chf_year_max);
- const validMin=j.salary_chf_year_min!=null&&min>0,validMax=j.salary_chf_year_max!=null&&max>0;
- if(!validMin&&!validMax)return "Lohn-Range: Keine Lohn-Range angegeben";
- const fmt=n=>"CHF "+Math.round(n).toLocaleString("de-CH");
- const value=validMin&&validMax?fmt(min)+"–"+fmt(max):validMin?"ab "+fmt(min):"bis "+fmt(max);
- return "Lohn-Range: "+value+"/Jahr"+(j.salary_kind==="estimated"?" (Schätzung)":j.salary_kind==="explicit"?" (Inserat)":" (Quelle ungeklärt)");
-}
 function renderNewJobs(){
  const query=el("query").value.trim().toLocaleLowerCase("de-CH");
  const category=el("category").value,source=el("source").value;
@@ -1540,23 +1549,13 @@ function renderNewJobs(){
   });
   const top=document.createElement("div");top.className="card-top";
   const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),linkedTitle(j),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
-  top.append(info,exportMarkButton(j));card.append(top);
-  card.append(node("p",jobTaskPreview(j.description),"job-meta"),node("div",jobSalaryLabel(j),"job-meta"));
+  top.append(info,cardRatingButton(j));card.append(top);
+  card.append(node("p",jobTaskPreview(j.description),"job-meta"));
   const tags=document.createElement("div");tags.className="tags";
   for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
-  // Bewertungen erscheinen ausschliesslich in der Detailansicht.
   card.append(tags);
-  const footer=document.createElement("div");footer.className="card-footer";
-  const actions=document.createElement("div");actions.className="card-actions";
-  actions.append(actionButton(j));footer.append(actions);
-   if(window.AgentCareerFilter){
-   const pre=window.AgentCareerFilter.classify(j);
-   footer.append(node("span","V2-Priorität "+pre.priority+"/100 · regelbasiert","job-meta"));
-  }else if(Number.isInteger(j.selection?.suggested_score)){
-   footer.append(node("span","Vorschlag "+j.selection.suggested_score+"/100","job-meta"));
-  }
-  
-  card.append(footer);if(mobileJobQuery.matches&&target.children.length>=mobileJobLimit)card.hidden=true;target.append(card);
+  if(mobileJobQuery.matches&&target.children.length>=mobileJobLimit)card.hidden=true;
+  target.append(card);
  }
  const sentinel=el("mobileJobSentinel");sentinel.hidden=!mobileJobQuery.matches||mobileJobLimit>=filtered.length;
  el("mobileJobCount").textContent=Math.min(mobileJobLimit,filtered.length)+" von "+filtered.length+" Inseraten";

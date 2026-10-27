@@ -1,10 +1,13 @@
 /* Landing-page notification control: same warm, minimal shell as the global menu. */
-.career-app-header > .career-header-actions{
- display:flex;align-items:flex-start;gap:8px;
- flex:0 0 auto;min-width:0;
+/* Menu stays at the top left; notification bell sits at the top right. */
+.career-app-header{
+ display:grid;grid-template-columns:44px minmax(0,1fr) 44px;
+ align-items:center;column-gap:14px;
 }
-.career-app-header > .career-header-copy{flex:1 1 0;min-width:0}
-.career-header-notifications{position:relative;flex:0 0 44px}
+.career-app-header > .mode-menu-button{grid-column:1;grid-row:1;align-self:start}
+.career-app-header > .career-header-copy{grid-column:2;grid-row:1;min-width:0}
+.career-app-header > .career-header-notifications{grid-column:3;grid-row:1;justify-self:end}
+.career-header-notifications{position:relative;width:44px}
 .notification-bell{
  display:grid;place-items:center;position:relative;
  width:44px;height:44px;min-width:44px;padding:0;
@@ -26,7 +29,7 @@
 }
 .notification-badge[hidden],.notification-panel[hidden],.notification-empty[hidden]{display:none!important}
 .notification-panel{
- position:absolute;z-index:90;top:calc(100% + 12px);left:-52px;
+ position:absolute;z-index:90;top:calc(100% + 12px);right:0;
  width:min(358px,calc(100vw - 44px));padding:18px;
  border:1px solid #d9c6ac;border-radius:15px;
  background:#fffaf2;color:#4b3b2d;
@@ -61,12 +64,17 @@
 }
 body:not([data-active-mode="startseite"]) .career-header-notifications{display:none}
 @media(max-width:650px){
- .career-app-header{flex-wrap:wrap;row-gap:10px}
- .career-app-header > .career-header-actions{flex:0 0 100%;width:100%}
- .career-app-header > .career-header-copy{flex:0 0 100%;width:100%}
+ .career-app-header{
+  grid-template-columns:44px minmax(0,1fr) 44px;
+  grid-template-rows:auto auto;align-items:start;
+  column-gap:10px;row-gap:14px;
+ }
+ .career-app-header > .mode-menu-button{grid-column:1;grid-row:1;margin-top:0}
+ .career-app-header > .career-header-notifications{grid-column:3;grid-row:1}
+ .career-app-header > .career-header-copy{grid-column:1/-1;grid-row:2}
 }
 @media(max-width:375px){
- .notification-panel{left:-51px;width:calc(100vw - 40px);padding:14px}
+ .notification-panel{right:0;width:calc(100vw - 40px);padding:14px}
 }
 @media(prefers-reduced-motion:reduce){
  .notification-bell,.notification-panel{transition:none}

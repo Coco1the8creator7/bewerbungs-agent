@@ -1,0 +1,30 @@
+/* Compact start-page cards. Ratings are explicit user decisions, not importer scores. */
+#newJobsList .card{gap:10px;cursor:pointer}
+#newJobsList .card-top{align-items:flex-start;gap:10px}
+#newJobsList .card-top>div:first-child{flex:1;min-width:0}
+#newJobsList .card-rating{
+ flex:0 0 auto;display:inline-grid;place-items:center;align-self:flex-start;
+ min-width:84px;min-height:44px;padding:9px 11px;
+ border:1px solid var(--ca-line,#d9c7b1);border-radius:10px;
+ background:var(--ca-paper-soft,#f4eadc);color:var(--ca-ink,#584737);box-shadow:none;
+ font-size:.79rem;font-weight:750;line-height:1.15;
+ font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+#newJobsList .card-rating:hover{background:#e7dac8;color:#433528}
+#newJobsList .card-rating.rated{
+ background:var(--ca-accent-soft,#eaf0e6);border-color:var(--ca-accent-line,#b9c8ae);color:var(--ca-accent,#3f5c41);
+}
+#newJobsList .card-rating.rated:hover{background:var(--ca-accent-line,#d9e7d5)}
+#newJobsList .card-rating:focus-visible{
+ outline:2px solid #9a794f;outline-offset:3px;
+}
+#newJobsList .card > p.job-meta{margin:0}
+#newJobsList .card .tags{margin-top:auto}
+.detail-export-mark{display:flex;justify-content:flex-end;margin:6px 0 3px}
+.detail-export-button{font-size:.78rem!important}
+.detail-export-button[aria-pressed="true"]{
+ background:#e6eee1!important;color:#3e6143!important;border:1px solid #b4c6a8;
+}
+@media(max-width:650px){
+ #newJobsList .card-rating{min-width:82px;min-height:44px;padding:8px 10px}
+}

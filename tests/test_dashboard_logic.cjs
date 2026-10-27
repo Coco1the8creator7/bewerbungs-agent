@@ -194,3 +194,4 @@ vm.runInNewContext(code + fixture, {assert,Date,Intl,URL,console,structuredClone
 console.log("Dashboard logic checks passed");
 require("./test_mode_navigation.cjs");
 require("./test_notifications.cjs");
+require("./test_landing_cards.cjs");
