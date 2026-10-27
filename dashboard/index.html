@@ -341,7 +341,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./light-earth.css">
 <link rel="stylesheet" href="./agency-theme-beige.css">
 <link rel="stylesheet" href="./mode-nav.css?v=20261024-nav-access-1">
-<link rel="stylesheet" href="./radar.css?v=20261027-zen-magenta-1">
+<link rel="stylesheet" href="./radar.css?v=20261027-radar-clean-1">
 
 <link rel="stylesheet" href="./radar-explorer.css">
 <link rel="stylesheet" href="./dossiers.css?v=20261027-dossiers-1">
@@ -462,23 +462,22 @@ header .sub,.section-heading p{color:#6b5744}
 </div><!-- Die bestehende CRM-Startseite bleibt unverändert. -->
 <section id="mode-radar" class="career-mode-view" data-mode-page="radar" aria-labelledby="mode-radar-title" hidden>
   <div class="radar-heading">
-    <div><span class="radar-kicker">CAREER.AGENCY / STELLEN-RADAR</span><h2 id="mode-radar-title">Dein Radar</h2>
+    <div><h2 id="mode-radar-title">Dein Radar</h2>
       <p class="radar-intro" id="radarIntro">Deine bestehenden Stellenabos liefern weiterhin aktuelle Inserate. Teste hier das Radar mit deinen eigenen Stellen.</p></div>
-    <span class="radar-badge" id="radarAudienceBadge">PERSÖNLICHER TEST · 0.2</span>
   </div>
   <div class="radar-markets" role="group" aria-label="Welche Art Stellen möchtest du ansehen?">
     <button type="button" class="radar-market" data-market="career" aria-pressed="true">Berufsstellen · persönlicher Test</button>
     <button type="button" class="radar-market" data-market="apprentice" aria-pressed="false">Lehrstellen · Vorschau</button>
   </div>
   <div class="radar-tabs" role="tablist" aria-label="Radar-Bereiche">
-    <button type="button" class="radar-tab" role="tab" id="radarTabOverview" data-tab="overview" aria-controls="radarPanelOverview" aria-selected="true" tabindex="0">01&nbsp; Überblick</button>
-    <button type="button" class="radar-tab" role="tab" id="radarTabProfile" data-tab="profile" aria-controls="radarPanelProfile" aria-selected="false" tabindex="-1">02&nbsp; Meine Stärken</button>
-    <button type="button" class="radar-tab" role="tab" id="radarTabReview" data-tab="review" aria-controls="radarPanelReview" aria-selected="false" tabindex="-1">03&nbsp; Bewertungs-Hub</button>
+    <button type="button" class="radar-tab" role="tab" id="radarTabOverview" data-tab="overview" aria-controls="radarPanelOverview" aria-selected="true" tabindex="0">Überblick</button>
+    <button type="button" class="radar-tab" role="tab" id="radarTabProfile" data-tab="profile" aria-controls="radarPanelProfile" aria-selected="false" tabindex="-1">Meine Stärken</button>
+    <button type="button" class="radar-tab" role="tab" id="radarTabReview" data-tab="review" aria-controls="radarPanelReview" aria-selected="false" tabindex="-1">Bewertungs-Hub</button>
   </div>
   <div class="radar-panel" role="tabpanel" id="radarPanelOverview" data-panel="overview" aria-labelledby="radarTabOverview">
     <div class="radar-grid">
       <section class="radar-surface soft" aria-label="Animierter Inserate-Radar">
-        <div class="radar-surface-head"><div><div class="radar-kicker">SCAN / 01</div><h3>Stellenradar</h3></div><span class="radar-scope">SCHWEIZ</span></div>
+        <div class="radar-surface-head"><div><h3>Stellenradar</h3></div><span class="radar-scope">SCHWEIZ</span></div>
         <div class="radar-display">
           <div class="radar-dial" id="radarDial" data-design="zen" role="img" aria-label="Noch keine neuen Stellen geladen">
             <span class="radar-sweep" aria-hidden="true"></span>
@@ -492,9 +491,7 @@ header .sub,.section-heading p{color:#6b5744}
             <div class="radar-targets" id="radarTargets" aria-hidden="true"></div>
           </div>
           <div>
-            <div class="radar-live" id="radarLiveLabel">IMPORT NOCH NICHT GELADEN</div>
             <div class="radar-target-summary"><strong id="radarTargetCount">0</strong><span id="radarTargetPeriod">Ortungen seit gestern</span></div>
-            <p id="radarTargetNote" class="radar-not-live">Jeder Punkt entspricht genau einem neuen Inserat aus dem Import. Kein Live-Crawler.</p>
           </div>
         </div>
         <div class="radar-time-controls" id="radarPeriodControls" role="group" aria-label="Zeitraum für Ortungen">
@@ -505,21 +502,18 @@ header .sub,.section-heading p{color:#6b5744}
         <div class="radar-design-options" id="radarDesignOptions" role="group" aria-label="Radar-Design auswählen" hidden></div>
       </section>
       <section class="radar-surface" aria-label="Statistik importierter Stellen">
-        <div class="radar-surface-head"><div><span class="radar-kicker">IMPORT / STATUS</span><h3>Was dein Radar bisher gefunden hat</h3></div>
-          <button id="radarRefresh" class="secondary compact-button" type="button">↻ Aktualisieren</button></div>
         <div class="radar-metrics">
-          <div class="radar-metric"><span>Inserate gesammelt</span><strong id="radarTotal">–</strong><small>Alle Inserate im aktuellen öffentlichen Feed</small></div>
-          <div class="radar-metric"><span>Neu seit gestern</span><strong id="radarSinceYesterday">–</strong><small>Erstmals erfasst ab gestern 00:00, Ortszeit</small></div>
-          <div class="radar-metric"><span>Neu diese Woche</span><strong id="radarWeek">–</strong><small>Erstmals erfasst seit Montag 00:00</small></div>
+          <div class="radar-metric"><span>Inserate gesammelt</span><strong id="radarTotal">–</strong></div>
+          <div class="radar-metric"><span>Neu seit gestern</span><strong id="radarSinceYesterday">–</strong></div>
+          <div class="radar-metric"><span>Neu diese Woche</span><strong id="radarWeek">–</strong></div>
           <div class="radar-metric"><span id="radarSegmentLabel">Davon im CRM sichtbar</span><strong id="radarApprenticeships">–</strong><small id="radarSegmentHint">Bestehende Anzeige-Regeln, kein zusätzlicher Ausschluss beim Import</small></div>
         </div>
-        <p id="radarFeedStatus" class="radar-notice" role="status" aria-live="polite">Statistik lädt beim Öffnen des Radars.</p>
+        <p id="radarFeedStatus" class="radar-notice" role="status" aria-live="polite" hidden></p>
       </section>
     </div>
     <section class="radar-surface radar-block" aria-labelledby="radarSourcesTitle">
-      <div class="radar-block-title"><div><span class="radar-kicker">QUELLEN / AUSWAHL</span><h3 id="radarSourcesTitle">Wo möchtest du suchen?</h3></div><span id="radarSourceCount" class="radar-small">Keine Auswahl</span></div>
+      <div class="radar-block-title"><div><h3 id="radarSourcesTitle">Wo möchtest du suchen?</h3></div></div>
       <div id="radarSources" class="radar-source-grid" role="group" aria-label="Bevorzugte Stellenquellen"></div>
-      <p id="radarSourcesInfo" class="radar-notice">Deine bestehenden Stellenabos (Gmail und URL-Import) bleiben die Datenquelle. Die Auswahl wirkt ausschliesslich auf die Radar-Anzeige – nicht auf Importer, CRM-Daten oder Bewerbungen.</p>
     </section>
   </div>
   <div class="radar-panel" role="tabpanel" id="radarPanelProfile" data-panel="profile" aria-labelledby="radarTabProfile" hidden>
