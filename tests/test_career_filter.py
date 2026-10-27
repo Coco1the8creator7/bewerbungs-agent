@@ -20,6 +20,8 @@ class CareerFilterTests(unittest.TestCase):
         self.assertLess(html.index('src="./career-filter.js"'), html.index('function visibleJobs()'))
         self.assertIn('function unratedJobs(){return visibleJobs()', html)
         self.assertIn('function reviewedJobs(){return visibleJobs()', html)
+        self.assertIn('value="priority" selected', html)
+        self.assertIn('radarReviewScope', html)
         self.assertIn('function markedJobs(){return visibleJobs()', html)
 
 
