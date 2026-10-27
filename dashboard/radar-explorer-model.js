@@ -4,39 +4,49 @@
 (function(root){
  "use strict";
  const youth=Object.freeze([
-  ["make","🛠️","Etwas Eigenes herstellen",["craft","design"]],
-  ["outside","🌳","Draussen anpacken",["outdoor","nature"]],
-  ["machines","⚙️","Mit Maschinen etwas bewegen",["machines","technology"]],
-  ["draw","✏️","Ideen zeichnen und gestalten",["design","creative"]],
-  ["code","💻","Digitale Lösungen ausprobieren",["digital","technology"]],
-  ["repair","🔧","Defekte Dinge wieder zum Laufen bringen",["craft","technology"]],
-  ["wood","🪵","Mit Holz etwas bauen",["craft","wood"]],
-  ["metal","🔩","Metall bearbeiten",["craft","machines"]],
-  ["electric","🔌","Stromkreise und Geräte verstehen",["technology","electric"]],
-  ["numbers","🔢","Mit Zahlen Probleme lösen",["numbers","planning"]],
-  ["plan","📐","Gegenstände oder Räume planen",["planning","design"]],
-  ["creative","🎨","Mit Farben und Formen experimentieren",["creative","design"]],
-  ["write","📝","Texte und Geschichten verfassen",["language","communication"]],
-  ["talk","🎤","Menschen etwas erklären",["communication","social"]],
-  ["advise","💬","Andere bei Entscheidungen unterstützen",["social","communication"]],
-  ["care","🤲","Menschen im Alltag helfen",["social","health"]],
-  ["children","🧸","Mit jüngeren Kindern Zeit verbringen",["children","social"]],
-  ["animals","🐾","Tiere versorgen und beobachten",["animals","nature"]],
-  ["plants","🌱","Pflanzen pflegen und wachsen sehen",["nature","outdoor"]],
-  ["food","🥘","Mahlzeiten zubereiten",["food","craft"]],
-  ["sell","🛍️","Produkte zeigen und Kundschaft beraten",["commerce","communication"]],
-  ["organise","📋","Veranstaltungen oder Abläufe organisieren",["planning","commerce"]],
-  ["move","📦","Waren einteilen und transportieren",["logistics","machines"]],
-  ["travel","🚲","Unterwegs statt am Schreibtisch sein",["outdoor","logistics"]],
-  ["research","🧪","Fragen mit Experimenten erforschen",["science","technology"]],
-  ["precision","🎯","Bei kleinen Details genau arbeiten",["precision","craft"]],
-  ["buildings","🏗️","An Gebäuden und Baustellen mitwirken",["construction","outdoor"]],
-  ["health","🩺","Mehr über Körper und Gesundheit wissen",["health","science"]],
-  ["team","🤝","Gemeinsam im Team etwas erreichen",["team","social"]],
-  ["independent","🧭","Aufgaben selbstständig erledigen",["independent","planning"]],
-  ["languages","🌍","Andere Sprachen sprechen und verstehen",["language","communication"]],
-  ["sport","🏃","Bei der Arbeit körperlich aktiv sein",["outdoor","craft"]]
- ].map(([id,emoji,title,tags])=>Object.freeze({id,emoji,title,tags:Object.freeze(tags)})));
+  ["outside","Draussen arbeiten",["outdoor","nature"]],
+  ["independent","Selbstständig arbeiten",["independent","planning"]],
+  ["plan","Konstruieren und technisch zeichnen",["planning","design","construction"]],
+  ["hours","Regelmässige Arbeitszeiten haben",["planning","independent"]],
+  ["active","Körperlich aktiv sein",["outdoor","craft"]],
+  ["drive","Fahrzeuge führen",["machines","logistics"]],
+  ["inform","Menschen informieren und sensibilisieren",["communication","social"]],
+  ["metal","Metall bearbeiten",["craft","machines","precision"]],
+  ["machines","Mit Maschinen arbeiten",["machines","technology"]],
+  ["travel","Viel unterwegs sein",["outdoor","logistics"]],
+  ["textiles","Mit Stoff, Leder oder Papier arbeiten",["craft","design","creative"]],
+  ["care","Menschen unterstützen und pflegen",["social","health"]],
+  ["hands","Mit den Händen arbeiten",["craft","precision"]],
+  ["code","Am Computer arbeiten",["digital","technology"]],
+  ["research","Experimentieren und forschen",["science","technology"]],
+  ["animals","Mit Tieren arbeiten",["animals","nature"]],
+  ["precision","Präzise und sorgfältig arbeiten",["precision","craft"]],
+  ["indoor","In Innenräumen arbeiten",["independent","planning"]],
+  ["write","Texte verfassen",["language","communication"]],
+  ["music","Musik machen, singen oder tanzen",["creative","team"]],
+  ["teaching","Wissen vermitteln",["communication","social"]],
+  ["technical","Technische Probleme lösen",["technology","analysis","machines"]],
+  ["food","Mit Lebensmitteln arbeiten",["food","craft"]],
+  ["stone","Stein, Ton und Glas bearbeiten",["craft","construction","precision"]],
+  ["advise","Andere Menschen beraten",["communication","social","commerce"]],
+  ["numbers","Mit Zahlen arbeiten",["numbers","planning"]],
+  ["electric","Mit Elektrizität und Elektronik arbeiten",["electric","technology"]],
+  ["lead","Verantwortung übernehmen und führen",["planning","team","social"]],
+  ["wood","Holz bearbeiten",["wood","craft"]],
+  ["team","Im Team arbeiten",["team","social"]],
+  ["languages","Sprachen anwenden",["language","communication"]],
+  ["plants","Mit Pflanzen arbeiten",["nature","outdoor"]],
+  ["children","Mit Kindern arbeiten",["children","social"]],
+  ["organise","Aufgaben planen und organisieren",["planning","commerce"]],
+  ["reading","Lesen und Informationen erschliessen",["language","science"]],
+  ["creative","Zeichnen, dekorieren und gestalten",["creative","design"]],
+  ["contact","Kontakt zu Menschen haben",["social","communication"]]
+ ].map(([id,title,tags])=>Object.freeze({id,title,tags:Object.freeze(tags)})));
+ const youthLegacy=Object.freeze({
+  make:"hands",draw:"creative",repair:"technical",sport:"active",
+  move:"travel",sell:"contact",talk:"inform",buildings:"plan",
+  health:"care"
+ });
  const career=Object.freeze([
   ["manage","🗂️","Projekte koordinieren und verantworten",["planning","leadership"]],
   ["analyze","📊","Kennzahlen interpretieren und Entscheidungen vorbereiten",["numbers","analysis"]],
@@ -91,9 +101,16 @@
  function normalizeExplorer(raw,market){
   const value=raw&&typeof raw==="object"&&!Array.isArray(raw)?raw:{};
   const ids=new Set(items(market).map(t=>t.id)),choices={};
-  if(value.choices&&typeof value.choices==="object"&&!Array.isArray(value.choices))
-   for(const [id,v] of Object.entries(value.choices))
-    if(ids.has(id)&&allowed.includes(v))choices[id]=v;
+  if(value.choices&&typeof value.choices==="object"&&!Array.isArray(value.choices)){
+   const entries=Object.entries(value.choices);
+   // Migrate former 32-card prototyping questions to the new 37-interest taxonomy.
+   // An explicit new answer always wins over a legacy alias.
+   if(market!=="career")for(const [id,v] of entries){
+    const mapped=youthLegacy[id];
+    if(mapped&&allowed.includes(v)&&!Object.hasOwn(value.choices,mapped))choices[mapped]=v;
+   }
+   for(const [id,v] of entries)if(ids.has(id)&&allowed.includes(v))choices[id]=v;
+  }
   const favorites=[...new Set((Array.isArray(value.favorites)?value.favorites:[])
    .filter(v=>typeof v==="string"&&fields(market).some(x=>x.id===v)))].slice(0,25);
   return {choices,favorites};
@@ -120,7 +137,7 @@
    .sort((a,b)=>b.order-a.order||b.score-a.score||a.title.localeCompare(b.title,"de-CH"))
    .slice(0,8);
  }
- const api=Object.freeze({items,fields,normalizeExplorer,progress,matches});
+ const api=Object.freeze({items,fields,normalizeExplorer,progress,matches,youthLegacy});
  root.CareerRadarExplorerModel=api;
  if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof globalThis!=="undefined"?globalThis:this);
