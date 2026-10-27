@@ -36,7 +36,7 @@ for(const id of ["query","category","source","sort","markedSummary","exportMarke
 assert.match(tools,/class="crm-advanced-filters"/);
 assert.match(tools,/Erweiterte Inseratesuche und Sortierung/);
 assert.match(tools,/role="search" aria-label="Inserate filtern"/);
-assert.match(tools,/class="crm-export-actions"/);
+assert.match(tools,/class="buttons crm-export-actions"/);
 assert.match(js,/el\("saveGithubFeedback"\)\.addEventListener\("click",async/);
 assert.match(js,/el\("exportMarkedJobs"\)\.addEventListener\("click"/);
 assert.match(js,/\["query","category","source","sort"\]\.forEach/);
