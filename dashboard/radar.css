@@ -108,3 +108,8 @@
 #mode-radar .radar-description{white-space:pre-wrap;overflow-wrap:anywhere;max-height:340px;overflow-y:auto;color:#594c3f;font-size:.8rem;line-height:1.55;margin:11px 0 0}
 #mode-radar .radar-original{border-top:1px solid #e3d4c1;margin-top:12px;padding-top:10px}
 @media(max-width:520px){#mode-radar .radar-review-scope{width:100%;align-items:stretch;flex-direction:column}#mode-radar .radar-review-scope select{width:100%;min-width:0}}
+
+#mode-radar .radar-main-relevance{margin-top:13px;padding:12px 13px;background:#efe9dc;border:1px solid #d4c2a9;border-radius:9px}
+#mode-radar .radar-main-relevance-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;color:#624b35;font-size:.77rem;font-weight:700}
+#mode-radar .radar-main-relevance input[type="range"]{width:100%;margin:11px 0 0;accent-color:#617d5b;cursor:ew-resize}
+#mode-radar .radar-main-relevance output{font-variant-numeric:tabular-nums}
