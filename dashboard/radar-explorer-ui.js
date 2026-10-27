@@ -1,9 +1,9 @@
 /* Career.Agency Interests Explorer UI. Desktop drag/drop and equal-accessible touch/keyboard buttons. */
 (function(){
  "use strict";
- const data=window.CareerRadarExplorerModel,bridge=window.CareerRadarBridge;
+ const data=window.CareerRadarExplorerModel,bridge=window.CareerRadarBridge,picto=window.CareerRadarPictograms;
  const root=document.getElementById("radarExplorer");
- if(!data||!bridge||!root)return;
+ if(!data||!bridge||!picto||!root)return;
  const el=id=>document.getElementById(id);
  const make=(tag,text,klass)=>{
   const n=document.createElement(tag);
@@ -14,6 +14,26 @@
  const offsets={career:0,apprentice:0};
  const selection=()=>bridge.profile().explorer;
  const market=()=>bridge.market();
+ function normalizeSavedAnswers(){
+  const original=selection(),clean=data.normalizeExplorer(original,market());
+  if(JSON.stringify(original.choices)!==JSON.stringify(clean.choices)||
+     JSON.stringify(original.favorites)!==JSON.stringify(clean.favorites)){
+   original.choices=clean.choices;
+   original.favorites=clean.favorites;
+   bridge.changed();
+  }
+ }
+ function suggestionPictogram(suggestion){
+  const tags=suggestion.tags;
+  const categories=[
+   ["wood","wood"],["electric","electric"],["digital","code"],["machines","machines"],
+   ["animals","animals"],["nature","plants"],["food","food"],["health","care"],
+   ["children","children"],["logistics","travel"],["construction","plan"],
+   ["creative","creative"],["science","research"],["commerce","contact"],
+   ["social","team"],["energy","electric"],["technology","technical"]
+  ];
+  return picto.create(categories.find(([tag])=>tags.includes(tag))?.[1]||"organise");
+ }
  function current(){
   const state=selection();
   const unmarked=data.items(market()).filter(i=>!state.choices[i.id]);
@@ -40,7 +60,8 @@
   const target=el(targetId);target.replaceChildren();
   if(!picked.length)target.append(make("p","Noch keine Auswahl","radar-explorer-empty"));
   for(const item of picked){
-   const b=make("button",item.emoji+" "+item.title+" ×","radar-explorer-pill");
+   const b=make("button",undefined,"radar-explorer-pill");
+   b.append(picto.create(item.id),make("span",item.title),make("span","×","radar-explorer-remove"));
    b.type="button";b.title="Einschätzung zurücknehmen";
    b.setAttribute("aria-label","Auswahl für "+item.title+" zurücknehmen");
    b.addEventListener("click",()=>{
@@ -65,7 +86,8 @@
   prompt.draggable=true;
   prompt.dataset.interestId=item.id;
   prompt.setAttribute("aria-label","Interesse: "+item.title+". Gefällt mir, eher nicht oder später wählen.");
-  prompt.append(make("span",item.emoji,"radar-explorer-emoji"));
+  const illustration=make("span",undefined,"radar-explorer-emoji");
+  illustration.append(picto.create(item.id));prompt.append(illustration);
   prompt.append(make("h4",item.title));
   prompt.append(make("p","Wäre das eine Tätigkeit, die du gerne ausprobieren würdest?"));
   prompt.addEventListener("dragstart",e=>{
@@ -96,7 +118,8 @@
   for(const suggestion of results){
    const card=make("article",undefined,"radar-explorer-match");
    const heading=make("div",undefined,"radar-explorer-match-head");
-   const icon=make("span",suggestion.emoji,"radar-explorer-match-icon");
+   const icon=make("span",undefined,"radar-explorer-match-icon");
+   icon.append(suggestionPictogram(suggestion));
    const title=make("div");title.append(make("h4",suggestion.title),
     make("span",suggestion.score+" Interessen passen zu diesem Vorschlag","radar-small"));
    heading.append(icon,title);
@@ -125,6 +148,7 @@
   }
  }
  function render(){
+  normalizeSavedAnswers();
   const m=market(),count=data.progress(selection(),m);
   el("radarExplorerIntro").textContent=m==="career"?
    "Wähle Arbeitsaufgaben, die dir Freude machen. Die Vorschläge sind von deinen bisherigen Stellenbewertungen unabhängig.":
