@@ -83,10 +83,27 @@ assert.equal(doc.activeElement,toggle);
 toggle.fire("click");
 documentHandlers.get("keydown")({key:"Escape",preventDefault(){}});
 assert.equal(menu.inert,true);
+// Sidebar Agency immediately opens the existing World instead of showing a placeholder.
+win.location.hash="#radar";
+windowHandlers.get("hashchange")();
+toggle.fire("click");
+let agencyLinkPrevented=false;
+links[3].fire("click",{preventDefault(){agencyLinkPrevented=true;}});
+assert.equal(agencyLinkPrevented,true);
+assert.equal(agencyOpens,1);
+assert.equal(menu.inert,true);
+assert.equal(doc.body.dataset.activeMode,"radar");
+assert.equal(win.location.hash,"#radar");
+// Reopening the sidebar and selecting Agency must work repeatedly.
+toggle.fire("click");
+links[3].fire("click",{preventDefault(){}});
+assert.equal(agencyOpens,2);
+// Deep links should also open the existing World, not the intermediate screen.
 win.location.hash="#agency";
 windowHandlers.get("hashchange")();
-launch.fire("click");
-assert.equal(agencyOpens,1);
+assert.equal(agencyOpens,3);
+assert.equal(doc.body.dataset.activeMode,"radar");
+assert.equal(pages.find(x=>x.dataset.modePage==="agency").hidden,true);
 win.location.hash="#profil";
 windowHandlers.get("hashchange")();
 assert.equal(doc.body.dataset.activeMode,"profil");
@@ -116,4 +133,4 @@ assert.equal(menu.inert,true);
 win.location.hash="#neuer-modus";
 windowHandlers.get("hashchange")();
 assert.equal(doc.body.dataset.activeMode,"neuer-modus");
-console.log("Six-mode sidebar and deployment-mismatch checks passed");
+console.log("Six-mode sidebar, direct Agency World and deployment-mismatch checks passed");
