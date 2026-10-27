@@ -35,9 +35,15 @@ Abrufen repräsentieren die Punkte den zuletzt erfolgreichen Feed.
 - Orbit: mehrfache konzentrische Kreisbahnen
 - Sektoren: Winkelteilung
 - Minimal: helle reduzierte Scanfläche
+- **Zen Radar (Standard):** vier langsame, vom Zentrum bis zum äusseren
+  Kreis expandierende, sehr dünne olivgrüne Wellen auf warmem Elfenbein.
+  Die Rotations-Sweep-Animation ist in diesem Modus ausgeblendet; der
+  Zentrumspunkt ist ein statischer Sender und ausdrücklich **keine Ortung**.
+  Die Wellen und die Miniatur-Vorschauen enthalten keine Job-Marker.
+  Bei `prefers-reduced-motion` bleiben dezente statische Ringe bestehen.
 
-Fünf zusätzliche Varianten; das Original bleibt bestehen. Themenwahl
-ändert ausschliesslich CSS, nicht Inserate, Termine, CRM, Bewertungen
+Sechs zusätzliche Varianten; das klassische Radar bleibt auswählbar. Themenwahl
+ändert ausschliesslich CSS und den dekorativen Puls-Container, nicht Inserate, Termine, CRM, Bewertungen
 oder Matching. Kleine Designvorschauen haben absichtlich keine
 Markerpunkte, damit diese nicht mit echten Ortungen verwechselt werden.
 Die Designauswahl bleibt vorerst nur für die laufende Sitzung.
