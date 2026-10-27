@@ -176,3 +176,16 @@ test("published Zen assets have matching cache-busting versions and highest styl
  assert.doesNotMatch(html,/href="\.\/radar-designs\.css"/);
  assert.doesNotMatch(html,/src="\.\/radar-designs\.js"/);
 });
+
+test("design-picker visibility: hidden previews, with Zen, time windows and live point layer intact",()=>{
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ assert.match(html,/<div class="radar-design-heading" hidden>/);
+ assert.match(html,/<div class="radar-design-options" id="radarDesignOptions"[^>]*hidden>/);
+ assert.match(html,/id="radarDial" data-design="zen"/);
+ assert.match(html,/id="radarTargets"/);
+ assert.match(html,/id="radarPeriodControls"/);
+ assert.match(html,/data-period="yesterday"/);
+ assert.match(html,/data-period="week"/);
+ const css=fs.readFileSync(path.join(root,"dashboard/radar.css"),"utf8");
+ assert.match(css,/#mode-radar \[hidden\]\{display:none!important\}/);
+});
