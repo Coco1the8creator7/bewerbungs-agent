@@ -471,7 +471,7 @@ header .sub,.section-heading p{color:#6b5744}
   <div class="radar-tabs" role="tablist" aria-label="Radar-Bereiche">
     <button type="button" class="radar-tab" role="tab" id="radarTabOverview" data-tab="overview" aria-controls="radarPanelOverview" aria-selected="true" tabindex="0">Überblick</button>
     <button type="button" class="radar-tab" role="tab" id="radarTabProfile" data-tab="profile" aria-controls="radarPanelProfile" aria-selected="false" tabindex="-1">Meine Stärken</button>
-    <button type="button" class="radar-tab" role="tab" id="radarTabReview" data-tab="review" aria-controls="radarPanelReview" aria-selected="false" tabindex="-1">Bewertungs-Hub</button>
+    <button type="button" class="radar-tab" role="tab" id="radarTabReview" data-tab="review" aria-controls="radarPanelReview" aria-selected="false" tabindex="-1">Filter-KI</button>
   </div>
   <div class="radar-panel" role="tabpanel" id="radarPanelOverview" data-panel="overview" aria-labelledby="radarTabOverview">
     <div class="radar-grid">
@@ -1570,7 +1570,7 @@ function loadJobs(rows,name,asDemo=false){
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(visibleJobs().flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
  refill(el("source"),unique(visibleJobs().map(j=>j.source)),"Alle Quellen");
- el("message").textContent=visibleJobs().length+" Inserate in der Vorauswahl ("+(jobs.length-visibleJobs().length)+" zurückgestellt · Radar > Bewertungs-Hub). Alle Originaldaten und Bewertungen bleiben erhalten.";
+ el("message").textContent=visibleJobs().length+" Inserate in der Vorauswahl ("+(jobs.length-visibleJobs().length)+" zurückgestellt · Radar > Filter-KI). Alle Originaldaten und Bewertungen bleiben erhalten.";
  render();
  saveChanges();
 }
