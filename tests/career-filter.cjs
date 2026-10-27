@@ -52,3 +52,41 @@ assert.equal(isVisible({title:"Diätkoch 80-100%",company:"Universitätsspital Z
 assert.equal(isVisible({title:"Schichtverantwortliche:r AEMP 80-100%",company:"Universitätsspital Zürich"}),false);
 assert.equal(isVisible({title:"Senior Software Developer (KI-gestützte Programmierung)",company:"Muster AG"}),false);
 console.log("Career filter: "+hidden.length+" exclusions and "+visible.length+" allowed roles validated");
+
+
+// V2 prioritises career-adjacent roles while parking only obvious misses.
+const outOfScopeTitles=[
+ "Koch / Köchin EFZ", "Coiffeur 80%", "Reinigungskraft 60-80%",
+ "Cleanroom Fabrication Engineer at the Quantum Device Lab"
+];
+for(const title of outOfScopeTitles){
+ const r=classify({title,company:"Muster AG"});
+ assert.equal(r.visible,false,"Must park: "+title);
+ assert.equal(r.reason,"out_of_scope_role");
+ assert.equal(r.exclusion,true);
+}
+const careerTitles=[
+ "Fachbauleiter Rohrleitungsbau Fernwärme",
+ "Projektleiter Klima und Mobilität",
+ "Junior Lichtdesigner",
+ "Verkaufsberater thermische Netze",
+ "Bauprojektadministration",
+ "Projektleiter Energiecontrolling",
+ "Projektleiter HLKS Universitätsspital",
+ "Projektleitung KI-Agenten Innovation"
+];
+for(const title of careerTitles){
+ const r=classify({title,company:"Engineering AG"});
+ assert.equal(r.visible,true,"Must keep cross-entry: "+title);
+ assert.equal(r.version,"career-preselector-v2");
+ assert.ok(Number.isInteger(r.priority)&&r.priority>=1&&r.priority<=99);
+}
+const relevant=classify({title:"Fachbauleiter Rohrleitungsbau Fernwärme"}).priority;
+const unrelated=classify({title:"Allgemeine Büroarbeiten"}).priority;
+assert.ok(relevant>unrelated,"Priority must favour thermal networks and project delivery");
+assert.equal(isVisible({title:"Koch EFZ",description:"Wir wollen die Energiewende vorantreiben"}),false,
+ "Employer's energy marketing must not override clear occupation");
+assert.equal(isVisible({title:"Projektleiter Gastronomie"}),true,
+ "Ambiguous transitions must stay reviewable");
+assert.equal(classify({title:"Unbekannte Funktion"}).visible,true,
+ "Insufficient evidence must not exclude");
