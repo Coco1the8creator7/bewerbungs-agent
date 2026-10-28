@@ -346,7 +346,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./radar.css?v=20261027-radar-clean-1">
 
 <link rel="stylesheet" href="./radar-explorer.css">
-<link rel="stylesheet" href="./dossiers.css?v=20261027-dossiers-1">
+<link rel="stylesheet" href="./dossiers.css?v=20261028-vault-1">
 <link rel="stylesheet" href="./notifications.css?v=20261027-notifications-1">
 <link rel="stylesheet" href="./landing-cards.css?v=20261027-compact-cards-1">
 <link rel="stylesheet" href="./urban-mono-magenta.css?v=20261027-muted-2">
@@ -646,7 +646,29 @@ header .sub,.section-heading p{color:#6b5744}
       <div id="dossierLibrary"></div>
     </section>
   </div>
-  <p class="dossier-info"><strong>Privater Prototyp:</strong> Hochgeladene Dateien und Dossier-Einstellungen werden nur im Browser dieses Geräts gespeichert. Es gibt noch keine Anmeldung, keine Synchronisation auf andere Geräte und keine KI-generierten Dokumente. Browserdaten nicht löschen, bevor wichtige Dateien gesichert sind.</p>
+  <section class="dossier-library dossier-vault" aria-labelledby="dossierVaultTitle">
+    <div class="dossier-library-head">
+      <div><h3 id="dossierVaultTitle">GitHub-Sicherung</h3><p>Verschlüsselte Ablage im aktuellen Repository</p></div>
+      <span class="dossier-vault-lock">AES-256-GCM</span>
+    </div>
+    <p class="dossier-info"><strong>Das Repository ist öffentlich.</strong> Deshalb werden alle Dossiers, Dateiinhalte, Namen und Stellenzuordnungen vor dem Hochladen im Browser verschlüsselt. Die verschlüsselten Dateien sind öffentlich abrufbar, aber ohne dein Kennwort nicht lesbar. Dateien bleiben trotz Löschung in der Git-Historie. Das Kennwort wird nicht gespeichert; bei Verlust ist die Sicherung nicht wiederherstellbar.</p>
+    <form id="dossierVaultForm" class="dossier-vault-form">
+      <label for="dossierVaultToken">GitHub-Token (nur für diese Sitzung, nicht gespeichert)</label>
+      <input id="dossierVaultToken" type="password" autocomplete="off" placeholder="Optional, falls bereits ein GitHub-Token hinterlegt ist">
+      <label for="dossierVaultPassword">Eigenes Verschlüsselungskennwort (mindestens 16 Zeichen)</label>
+      <input id="dossierVaultPassword" type="password" autocomplete="new-password" minlength="16" required placeholder="Ein langes, einzigartiges Kennwort verwenden">
+      <button id="dossierVaultConnect" class="dossier-primary" type="submit">Verschlüsselte Ablage entsperren</button>
+      <p class="dossier-quiet">Token-Berechtigung: ausschliesslich «Contents: Read and write» für dieses Repository. Falls bereits ein Token für «Bewertungen speichern» eingerichtet ist, kann dasselbe verwendet werden. Kennwort sicher ausserhalb der Website aufbewahren.</p>
+    </form>
+    <div id="dossierVaultActions" class="dossier-vault-actions" hidden>
+      <button id="dossierVaultSave" type="button" class="dossier-primary">Jetzt verschlüsselt sichern</button>
+      <button id="dossierVaultRestore" type="button" class="dossier-secondary">Aus GitHub wiederherstellen</button>
+      <button id="dossierVaultLock" type="button" class="dossier-secondary">Verbindung sperren</button>
+      <p class="dossier-quiet">Neue Uploads und Dossieränderungen werden in dieser entsperrten Sitzung automatisch verschlüsselt synchronisiert. Prüfe die Erfolgsbestätigung, bevor du lokale Dateien löschst.</p>
+    </div>
+    <p id="dossierVaultStatus" class="dossier-message" role="status" aria-live="polite">Nur lokal gespeichert · GitHub-Sicherung noch nicht entsperrt.</p>
+  </section>
+  <p class="dossier-info"><strong>Lokale Zwischenablage:</strong> Dateien werden zunächst im Browser dieses Geräts gespeichert. Die GitHub-Sicherung erfolgt erst nach Entsperren und bestätigtem erfolgreichem Upload. Ohne Kennwort oder GitHub-Token gibt es keinen Cloud-Sync. Eine KI-Dokumentengenerierung ist noch nicht eingerichtet.</p>
   <p id="dossierMessage" class="dossier-message" role="status" aria-live="polite"></p>
   <input id="dossierFileInput" type="file" accept=".pdf,.doc,.docx,.odt,.txt,.png,.jpg,.jpeg" multiple hidden aria-label="Bewerbungsunterlagen auswählen">
 </section>
@@ -1894,7 +1916,9 @@ initialize();
 <script src="./radar.js?v=20261027-zen-magenta-1"></script>
 <script src="./radar-interest-pictograms.js"></script>
 <script src="./radar-explorer-ui.js"></script>
-<script src="./dossiers.js?v=20261027-dossiers-1"></script>
+<script src="./dossiers-vault-crypto.js?v=20261028-vault-1"></script>
+<script src="./dossiers.js?v=20261028-vault-1"></script>
+<script src="./dossiers-vault.js?v=20261028-vault-1"></script>
 <script src="./mode-nav.js?v=20261027-agency-direct-1"></script>
 </body>
 </html>
