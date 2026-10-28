@@ -229,3 +229,35 @@ test("Detailed Nature Blend assets load after base and the zoom remains opt-in",
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.match(css,/agency-scene-detail-preview/);
 });
+
+const radarPrototypeSource=readFileSync(new URL("../dashboard/agency-radar-prototype.js",import.meta.url),"utf8");
+runInNewContext(radarPrototypeSource,context,{filename:"agency-radar-prototype.js"});
+const prototypeRender=context.window.AgentAgencyArt.renderSVG;
+test("Radar-only visual prototype has five clearly different tower construction stages",()=>{
+ const stages=[0,1,2,3,4].map(level=>prototypeRender(level,"radar"));
+ assert.equal(new Set(stages).size,5);
+ assert.match(stages[0],/radar-prototype-dish/);
+ assert.match(stages[1],/radar-prototype-tower/);
+ assert.match(stages[2],/radar-prototype-tower/);
+ assert.match(stages[3],/radar-prototype-dome/);
+ assert.match(stages[4],/radar-prototype-dome/);
+ for(let level=0;level<=4;level++){
+  assert.match(stages[level],new RegExp('data-level="'+level+'"'));
+  assert.doesNotMatch(stages[level],/fill="undefined"|stroke="undefined"|NaN|<script|onload=|<foreignObject/i);
+ }
+ assert.equal(prototypeRender(-20,"radar"),stages[0]);
+ assert.equal(prototypeRender(99,"radar"),stages[4]);
+});
+test("Radar experiment leaves all other six Nature Blend scenes untouched",()=>{
+ for(const theme of ["dossier","dispatch","comms","interview","advanced","finale","analysis"]){
+  assert.equal(prototypeRender(3,theme),detailed(3,theme));
+ }
+});
+test("Radar prototype is loaded last and retains accessible focus and reduced-motion safeguards",()=>{
+ const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const css=readFileSync(new URL("../dashboard/agency-radar-prototype.css",import.meta.url),"utf8");
+ assert.ok(html.indexOf('src="./agency-nature-rich.js"')<html.indexOf('src="./agency-radar-prototype.js"'));
+ assert.ok(html.indexOf('href="./agency-nature-rich.css"')<html.indexOf('href="./agency-radar-prototype.css"'));
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(css,/212px/,"Artwork stays near original real-width 222px tile");
+});
