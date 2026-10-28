@@ -1,0 +1,84 @@
+/* Original Nature Blend Radar: three lightweight illustrated layers, not SVG geometry.
+   Shared card size remains 222px and the surrounding seven-world layout is unchanged. */
+.agency-world .agency-radar-illustrated,
+#routeMap .agency-radar-illustrated{
+  position:relative;isolation:isolate;
+  width:212px;height:198px;max-width:100%;
+  overflow:visible;flex:none;
+  image-rendering:auto;
+  user-select:none;pointer-events:none;
+}
+.agency-radar-illustrated img{
+  position:absolute;display:block;
+  pointer-events:none;user-select:none;
+  object-fit:fill;max-width:none;
+}
+.agency-radar-illustrated .radar-illustration-landscape{
+  width:100%;height:100%;left:0;top:0;z-index:0;
+}
+.agency-radar-illustrated .radar-illustration-tower{
+  width:46.26%;height:60.26%;
+  left:35.68%;top:18.59%;z-index:2;
+  transform-origin:50% 100%;
+  transform:scale(var(--radar-tower-size,1));
+  transition:transform 650ms cubic-bezier(.22,.82,.21,1);
+}
+.agency-radar-illustrated .radar-illustration-receiver{
+  position:absolute;left:46.7%;top:var(--radar-dome-top,3.2%);
+  width:25.55%;height:32.7%;z-index:4;
+  transform-origin:50% 100%;
+  transform:scale(var(--radar-dome-size,1));
+  pointer-events:none;
+}
+.agency-radar-illustrated .radar-illustration-dome{
+  position:absolute;width:100%;height:100%;
+  left:0;top:0;z-index:2;
+  transform-origin:50% 50%;
+  animation:radar-nature-dome-rotate 22s linear infinite;
+}
+.agency-radar-illustrated .radar-illustration-wave{
+  position:absolute;z-index:1;top:10%;left:6%;
+  width:88%;height:74%;
+  border:1.8px solid #b66c85;
+  border-radius:50%;opacity:0;
+  box-shadow:0 0 6px #aa668044;
+  animation:radar-nature-wave 3.2s ease-out infinite;
+}
+.agency-radar-illustrated .radar-illustration-wave-secondary{
+  animation-delay:1.6s;
+}
+.agency-radar-illustrated .radar-illustration-beacon{
+  position:absolute;left:70%;top:57%;
+  width:3px;height:3px;border-radius:100%;z-index:5;
+  background:#e8ad68;box-shadow:0 0 8px #e4a05c;
+  animation:radar-nature-beacon 2.6s steps(2,end) infinite;
+}
+@keyframes radar-nature-dome-rotate{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+@keyframes radar-nature-wave{
+  0%{opacity:.65;transform:scale(.72)}
+  80%,100%{opacity:0;transform:scale(1.95)}
+}
+@keyframes radar-nature-beacon{
+  0%,100%{opacity:1}50%{opacity:.2}
+}
+/* In enlarged Inspector the same proportioned layers scale as a unit. */
+.agency-world .agency-scene-detail-preview .agency-radar-illustrated{
+  width:min(100%,435px);height:auto;aspect-ratio:212 / 198;
+}
+/* Mission Control intentionally reuses the same 3 assets at compact size. */
+#routeMap .mission-route-art .agency-radar-illustrated{
+  width:100%;height:118px;
+}
+@media(max-width:760px){
+ .agency-world .agency-radar-illustrated{
+   width:197px;height:184px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .agency-radar-illustrated *, .agency-radar-illustrated{
+   animation:none!important;transition:none!important;
+ }
+}
