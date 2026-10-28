@@ -75,3 +75,19 @@
  #mode-dossiers .dossier-toolbar input{width:100%}
  .dossier-dialog .dossier-dialog-grid{grid-template-columns:1fr}
 }
+
+
+/* Encrypted GitHub sync sits below the single Dossiers overview tab. */
+#mode-dossiers .dossier-vault{margin-top:17px}
+#mode-dossiers .dossier-vault-lock{display:inline-block;white-space:nowrap;font-size:.71rem;font-weight:800;letter-spacing:.02em;background:#e8ede0;color:#496247;border:1px solid #c5d4be;border-radius:40px;padding:7px 10px}
+#mode-dossiers .dossier-vault .dossier-info{color:#745c48;font-size:.81rem;margin:14px 0}
+#mode-dossiers .dossier-vault .dossier-info strong{color:#68412e}
+#mode-dossiers .dossier-vault-form{margin-top:12px;display:grid;gap:10px;max-width:660px}
+#mode-dossiers .dossier-vault-form label{color:#574431;font-size:.81rem;margin:0;font-weight:720}
+#mode-dossiers .dossier-vault-form input{background:#fffaf2;color:#4a3a29;border:1px solid #d6c5b3;width:100%}
+#mode-dossiers .dossier-vault-form button{justify-self:start;margin-top:3px}
+#mode-dossiers .dossier-vault-actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:12px}
+#mode-dossiers .dossier-vault-actions p{flex-basis:100%;margin-top:3px}
+#mode-dossiers .dossier-vault-form[hidden],#mode-dossiers .dossier-vault-actions[hidden],#mode-dossiers #dossierVaultRestore[hidden]{display:none!important}
+#mode-dossiers .dossier-message.is-error{color:#a34635}
+@media(max-width:650px){#mode-dossiers .dossier-vault-actions button{width:100%}#mode-dossiers .dossier-vault-form button{width:100%}}
