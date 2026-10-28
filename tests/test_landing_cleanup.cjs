@@ -58,4 +58,14 @@ assert.match(css,/#floatingSaveGithubFeedback,[\s\S]*?#floatingSaveStatus\s*\{di
 assert.match(theme,/--ca-accent:/);
 assert.match(html,/id="agencyMap"/);
 assert.match(html,/id="questList"/);
+// The user-selected fingerprint replaces only the tiny sparkle beside the header title.
+const fingerprintSvg=fs.readFileSync("dashboard/career-fingerprint.svg","utf8");
+assert.match(header,/<h1>Career\.Agency<img class="career-brand-fingerprint"[^>]+alt=""[^>]*><\/h1>/);
+assert.doesNotMatch(header,/<h1>Career\.Agency<span[^>]*> ✦<\/span>/);
+assert.match(head,/landing-cleanup\.css\?v=/);
+assert.match(css,/\.career-app-header h1 \.career-brand-fingerprint/);
+assert.match(fingerprintSvg,/viewBox="0 0 520 635"/);
+assert.match(fingerprintSvg,/fill="#b52d5e"/);
+assert.equal((fingerprintSvg.match(/<path /g)||[]).length,9);
+assert.doesNotMatch(fingerprintSvg,/<text|<script|Career\.Agency/);
 console.log("Landing cleanup contracts passed");
