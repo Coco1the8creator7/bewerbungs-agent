@@ -184,3 +184,48 @@ test("Nature Blend assets load in the correct order and support reduced motion",
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.match(css,/agency-map::before/);
 });
+
+
+const richSource=readFileSync(new URL("../dashboard/agency-nature-rich.js",import.meta.url),"utf8");
+runInNewContext(richSource,context,{filename:"agency-nature-rich.js"});
+const detailed=context.window.AgentAgencyArt.renderSVG;
+test("Detailed Nature Blend has individual props in all seven scenes",()=>{
+ const themes=["radar","dossier","dispatch","comms","interview","advanced","finale"];
+ const signatures=[
+  "agency-detail-radar-dome","agency-detail-dossier-bench","agency-detail-runway",
+  "agency-detail-rope-bridge","agency-detail-presentation","agency-detail-vault-door",
+  "agency-detail-garden-terrace"
+ ];
+ const output=themes.map(theme=>detailed(2,theme));
+ assert.equal(new Set(output).size,7);
+ for(let i=0;i<themes.length;i++){
+  assert.match(output[i],new RegExp(signatures[i]),"missing visual motif "+themes[i]);
+  assert.match(output[i],new RegExp('data-theme="'+themes[i]+'"'));
+  assert.doesNotMatch(output[i],/fill="undefined"|stroke="undefined"|NaN|<script|onload=|<foreignObject/i);
+ }
+ assert.match(detailed(3,"radar"),/agency-detail-radar-signals/);
+ assert.match(detailed(3,"comms"),/agency-detail-radio-activity/);
+ assert.match(detailed(4,"finale"),/agency-detail-victory/);
+});
+test("Detailed scenery keeps the original seven scene milestones and legacy Analysis mode",()=>{
+ const themes=["radar","dossier","dispatch","comms","interview","advanced","finale"];
+ for(const theme of themes){
+  const stages=[0,1,2,3,4].map(level=>detailed(level,theme));
+  assert.equal(new Set(stages).size,5,"Five level-specific silhouettes: "+theme);
+  assert.equal(detailed(-7,theme),stages[0]);
+  assert.equal(detailed(18,theme),stages[4]);
+ }
+ assert.equal(detailed(2,"analysis"),natureRender(2,"analysis"));
+});
+test("Detailed Nature Blend assets load after base and the zoom remains opt-in",()=>{
+ const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const css=readFileSync(new URL("../dashboard/agency-nature-rich.css",import.meta.url),"utf8");
+ const js=readFileSync(new URL("../dashboard/agency-world.js",import.meta.url),"utf8");
+ assert.ok(html.indexOf('src="./agency-nature.js"')<html.indexOf('src="./agency-nature-rich.js"'));
+ assert.ok(html.indexOf('src="./agency-nature-rich.js"')<html.indexOf('src="./agency-world.js"'));
+ assert.ok(html.indexOf('href="./agency-nature.css"')<html.indexOf('href="./agency-nature-rich.css"'));
+ assert.match(js,/Szene vergrössern/);
+ assert.match(js,/make\("details","agency-scene-detail"\)/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(css,/agency-scene-detail-preview/);
+});

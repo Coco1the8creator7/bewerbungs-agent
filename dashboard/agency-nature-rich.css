@@ -1,0 +1,72 @@
+/* Detailed Nature Blend: lively craftsmanship inside sparse, linear scenery.
+ * Additive stylesheet; visual density belongs in SVG, not more UI controls. */
+.agency-world .agency-map{gap:10px!important}
+.agency-world .agency-island{
+ flex:0 0 222px;width:222px;
+ min-height:295px;padding-inline:8px;
+}
+.agency-world .agency-scene-rich{
+ width:212px;height:198px;max-width:100%;
+ margin:1px 0 3px;overflow:visible;
+}
+.agency-world .agency-map::before{top:168px;opacity:.4}
+.agency-world .agency-nature-detail{
+ paint-order:stroke fill;
+}
+.agency-world .agency-nature-detail-glow{
+ animation:agency-detail-glimmer 3.8s ease-in-out infinite alternate;
+}
+.agency-nature-art .agency-nature-detail-signal{
+ stroke-dasharray:4 7;
+ stroke-opacity:.6;
+ animation:agency-detail-signal 10s linear infinite;
+}
+.agency-nature-art .agency-nature-detail-flight{
+ stroke-dasharray:5 6;
+ stroke-width:1.5;
+ animation:agency-detail-signal 5s linear infinite;
+}
+.agency-nature-art .agency-nature-detail-celebrate{
+ stroke-dasharray:3 5;
+ animation:agency-detail-glimmer 4s ease-in-out infinite alternate;
+}
+@keyframes agency-detail-glimmer{from{opacity:.55}to{opacity:1}}
+@keyframes agency-detail-signal{to{stroke-dashoffset:-88}}
+.agency-world .agency-scene-detail{
+ border-top:1px solid #dfd0bc;margin-top:11px;padding-top:10px;
+}
+.agency-world .agency-scene-detail summary{
+ cursor:pointer;color:#735c41;font-size:.78rem;font-weight:600;
+}
+.agency-world .agency-scene-detail-preview{
+ display:grid;place-items:center;overflow:hidden;
+ min-height:270px;margin:10px 0 0;
+ padding:14px 8px;
+ border-radius:10px;border:1px solid #e1d2bd;
+ background:linear-gradient(165deg,#fffaf1,#f4e9d6);
+}
+.agency-world .agency-scene-detail-preview .agency-scene-rich{
+ width:min(100%,495px);height:auto;aspect-ratio:320/245;
+ margin:0;
+}
+.agency-world .agency-scene-detail-preview .agency-art{
+ width:100%;height:100%;max-height:365px;
+}
+/* Do not trade accessibility for illustration quality. */
+.agency-world .agency-scene-detail:focus-within summary{
+ outline-color:#98714c;outline-offset:3px;
+}
+@media(max-width:760px){
+ .agency-world .agency-island{flex-basis:206px;width:206px;min-height:278px}
+ .agency-world .agency-scene-rich{width:197px;height:184px}
+ .agency-world .agency-map::before{top:159px}
+ .agency-world .agency-scene-detail-preview{min-height:230px}
+}
+@media(prefers-reduced-motion:reduce){
+ .agency-nature-art .agency-nature-detail-glow,
+ .agency-nature-art .agency-nature-detail-signal,
+ .agency-nature-art .agency-nature-detail-flight,
+ .agency-nature-art .agency-nature-detail-celebrate{
+  animation:none!important;
+ }
+}
