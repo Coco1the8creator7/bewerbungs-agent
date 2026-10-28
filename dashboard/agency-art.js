@@ -102,7 +102,15 @@
       'aria-hidden="true" shape-rendering="crispEdges" data-level="'+level+'" data-theme="'+theme+'">';
     o+=terrain();
     o+=tree(94,150,0.6)+tree(236,171,0.65);
-    if(level===0) {
+    if(special) {
+      // Keep Radar's compact listening-post silhouette, even at high manual
+      // Analysis levels; only understated extra equipment is added.
+      o+=tower(147,178,56,26,12,accent,false)+dish(204,166);
+      if(level>=1)o+=agent(120,190);
+      if(level>=2)o+=tower(112,171,34,18,8,accent,false);
+      if(level>=3)o+=drone(251,102);
+      if(level>=4)o+=tower(232,180,30,22,8,accent,false);
+    } else if(level===0) {
       o+=tower(147,178,56,26,12,accent,false)+dish(204,166);
     } else if(level===1) {
       o+=tower(163,169,70,49,16,accent,true);

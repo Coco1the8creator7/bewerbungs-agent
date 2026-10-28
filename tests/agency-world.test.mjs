@@ -102,3 +102,28 @@ test("Mission Control previews use the same Agency renderer and current CRM leve
  assert.match(css,/scroll-snap-type:x proximity/);
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
 });
+
+
+test("World map has seven stops with Analysis milestones integrated into Radar",()=>{
+ const data=build({jobs:[{id:"job-imported"}],ratings:makeRatings(100)});
+ const shown=Array.from(context.window.AgentAgency.worldPhases(data));
+ assert.deepEqual(shown.map(p=>p.id),["radar","dossier","dispatch","comms","interview","advanced","finale"]);
+ assert.equal(data.islands.find(p=>p.id==="radar").count,1,"Original import count stays independent");
+ assert.equal(data.islands.find(p=>p.id==="analysis").count,100,"Original Analysis count stays independent");
+ assert.equal(shown[0].sourceId,"analysis");
+ assert.equal(shown[0].level,3);
+ assert.equal(shown[0].count,100);
+ assert.equal(shown[0].compact,true);
+ const radarArt=renderSVG(shown[0].level,"radar");
+ assert.match(radarArt,/agency-art-dish/);
+ assert.ok((radarArt.match(/class="agency-art-structure"/g)||[]).length<=2,
+  "Radar stays visually minimal even at high Analysis levels");
+ assert.deepEqual(shown.slice(1,4).map(p=>p.title),["PREPPER","MACHER:IN","STALKER"]);
+});
+test("Agency modal has the annotated minimal header, no redundant intro and a close icon",()=>{
+ const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const section=html.slice(html.indexOf('<dialog class="agency-world"'),html.indexOf('id="agencyInspector"'));
+ assert.match(section,/<h2 id="agencyTitle">Agency World<\/h2>/);
+ assert.match(section,/id="closeAgency"[^>]*aria-label="Agency World schliessen"[^>]*>×<\/button>/);
+ assert.doesNotMatch(section,/THE AGENCY \/ OPERATIONS ARCHIPELAGO|Deine lebendige Operationskarte|Eine Insel je Bewerbungsphase|id="agencySummary"/);
+});
