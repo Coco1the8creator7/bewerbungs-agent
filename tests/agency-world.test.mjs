@@ -114,6 +114,10 @@ test("World map has seven stops with Analysis milestones integrated into Radar",
  assert.equal(shown[0].level,3);
  assert.equal(shown[0].count,100);
  assert.equal(shown[0].compact,true);
+ const radarArt=renderSVG(shown[0].level,"radar");
+ assert.match(radarArt,/agency-art-dish/);
+ assert.ok((radarArt.match(/class="agency-art-structure"/g)||[]).length<=2,
+  "Radar stays visually minimal even at high Analysis levels");
  assert.deepEqual(shown.slice(1,4).map(p=>p.title),["PREPPER","MACHER:IN","STALKER"]);
 });
 test("Agency modal has the annotated minimal header, no redundant intro and a close icon",()=>{
