@@ -236,8 +236,8 @@ runInNewContext(illustratedSource,context,{filename:"agency-radar-illustrated.js
 test("Approved Nature Blend Radar uses real layered image assets instead of new SVG polygons",()=>{
  const stages=context.window.AgentAgencyArt.radarAssetStages;
  assert.equal(stages.length,5);
- assert.deepEqual(stages.map(s=>s.level),[0,1,2,3,4]);
- assert.deepEqual(stages.map(s=>s.dome),[false,false,true,true,true]);
+ assert.deepEqual(Array.from(stages,s=>s.level),[0,1,2,3,4]);
+ assert.deepEqual(Array.from(stages,s=>s.dome),[false,false,true,true,true]);
  assert.ok(stages[0].scale<stages[1].scale&&stages[1].scale<stages[2].scale&&
   stages[2].scale<stages[3].scale&&stages[3].scale<stages[4].scale);
  for(const name of ["base","tower","dome"]){
