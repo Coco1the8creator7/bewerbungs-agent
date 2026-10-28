@@ -1,0 +1,35 @@
+/* Radar prototype: one dominant illustrated landmark at the real Agency tile size.
+ * Scoped to Radar; other Nature Blend locations retain their current styling. */
+.agency-world .radar-prototype-scene{
+  width:212px;height:198px;max-width:100%;
+  overflow:visible;
+}
+.agency-world .radar-prototype-art,
+#routeMap .radar-prototype-art{
+  display:block;width:100%;height:100%;overflow:visible;
+  image-rendering:auto;
+}
+.radar-prototype-art .radar-prototype-beacon{
+  animation:radar-prototype-glow 3.6s ease-in-out infinite alternate;
+}
+.radar-prototype-art .radar-prototype-dome{
+  transform-origin:162px 55px;
+  animation:radar-prototype-breathe 7s ease-in-out infinite alternate;
+}
+@keyframes radar-prototype-glow{from{opacity:.6}to{opacity:1}}
+@keyframes radar-prototype-breathe{
+  from{filter:brightness(1)}
+  to{filter:brightness(1.06)}
+}
+@media(max-width:760px){
+  .agency-world .radar-prototype-scene{
+    width:197px;height:184px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .radar-prototype-art *,
+  .radar-prototype-art .radar-prototype-beacon,
+  .radar-prototype-art .radar-prototype-dome{
+    animation:none!important;transition:none!important;
+  }
+}
