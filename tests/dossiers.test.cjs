@@ -28,16 +28,30 @@ test("job popup can open a job-linked dossier preparation form",()=>{
  assert.match(js,/preferences:\{tone:/);
 });
 
-test("private documents never use public repository or unprotected remote endpoints",()=>{
+test("dossiers remain local until user explicitly publishes to public GitHub",()=>{
+ const remote=fs.readFileSync("dashboard/dossiers-public.js","utf8");
  assert.match(js,/window\.indexedDB/);
  assert.match(js,/createObjectStore\("dossiers"/);
  assert.match(js,/createObjectStore\("files"/);
  assert.match(js,/URL\.createObjectURL/);
  assert.match(js,/URL\.revokeObjectURL/);
  assert.match(js,/MAX_BYTES=15\*1024\*1024/);
- assert.doesNotMatch(js,/\bfetch\s*\(|GithubFeedback|localStorage|innerHTML|\.github\.com\/.*api/);
- assert.match(html,/nur im Browser dieses Geräts gespeichert/);
- assert.match(html,/keine KI-generierten Dokumente/);
+ assert.match(js,/window\.CareerDossiersData=Object\.freeze/);
+ assert.doesNotMatch(js,/\bfetch\s*\(|localStorage|innerHTML/);
+ for(const id of ["dossierPublicSave","dossierPublicLoad","dossierPublicToken","dossierPublicStatus"])
+  assert.ok(html.includes('id="'+id+'"'),id);
+ assert.match(html,/src="\.\/dossiers-public\.js\?v=/);
+ assert.match(html,/öffentlichen Repository veröffentlicht/);
+ assert.match(remote,/public-dossiers\/v1/);
+ assert.match(remote,/career-agency-public-dossiers-v1/);
+ assert.match(remote,/window\.confirm/);
+ assert.match(remote,/Contents: Read and write/);
+ assert.match(remote,/cache:"no-store"/);
+ assert.match(remote,/branch:"main"/);
+ assert.match(remote,/file\.content instanceof Blob/);
+ assert.match(remote,/sha256/);
+ assert.doesNotMatch(remote,/localStorage|sessionStorage|AES-GCM|PBKDF2|encrypt\(/);
+ assert.match(remote,/store\.importSnapshot/);
 });
 
 test("deleting a dossier preserves uploaded documents; files require confirmation",()=>{
