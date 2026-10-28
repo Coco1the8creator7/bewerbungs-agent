@@ -51,9 +51,17 @@ assert.ok(header.indexOf('class="career-header-copy"')<header.indexOf('id="notif
 assert.ok(head.indexOf('urban-mono-magenta.css')<head.indexOf('landing-cleanup.css'));
 assert.ok(head.indexOf('radar-designs.css')<head.indexOf('landing-cleanup.css'));
 assert.match(css,/header\.career-app-header\s*\{[\s\S]*?position:relative/);
-assert.match(css,/header\.career-app-header\s*>\s*\.career-header-notifications\s*\{[\s\S]*?position:absolute;[\s\S]*?right:20px/);
+// Both buttons share grid row 1: no absolute top offsets that could drift apart.
+assert.match(css,/grid-template-columns:44px minmax\(0,1fr\) 44px;/);
+assert.match(css,/column-gap:36px;/);
+assert.match(css,/header\.career-app-header > #openModeSidebar\s*\{[^}]*grid-column:1;grid-row:1;[^}]*align-self:start;justify-self:start;/);
+assert.match(css,/header\.career-app-header > \.career-header-notifications\s*\{[^}]*position:relative;[^}]*grid-column:3;grid-row:1;[^}]*align-self:start;justify-self:end;/);
+assert.match(css,/header\.career-app-header > \.career-header-notifications > \.notification-bell\s*\{[^}]*width:44px;height:44px;margin:0;/);
+assert.doesNotMatch(css,/position:absolute;\s*top:17px;right:20px/);
 assert.match(css,/@media\(max-width:650px\)/);
-assert.match(css,/\.career-header-notifications\s*\{\s*top:14px;right:12px/);
+assert.match(css,/grid-template-rows:44px auto;/);
+assert.match(css,/column-gap:12px;row-gap:12px;/);
+assert.match(css,/header\.career-app-header > \.career-header-notifications\s*\{\s*grid-column:3;grid-row:1;/);
 assert.match(css,/#floatingSaveGithubFeedback,[\s\S]*?#floatingSaveStatus\s*\{display:none!important\}/);
 assert.match(theme,/--ca-accent:/);
 assert.match(html,/id="agencyMap"/);
@@ -63,6 +71,8 @@ const fingerprintSvg=fs.readFileSync("dashboard/career-fingerprint.svg","utf8");
 assert.match(header,/<h1>Career\.Agency<img class="career-brand-fingerprint"[^>]+alt=""[^>]*><\/h1>/);
 assert.doesNotMatch(header,/<h1>Career\.Agency<span[^>]*> ✦<\/span>/);
 assert.match(head,/landing-cleanup\.css\?v=/);
+assert.match(css,/\.career-app-header \.career-header-copy h1\s*\{[^}]*display:inline-flex;[^}]*align-items:center;[^}]*gap:16px;/);
+assert.match(css,/\.career-app-header h1 \.career-brand-fingerprint\s*\{[^}]*height:1\.27em;/);
 assert.match(css,/\.career-app-header h1 \.career-brand-fingerprint/);
 assert.match(fingerprintSvg,/viewBox="0 0 520 635"/);
 assert.match(fingerprintSvg,/fill="#b52d5e"/);
