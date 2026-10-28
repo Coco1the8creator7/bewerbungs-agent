@@ -64,23 +64,40 @@
   if(level>=4){structures.append(make("div","agency-tower"));structures.append(make("div","agency-person agency-person-c"));structures.append(make("div","agency-light agency-light-b"));}
   return panel;
  }
+ // The public world has seven stops. The Analysis progress is integrated
+ // into the Radar station, not deleted from the underlying CRM model.
+ function worldPhases(model){
+  const analysis=model.islands.find(p=>p.id==="analysis");
+  return model.islands.filter(p=>p.id!=="analysis").map(p=>{
+   if(p.id==="radar"){
+    return {...analysis,id:"radar",sourceId:"analysis",title:"RADAR",
+     name:"Inserate bewerten",theme:"radar",compact:true};
+   }
+   const titles={dossier:"PREPPER",dispatch:"MACHER:IN",comms:"STALKER"};
+   return {...p,title:titles[p.id]||p.title};
+  });
+ }
  function render(root,input){
   const model=buildModel(input);
   const board=root.querySelector("#agencyMap"),awards=root.querySelector("#agencyAwards"),inspector=root.querySelector("#agencyInspector");
   if(!board||!awards||!inspector)return model;
+  const phases=worldPhases(model);
   board.replaceChildren();
-  for(const p of model.islands){
+  for(const [index,p] of phases.entries()){
    const b=make("button","agency-island");b.type="button";b.dataset.theme=p.theme;
+   if(p.compact)b.classList.add("agency-island-compact");
    b.setAttribute("aria-pressed","false");
-   b.setAttribute("aria-label",p.name+", "+number(p.count)+" "+p.metric+", Stufe "+p.level);
-   b.append(make("span","agency-island-number",String(model.islands.indexOf(p)+1).padStart(2,"0")));
+   b.setAttribute("aria-label",p.title+", "+number(p.count)+" "+p.metric+", Stufe "+p.level);
+   b.append(make("span","agency-island-number",String(index+1).padStart(2,"0")));
    b.append(scene(p));
    b.append(make("span","agency-island-title",p.title));
-   b.append(make("span","agency-island-sub",p.name));
-   b.append(make("span","agency-island-stat",number(p.count)+" · "+(p.maxLevel?"LEVEL "+p.level+"/"+p.maxLevel:"RADAR ONLINE")));
-   const strip=make("span","agency-level-pips");
-   for(let i=1;i<=p.maxLevel;i++)strip.append(make("i",i<=p.level?"is-active":""));
-   b.append(strip);
+   if(!p.compact){
+    b.append(make("span","agency-island-sub",p.name));
+    b.append(make("span","agency-island-stat",number(p.count)+" · LEVEL "+p.level+"/"+p.maxLevel));
+    const strip=make("span","agency-level-pips");
+    for(let i=1;i<=p.maxLevel;i++)strip.append(make("i",i<=p.level?"is-active":""));
+    b.append(strip);
+   }
    b.addEventListener("click",()=>{
     board.querySelectorAll(".agency-island").forEach(x=>x.setAttribute("aria-pressed","false"));
     b.setAttribute("aria-pressed","true");inspect(inspector,p);
@@ -95,10 +112,9 @@
    content.append(make("strong","",a.title));content.append(make("small","",a.detail));
    item.append(content);awards.append(item);
   }
-  const header=root.querySelector("#agencySummary");
-  if(header)header.textContent=number(model.islands.find(p=>p.id==="analysis").count)+" selbst bewertete Inserate · "+model.achievements.filter(a=>a.unlocked).length+" von "+model.achievements.length+" Achievements";
-  inspect(inspector,model.islands.find(p=>p.id==="analysis"));
-  if(board.children[1])board.children[1].setAttribute("aria-pressed","true");
+  // Radar is the initial focus; its inspector retains the Analysis achievements.
+  inspect(inspector,phases[0]);
+  if(board.firstElementChild)board.firstElementChild.setAttribute("aria-pressed","true");
   return model;
  }
  function inspect(target,p){
@@ -116,7 +132,7 @@
    fill.style.width=(p.next===null?100:Math.min(100,Math.max(0,100*(p.count-p.previous)/Math.max(span,1))))+"%";
    track.append(fill);target.append(track);
   }
-  if(p.id==="analysis"&&window.AgentAgencyArt){
+  if((p.sourceId||p.id)==="analysis"&&window.AgentAgencyArt){
    const gallery=make("details","agency-evolution");
    gallery.append(make("summary","","Alle fünf Ausbaustufen ansehen"));
    const strip=make("div","agency-evolution-strip");
@@ -140,5 +156,5 @@
   if(!root.open)root.showModal();
   return model;
  }
- window.AgentAgency=Object.freeze({buildModel,render,open});
+ window.AgentAgency=Object.freeze({buildModel,worldPhases,render,open});
 })();
