@@ -7,7 +7,7 @@
  const base=window.AgentAgencyArt;
  if(!base)throw new Error("Agency Nature Blend base renderer is required");
  const W=Object.freeze({
-  ink:"#574c3b", wood:"#8d6748", lightWood:"#c8a079", pale:"#f8eddb",
+  ink:"#574c3b", wood:"#8d6748", woodDark:"#6e5038", canvas:"#e9dcc7", lightWood:"#c8a079", pale:"#f8eddb",
   grass:"#84966c", leaf:"#617a56", sand:"#e5d4b5", clay:"#b58562",
   stone:"#aca99a", dark:"#4b544b", glass:"#bed1c2", teal:"#63867c",
   gold:"#e5b169", red:"#ad705b", violet:"#8d6475", metal:"#767c78"
