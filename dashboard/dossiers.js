@@ -10,7 +10,8 @@
  const DB="career-agency-dossiers-v1",DB_VERSION=1,MAX_BYTES=15*1024*1024,MAX_FILES=50;
  const ALLOWED=new Set(["pdf","doc","docx","odt","txt","png","jpg","jpeg"]);
  const state={dossiers:[],files:[],editingId:null,uploadTarget:null,ready:false};
- let connection=null,refreshPending=Promise.resolve();
+ let connection=null;
+ function notifyChanged(){window.dispatchEvent(new Event("career-dossiers-changed"));}
 
  function make(tag,value,klass){
   const e=document.createElement(tag);
@@ -95,7 +96,7 @@
   actions.append(button("Öffnen",()=>preview(file),true),button("Download",()=>downloadable(file),true));
   const del=button("Entfernen",async()=>{
    if(!window.confirm("Datei «"+file.name+"» dauerhaft aus diesem Browser löschen?"))return;
-   try{await remove("files",file.id);await refresh();notice("Datei entfernt.");}
+   try{await remove("files",file.id);await refresh();notifyChanged();notice("Datei entfernt (GitHub-Sicherung ggf. noch ausstehend).");}
    catch(err){notice(err.message,true);}
   },true);
   del.setAttribute("aria-label","Datei entfernen: "+file.name);actions.append(del);
@@ -144,7 +145,7 @@
    if(!window.confirm("Dossier «"+row.title+"» entfernen? Zugeordnete Dateien bleiben unter Basisunterlagen erhalten."))return;
    try{
     for(const f of files)await put("files",{...f,dossierId:null});
-    await remove("dossiers",row.id);await refresh();notice("Dossier entfernt. Dateien bleiben in der Ablage.");
+    await remove("dossiers",row.id);await refresh();notifyChanged();notice("Dossier entfernt. Dateien bleiben in der Ablage.");
    }catch(err){notice(err.message,true);}
   },true);
   actions.append(del);
@@ -190,6 +191,7 @@
    }catch(err){notice("Speichern fehlgeschlagen. Möglicherweise ist der Gerätespeicher voll: "+err.message,true);break;}
   }
   await refresh();
+  if(stored.length)notifyChanged();
   if(stored.length)notice(stored.length+" "+(stored.length===1?"Datei":"Dateien")+" lokal gespeichert."+ (rejected.length?" Übersprungen: "+rejected.join(", "):""));
   else if(rejected.length)notice("Keine Datei gespeichert. Zulässig sind PDF, DOC(X), ODT, TXT und Bilder bis 15 MB. "+rejected.join(", "),true);
  }
@@ -218,7 +220,7 @@
   };
   const submit=$("dossierSubmit");setBusy(submit,true);
   try{
-   await put("dossiers",entry);$("dossierDialog").close();await refresh();
+   await put("dossiers",entry);$("dossierDialog").close();await refresh();notifyChanged();
    notice("Dossiervorbereitung gespeichert. KI-Dokumentengenerierung ist noch nicht angeschlossen.");
   }catch(err){notice("Dossier konnte nicht gespeichert werden: "+err.message,true);}
   finally{setBusy(submit,false);}
@@ -236,6 +238,35 @@
    $("dossierCompanyInput").value=job.company||"";
   }
  }
+ // The remote adapter reads this only after the user unlocks encrypted GitHub sync.
+ // Do not expose filesystem paths, tokens or passphrases here.
+ async function importSnapshot(dossiers,files){
+  if(!state.ready)throw Error("Lokaler Dossierspeicher ist noch nicht bereit.");
+  if(!Array.isArray(dossiers)||!Array.isArray(files))throw Error("Ungültige Sicherungsdaten.");
+  const ids=new Set(state.dossiers.map(d=>d.id));
+  const fileIds=new Set(state.files.map(f=>f.id));
+  if(fileIds.size+files.filter(f=>!fileIds.has(f.id)).length>MAX_FILES)
+   throw Error("Die GitHub-Sicherung überschreitet das lokale Limit von "+MAX_FILES+" Dateien.");
+  // Validate first to avoid partial writes from malformed data.
+  for(const d of dossiers){
+   if(!d||typeof d.id!=="string"||!/^[A-Za-z0-9_-]{1,100}$/.test(d.id)||
+    typeof d.title!=="string"||!d.title.trim()||d.title.length>250)
+    throw Error("Ungültiger Dossierdatensatz in der Sicherung.");
+  }
+  for(const f of files){
+   if(!f||typeof f.id!=="string"||!/^[A-Za-z0-9_-]{1,100}$/.test(f.id)||
+    typeof f.name!=="string"||f.name.length>250||!(f.content instanceof Blob)||
+    f.content.size!==f.size||f.size>MAX_BYTES)
+    throw Error("Ungültiger Dateiinhalt in der Sicherung.");
+  }
+  for(const d of dossiers){if(!ids.has(d.id)){await put("dossiers",d);ids.add(d.id);}}
+  for(const f of files){if(!fileIds.has(f.id)){await put("files",f);fileIds.add(f.id);}}
+  await refresh();
+ }
+ window.CareerDossiersData=Object.freeze({
+  snapshot:()=>({dossiers:state.dossiers.map(x=>({...x})),files:state.files.map(x=>({...x}))}),
+  importSnapshot
+ });
  window.CareerDossiers=Object.freeze({prepare});
  $("dossierCreate").addEventListener("click",()=>editDossier(null));
  $("dossierUpload").addEventListener("click",()=>chooseFiles());
