@@ -140,6 +140,16 @@
    fill.style.width=(p.next===null?100:Math.min(100,Math.max(0,100*(p.count-p.previous)/Math.max(span,1))))+"%";
    track.append(fill);target.append(track);
   }
+  // A large opt-in scene view lets the richer pixel/linework remain legible
+  // without making the seven-stop route visually crowded.
+  if(window.AgentAgencyArt?.createScene){
+   const details=make("details","agency-scene-detail");
+   details.append(make("summary","","Szene vergrössern"));
+   const preview=make("div","agency-scene-detail-preview");
+   preview.append(window.AgentAgencyArt.createScene({...p,visualLevel:p.level}));
+   details.append(preview);
+   target.append(details);
+  }
   if(p.id==="radar"&&p.analysisProgress){
    const progress=p.analysisProgress;
    const details=make("details","agency-evolution agency-analysis-details");
