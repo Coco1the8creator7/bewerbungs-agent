@@ -96,7 +96,8 @@ test("Mission Control previews use the same Agency renderer and current CRM leve
  assert.doesNotMatch(html,/id="routeShip"|el\("routeShip"\)/);
  assert.match(html,/window\.AgentAgency\.buildModel\(agencyData\(\)\)/);
  assert.match(html,/window\.AgentAgencyArt\.createScene\(phase\)/);
- assert.match(html,/\["radar","analysis","dispatch","interview","finale"\]/);
+ assert.match(html,/\["radar","dossier","dispatch","interview","finale"\]/);
+ assert.match(html,/window\.AgentAgency\.worldPhases\(model\)/);
  assert.match(html,/host\.dataset\.sceneKey!==sceneKey/);
  assert.match(css,/#routeMap \.mission-route-art \.agency-art/);
  assert.match(css,/scroll-snap-type:x proximity/);
@@ -110,15 +111,17 @@ test("World map has seven stops with Analysis milestones integrated into Radar",
  assert.deepEqual(shown.map(p=>p.id),["radar","dossier","dispatch","comms","interview","advanced","finale"]);
  assert.equal(data.islands.find(p=>p.id==="radar").count,1,"Original import count stays independent");
  assert.equal(data.islands.find(p=>p.id==="analysis").count,100,"Original Analysis count stays independent");
- assert.equal(shown[0].sourceId,"analysis");
- assert.equal(shown[0].level,3);
- assert.equal(shown[0].count,100);
- assert.equal(shown[0].compact,true);
+ assert.equal(shown[0].analysisProgress.level,3);
+ assert.equal(shown[0].analysisProgress.count,100);
+ assert.equal(shown[0].count,1,"Radar growth is based on job imports");
+ assert.equal(shown[0].level,0);
+ assert.equal(shown[0].next,25,"Visual import milestones are provisional");
+ assert.equal(shown[0].compact,false);
  const radarArt=renderSVG(shown[0].level,"radar");
  assert.match(radarArt,/agency-art-dish/);
  assert.ok((radarArt.match(/class="agency-art-structure"/g)||[]).length<=2,
   "Radar stays visually minimal even at high Analysis levels");
- assert.deepEqual(shown.slice(1,4).map(p=>p.title),["PREPPER","MACHER:IN","STALKER"]);
+ assert.deepEqual(shown.slice(1).map(p=>p.title),["PREPPER","MACHER:IN","STALKER","SPEAKER","INSIDER","ENTREPRENEUR"]);
 });
 test("Agency modal has the annotated minimal header, no redundant intro and a close icon",()=>{
  const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
@@ -126,4 +129,58 @@ test("Agency modal has the annotated minimal header, no redundant intro and a cl
  assert.match(section,/<h2 id="agencyTitle">Agency World<\/h2>/);
  assert.match(section,/id="closeAgency"[^>]*aria-label="Agency World schliessen"[^>]*>×<\/button>/);
  assert.doesNotMatch(section,/THE AGENCY \/ OPERATIONS ARCHIPELAGO|Deine lebendige Operationskarte|Eine Insel je Bewerbungsphase|id="agencySummary"/);
+});
+
+
+const natureSource=readFileSync(new URL("../dashboard/agency-nature.js",import.meta.url),"utf8");
+runInNewContext(natureSource,context,{filename:"agency-nature.js"});
+const natureRender=context.window.AgentAgencyArt.renderSVG;
+test("All seven Nature Blend subjects have recognisably different SVG scenes",()=>{
+ const themes=["radar","dossier","dispatch","comms","interview","advanced","finale"];
+ const scenes=themes.map(theme=>natureRender(2,theme));
+ assert.equal(new Set(scenes).size,7);
+ for(let i=0;i<scenes.length;i++){
+  assert.match(scenes[i],/class="agency-art agency-nature-art"/);
+  assert.match(scenes[i],new RegExp('data-theme="'+themes[i]+'"'));
+  assert.match(scenes[i],/agency-nature-landmark/);
+  assert.doesNotMatch(scenes[i],/agency-art-terrain|<foreignObject|<script|onload=/i);
+ }
+ assert.match(scenes[0],/agency-art-dish/,"Radar has a dish tower");
+ assert.match(scenes[1],/agency-nature-documents/,"Prepper makes dossiers");
+ assert.match(scenes[2],/agency-nature-plane/,"Macher:in launches applications");
+ assert.match(scenes[3],/agency-nature-pine/,"Stalker is a wooded station");
+ assert.match(scenes[4],/agency-nature-deck/,"Speaker has an outdoor stage");
+ assert.match(scenes[5],/agency-nature-structure/,"Insider has a stone base and annex");
+ assert.match(scenes[6],/agency-nature-flag/,"Entrepreneur has a goal flag");
+});
+test("Nature Blend stages evolve without changing the stored CRM model",()=>{
+ const themes=["radar","dossier","dispatch","comms","interview","advanced","finale"];
+ for(const theme of themes){
+  const stages=[0,1,2,3,4].map(level=>natureRender(level,theme));
+  assert.equal(new Set(stages).size,5,"Distinct visible progress for "+theme);
+  for(let i=0;i<5;i++)assert.match(stages[i],new RegExp('data-level="'+i+'"'));
+ }
+ assert.equal(natureRender(-99,"radar"),natureRender(0,"radar"));
+ assert.equal(natureRender(99,"radar"),natureRender(4,"radar"));
+ assert.match(natureRender(3,"analysis"),/data-theme="analysis"/,"Legacy Analysis gallery remains accessible");
+});
+test("Radar tower growth follows unique imported ads and never counts AI or manual ratings",()=>{
+ const m=build({jobs:Array.from({length:76},(_,i)=>({id:"job-"+i})).concat([{id:"job-3"}]),
+  ratings:makeRatings(200)});
+ const radar=context.window.AgentAgency.worldPhases(m)[0];
+ assert.equal(radar.count,76);
+ assert.equal(radar.level,2);
+ assert.equal(radar.next,150);
+ assert.equal(radar.analysisProgress.level,4);
+ const withoutJobs=context.window.AgentAgency.worldPhases(build({ratings:makeRatings(200)}))[0];
+ assert.equal(withoutJobs.level,0);
+});
+test("Nature Blend assets load in the correct order and support reduced motion",()=>{
+ const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const css=readFileSync(new URL("../dashboard/agency-nature.css",import.meta.url),"utf8");
+ assert.ok(html.indexOf('src="./agency-art.js"')<html.indexOf('src="./agency-nature.js"'));
+ assert.ok(html.indexOf('src="./agency-nature.js"')<html.indexOf('src="./agency-world.js"'));
+ assert.ok(html.indexOf('href="./agency-theme-beige.css"')<html.indexOf('href="./agency-nature.css"'));
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(css,/agency-map::before/);
 });

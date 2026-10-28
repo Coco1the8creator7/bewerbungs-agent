@@ -340,6 +340,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./agency-world.css">
 <link rel="stylesheet" href="./light-earth.css">
 <link rel="stylesheet" href="./agency-theme-beige.css">
+<link rel="stylesheet" href="./agency-nature.css">
 <link rel="stylesheet" href="./mode-nav.css?v=20261024-nav-access-1">
 <link rel="stylesheet" href="./radar.css?v=20261027-radar-clean-1">
 
@@ -753,6 +754,7 @@ header .sub,.section-heading p{color:#6b5744}
 <div id="floatingSaveStatus" class="floating-save-status" role="status" aria-live="polite" hidden></div>
 <script src="./storage.js"></script>
 <script src="./agency-art.js"></script>
+<script src="./agency-nature.js"></script>
 <script src="./agency-world.js"></script>
 <script src="./github-sync.js"></script>
 <script src="./career-filter.js"></script>
@@ -866,13 +868,13 @@ function renderMission(){
  // Cache the scene level so normal rating edits do not restart animations.
  if(window.AgentAgency?.buildModel&&window.AgentAgencyArt?.createScene){
   const model=window.AgentAgency.buildModel(agencyData());
-  const phaseIds=["radar","analysis","dispatch","interview","finale"];
-  const phases=new Map(model.islands.map(phase=>[phase.id,phase]));
+  const phaseIds=["radar","dossier","dispatch","interview","finale"];
+  const phases=new Map(window.AgentAgency.worldPhases(model).map(phase=>[phase.id,phase]));
   for(const marker of document.querySelectorAll("#routeMap [data-milestone]")){
    const phase=phases.get(phaseIds[Number(marker.dataset.milestone)]);
    const host=marker.querySelector(".mission-route-art");
    if(!phase||!host)continue;
-   const visualLevel=phase.id==="radar"&&phase.count>0?Math.max(1,phase.level):phase.level;
+   const visualLevel=phase.level;
    const sceneKey=phase.theme+":"+visualLevel;
    if(host.dataset.sceneKey!==sceneKey){
     host.replaceChildren(window.AgentAgencyArt.createScene(phase));
