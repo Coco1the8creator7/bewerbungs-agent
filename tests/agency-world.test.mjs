@@ -229,3 +229,62 @@ test("Detailed Nature Blend assets load after base and the zoom remains opt-in",
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.match(css,/agency-scene-detail-preview/);
 });
+
+
+const illustratedSource=readFileSync(new URL("../dashboard/agency-radar-illustrated.js",import.meta.url),"utf8");
+runInNewContext(illustratedSource,context,{filename:"agency-radar-illustrated.js"});
+test("Approved Nature Blend Radar uses real layered image assets instead of new SVG polygons",()=>{
+ const stages=context.window.AgentAgencyArt.radarAssetStages;
+ assert.equal(stages.length,5);
+ assert.deepEqual(Array.from(stages,s=>s.level),[0,1,2,3,4]);
+ assert.deepEqual(Array.from(stages,s=>s.dome),[false,false,true,true,true]);
+ assert.ok(stages[0].scale<stages[1].scale&&stages[1].scale<stages[2].scale&&
+  stages[2].scale<stages[3].scale&&stages[3].scale<stages[4].scale);
+ for(const name of ["base","tower","dome"]){
+  const binary=readFileSync(new URL("../dashboard/assets/agency/radar-"+name+".webp",import.meta.url));
+  assert.equal(binary.toString("ascii",0,4),"RIFF");
+  assert.equal(binary.toString("ascii",8,12),"WEBP");
+  assert.ok(binary.length<10000,"Small, local, optimized raster layer "+name);
+ }
+ // All legacy direct SVG methods remain compatible for Analysis and other worlds.
+ for(const theme of ["radar","dossier","dispatch","comms","interview","advanced","finale","analysis"])
+  assert.equal(context.window.AgentAgencyArt.renderSVG(2,theme),detailed(2,theme));
+});
+test("Radar scene assembles original art and animation layers by the existing import-driven level",()=>{
+ const saved=context.document.createElement;
+ context.document.createElement=(tag)=>{
+  const el={tagName:tag,className:"",children:[],dataset:{},src:"",alt:null,
+   isConnected:false,replaceWith(){},
+   style:{props:{},setProperty(k,v){this.props[k]=v}},
+   setAttribute(){},addEventListener(){},append(...children){this.children.push(...children)}};
+  return el;
+ };
+ try{
+  const scene=context.window.AgentAgencyArt.createScene({theme:"radar",id:"radar",level:4});
+  assert.match(scene.className,/agency-radar-illustrated/);
+  assert.equal(scene.dataset.level,"4");
+  assert.equal(scene.children.length,4);
+  assert.match(scene.children[0].src,/radar-base\.webp$/);
+  assert.match(scene.children[1].src,/radar-tower\.webp$/);
+  assert.equal(scene.children[2].children.length,3,"Dome and two signal waves");
+  assert.match(scene.children[2].children[0].src,/radar-dome\.webp$/);
+  assert.equal(scene.style.props["--radar-tower-size"],"1");
+  const early=context.window.AgentAgencyArt.createScene({theme:"radar",level:0});
+  assert.equal(early.children.length,2,"Empty radar station must not pretend to have a dome");
+  const other=context.window.AgentAgencyArt.createScene({theme:"dossier",level:3});
+  assert.doesNotMatch(other.className,/agency-radar-illustrated/);
+ } finally {
+  if(saved===undefined)delete context.document.createElement;
+  else context.document.createElement=saved;
+ }
+});
+test("Illustrated Radar loads after rich art and honors reduced motion",()=>{
+ const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const css=readFileSync(new URL("../dashboard/agency-radar-illustrated.css",import.meta.url),"utf8");
+ assert.ok(html.indexOf('src="./agency-nature-rich.js"')<html.indexOf('src="./agency-radar-illustrated.js"'));
+ assert.ok(html.indexOf('href="./agency-nature-rich.css"')<html.indexOf('href="./agency-radar-illustrated.css"'));
+ assert.match(css,/radar-nature-dome-rotate/);
+ assert.match(css,/radar-nature-wave/);
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(css,/212px;height:198px/);
+});
