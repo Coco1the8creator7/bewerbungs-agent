@@ -12,8 +12,6 @@
   {id:"advanced",title:"ADVANCED OPS",name:"Weitere Gespräche",metric:"Erfasste weitere Gesprächsrunden",thresholds:[1,2,4,8],theme:"advanced"},
   {id:"finale",title:"FINAL HQ",name:"Angebot und Zusage",metric:"Erhaltene Angebote",thresholds:[1,2,3,5],theme:"finale"}
  ];
- // Provisional visual milestones for unique imported jobs, separate from ratings.
- const RADAR_GROWTH=[25,75,150,300];
  const unique=xs=>new Set(xs);
  function buildModel({jobs=[],ratings=[],annotations=[],activityLog=[],demoMode=false}={}){
   const allowed=id=>typeof id==="string"&&(demoMode?id.startsWith("DEMO-"):!id.startsWith("DEMO-"));
@@ -24,7 +22,7 @@
   const reached=(type,stages)=>unique([...eventIds(type),...stageIds(stages)]).size;
   const analysis=unique(ratings.filter(r=>r&&allowed(r.id)&&Number.isInteger(r.score)&&r.score>=1&&r.score<=100).map(r=>r.id)).size;
   const counts={
-   radar:unique(jobs.filter(j=>j&&allowed(j.id)).map(j=>j.id)).size,
+   radar:jobs.filter(j=>j&&allowed(j.id)).length,
    analysis,
    dossier:reached("preparing",["preparing"]),
    dispatch:reached("applied",["applied","interview","interview2","offer","accepted"]),
@@ -72,16 +70,10 @@
   const analysis=model.islands.find(p=>p.id==="analysis");
   return model.islands.filter(p=>p.id!=="analysis").map(p=>{
    if(p.id==="radar"){
-    // Radar grows with incoming unique job ads, not with manually rated ads.
-    const level=RADAR_GROWTH.filter(t=>p.count>=t).length;
-    return {...p,title:"RADAR",name:"Stellen entdecken",
-     metric:"importierte Inserate",theme:"radar",compact:false,
-     thresholds:RADAR_GROWTH,level,maxLevel:4,
-     next:RADAR_GROWTH[level]??null,previous:level?RADAR_GROWTH[level-1]:0,
-     analysisProgress:analysis};
+    return {...analysis,id:"radar",sourceId:"analysis",title:"RADAR",
+     name:"Inserate bewerten",theme:"radar",compact:true};
    }
-   const titles={dossier:"PREPPER",dispatch:"MACHER:IN",comms:"STALKER",
-    interview:"SPEAKER",advanced:"INSIDER",finale:"ENTREPRENEUR"};
+   const titles={dossier:"PREPPER",dispatch:"MACHER:IN",comms:"STALKER"};
    return {...p,title:titles[p.id]||p.title};
   });
  }
@@ -139,42 +131,6 @@
    const span=(p.next??p.thresholds.at(-1))-p.previous;
    fill.style.width=(p.next===null?100:Math.min(100,Math.max(0,100*(p.count-p.previous)/Math.max(span,1))))+"%";
    track.append(fill);target.append(track);
-  }
-  // A large opt-in scene view lets the richer pixel/linework remain legible
-  // without making the seven-stop route visually crowded.
-  if(window.AgentAgencyArt?.createScene){
-   const details=make("details","agency-scene-detail");
-   details.append(make("summary","","Szene vergrössern"));
-   const preview=make("div","agency-scene-detail-preview");
-   preview.append(window.AgentAgencyArt.createScene({...p,visualLevel:p.level}));
-   details.append(preview);
-   target.append(details);
-  }
-  if(p.id==="radar"&&p.analysisProgress){
-   const progress=p.analysisProgress;
-   const details=make("details","agency-evolution agency-analysis-details");
-   details.append(make("summary","","Bewertungsfortschritt · "+number(progress.count)+" Inserate"));
-   const explanation=progress.next===null?"Maximale Analyse-Stufe erreicht.":
-    "Nächster Analyse-Ausbau bei "+number(progress.next)+" Bewertungen.";
-   details.append(make("p","",number(progress.count)+" selbst bewertete Inserate. "+explanation));
-   const track=make("div","agency-meter"),fill=make("span","");
-   const span=(progress.next??progress.thresholds.at(-1))-progress.previous;
-   fill.style.width=(progress.next===null?100:Math.min(100,Math.max(0,
-    100*(progress.count-progress.previous)/Math.max(span,1))))+"%";
-   track.append(fill);details.append(track);
-   if(window.AgentAgencyArt){
-    const gallery=make("div","agency-evolution-strip");
-    for(let level=0;level<=4;level++){
-     const tile=make("div","agency-evolution-stage");
-     tile.dataset.current=String(level===progress.level);
-     tile.append(window.AgentAgencyArt.createScene({...progress,theme:"analysis",level}));
-     tile.append(make("strong","","LEVEL "+level));
-     tile.append(make("small","",level?"Ab "+progress.thresholds[level-1]+" Bewertungen":"0–49 Bewertungen"));
-     gallery.append(tile);
-    }
-    details.append(gallery);
-   }
-   target.append(details);
   }
   if((p.sourceId||p.id)==="analysis"&&window.AgentAgencyArt){
    const gallery=make("details","agency-evolution");
