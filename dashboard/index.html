@@ -628,7 +628,7 @@ header .sub,.section-heading p{color:#6b5744}
   <div class="dossier-stats" aria-label="Dossier-Statistik">
     <div class="dossier-stat"><span>Deine Dossiers</span><strong id="dossierCount">0</strong><small>Stellenbezogene Sammlungen</small></div>
     <div class="dossier-stat"><span>Deine Dateien</span><strong id="dossierFileCount">0</strong><small>Dokumente in dieser Ablage</small></div>
-    <div class="dossier-stat"><span>Speicherort</span><strong>Dieses Gerät</strong><small>Privat · kein Cloud-Sync</small></div>
+    <div class="dossier-stat"><span>Speicherort</span><strong>Lokal / GitHub</strong><small>GitHub nur nach Freigabe · öffentlich</small></div>
   </div>
   <div class="dossier-tabs" role="tablist" aria-label="Dossiers Bereiche">
     <button type="button" class="dossier-tab" role="tab" aria-selected="true" aria-controls="dossierOverviewPanel" id="dossierOverviewTab">Übersicht <span id="dossierTabCount">(0)</span></button>
@@ -644,7 +644,21 @@ header .sub,.section-heading p{color:#6b5744}
       <div id="dossierLibrary"></div>
     </section>
   </div>
-  <p class="dossier-info"><strong>Privater Prototyp:</strong> Hochgeladene Dateien und Dossier-Einstellungen werden nur im Browser dieses Geräts gespeichert. Es gibt noch keine Anmeldung, keine Synchronisation auf andere Geräte und keine KI-generierten Dokumente. Browserdaten nicht löschen, bevor wichtige Dateien gesichert sind.</p>
+  <section class="dossier-library dossier-public" aria-labelledby="dossierPublicHeading">
+  <div class="dossier-library-head">
+    <div><h3 id="dossierPublicHeading">Öffentliche GitHub-Ablage</h3>
+      <p>Unterlagen gezielt veröffentlichen oder auf einem anderen Gerät wieder laden.</p></div>
+  </div>
+  <p class="dossier-quiet">Dateien bleiben zunächst lokal. Erst mit «Auf GitHub sichern» werden sämtliche aktuell lokalen Dossiers und Dateien unverschlüsselt im öffentlichen Repository veröffentlicht. Sie sind für alle einsehbar und können selbst nach dem Löschen über die Git-Historie zugänglich bleiben.</p>
+  <label for="dossierPublicToken">GitHub-Token (Contents: Read and write)</label>
+  <input type="password" id="dossierPublicToken" autocomplete="off" spellcheck="false" placeholder="GitHub-Token, falls noch keiner eingerichtet ist">
+  <div class="dossier-public-actions">
+    <button type="button" id="dossierPublicSave" class="dossier-primary">Auf GitHub sichern</button>
+    <button type="button" id="dossierPublicLoad" class="dossier-secondary">Von GitHub laden</button>
+  </div>
+  <p id="dossierPublicStatus" class="dossier-message" role="status" aria-live="polite"></p>
+</section>
+<p class="dossier-info">Lokale Dokumente und Dossier-Vorbereitungen bleiben weiterhin auf diesem Gerät. GitHub-Abgleich erfolgt ausschliesslich auf Knopfdruck und ist nicht verschlüsselt. KI-Dokumentengenerierung ist noch nicht angeschlossen.</p>
   <p id="dossierMessage" class="dossier-message" role="status" aria-live="polite"></p>
   <input id="dossierFileInput" type="file" accept=".pdf,.doc,.docx,.odt,.txt,.png,.jpg,.jpeg" multiple hidden aria-label="Bewerbungsunterlagen auswählen">
 </section>
@@ -661,7 +675,7 @@ header .sub,.section-heading p{color:#6b5744}
   <form id="dossierForm">
     <span class="dossier-kicker">DOSSIERS / VORBEREITUNG</span>
     <h2 id="dossierDialogTitle">Dossier vorbereiten</h2>
-    <p>Lege die Eckdaten für die spätere Generierung fest. Deine Eingaben bleiben auf diesem Gerät.</p>
+    <p>Lege die Eckdaten für die spätere Generierung fest. Eine Veröffentlichung auf GitHub erfolgt nur über die GitHub-Ablage.</p>
     <label for="dossierJobSelect">Mit Inserat verknüpfen</label><select id="dossierJobSelect"><option value="">Ohne verknüpftes Inserat</option></select>
     <label for="dossierTitleInput">Stellenbezeichnung *</label><input id="dossierTitleInput" required maxlength="250" placeholder="z. B. Projektleiter thermische Netze">
     <label for="dossierCompanyInput">Unternehmen</label><input id="dossierCompanyInput" maxlength="250" placeholder="z. B. Energieversorger">
@@ -1890,7 +1904,8 @@ initialize();
 <script src="./radar.js?v=20261027-zen-magenta-1"></script>
 <script src="./radar-interest-pictograms.js"></script>
 <script src="./radar-explorer-ui.js"></script>
-<script src="./dossiers.js?v=20261027-dossiers-1"></script>
+<script src="./dossiers.js?v=20261028-dossiers-public-1"></script>
+<script src="./dossiers-public.js?v=20261028-dossiers-public-1"></script>
 <script src="./mode-nav.js?v=20261027-agency-direct-1"></script>
 </body>
 </html>
