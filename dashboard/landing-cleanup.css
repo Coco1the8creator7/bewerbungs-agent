@@ -73,3 +73,15 @@ header.career-app-header .notification-panel{
  #mode-startseite .crm-export-actions{align-items:stretch}
  #mode-startseite .crm-export-actions .marked-summary{flex-basis:100%}
 }
+
+/* Small fingerprint taken from the approved Career.Agency logo.
+   Preserve the original magenta motif without introducing a second wordmark. */
+.career-app-header h1 .career-brand-fingerprint{
+ display:inline-block;
+ width:auto;
+ height:.9em;
+ vertical-align:-.12em;
+ margin-left:.19em;
+ object-fit:contain;
+ pointer-events:none;
+}
