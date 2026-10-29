@@ -28,30 +28,22 @@ test("job popup can open a job-linked dossier preparation form",()=>{
  assert.match(js,/preferences:\{tone:/);
 });
 
-test("dossiers remain local until user explicitly publishes to public GitHub",()=>{
- const remote=fs.readFileSync("dashboard/dossiers-public.js","utf8");
+test("dossiers stay local and the public GitHub panel is fully removed",()=>{
  assert.match(js,/window\.indexedDB/);
  assert.match(js,/createObjectStore\("dossiers"/);
  assert.match(js,/createObjectStore\("files"/);
  assert.match(js,/URL\.createObjectURL/);
  assert.match(js,/URL\.revokeObjectURL/);
  assert.match(js,/MAX_BYTES=15\*1024\*1024/);
- assert.match(js,/window\.CareerDossiersData=Object\.freeze/);
- assert.doesNotMatch(js,/\bfetch\s*\(|localStorage|innerHTML/);
- for(const id of ["dossierPublicSave","dossierPublicLoad","dossierPublicToken","dossierPublicStatus"])
-  assert.ok(html.includes('id="'+id+'"'),id);
- assert.match(html,/src="\.\/dossiers-public\.js\?v=/);
- assert.match(html,/öffentlichen Repository veröffentlicht/);
- assert.match(remote,/public-dossiers\/v1/);
- assert.match(remote,/career-agency-public-dossiers-v1/);
- assert.match(remote,/window\.confirm/);
- assert.match(remote,/Contents: Read and write/);
- assert.match(remote,/cache:"no-store"/);
- assert.match(remote,/branch:"main"/);
- assert.match(remote,/file\.content instanceof Blob/);
- assert.match(remote,/sha256/);
- assert.doesNotMatch(remote,/localStorage|sessionStorage|AES-GCM|PBKDF2|encrypt\(/);
- assert.match(remote,/store\.importSnapshot/);
+ assert.doesNotMatch(js,/\bfetch\s*\(|localStorage|innerHTML|CareerDossiersData/);
+ assert.match(html,/Nur lokal im Browser/);
+ for(const obsolete of ["dossierPublicSave","dossierPublicLoad","dossierPublicToken",
+  "dossierPublicStatus","dossierPublicHeading","Öffentliche GitHub-Ablage",
+  "dossiers-public.js","GitHub-Abgleich","GitHub nur nach Freigabe"]){
+  assert.ok(!html.includes(obsolete),obsolete+" must be removed");
+ }
+ assert.doesNotMatch(css,/dossier-public/);
+ assert.match(html,/Deine Eingaben werden vorerst lokal auf diesem Gerät gespeichert/);
 });
 
 test("deleting a dossier preserves uploaded documents; files require confirmation",()=>{

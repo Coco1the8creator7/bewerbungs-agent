@@ -1,3 +1,5 @@
+> **Historische Dokumentation (Stand 28.10.2026):** Die hier beschriebene öffentliche Dossier-Synchronisation wurde am 29.10.2026 aus dem Dashboard entfernt und deaktiviert. Die Ablage in GitHub wird nicht automatisch aufgeräumt und bereits veröffentlichte Dateien bleiben gegebenenfalls öffentlich zugänglich. Der Inhalt unten ist nur als Entscheidungsverlauf archiviert.
+
 # Career.Agency – provisorische öffentliche Dossier-Ablage (28.10.2026)
 
 ## Entscheidung und Geltungsbereich

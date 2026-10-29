@@ -75,11 +75,3 @@
  #mode-dossiers .dossier-toolbar input{width:100%}
  .dossier-dialog .dossier-dialog-grid{grid-template-columns:1fr}
 }
-
-/* Temporary public GitHub storage controls */
-#mode-dossiers .dossier-public{margin-top:16px}
-#mode-dossiers .dossier-public label{display:block;margin:14px 0 6px;font-size:.82rem;font-weight:700}
-#mode-dossiers .dossier-public input{display:block;width:min(100%,440px);padding:10px 12px;border:1px solid var(--ca-border,#d8c8b2);border-radius:9px;background:var(--ca-surface,#fffaf2);color:var(--ca-text,#4b3a2b)}
-#mode-dossiers .dossier-public-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
-#mode-dossiers .dossier-public-actions button{padding:10px 14px}
-@media(max-width:660px){#mode-dossiers .dossier-public-actions button{flex:1 1 160px}}
