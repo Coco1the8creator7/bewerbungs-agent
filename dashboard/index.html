@@ -350,6 +350,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./urban-mono-magenta.css?v=20261027-muted-2">
 <link rel="stylesheet" href="./radar-designs.css?v=20261027-zen-magenta-1">
 <link rel="stylesheet" href="./landing-cleanup.css?v=20261027-cleanup-1">
+<link rel="stylesheet" href="./job-popup.css?v=20261029-popup-actions-1">
 </head>
 <body data-active-mode="startseite">
 <div id="modeNavBackdrop" class="mode-nav-backdrop" hidden></div>
@@ -676,14 +677,17 @@ header .sub,.section-heading p{color:#6b5744}
 </dialog>
 <dialog id="details" aria-labelledby="detailTitle">
   <div class="detail-top"><h2 id="detailTitle">Inserat</h2><button type="button" id="dismissDetails" class="secondary compact-button" aria-label="Detailansicht schliessen">✕</button></div><p id="detailMeta" class="muted"></p>
-  <div id="detailExportMarkHost" class="detail-export-mark"></div>
+  <div id="detailExportMarkHost" class="detail-action-bar" role="group" aria-label="Aktionen für dieses Inserat">
+ <button type="button" id="detailSaveMark" class="detail-icon-action secondary" aria-pressed="false" title="Vormerken" aria-label="Vormerken"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4.5h12v15l-6-4-6 4z"/></svg><span class="detail-action-label">Vormerken</span></button>
+ <button type="button" id="detailPrepareDossier" class="detail-icon-action secondary"  title="Dossier" aria-label="Dossier"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3.5h7l4 4V20H7zM14 3.5v4h4M10 12h5M10 16h5"/></svg><span class="detail-action-label">Dossier</span></button>
+ <button type="button" id="detailOpenAgency" class="detail-icon-action secondary"  title="Agency" aria-label="Agency"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V8l8-5 8 5v12zM9 20v-7h6v7M8.5 9.5h.01M15.5 9.5h.01"/></svg><span class="detail-action-label">Agency</span></button>
+ <button type="button" id="detailExportMark" class="detail-icon-action secondary" aria-pressed="false" title="Export" aria-label="Export"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v4h16v-4"/></svg><span class="detail-action-label">Export</span></button>
+  </div>
   <section class="dialog-field" aria-label="Stellenbeschreibung"><div id="detailDescription"></div></section>
   <section id="detailReviewHost" class="dialog-field" aria-label="Relevanzbewertung"></section>
   <div id="detailLegacyRating">
   <div class="dialog-field"><label for="detailDecision">Bearbeitungsstatus</label><select id="detailDecision"></select></div>
   <div class="dialog-field"><label for="detailScore">Relevanz (1–100)</label><input id="detailScore" type="number" min="1" max="100" step="1" placeholder="Unbewertet"></div>
-  <div class="dialog-field"><label>Kriterienbewertung (optional)</label><div id="detailReasons" class="feedback-editor-host" role="group" aria-label="Kriterienbewertung"></div></div>
-  <div class="dialog-field"><label for="detailRatingNote">Bewertungszusatz (optional, max. 1000 Zeichen)</label><textarea id="detailRatingNote" maxlength="1000" rows="3" placeholder="Warum ist diese Stelle für mich interessant oder ungeeignet?"></textarea></div>
   </div>
   <div class="dialog-field"><label for="detailNote">Meine Notiz (max. 2000 Zeichen)</label><textarea id="detailNote" maxlength="2000" placeholder="Anforderungen, offene Fragen, weitere Schritte …"></textarea></div>
   <details id="editFields">
@@ -708,7 +712,7 @@ header .sub,.section-heading p{color:#6b5744}
     </div>
   </details>
   <p id="detailError" class="status-message" style="color:#8a3e2b" role="alert"></p>
-  <div class="dialog-actions"><button type="button" id="detailPrepareDossier" class="secondary">Dossier vorbereiten</button><button type="button" id="closeDetails" class="secondary">Abbrechen</button><button type="button" id="saveDetails">Änderungen übernehmen</button></div>
+  <div class="dialog-actions"><button type="button" id="closeDetails" class="secondary">Abbrechen</button><button type="button" id="saveDetails">Änderungen übernehmen</button></div>
 </dialog>
 <dialog class="agency-world" id="agencyWorld" aria-labelledby="agencyTitle">
  <header class="agency-world-top">
@@ -1247,17 +1251,23 @@ function linkedTitle(j,tag="h3"){
  button.addEventListener("click",()=>openDetails(j.id));
  h.append(button);return h;
 }
-function detailExportMarkButton(j){
- const b=document.createElement("button");b.type="button";b.className="secondary compact-button detail-export-button";
- const update=()=>{
-  const active=selectedJobIds.has(j.id);
-  b.setAttribute("aria-pressed",String(active));
-  b.setAttribute("aria-label",(active?"Exportmarkierung entfernen: ":"Für Export markieren: ")+j.title);
-  b.textContent=active?"✓ Für Export markiert":"Für Export markieren";
- };
- update();
- b.addEventListener("click",()=>{toggleExportSelection(j.id);update();renderNewJobs();});
- return b;
+function syncDetailActions(j){
+ const host=el("detailExportMarkHost");host.hidden=false;
+ const state=stageOf(j.id),saved=state==="saved";
+ const mark=el("detailSaveMark");
+ mark.disabled=!["open","review","later","saved"].includes(state);
+ mark.setAttribute("aria-pressed",String(saved));
+ mark.setAttribute("aria-label",mark.disabled?"Bereits im Bewerbungsprozess: "+j.title:(saved?"Vormerkung entfernen: ":"Für Dossier und Agency vormerken: ")+j.title);
+ mark.title=mark.disabled?"Bereits im Bewerbungsprozess":(saved?"Vormerkung entfernen":"Für die weitere Bearbeitung vormerken");
+ mark.querySelector(".detail-action-label").textContent=saved?"Vorgemerkt":"Vormerken";
+ const dossier=el("detailPrepareDossier");
+ dossier.disabled=j.id.startsWith("DEMO-");
+ dossier.title=dossier.disabled?"Für Demo-Inserate nicht verfügbar":"Dossier für diese Stelle vorbereiten";
+ const exportButton=el("detailExportMark"),exported=selectedJobIds.has(j.id);
+ exportButton.setAttribute("aria-pressed",String(exported));
+ exportButton.setAttribute("aria-label",(exported?"Exportmarkierung entfernen: ":"Für JSON-Export markieren: ")+j.title);
+ exportButton.title=exported?"Exportmarkierung entfernen":"Für JSON-Export markieren";
+ exportButton.querySelector(".detail-action-label").textContent=exported?"Markiert":"Export";
 }
 // Only the user's explicit 1–100 rating is displayed. Never show
 // the importer priority or estimated suitability as a personal rating.
@@ -1285,17 +1295,9 @@ function ratingPanel(j){
  input.value=String(rating?.score??50);
  input.setAttribute("aria-label","Relevanz 1 bis 100 für "+j.title);
  input.addEventListener("input",()=>{output.textContent=input.value+" / 100";output.classList.remove("unrated");});
- input.addEventListener("change",()=>{setRating(j.id,input.value);renderNewJobs();el("message").textContent="Relevanz "+input.value+"/100 übernommen. Feedback-JSON für das Training separat exportieren.";});
+ input.addEventListener("change",()=>{setRating(j.id,input.value);renderNewJobs();el("message").textContent="Relevanz "+input.value+"/100 übernommen.";});
  const scale=document.createElement("div");scale.className="review-scale";scale.append(node("span","1 · gering"),node("span","100 · hoch"));
- const reasons=document.createElement("div");
- reasons.append(node("div","Wie beeinflussen einzelne Kriterien deine Bewertung?","review-reasons-label"),
-  makeReasonButtons(rating,feedback=>{setFeedback(j.id,feedback);el("message").textContent="Kriterienfeedback gespeichert.";}));
- const noteLabel=node("label","Bewertungszusatz (optional)","review-reasons-label");
- const note=document.createElement("textarea");note.maxLength=1000;note.rows=2;
- note.placeholder="Persönliche Einschätzung zur Stelle …";note.value=rating?.note||"";
- note.setAttribute("aria-label","Bewertungszusatz für "+j.title);
- note.addEventListener("change",()=>{setRatingNote(j.id,note.value);el("message").textContent="Bewertungszusatz übernommen. Für die dauerhafte Sicherung lokale Speicherung aktivieren oder JSON exportieren.";});
- panel.append(top,input,scale,reasons,noteLabel,note);
+ panel.append(top,input,scale);
  return panel;
 }
 function stageOf(id){return annotations.get(id)?.decision||"open";}
@@ -1402,16 +1404,13 @@ function openDetails(id){
   title.append(link);
  }else title.textContent=j.title;
  el("detailMeta").textContent=[j.company,j.location,j.source].filter(Boolean).join(" · ");
- el("detailExportMarkHost").replaceChildren(detailExportMarkButton(j));
+ syncDetailActions(j);
  el("detailDescription").textContent=cleanDescription(j.description);
  el("detailReviewHost").hidden=false;el("detailReviewHost").replaceChildren(ratingPanel(j));
  el("detailLegacyRating").hidden=true;
  el("detailDecision").value=stageOf(id);el("detailNote").value=noteOf(id);
  el("detailScore").value=ratingOf(id)?.score??"";
- detailDraftFeedback=normalizeReasonFeedback(ratingOf(id));
- el("detailRatingNote").value=ratingOf(id)?.note||"";
- el("detailReasons").replaceChildren(makeReasonButtons(detailDraftFeedback,value=>{detailDraftFeedback=value;}));
- el("closeDetails").textContent="Schliessen";el("detailPrepareDossier").hidden=j.id.startsWith("DEMO-");
+ el("closeDetails").textContent="Schliessen";
  el("details").showModal();el("details").scrollTop=0;
 }
 function startNewJob(){
@@ -1430,14 +1429,12 @@ function startNewJob(){
  newJobDraft=j;
  el("detailTitle").textContent="Neues Inserat erfassen";
  el("detailReviewHost").hidden=true;el("detailReviewHost").replaceChildren();el("detailLegacyRating").hidden=false;
- el("closeDetails").textContent="Abbrechen";el("detailPrepareDossier").hidden=true;
+ el("detailExportMarkHost").hidden=true;
+ el("closeDetails").textContent="Abbrechen";
  el("detailMeta").textContent="Manueller Eintrag · keine automatische Bewerbung";
- el("detailExportMarkHost").replaceChildren();
+
  el("detailDescription").textContent="Wird erst nach dem Speichern übernommen.";
  el("detailDecision").value="open";el("detailNote").value="";el("detailScore").value="";
- detailDraftFeedback=normalizeReasonFeedback(null);
- el("detailReasons").replaceChildren(makeReasonButtons(detailDraftFeedback,value=>{detailDraftFeedback=value;}));
- el("detailRatingNote").value="";
  el("detailError").textContent="";el("editFields").open=true;
  displayEditFields(j);
  el("details").showModal();
@@ -1654,8 +1651,6 @@ el("saveDetails").addEventListener("click",()=>{
   refill(el("source"),unique(visibleJobs().map(j=>j.source)),"Alle Quellen");
   if(wasNewJob){
    if(el("detailScore").value.trim())setRating(currentJobId,el("detailScore").value);
-   setFeedback(currentJobId,detailDraftFeedback);
-   setRatingNote(currentJobId,el("detailRatingNote").value);
   }
   setAnnotation(currentJobId,el("detailDecision").value,el("detailNote").value);
   el("details").close();currentJobId=null;
@@ -1875,11 +1870,37 @@ document.addEventListener("close",updateFloatingSaveVisibility,true);
 updateFloatingSaveVisibility();
 // Expose public job metadata only, never private reviews or notes.
 window.CareerDossierJobs=()=>jobs.map(j=>({id:j.id,title:j.title,company:j.company,location:j.location}));
+el("detailSaveMark").addEventListener("click",()=>{
+ const j=jobs.find(job=>job.id===currentJobId);if(!j)return;
+ const stage=stageOf(j.id);
+ if(!["open","review","later","saved"].includes(stage))return;
+ setAnnotation(j.id,stage==="saved"?"open":"saved",noteOf(j.id));
+ el("detailDecision").value=stageOf(j.id);
+ syncDetailActions(j);
+});
+el("detailExportMark").addEventListener("click",()=>{
+ const j=jobs.find(job=>job.id===currentJobId);if(!j)return;
+ toggleExportSelection(j.id);
+ syncDetailActions(j);
+ renderNewJobs();
+});
+el("detailOpenAgency").addEventListener("click",()=>{
+ if(!currentJobId)return;
+ el("details").close();
+ openAgencyWorld();
+});
 el("detailPrepareDossier").addEventListener("click",()=>{
  const j=jobs.find(job=>job.id===currentJobId);
  if(!j||j.id.startsWith("DEMO-"))return;
  el("details").close();
  window.CareerDossiers?.prepare({id:j.id,title:j.title,company:j.company,location:j.location});
+});
+window.addEventListener("career-dossier-prepared",event=>{
+ const id=event.detail?.job_id;
+ if(typeof id!=="string"||!jobs.some(j=>j.id===id))return;
+ // Nur eine tatsächlich gespeicherte Dossiervorbereitung zählt für die Agency.
+ if(["open","review","later","saved"].includes(stageOf(id)))
+  setAnnotation(id,"preparing",noteOf(id));
 });
 initialize();
 </script>
