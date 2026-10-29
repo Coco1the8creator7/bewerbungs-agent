@@ -35,9 +35,9 @@ Im Detailfenster lassen sich Inseratdaten (Arbeitgeber, Ort, Kategorien, Pensum,
 
 **Keine Cloud-Synchronisierung:** Die öffentliche GitHub-Pages-Webseite hat keinen sicheren Schreibzugriff auf eine private Datenbank oder lokale Mac-Dateien; sie schreibt auch nicht zurück ins GitHub-Repository. Für mehrere Geräte wäre später ein authentifiziertes Backend erforderlich. Technische Details: [docs/persistence-v0.3.md](docs/persistence-v0.3.md).
 
-## Provisorische öffentliche Dossier-Ablage (28.10.2026)
+## Dossiers – lokale Dokumentenablage
 
-Im Bereich **Dossiers** können Dateien und Dossier-Vorbereitungen weiterhin lokal in IndexedDB abgelegt und **nach separater Bestätigung** unverschlüsselt unter `public-dossiers/v1/` in das öffentliche GitHub-Repository hochgeladen werden. Über «Von GitHub laden» können diese mit einem weiteren Browser abgerufen werden. Der Schreibzugriff erfordert einen GitHub-Token mit `Contents: Read and write`; die Dossiers-Funktion speichert ihn nicht zusätzlich. **Jede veröffentlichte Datei ist öffentlich zugänglich und kann auch nach Löschung in der Git-Historie erhalten bleiben.** Nur für bewusst zur Veröffentlichung freigegebene eigene Testunterlagen; ausdrücklich **nicht** für andere Nutzer, Minderjährige oder eine produktive SaaS-Nutzung. Die bisherige verschlüsselte/private Backend-Lösung bleibt als spätere Migration vorgesehen. Details: [docs/dossiers-public-mvp.md](docs/dossiers-public-mvp.md).
+Dossiers und hochgeladene Dateien werden im aktuellen Browser (IndexedDB) gespeichert. Die frühere sichtbare Schaltfläche zur öffentlichen GitHub-Veröffentlichung wurde auf Wunsch aus der Dossiers-Oberfläche entfernt (29.10.2026). Neue Dateien werden daher nicht mehr über Dossiers nach GitHub übertragen. Bereits früher veröffentlichte Dateien im öffentlichen Repository oder in der Git-Historie werden dadurch **nicht** gelöscht. Ein späterer privater oder verschlüsselter Dokumentenspeicher bleibt geplant.
 
 ## Offline testen (ohne Gmail)
 
@@ -66,7 +66,7 @@ Für die statische Website verwenden wir denselben Hosting-Ansatz wie bei `was-i
 
 Der produktive GitHub-Action-Importer aktualisiert `dashboard/jobs.json` täglich und nach Änderungen am Importcode. Nicht implementiert sind persönliches Bewerberprofil-Matching, automatisches Training aus privaten Bewertungen und Bewerbungsautomatisierung.
 
-**Sicherheit:** E-Mails, OAuth-Tokens und vertrauliche Drittunterlagen niemals ins Repository committen. **Zeitlich begrenzte Ausnahme:** Der Projektinhaber hat ausdrücklich der unverschlüsselten Veröffentlichung seiner eigenen Test-Bewerbungsunterlagen im Prototyp zugestimmt; siehe öffentliche Dossier-Ablage. Keine Freigabe für fremde Daten. Es werden keine Bewerbungen ohne ausdrückliche Freigabe versendet.
+**Sicherheit:** E-Mails, OAuth-Tokens und persönliche bzw. vertrauliche Dokumente nicht öffentlich committen. Die frühere provisorische öffentliche Dossier-Funktion ist deaktiviert; bereits veröffentlichte Git-Dateien und Historieneinträge bleiben unter Umständen öffentlich erreichbar. Es werden keine Bewerbungen ohne ausdrückliche Freigabe versendet.
 
 ## Nächster Schritt
 
