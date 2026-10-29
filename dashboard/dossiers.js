@@ -1,5 +1,5 @@
-/* Career.Agency / Dossiers: local IndexedDB with optional public GitHub export.
- * Publication is never automatic. Stable IDs support a future private backend.
+/* Career.Agency / Dossiers: local IndexedDB document workspace.
+ * Stable IDs support a future authenticated private backend.
  */
 (function(){
  "use strict";
@@ -235,30 +235,6 @@
    $("dossierCompanyInput").value=job.company||"";
   }
  }
- async function importSnapshot(dossiers,files){
-  if(!state.ready)throw Error("Lokaler Dossierspeicher noch nicht bereit.");
-  if(!Array.isArray(dossiers)||!Array.isArray(files))throw Error("Ungültige GitHub-Daten.");
-  const ids=new Set(state.dossiers.map(x=>x.id)),fileIds=new Set(state.files.map(x=>x.id));
-  const additions=files.filter(f=>!fileIds.has(f.id));
-  if(state.files.length+additions.length>MAX_FILES)throw Error("Maximal "+MAX_FILES+" lokale Dateien zulässig.");
-  const validId=id=>typeof id==="string"&&/^[a-zA-Z0-9_-]{1,100}$/.test(id);
-  for(const d of dossiers){
-   if(!d||!validId(d.id)||typeof d.title!=="string"||!d.title.trim()||d.title.length>250)
-    throw Error("Ungültige Dossier-Metadaten.");
-  }
-  for(const f of files){
-   if(!f||!validId(f.id)||typeof f.name!=="string"||f.name.length>250||
-    !(f.content instanceof Blob)||f.content.size!==f.size||f.size>MAX_BYTES)
-    throw Error("Ungültige Datei aus GitHub.");
-  }
-  for(const d of dossiers)if(!ids.has(d.id)){await put("dossiers",d);ids.add(d.id);}
-  for(const f of files)if(!fileIds.has(f.id)){await put("files",f);fileIds.add(f.id);}
-  await refresh();
- }
- window.CareerDossiersData=Object.freeze({
-  snapshot:()=>({dossiers:state.dossiers.map(d=>({...d})),files:state.files.map(f=>({...f}))}),
-  importSnapshot
- });
  window.CareerDossiers=Object.freeze({prepare});
  $("dossierCreate").addEventListener("click",()=>editDossier(null));
  $("dossierUpload").addEventListener("click",()=>chooseFiles());
