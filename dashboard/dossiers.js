@@ -218,6 +218,8 @@
   const submit=$("dossierSubmit");setBusy(submit,true);
   try{
    await put("dossiers",entry);$("dossierDialog").close();await refresh();
+   // CRM/Agency erst nach einer tatsächlich erfolgreichen Dossierspeicherung fortschreiben.
+   window.dispatchEvent(new CustomEvent("career-dossier-prepared",{detail:{job_id:entry.jobId||null}}));
    notice("Dossiervorbereitung gespeichert. KI-Dokumentengenerierung ist noch nicht angeschlossen.");
   }catch(err){notice("Dossier konnte nicht gespeichert werden: "+err.message,true);}
   finally{setBusy(submit,false);}
