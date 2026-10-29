@@ -1,0 +1,35 @@
+/* Career.Agency / job popup: compact actions and single relevance control. */
+#details .detail-action-bar{
+ display:flex;align-items:stretch;flex-wrap:wrap;gap:8px;
+ margin:13px 0 4px;padding-bottom:15px;
+ border-bottom:1px solid var(--ca-line,#e1e5e9);
+}
+#details .detail-action-bar[hidden]{display:none!important}
+#details .detail-icon-action{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ min-height:42px;padding:9px 13px;border:1px solid var(--ca-line,#e1e5e9);
+ background:var(--ca-paper-soft,#fafbfc)!important;color:var(--ca-ink,#262a31)!important;
+ border-radius:10px;font-size:.8rem;font-weight:650;white-space:nowrap;
+}
+#details .detail-icon-action svg{display:block;flex:0 0 20px}
+#details .detail-icon-action:hover:not(:disabled){
+ background:var(--ca-accent-soft,#f7eef2)!important;
+ border-color:var(--ca-accent-line,#e8d5df);
+}
+#details .detail-icon-action[aria-pressed="true"]{
+ background:var(--ca-accent-soft,#f7eef2)!important;
+ color:var(--ca-accent,#95516e)!important;
+ border-color:var(--ca-accent-line,#e8d5df);
+}
+#details .detail-icon-action:focus-visible{
+ outline:2px solid var(--ca-accent,#95516e);outline-offset:3px;
+}
+#details .detail-icon-action:disabled{opacity:.5;cursor:not-allowed}
+#details #detailReviewHost{padding-top:13px;margin-top:17px}
+#details #detailReviewHost .review-panel{display:grid;gap:10px}
+#details #detailReviewHost .relevance-slider{accent-color:var(--ca-accent,#95516e)}
+#details #detailReviewHost .review-value{font-variant-numeric:tabular-nums}
+@media(max-width:560px){
+ #details .detail-action-bar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #details .detail-icon-action{min-width:0;justify-content:flex-start;padding:11px}
+}
