@@ -22,7 +22,7 @@ test("pictogram controls have unique IDs and accessible labels",()=>{
   assert.match(html,new RegExp('id="'+id+'"[^>]*aria-label="[^"]+"'));
  }
  assert.match(html,/detail-action-bar" role="group"/);
- assert.match(html,/\.detail-icon-action\[aria-pressed="true"\]/);
+ assert.match(popupCSS,/\.detail-icon-action\[aria-pressed="true"\]/);
  assert.match(popupCSS,/--ca-accent/);
 });
 
