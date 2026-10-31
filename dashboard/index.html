@@ -389,6 +389,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./urban-mono-magenta.css?v=20261027-muted-2">
 <link rel="stylesheet" href="./radar-designs.css?v=20261027-zen-magenta-1">
 <link rel="stylesheet" href="./landing-cleanup.css?v=20261027-cleanup-1">
+<link rel="stylesheet" href="./job-card-swipe.css?v=20261031-1">
 <link rel="stylesheet" href="./job-popup.css?v=20261029-popup-actions-1">
 </head>
 <body data-active-mode="startseite">
@@ -460,9 +461,11 @@ header .sub,.section-heading p{color:#6b5744}
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
   <div class="section-heading"><h2 id="newJobsTitle">Meine Inserate</h2></div>
-  <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Offen (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button></div>
+  <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Offen (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button><button type="button" id="viewDismissed" aria-pressed="false">Ausgeblendet (0)</button></div>
+  <p class="job-swipe-hint">Auf dem Smartphone nach links wischen: Nicht interessant</p>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
   <div id="mobileJobSentinel" class="mobile-load" hidden><span id="mobileJobCount"></span><button type="button" class="secondary" onclick="appendJobBatch();observeMobileJobs()">Weitere 5 anzeigen</button></div>
+  <div id="swipeUndoToast" class="job-swipe-undo" role="status" aria-live="polite" hidden><span id="swipeUndoText"></span><button type="button" id="swipeUndoButton" class="secondary">Rückgängig</button></div>
 </section>
 <footer class="bottom">
   <details class="tools">
@@ -810,6 +813,7 @@ header .sub,.section-heading p{color:#6b5744}
 <script src="./github-sync.js"></script>
 <script src="./career-filter.js"></script>
 <script src="./notifications.js?v=20261027-notifications-1"></script>
+<script src="./job-card-swipe.js?v=20261031-1"></script>
 <script>
 "use strict";
 // Kein Browser-Dauerspeicher: private Status-/Notizdaten liegen nur im aktuellen Tab.
@@ -826,6 +830,7 @@ const stageNames=new Map(stages);
 const activeStages=new Set(["review","saved","later","preparing","applied","interview","interview2","offer"]);
 const annotations=new Map();
 const relevanceRatings=new Map();
+const dismissedJobFeedback=new Map(); // Negative preference signal; never an invented 1–100 rating.
 const selectedJobIds=new Set(); // Private Auswahl nur für einen späteren Export, kein Statuswechsel.
 const reasonOptions=[["field","Berufsfeld"],["distance","Arbeitsweg"],["seniority","Seniorität"],["tasks","Aufgaben"],["employer","Arbeitgeber"],["conditions","Arbeitsbedingungen"]];
 const reasonCodes=new Set(reasonOptions.map(([code])=>code));
@@ -1011,6 +1016,7 @@ function snapshot(){
   jobs:structuredClone(jobs),
   annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
   relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value,reasons:[...(value.reasons||[])],aspects:{...(value.aspects||{})}})),
+  dismissals:[...dismissedJobFeedback.entries()].map(([id,value])=>({id,...value})),
   export_selection:[...selectedJobIds],
   activity_log:structuredClone(activityLog),
   overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
@@ -1034,19 +1040,21 @@ function saveChanges(){
 function feedbackSnapshot(){
  const state=snapshot();
  return {type:"bewerbungs-agent-feedback",schema_version:"1.0.0",updated_at:new Date().toISOString(),
-  annotations:state.annotations,relevance_ratings:state.relevance_ratings,export_selection:state.export_selection,
+  annotations:state.annotations,relevance_ratings:state.relevance_ratings,dismissals:state.dismissals,
+  export_selection:state.export_selection,
   activity_log:state.activity_log,overrides:state.overrides,
   manual_jobs:state.jobs.filter(j=>j.id.startsWith("MANUAL-"))};
 }
 function applyCloudFeedback(data){
  if(!data||data.type!=="bewerbungs-agent-feedback"||data.schema_version!=="1.0.0")throw Error("Unbekanntes Feedbackformat");
  const a=validateAnnotations(data.annotations),r=validateRelevanceRatings(data.relevance_ratings),
-  sel=validateExportSelection(data.export_selection),ov=validateOverrides(data.overrides),
+  dismissed=validateDismissals(data.dismissals),sel=validateExportSelection(data.export_selection),ov=validateOverrides(data.overrides),
   activities=validateActivityLog(data.activity_log),manual=validateJobs(data.manual_jobs||[]);
  isRestoring=true;
  try{
   annotations.clear();for(const [id,v] of a)annotations.set(id,v);
   relevanceRatings.clear();for(const [id,v] of r)relevanceRatings.set(id,v);
+  dismissedJobFeedback.clear();for(const [id,v] of dismissed)dismissedJobFeedback.set(id,v);
   selectedJobIds.clear();for(const id of sel)selectedJobIds.add(id);
   manualOverrides.clear();for(const [id,v] of ov)manualOverrides.set(id,v);
   activityLog=activities;
@@ -1110,11 +1118,24 @@ function unique(values){return [...new Set(values.filter(Boolean))].sort((a,b)=>
 function refill(select,values,placeholder){const old=select.value;select.replaceChildren(new Option(placeholder,""));for(const value of values)select.add(new Option(value,value));select.value=values.includes(old)?old:"";}
 function node(tag,value,klass){const item=document.createElement(tag);if(klass)item.className=klass;item.textContent=text(value);return item;}
 function safeLink(value){try{const url=new URL(value);return ["https:","http:"].includes(url.protocol)?url.href:null;}catch{return null;}}
+function validateDismissals(records){
+ if(records==null)return new Map(); // Older backups and GitHub feedback remain importable.
+ if(!Array.isArray(records)||records.length>10000)throw Error("Ungültige Ausblendungen.");
+ const result=new Map();
+ for(const item of records){
+  if(!item||typeof item.id!=="string"||!item.id.trim()||result.has(item.id)||
+     item.signal!=="not_interested"||!["swipe_left","button"].includes(item.source)||
+     validDate(item.dismissed_at)===null)throw Error("Ungültiger Ausblendungs-Eintrag.");
+  result.set(item.id,{signal:"not_interested",source:item.source,dismissed_at:item.dismissed_at});
+ }
+ return result;
+}
+function dismissedLandingJobs(){return visibleJobs().filter(j=>dismissedJobFeedback.has(j.id));}
 function ratingOf(id){return relevanceRatings.get(id)||null;}
 function hasReviewFeedback(id){const r=ratingOf(id);return !!r&&(Number.isInteger(r.score)||storedReasons(r).length>0||!!r.note?.trim()||Object.keys(r.aspects||{}).length>0||!!r.field_relation||!!r.seniority_assessment);}
 function visibleJobs(){return jobs.filter(j=>!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j));}
-function unratedJobs(){return visibleJobs().filter(j=>stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
-function reviewedJobs(){return visibleJobs().filter(j=>hasReviewFeedback(j.id));}
+function unratedJobs(){return visibleJobs().filter(j=>!dismissedJobFeedback.has(j.id)&&stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
+function reviewedJobs(){return visibleJobs().filter(j=>!dismissedJobFeedback.has(j.id)&&hasReviewFeedback(j.id));}
 function normalizeReasons(value){
  const items=typeof value==="string"?(value?[value]:[]):value??[];
  if(!Array.isArray(items)||items.some(code=>typeof code!=="string"||!reasonCodes.has(code)))throw Error("Ungültige Bewertungsgründe.");
@@ -1225,6 +1246,12 @@ function buildMarkedJobsPayload(){
 function buildRelevancePayload(){
  return {type:"bewerbungs-agent-relevance-feedback",schema_version:"1.1.0",
   generated_at:new Date().toISOString(),selection_policy:"suggestion_only_no_exclusion",
+  dismissals:[...dismissedJobFeedback.entries()].filter(([id])=>!id.startsWith("DEMO-")).map(([id,value])=>{
+   const j=jobs.find(x=>x.id===id);
+   return {job_id:id,signal:value.signal,source:value.source,dismissed_at:value.dismissed_at,
+    job:j?{title:j.title,company:j.company,location:j.location,source:j.source,
+      categories:j.categories,description:j.description}:null};
+  }),
   unrated_feedback:[...relevanceRatings.entries()].filter(([id,r])=>!id.startsWith("DEMO-")&&r.score==null).map(([id,r])=>({
    job_id:id,...normalizeReasonFeedback(r),legacy_reasons:storedReasons(r),note:r.note||"",updated_at:r.updated_at
   })),
@@ -1559,15 +1586,39 @@ function jobTaskPreview(description){
  const summary=candidates.slice(0,3).join(" ").slice(0,360);
  return summary||"Aufgabenbereich im Inserat nicht näher beschrieben.";
 }
+let lastDismissedId=null;
+function dismissLandingJob(id,source="button"){
+ if(!jobs.some(j=>j.id===id)||dismissedJobFeedback.has(id))return false;
+ if(!["button","swipe_left"].includes(source))throw Error("Ungültige Ausblendungsquelle.");
+ dismissedJobFeedback.set(id,{signal:"not_interested",source,dismissed_at:new Date().toISOString()});
+ lastDismissedId=id;
+ saveChanges();
+ render();
+ const job=jobs.find(j=>j.id===id);
+ el("swipeUndoText").textContent=(job?.title||"Stelleninserat")+" ausgeblendet · Nicht interessant"+
+  (persistEnabled?"":" · ohne Gerätespeicherung nur bis zum Neuladen.");
+ el("swipeUndoToast").hidden=false;
+ return true;
+}
+function restoreLandingJob(id){
+ if(!dismissedJobFeedback.delete(id))return false;
+ if(lastDismissedId===id){lastDismissedId=null;el("swipeUndoToast").hidden=true;}
+ reviewListView=hasReviewFeedback(id)?"reviewed":"unrated";
+ saveChanges();
+ render();
+ return true;
+}
+el("swipeUndoButton").addEventListener("click",()=>{if(lastDismissedId)restoreLandingJob(lastDismissedId);});
 function renderNewJobs(){
  const query=el("query").value.trim().toLocaleLowerCase("de-CH");
  const category=el("category").value,source=el("source").value;
- const unreviewed=unratedJobs(),reviewed=reviewedJobs();
+ const unreviewed=unratedJobs(),reviewed=reviewedJobs(),dismissed=dismissedLandingJobs();
   el("viewUnrated").textContent="Offen ("+unreviewed.length+")";
   el("viewReviewed").textContent="Bearbeitet ("+reviewed.length+")";
-  el("viewUnrated").setAttribute("aria-pressed",String(reviewListView==="unrated"));
-  el("viewReviewed").setAttribute("aria-pressed",String(reviewListView==="reviewed"));
-  const allNew=reviewListView==="reviewed"?reviewed:unreviewed;
+  el("viewDismissed").textContent="Ausgeblendet ("+dismissed.length+")";
+  for(const [id,mode] of [["viewUnrated","unrated"],["viewReviewed","reviewed"],["viewDismissed","dismissed"]])
+   el(id).setAttribute("aria-pressed",String(reviewListView===mode));
+  const allNew=reviewListView==="reviewed"?reviewed:reviewListView==="dismissed"?dismissed:unreviewed;
  const filtered=allNew.filter(j=>{
   const categories=Array.isArray(j.categories)?j.categories:[];
   const hay=[j.title,j.company,j.location,j.source,...categories].map(text).join(" ").toLocaleLowerCase("de-CH");
@@ -1586,7 +1637,7 @@ function renderNewJobs(){
  const signature=JSON.stringify([reviewListView,query,category,source,el("sort").value,filtered.map(j=>j.id)]);
  if(signature!==mobileJobSignature){mobileJobLimit=5;mobileJobSignature=signature;}
  const target=el("newJobsList");target.replaceChildren();
- if(!filtered.length){target.append(node("div",allNew.length?"Keine Inserate mit diesen Filtern.":(reviewListView==="reviewed"?"Noch keine Inserate beurteilt.":"Alle neuen Inserate sind bearbeitet – oder befinden sich im Bewerbungsprozess."),"empty panel"));return;}
+ if(!filtered.length){target.append(node("div",allNew.length?"Keine Inserate mit diesen Filtern.":(reviewListView==="dismissed"?"Keine ausgeblendeten Inserate.":reviewListView==="reviewed"?"Noch keine Inserate beurteilt.":"Alle neuen Inserate sind bearbeitet – oder befinden sich im Bewerbungsprozess."),"empty panel"));return;}
  for(const j of filtered){
   const card=document.createElement("article");card.className="card"+(selectedJobIds.has(j.id)?" export-marked":"");
   card.tabIndex=0;card.setAttribute("aria-label","Details öffnen: "+j.title);
@@ -1605,6 +1656,21 @@ function renderNewJobs(){
   const tags=document.createElement("div");tags.className="tags";
   for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
   card.append(tags);
+  const dismissControl=document.createElement("button");
+  dismissControl.type="button";
+  if(reviewListView==="dismissed"){
+   dismissControl.className="card-restore-button";
+   dismissControl.textContent="Wieder anzeigen";
+   dismissControl.setAttribute("aria-label","Ausgeblendetes Inserat wieder anzeigen: "+j.title);
+   dismissControl.addEventListener("click",()=>restoreLandingJob(j.id));
+  }else{
+   dismissControl.className="card-dismiss-button";
+   dismissControl.textContent="× Nicht interessant";
+   dismissControl.setAttribute("aria-label","Inserat als nicht interessant ausblenden: "+j.title);
+   dismissControl.addEventListener("click",()=>dismissLandingJob(j.id,"button"));
+   window.CareerJobSwipe?.bind(card,{onDismiss:()=>dismissLandingJob(j.id,"swipe_left")});
+  }
+  card.append(dismissControl);
   if(mobileJobQuery.matches&&target.children.length>=mobileJobLimit)card.hidden=true;
   target.append(card);
  }
@@ -1617,7 +1683,10 @@ function loadJobs(rows,name,asDemo=false){
  if(!Array.isArray(rows)||rows.some(j=>!j||typeof j!=="object"||Array.isArray(j)||typeof j.id!=="string"||!j.id.trim()||typeof j.title!=="string"||!j.title.trim()||typeof j.source!=="string"||!j.source.trim()))throw Error("Erwartet wird ein Array aus Inseraten mit id, title und source.");
  if(new Set(rows.map(j=>j.id)).size!==rows.length)throw Error("Doppelte Inserat-IDs.");
  for(const key of [...annotations.keys()])if(key.startsWith("DEMO-"))annotations.delete(key);
- if(!asDemo)activityLog=activityLog.filter(entry=>!entry.job_id.startsWith("DEMO-"));
+ if(!asDemo){
+  activityLog=activityLog.filter(entry=>!entry.job_id.startsWith("DEMO-"));
+  for(const key of dismissedJobFeedback.keys())if(key.startsWith("DEMO-"))dismissedJobFeedback.delete(key);
+ }
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(visibleJobs().flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
  refill(el("source"),unique(visibleJobs().map(j=>j.source)),"Alle Quellen");
@@ -1840,13 +1909,15 @@ function applyWorkspace(data,name){
  if(!data||data.type!=="bewerbungs-agent-workspace"||data.schema_version!=="0.3.0"||typeof data.demo_mode!=="boolean")
   throw Error("Ungültige Gesamtsicherung v0.3.0.");
  const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations),overrides=validateOverrides(data.overrides),activities=validateActivityLog(data.activity_log),
-  ratings=validateRelevanceRatings(data.relevance_ratings),exportSelection=validateExportSelection(data.export_selection);
+  ratings=validateRelevanceRatings(data.relevance_ratings),dismissed=validateDismissals(data.dismissals),
+  exportSelection=validateExportSelection(data.export_selection);
  isRestoring=true;
  try{
   loadJobs(structuredClone(rows),name,data.demo_mode);
   annotations.clear();
   for(const [id,item] of records)annotations.set(id,item);
   relevanceRatings.clear();for(const [id,entry] of ratings)relevanceRatings.set(id,entry);
+  dismissedJobFeedback.clear();for(const [id,entry] of dismissed)dismissedJobFeedback.set(id,entry);
   selectedJobIds.clear();for(const id of exportSelection)selectedJobIds.add(id);
   manualOverrides.clear();
   for(const [id,patch] of overrides)manualOverrides.set(id,patch);
@@ -1928,7 +1999,7 @@ async function initialize(){
  }
  if(!restored)loadDemo();
 }
-for(const [id,view] of [["viewUnrated","unrated"],["viewReviewed","reviewed"]])el(id).addEventListener("click",()=>{reviewListView=view;renderNewJobs();});
+for(const [id,view] of [["viewUnrated","unrated"],["viewReviewed","reviewed"],["viewDismissed","dismissed"]])el(id).addEventListener("click",()=>{reviewListView=view;el("swipeUndoToast").hidden=true;renderNewJobs();});
 mobileJobQuery.addEventListener("change",()=>{mobileJobLimit=5;mobileJobSignature="";renderNewJobs();});
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
 for(const [code,label] of stages)el("detailDecision").add(new Option(label,code));
