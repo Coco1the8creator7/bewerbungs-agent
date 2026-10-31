@@ -286,6 +286,8 @@
  $("dossierCancel").addEventListener("click",()=>$("dossierDialog").close());
  const initialRefresh=refresh().catch(err=>{
   notice("Lokale Dateiablage nicht verfügbar: "+err.message,true);
-  throw err;
+  // Avoid an unhandled rejection when the user never clicks a Dossier action.
+  // addJob checks state.ready and reports the failure to the caller.
+  return null;
  });
 })();
