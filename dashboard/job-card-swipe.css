@@ -1,0 +1,80 @@
+/* Landing job-card dismissal: uses the approved global neutral/muted-magenta tokens. */
+#newJobsList .card{
+ position:relative;
+ touch-action:pan-y;
+ will-change:auto;
+ transition:transform .18s ease,opacity .18s ease,border-color .15s ease;
+}
+#newJobsList .card.is-swiping{
+ transition:none;
+ user-select:none;
+ -webkit-user-select:none;
+ will-change:transform,opacity;
+}
+#newJobsList .card-dismiss-button,
+#newJobsList .card-restore-button{
+ align-self:flex-end;
+ min-height:36px;
+ padding:7px 10px;
+ border:1px solid transparent;
+ border-radius:8px;
+ background:transparent;
+ color:var(--ca-muted,#636b76);
+ box-shadow:none;
+ font-size:.76rem;
+ font-weight:600;
+}
+#newJobsList .card-dismiss-button:hover{
+ color:var(--ca-danger,#a34454);
+ background:var(--ca-accent-soft,#f7eef2);
+}
+#newJobsList .card-restore-button{
+ color:var(--ca-accent,#95516e);
+ border-color:var(--ca-accent-line,#e8d5df);
+ background:var(--ca-accent-soft,#f7eef2);
+}
+#newJobsList .card-dismiss-button:focus-visible,
+#newJobsList .card-restore-button:focus-visible{
+ outline:2px solid var(--ca-accent,#95516e);
+ outline-offset:2px;
+}
+#mode-startseite .job-swipe-hint{display:none}
+#mode-startseite .job-swipe-undo{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:12px;
+ position:sticky;
+ bottom:12px;
+ z-index:30;
+ margin-top:12px;
+ padding:12px 14px;
+ background:var(--ca-paper,#fff);
+ color:var(--ca-ink,#262a31);
+ border:1px solid var(--ca-accent-line,#e8d5df);
+ box-shadow:0 7px 28px #272a351b;
+ border-radius:12px;
+ font-size:.83rem;
+}
+#mode-startseite .job-swipe-undo[hidden]{display:none!important}
+#mode-startseite .job-swipe-undo > span{flex:1 1 210px}
+#mode-startseite .job-swipe-undo button{
+ min-height:40px;
+ color:var(--ca-accent,#95516e);
+ background:var(--ca-accent-soft,#f7eef2);
+ border:1px solid var(--ca-accent-line,#e8d5df);
+}
+@media(max-width:650px){
+ #mode-startseite .job-swipe-hint{
+  display:block;
+  margin:0 0 12px;
+  font-size:.76rem;
+  color:var(--ca-muted,#636b76);
+ }
+ #newJobsList .card-dismiss-button,
+ #newJobsList .card-restore-button{min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ #newJobsList .card{transition:none}
+}
