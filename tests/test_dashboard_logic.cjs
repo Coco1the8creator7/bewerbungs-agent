@@ -184,6 +184,7 @@ const fixture = [
   'assert.throws(()=>validateDismissals([{id:"a",signal:"not_interested",source:"button",dismissed_at:"no-date"}]));',
   'assert.throws(()=>validateDismissals([{id:"a",signal:"not_interested",source:"button",dismissed_at:new Date().toISOString()},{id:"a",signal:"not_interested",source:"swipe_left",dismissed_at:new Date().toISOString()}]));',
   'assert.equal(validateDismissals([{id:"ok",signal:"not_interested",source:"swipe_left",dismissed_at:new Date().toISOString()}]).get("ok").source,"swipe_left");',
+  'assert.equal(validateDismissals([{id:"right",signal:"not_interested",source:"swipe_right",dismissed_at:new Date().toISOString()}]).get("right").source,"swipe_right");',
   'assert.equal(dismissedLandingJobs().length,0);',
   'const originalRating=structuredClone(ratingOf("sample-1"));',
   'const oldStage=stageOf("sample-1");',
@@ -209,6 +210,15 @@ const fixture = [
   'assert.equal(ratingOf("sample-1").score,72);',
   'assert.equal(snapshot().dismissals.length,0);',
   'assert.equal(buildRelevancePayload().dismissals.length,0);',
+  'assert.equal(dismissLandingJob("sample-1","swipe_right"),true);',
+  'assert.equal(dismissedJobFeedback.get("sample-1").source,"swipe_right");',
+  'assert.equal(snapshot().dismissals[0].source,"swipe_right");',
+  'assert.equal(feedbackSnapshot().dismissals[0].source,"swipe_right");',
+  'assert.equal(buildRelevancePayload().dismissals[0].source,"swipe_right");',
+  'assert.equal(ratingOf("sample-1").score,72);',
+  'assert.equal(stageOf("sample-1"),oldStage);',
+  'assert.equal(activityLog.length,oldEvents);',
+  'assert.equal(restoreLandingJob("sample-1"),true);',
 ].join("\n");
 // The dashboard now updates mission widgets during rating changes. Use a minimal
 // DOM fixture to exercise business logic without executing any browser or network IO.
