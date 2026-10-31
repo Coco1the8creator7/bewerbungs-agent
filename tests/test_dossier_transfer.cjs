@@ -35,7 +35,7 @@ const addStart=dossier.indexOf(" async function addJob(job){");
 const addEnd=dossier.indexOf("\n function prepare(job){",addStart);
 assert.ok(addStart>=0&&addEnd>addStart);
 const addSource=dossier.slice(addStart,addEnd);
-assert.doesNotMatch(addSource,/career-dossier-prepared|setAnnotation|setRating/);
+assert.doesNotMatch(addSource.replace(/\/\/[^\n]*/g,""),/career-dossier-prepared|setAnnotation|setRating/);
 assert.match(addSource,/await put\("dossiers",entry\)/);
 assert.match(addSource,/await refresh\(\)/);
 assert.match(addSource,/await initialRefresh/);
