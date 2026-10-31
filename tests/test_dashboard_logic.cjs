@@ -178,6 +178,37 @@ const fixture = [
   'assert.ok(backup.overrides.some(entry=>entry.id==="abc"));',
   'assert.equal(backup.export_selection.join(","),"sample-2");',
   'assert.equal(backup.relevance_ratings[0].score,72);',
+  '// Dismissal is a separate negative preference, not a fabricated 1–100 rating or status.',
+  'assert.equal(validateDismissals(null).size,0);',
+  'assert.throws(()=>validateDismissals([{id:"a",signal:"unknown",source:"button",dismissed_at:new Date().toISOString()}]));',
+  'assert.throws(()=>validateDismissals([{id:"a",signal:"not_interested",source:"button",dismissed_at:"no-date"}]));',
+  'assert.throws(()=>validateDismissals([{id:"a",signal:"not_interested",source:"button",dismissed_at:new Date().toISOString()},{id:"a",signal:"not_interested",source:"swipe_left",dismissed_at:new Date().toISOString()}]));',
+  'assert.equal(validateDismissals([{id:"ok",signal:"not_interested",source:"swipe_left",dismissed_at:new Date().toISOString()}]).get("ok").source,"swipe_left");',
+  'assert.equal(dismissedLandingJobs().length,0);',
+  'const originalRating=structuredClone(ratingOf("sample-1"));',
+  'const oldStage=stageOf("sample-1");',
+  'const oldEvents=activityLog.length;',
+  'assert.equal(dismissLandingJob("sample-1","swipe_left"),true);',
+  'assert.equal(dismissLandingJob("sample-1","button"),false);',
+  'assert.equal(dismissedJobFeedback.get("sample-1").signal,"not_interested");',
+  'assert.equal(dismissedJobFeedback.get("sample-1").source,"swipe_left");',
+  'assert.equal(reviewedJobs().some(j=>j.id==="sample-1"),false);',
+  'assert.equal(dismissedLandingJobs().some(j=>j.id==="sample-1"),true);',
+  'assert.equal(stageOf("sample-1"),oldStage);',
+  'assert.equal(activityLog.length,oldEvents,"swipe must not count as a manual review mission");',
+  'assert.equal(JSON.stringify(ratingOf("sample-1")),JSON.stringify(originalRating));',
+  'assert.equal(snapshot().dismissals.length,1);',
+  'assert.equal(feedbackSnapshot().dismissals.length,1);',
+  'assert.equal(buildRelevancePayload().dismissals[0].job_id,"sample-1");',
+  'assert.equal(buildRelevancePayload().dismissals[0].signal,"not_interested");',
+  'assert.equal(buildRelevancePayload().ratings[0].user_score,72,"original rating survives dismissal");',
+  'assert.equal(restoreLandingJob("sample-1"),true);',
+  'assert.equal(restoreLandingJob("sample-1"),false);',
+  'assert.equal(dismissedLandingJobs().length,0);',
+  'assert.equal(reviewedJobs().some(j=>j.id==="sample-1"),true);',
+  'assert.equal(ratingOf("sample-1").score,72);',
+  'assert.equal(snapshot().dismissals.length,0);',
+  'assert.equal(buildRelevancePayload().dismissals.length,0);',
 ].join("\n");
 // The dashboard now updates mission widgets during rating changes. Use a minimal
 // DOM fixture to exercise business logic without executing any browser or network IO.
@@ -196,3 +227,4 @@ require("./test_mode_navigation.cjs");
 require("./test_notifications.cjs");
 require("./test_landing_cards.cjs");
 require("./test_landing_cleanup.cjs");
+require("./test_job_card_swipe.cjs");
