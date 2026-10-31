@@ -29,7 +29,8 @@ const start=html.indexOf("function renderNewJobs(){");
 const end=html.indexOf("\nfunction render(){",start);
 assert.ok(start>=0&&end>start);
 const cards=html.slice(start,end);
-assert.match(cards,/top\.append\(info,cardRatingButton\(j\)\)/);
+assert.match(cards,/cardActions\.append\(secretDossierButton\(j\),cardRatingButton\(j\)\)/);
+assert.match(cards,/top\.append\(info,cardActions\)/);
 assert.match(cards,/card\.append\(tags\)/);
 assert.match(cards,/openDetails\(j\.id\)/,"whole card still opens the details dialog");
 for(const forbidden of ["exportMarkButton(j)","jobSalaryLabel(j)","Lohn-Range",
