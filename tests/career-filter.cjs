@@ -20,13 +20,10 @@ const hidden = [
   "Product Owner – B2B Digital Ecosystem Platform"
 ];
 const visible = [
-  ["Bauleiter:in Neubau USZ Universitätsspital Zürich","Fanzun AG"],
   ["Projektleiter:in Bau-Entwicklungsplanung 80-100 %","Universitätsspital Zürich"],
-  ["Projektleiter HLKS Spital","Ingenieurbüro"],
   ["Projektleiter Medizintechnik","Muster Engineering AG"],
   ["Ingenieur für Energieversorgung im Krankenhaus","Ingenieur AG"],
   ["Fachspezialist*in Netzinformationssysteme (GIS, CAD)","ewz"],
-  ["Teamleiter*in Betrieb HLK","ewz"],
   ["Projektleiter/in Verkehrs- und Infrastrukturprojekte","Kanton Zürich"],
   ["Projektentwickler Energie","ewz"],
   ["Werkstudent/in AI-Innovation & Prozessautomatisierung","Vokus Personal AG"],
@@ -43,7 +40,7 @@ for(const title of hidden){
 }
 for(const [title,company] of visible)
  assert.equal(isVisible({title,company}),true,"Should retain: "+title);
-assert.equal(isVisible({title:"Bauleiter:in Hochbau",company:"Universitätsspital Zürich",description:"Patientenversorgung Klinik"}),true);
+assert.equal(isVisible({title:"Bauleiter:in Hochbau",company:"Universitätsspital Zürich",description:"Patientenversorgung Klinik"}),false);
 assert.equal(isVisible({title:"SAP Administrator",company:"Universitätsspital Zürich"}),false);
 assert.equal(isVisible({title:"Projektleiter Energiekonzept",company:"Spital GmbH"}),true);
 assert.equal(isVisible({title:"Unbekannte Stelle",company:"Pflegeheim AG"}),false,"Healthcare-sector roles without technical evidence should be hidden");
@@ -72,13 +69,13 @@ const careerTitles=[
  "Verkaufsberater thermische Netze",
  "Bauprojektadministration",
  "Projektleiter Energiecontrolling",
- "Projektleiter HLKS Universitätsspital",
+ "Fachbauleiter Fernwärme Universitätsspital",
  "Projektleitung KI-Agenten Innovation"
 ];
 for(const title of careerTitles){
  const r=classify({title,company:"Engineering AG"});
  assert.equal(r.visible,true,"Must keep cross-entry: "+title);
- assert.equal(r.version,"career-preselector-v2");
+ assert.equal(r.version,"career-preselector-v2.1");
  assert.ok(Number.isInteger(r.priority)&&r.priority>=1&&r.priority<=99);
 }
 const relevant=classify({title:"Fachbauleiter Rohrleitungsbau Fernwärme"}).priority;
@@ -90,3 +87,68 @@ assert.equal(isVisible({title:"Projektleiter Gastronomie"}),true,
  "Ambiguous transitions must stay reviewable");
 assert.equal(classify({title:"Unbekannte Funktion"}).visible,true,
  "Insufficient evidence must not exclude");
+
+
+// 31.10.2026: user-confirmed discipline exclusions and PRIMARY-only heat focus.
+const excludedByScope=[
+ ["Junior Projektleiter Elektro 80-100%","electrical_trade"],
+ ["Netzelektriker EFZ","electrical_trade"],
+ ["Fachbauleiter Elektrotechnik","electrical_trade"],
+ ["Projektleiter Sanitär und Heizung","sanitary_trade"],
+ ["Fachbauleiter Sanitär","sanitary_trade"],
+ ["Projektleiter Lüftung","ventilation_trade"],
+ ["Technischer Verkaufsberater Komfortlüftung","ventilation_trade"],
+ ["Teamleiter Betrieb HLK","ventilation_trade"],
+ ["Projektleiter HLKS im Spital","ventilation_trade"],
+ ["Projektentwickler Fassadenbau","building_construction"],
+ ["Projektleiter Hochbau","building_construction"],
+ ["Projektleiter Innenausbau","building_construction"],
+ ["Fachbauleiter Hochbau","building_construction"],
+ ["Bauleiter Fernwärme","general_construction_supervision"],
+ ["Projekt- und Bauleitung Construction & Design Services","general_construction_supervision"],
+ ["Oberbauleiter Energiezentrale","general_construction_supervision"],
+ ["Gesamtprojektleiter / Oberbauleiter","general_construction_supervision"],
+ ["Bauleiter Neubau Universitätsspital","general_construction_supervision"],
+ ["Heizungsinstallateur","secondary_heating"],
+ ["Gebäudetechnikplanerin Heizung / Kälte","secondary_heating"],
+ ["Fachbauleiter Heizung Sekundärseite","secondary_heating"],
+ ["Projektleiter thermische Netze Sekundärseite","secondary_heating"]
+];
+for(const [title,reason] of excludedByScope){
+ const result=classify({title,company:"Ingenieurbüro AG"});
+ assert.equal(result.visible,false,"Excluded role: "+title);
+ assert.equal(result.reason,reason,"Wrong exclusion for "+title);
+ assert.equal(result.exclusion,true);
+}
+const safelyVisible=[
+ "Fachbauleiter Rohrleitungsbau Fernwärme",
+ "Fach-Bauleiter Fernwärmenetz",
+ "Projektleiter Primärseite Fernwärme",
+ "Projektleiter Wärmeverbund und Netztrassen",
+ "Projektleiter thermische Netze",
+ "Projektleiter Heizung", // Unknown: not silently made secondary
+ "Projektleiter Wärmetechnik", // Unknown: role-level evidence is insufficient
+ "Fachbauleiter Heizung", // Fachbauleitung allowed; heating side unknown
+ "Projektleiter Tiefbau / Leitungsbau",
+ "Ingenieur Energieversorgung im Universitätsspital",
+ "Projektleiter KI-Agent Innovation"
+];
+for(const title of safelyVisible){
+ assert.equal(classify({title}).visible,true,"Keep: "+title);
+}
+const cases=[
+ [{title:"Projektleiter Heizung",description:"Planung der Heizkörper und Heizkreise für Mehrfamilienhäuser"},false,"secondary"],
+ [{title:"Projektleiter Heizung",description:"Sekundärseitige Heizungsanlagen auslegen und projektieren"},false,"secondary"],
+ [{title:"Projektleiter Fernwärme",description:"Schnittstellen zu Heizkreisen auf der Sekundärseite koordinieren"},true,"primary"],
+ [{title:"Projektleiter Heizung",description:"Koordination mit der Primärseite und Sekundärseite"},true,"undetermined"],
+ [{title:"Servicetechniker Wärmepumpen",description:null},true,"undetermined"],
+ [{title:"Fachbauleiter Fernwärme",description:"Baustellenleitung und Qualitätssicherung"},true,"primary"],
+ [{title:"Projektleiter Heizung Primärseite",description:"Heizkörper als Schnittstelle"},true,"primary"]
+];
+for(const [job,visible,side] of cases){
+ const got=classify(job);
+ assert.equal(got.visible,visible,"Side check for "+job.title+" / "+job.description);
+ assert.equal(got.heating_side,side,"Side category for "+job.title+" / "+job.description);
+}
+assert.equal(classify({title:"Projektleiter Elektro und Fernwärme Primärseite"}).reason,"electrical_trade",
+ "A trade role does not become thermal network engineering just by mentioning Fernwärme.");
