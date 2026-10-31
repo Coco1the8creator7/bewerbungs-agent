@@ -50,15 +50,15 @@
   // another trade in the description is not a role-level exclusion.
   const excludedTrades = [
     ["electrical_trade", /\b(?:elektro\w*|elektriker\w*|elektronik\w*|netzelektriker\w*|elektrisch\w* installat\w*)\b/],
-    ["sanitary_trade", /\b(?:sanitaer\w*|sanitaerinstallat\w*|sanitaerplan\w*|sanitaermonteur\w*)\b/],
-    ["ventilation_trade", /\b(?:lueft\w*|raumluft\w*|ventilation\w*|hlk\w*)\b/]
+    ["sanitary_trade", /\b(?:\w*sanitaer\w*)\b/],
+    ["ventilation_trade", /\b(?:\w*lueft\w*|raumluft\w*|ventilation\w*|hlk\w*)\b/]
   ];
   // Architectural building construction is distinct from primary heat
   // networks. Don't reject all 'Bauprojekt...' or 'Projektleiter Tiefbau':
   // those titles may describe civil works for district heating.
   const buildingConstruction = /\b(?:hochbau\w*|fassaden\w*|innenausbau\w*|ausbaugewerk\w*|wohnungsbau\w*|architektur\w*|architekt\w*|immobilienprojekt\w*|gebaeudeneubau\w*)\b/;
   const fachBauleitung = /\bfach(?:[- ]?bauleit(?:er(?:in)?|ung|end\w*)\w*)\b/;
-  const ordinaryBauleitung = /\b(?:bauleit(?:er(?:in)?|ung|end\w*)\w*)\b/;
+  const ordinaryBauleitung = /\b(?:\w*bauleit(?:er(?:in)?|ung|end\w*)\w*)\b/;
   // This is about PRIMARY distribution networks (Fernwärme/thermische Netze),
   // NOT building-internal secondary heating systems. Heat generation and the
   // handover station can be interfaces; do not guess a side from them alone.
