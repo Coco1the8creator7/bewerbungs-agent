@@ -462,7 +462,7 @@ header .sub,.section-heading p{color:#6b5744}
 <section class="section" aria-labelledby="newJobsTitle">
   <div class="section-heading"><h2 id="newJobsTitle">Meine Inserate</h2></div>
   <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Offen (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button><button type="button" id="viewDismissed" aria-pressed="false">Ausgeblendet (0)</button></div>
-  <p class="job-swipe-hint">Auf dem Smartphone nach links wischen: Nicht interessant</p>
+  <p class="job-swipe-hint">Auf dem Smartphone nach links oder rechts wischen: Nicht interessant</p>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
   <div id="mobileJobSentinel" class="mobile-load" hidden><span id="mobileJobCount"></span><button type="button" class="secondary" onclick="appendJobBatch();observeMobileJobs()">Weitere 5 anzeigen</button></div>
   <div id="swipeUndoToast" class="job-swipe-undo" role="status" aria-live="polite" hidden><span id="swipeUndoText"></span><button type="button" id="swipeUndoButton" class="secondary">Rückgängig</button></div>
@@ -813,7 +813,7 @@ header .sub,.section-heading p{color:#6b5744}
 <script src="./github-sync.js"></script>
 <script src="./career-filter.js"></script>
 <script src="./notifications.js?v=20261027-notifications-1"></script>
-<script src="./job-card-swipe.js?v=20261031-1"></script>
+<script src="./job-card-swipe.js?v=20261031-2"></script>
 <script>
 "use strict";
 // Kein Browser-Dauerspeicher: private Status-/Notizdaten liegen nur im aktuellen Tab.
@@ -1124,7 +1124,7 @@ function validateDismissals(records){
  const result=new Map();
  for(const item of records){
   if(!item||typeof item.id!=="string"||!item.id.trim()||result.has(item.id)||
-     item.signal!=="not_interested"||!["swipe_left","button"].includes(item.source)||
+     item.signal!=="not_interested"||!["swipe_left","swipe_right","button"].includes(item.source)||
      validDate(item.dismissed_at)===null)throw Error("Ungültiger Ausblendungs-Eintrag.");
   result.set(item.id,{signal:"not_interested",source:item.source,dismissed_at:item.dismissed_at});
  }
@@ -1589,7 +1589,7 @@ function jobTaskPreview(description){
 let lastDismissedId=null;
 function dismissLandingJob(id,source="button"){
  if(!jobs.some(j=>j.id===id)||dismissedJobFeedback.has(id))return false;
- if(!["button","swipe_left"].includes(source))throw Error("Ungültige Ausblendungsquelle.");
+ if(!["button","swipe_left","swipe_right"].includes(source))throw Error("Ungültige Ausblendungsquelle.");
  dismissedJobFeedback.set(id,{signal:"not_interested",source,dismissed_at:new Date().toISOString()});
  lastDismissedId=id;
  saveChanges();
@@ -1668,7 +1668,7 @@ function renderNewJobs(){
    dismissControl.textContent="× Nicht interessant";
    dismissControl.setAttribute("aria-label","Inserat als nicht interessant ausblenden: "+j.title);
    dismissControl.addEventListener("click",()=>dismissLandingJob(j.id,"button"));
-   window.CareerJobSwipe?.bind(card,{onDismiss:()=>dismissLandingJob(j.id,"swipe_left")});
+   window.CareerJobSwipe?.bind(card,{onDismiss:direction=>dismissLandingJob(j.id,direction==="right"?"swipe_right":"swipe_left")});
   }
   card.append(dismissControl);
   if(mobileJobQuery.matches&&target.children.length>=mobileJobLimit)card.hidden=true;
