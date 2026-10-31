@@ -66,7 +66,7 @@
   const primaryTitle = /\b(?:primaer(?:seit\w*|netz\w*)?|fernwaerm\w*|fernkaelt\w*|waermenetz\w*|waermeverbund\w*|thermisch\w* netz\w*|netzausbau\w*|netztrasse\w*|trassenplan\w*)\b/;
   const secondaryTitle = /\b(?:sekundaer(?:seit\w*|netz\w*)?|heizungsinstallat\w*|heizungsmonteur\w*|heizkoerper\w*|fussbodenheiz\w*|raumheiz\w*|gebaeudeheiz\w*|heizungsverteilung\w*)\b/;
   const buildingHeatingTitle = /\bgebaeudetechnikplan\w*\b.*\bheiz\w*\b|\bheiz\w*\b.*\b(?:efh|mfh|wohngebaeude\w*|heizzentrale(?:n)? im gebaeude)\b/;
-  const secondaryDescription = /\b(?:heizkreis\w*|heizkoerper\w*|fussbodenheiz\w*|raumheiz\w*|heizungsverteilung\w*|gebaeudeintern\w* heiz\w*|heizungsinstallat\w* im gebaeude)\b/;
+  const secondaryDescription = /\b(?:heizkreis\w*|heizkoerper\w*|fussbodenheiz\w*|raumheiz\w*|heizungsverteilung\w*|gebaeudeintern\w* heiz\w*|heizungsinstallat\w* im gebaeude|sekundaerseit\w* heiz\w*|heiz\w* sekundaerseit\w*)\b/;
   const careerSignals = [
     ["thermal_networks", /\b(?:fernwaerm\w*|waermenetz\w*|thermisch\w* netz\w*|rohrleitungsbau|waermeversorgung\w*)\b/, 33],
     ["project_management", /\b(?:projektleit\w*|projektmanag\w*|projektkoordin\w*|fachbauleit\w*|bauleit\w*|bauherrenvertret\w*)\b/, 19],
