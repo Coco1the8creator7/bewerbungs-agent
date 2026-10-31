@@ -68,6 +68,11 @@
   state.files=files.sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
   state.ready=true;
   render();
+  // Tell the landing page which jobs are already represented in Dossiers.
+  // IndexedDB remains the single source of truth; no duplicate CRM storage.
+  window.dispatchEvent(new CustomEvent("career-dossier-jobs-changed",{
+   detail:{job_ids:state.dossiers.filter(row=>typeof row.jobId==="string"&&row.jobId).map(row=>row.jobId)}
+  }));
  }
  function button(label,handler,secondary=false){
   const b=make("button",label,secondary?"dossier-button-quiet":"");
@@ -224,6 +229,39 @@
   }catch(err){notice("Dossier konnte nicht gespeichert werden: "+err.message,true);}
   finally{setBusy(submit,false);}
  }
+ async function addJob(job){
+  if(!job||typeof job.id!=="string"||!job.id.trim()||job.id.startsWith("DEMO-")||
+     typeof job.title!=="string"||!job.title.trim())
+   throw Error("Dieses Inserat kann nicht in Dossiers übernommen werden.");
+  // Serialize rapid taps so the same job never creates two draft records.
+  const run=async()=>{
+   await initialRefresh;
+   if(!state.ready)throw Error("Dossierspeicher ist derzeit nicht verfügbar.");
+   const existing=state.dossiers.find(row=>row.jobId===job.id);
+   if(existing){
+    notice("Diese Stelle ist bereits in deiner Dossierübersicht vorhanden.");
+    return {added:false,dossierId:existing.id};
+   }
+   const now=new Date().toISOString();
+   const entry={
+    id:uniqueId(),ownerId:null,jobId:job.id,
+    title:job.title.trim().slice(0,250),
+    company:String(job.company||"").slice(0,250),
+    location:String(job.location||"").slice(0,250),
+    status:"draft",origin:"job-card",createdAt:now,updatedAt:now,
+    preferences:{tone:"klar",length:"standard",focus:""}
+   };
+   await put("dossiers",entry);
+   await refresh();
+   notice("Stelle in die Dossierübersicht übernommen. Du kannst das Dossier jetzt vorbereiten.");
+   // Intentionally no career-dossier-prepared event: saving a job is not
+   // evidence that an application document was prepared.
+   return {added:true,dossierId:entry.id};
+  };
+  const result=refreshPending.then(run,run);
+  refreshPending=result.catch(()=>{});
+  return result;
+ }
  function prepare(job){
   if(!state.ready){notice("Lokale Ablage wird noch initialisiert. Bitte nochmals versuchen.",true);return;}
   window.location.hash="#dossiers";
@@ -237,7 +275,7 @@
    $("dossierCompanyInput").value=job.company||"";
   }
  }
- window.CareerDossiers=Object.freeze({prepare});
+ window.CareerDossiers=Object.freeze({prepare,addJob,listJobIds:()=>state.dossiers.map(row=>row.jobId).filter(Boolean)});
  $("dossierCreate").addEventListener("click",()=>editDossier(null));
  $("dossierUpload").addEventListener("click",()=>chooseFiles());
  $("dossierLibraryUpload").addEventListener("click",()=>chooseFiles());
@@ -246,5 +284,10 @@
  $("dossierJobSelect").addEventListener("change",populateFromSelected);
  $("dossierForm").addEventListener("submit",submit);
  $("dossierCancel").addEventListener("click",()=>$("dossierDialog").close());
- refresh().catch(err=>notice("Lokale Dateiablage nicht verfügbar: "+err.message,true));
+ const initialRefresh=refresh().catch(err=>{
+  notice("Lokale Dateiablage nicht verfügbar: "+err.message,true);
+  // Avoid an unhandled rejection when the user never clicks a Dossier action.
+  // addJob checks state.ready and reports the failure to the caller.
+  return null;
+ });
 })();

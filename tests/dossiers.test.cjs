@@ -23,7 +23,9 @@ test("job popup can open a job-linked dossier preparation form",()=>{
  }
  assert.match(html,/window\.CareerDossierJobs=/);
  assert.match(html,/window\.CareerDossiers\?\.prepare\(/);
- assert.match(js,/window\.CareerDossiers=Object\.freeze\(\{prepare\}\)/);
+ assert.match(js,/window\.CareerDossiers=Object\.freeze\(\{prepare,addJob,listJobIds:/);
+ assert.match(js,/async function addJob\(job\)/);
+ assert.match(js,/career-dossier-jobs-changed/);
  assert.match(js,/jobId/);
  assert.match(js,/preferences:\{tone:/);
 });

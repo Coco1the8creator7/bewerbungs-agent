@@ -1,0 +1,54 @@
+/* The Geheimakte action only adds an entry to the existing Dossiers overview.
+   Do not restyle the approved job cards or change the rating affordance. */
+#newJobsList .card-header-actions{
+ display:flex;
+ align-items:flex-start;
+ justify-content:flex-end;
+ gap:8px;
+ flex:0 0 auto;
+}
+#newJobsList .card-secret-dossier{
+ display:inline-grid;
+ place-items:center;
+ flex:0 0 44px;
+ width:44px;
+ height:44px;
+ min-height:44px;
+ padding:0;
+ border-radius:10px;
+ border:1px solid var(--ca-accent-line,#e5d0dc);
+ background:var(--ca-accent-soft,#f9f0f4);
+ color:var(--ca-accent,#a24572);
+ box-shadow:none;
+ cursor:pointer;
+}
+#newJobsList .card-secret-dossier:hover:not(:disabled){
+ background:var(--ca-accent-line,#e5d0dc);
+ color:var(--ca-ink,#322a34);
+}
+#newJobsList .card-secret-dossier:focus-visible{
+ outline:2px solid var(--ca-accent,#a24572);
+ outline-offset:3px;
+}
+#newJobsList .card-secret-dossier:disabled{
+ cursor:not-allowed;
+ opacity:.45;
+}
+#newJobsList .card-secret-dossier svg{
+ display:block;
+ pointer-events:none;
+}
+#mode-startseite .job-dossier-transfer-notice{
+ margin:0 0 13px;
+ padding:11px 14px;
+ border:1px solid var(--ca-accent-line,#e5d0dc);
+ border-radius:10px;
+ background:var(--ca-paper-soft,#faf5f8);
+ color:var(--ca-ink,#322a34);
+ font-size:.83rem;
+}
+#mode-startseite .job-dossier-transfer-notice[hidden]{display:none!important}
+@media(max-width:650px){
+ #newJobsList .card-header-actions{gap:6px}
+ #newJobsList .card-secret-dossier{flex-basis:44px}
+}
