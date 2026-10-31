@@ -390,6 +390,7 @@ header .sub,.section-heading p{color:#6b5744}
 <link rel="stylesheet" href="./radar-designs.css?v=20261027-zen-magenta-1">
 <link rel="stylesheet" href="./landing-cleanup.css?v=20261027-cleanup-1">
 <link rel="stylesheet" href="./job-card-swipe.css?v=20261031-1">
+<link rel="stylesheet" href="./card-dossier-action.css?v=20261031-1">
 <link rel="stylesheet" href="./job-popup.css?v=20261029-popup-actions-1">
 </head>
 <body data-active-mode="startseite">
@@ -461,6 +462,7 @@ header .sub,.section-heading p{color:#6b5744}
 </section>
 <section class="section" aria-labelledby="newJobsTitle">
   <div class="section-heading"><h2 id="newJobsTitle">Meine Inserate</h2></div>
+  <p id="dossierTransferNotice" class="job-dossier-transfer-notice" role="status" aria-live="polite" hidden></p>
   <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Offen (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button><button type="button" id="viewDismissed" aria-pressed="false">Ausgeblendet (0)</button></div>
   <p class="job-swipe-hint">Auf dem Smartphone nach links oder rechts wischen: Nicht interessant</p>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
@@ -831,6 +833,7 @@ const activeStages=new Set(["review","saved","later","preparing","applied","inte
 const annotations=new Map();
 const relevanceRatings=new Map();
 const dismissedJobFeedback=new Map(); // Negative preference signal; never an invented 1–100 rating.
+const dossierLinkedJobIds=new Set(); // Derived from Dossiers IndexedDB; never duplicate persist.
 const selectedJobIds=new Set(); // Private Auswahl nur für einen späteren Export, kein Statuswechsel.
 const reasonOptions=[["field","Berufsfeld"],["distance","Arbeitsweg"],["seniority","Seniorität"],["tasks","Aufgaben"],["employer","Arbeitgeber"],["conditions","Arbeitsbedingungen"]];
 const reasonCodes=new Set(reasonOptions.map(([code])=>code));
@@ -1130,12 +1133,12 @@ function validateDismissals(records){
  }
  return result;
 }
-function dismissedLandingJobs(){return visibleJobs().filter(j=>dismissedJobFeedback.has(j.id));}
+function dismissedLandingJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&dismissedJobFeedback.has(j.id));}
 function ratingOf(id){return relevanceRatings.get(id)||null;}
 function hasReviewFeedback(id){const r=ratingOf(id);return !!r&&(Number.isInteger(r.score)||storedReasons(r).length>0||!!r.note?.trim()||Object.keys(r.aspects||{}).length>0||!!r.field_relation||!!r.seniority_assessment);}
 function visibleJobs(){return jobs.filter(j=>!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j));}
-function unratedJobs(){return visibleJobs().filter(j=>!dismissedJobFeedback.has(j.id)&&stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
-function reviewedJobs(){return visibleJobs().filter(j=>!dismissedJobFeedback.has(j.id)&&hasReviewFeedback(j.id));}
+function unratedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
+function reviewedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&hasReviewFeedback(j.id));}
 function normalizeReasons(value){
  const items=typeof value==="string"?(value?[value]:[]):value??[];
  if(!Array.isArray(items)||items.some(code=>typeof code!=="string"||!reasonCodes.has(code)))throw Error("Ungültige Bewertungsgründe.");
@@ -1348,6 +1351,46 @@ function syncDetailActions(j){
 }
 // Only the user's explicit 1–100 rating is displayed. Never show
 // the importer priority or estimated suitability as a personal rating.
+// The Geheimakte icon files the job directly in the local Dossier overview.
+// A successful IndexedDB transaction is required before leaving the landing.
+async function transferJobToDossiers(job,button){
+ if(button.disabled)return false;
+ button.disabled=true;
+ button.setAttribute("aria-busy","true");
+ const notice=el("dossierTransferNotice");
+ try{
+  if(typeof window.CareerDossiers?.addJob!=="function")
+   throw Error("Dossierbereich ist noch nicht bereit.");
+  const result=await window.CareerDossiers.addJob({
+   id:job.id,title:job.title,company:job.company,location:job.location
+  });
+  if(!result?.dossierId)throw Error("Dossier konnte nicht gespeichert werden.");
+  notice.hidden=true;
+  window.location.hash="#dossiers";
+  return true;
+ }catch(err){
+  notice.textContent="Übernahme fehlgeschlagen: "+(err?.message||"Speicherung nicht möglich.");
+  notice.hidden=false;
+  return false;
+ }finally{
+  button.disabled=false;
+  button.setAttribute("aria-busy","false");
+ }
+}
+function secretDossierButton(job){
+ const button=document.createElement("button");
+ button.type="button";
+ button.className="card-secret-dossier";
+ button.setAttribute("aria-label","Geheimakte: Stelle in die Dossierübersicht übernehmen: "+job.title);
+ button.title="In die Dossierübersicht übernehmen";
+ button.innerHTML='<svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5.5A2.5 2.5 0 0 1 5.5 3h4l2.3 2.5h6.7A2.5 2.5 0 0 1 21 8v9.5a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5V7z"/><rect x="10.5" y="12.5" width="7" height="5.2" rx="1.1"/><path d="M12.2 12.5v-1.2a1.8 1.8 0 0 1 3.6 0v1.2"/></svg>';
+ if(job.id.startsWith("DEMO-")){
+  button.disabled=true;
+  button.title="Für Demo-Inserate nicht verfügbar";
+  button.setAttribute("aria-label","Für Demo-Inserate nicht verfügbar");
+ }else button.addEventListener("click",()=>transferJobToDossiers(job,button));
+ return button;
+}
 function cardRatingButton(j){
  const score=ratingOf(j.id)?.score;
  const rated=Number.isInteger(score)&&score>=1&&score<=100;
@@ -1651,7 +1694,9 @@ function renderNewJobs(){
   });
   const top=document.createElement("div");top.className="card-top";
   const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),linkedTitle(j),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
-  top.append(info,cardRatingButton(j));card.append(top);
+  const cardActions=document.createElement("div");cardActions.className="card-header-actions";
+  cardActions.append(secretDossierButton(j),cardRatingButton(j));
+  top.append(info,cardActions);card.append(top);
   card.append(node("p",jobTaskPreview(j.description),"job-meta"));
   const tags=document.createElement("div");tags.className="tags";
   for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
@@ -2008,6 +2053,16 @@ window.addEventListener("scroll",updateFloatingSaveVisibility,{passive:true});
 window.addEventListener("resize",updateFloatingSaveVisibility);
 document.addEventListener("close",updateFloatingSaveVisibility,true);
 updateFloatingSaveVisibility();
+// Dossier membership comes from the existing local Dossiers database.
+// Refresh the landing when jobs are added, removed, or restored from that store.
+window.addEventListener("career-dossier-jobs-changed",event=>{
+ const ids=event.detail?.job_ids;
+ if(!Array.isArray(ids))return;
+ dossierLinkedJobIds.clear();
+ for(const id of ids)if(typeof id==="string"&&id)dossierLinkedJobIds.add(id);
+ renderNewJobs();
+ renderStats();
+});
 // Expose public job metadata only, never private reviews or notes.
 window.CareerDossierJobs=()=>jobs.map(j=>({id:j.id,title:j.title,company:j.company,location:j.location}));
 el("detailSaveMark").addEventListener("click",()=>{
@@ -2050,7 +2105,7 @@ initialize();
 <script src="./radar.js?v=20261027-zen-magenta-1"></script>
 <script src="./radar-interest-pictograms.js"></script>
 <script src="./radar-explorer-ui.js"></script>
-<script src="./dossiers.js?v=20261029-dossiers-local-1"></script>
+<script src="./dossiers.js?v=20261031-secret-file-1"></script>
 <script src="./mode-nav.js?v=20261027-agency-direct-1"></script>
 </body>
 </html>
