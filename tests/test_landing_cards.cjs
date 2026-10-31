@@ -37,13 +37,15 @@ for(const forbidden of ["exportMarkButton(j)","jobSalaryLabel(j)","Lohn-Range",
  assert.ok(!cards.includes(forbidden),"Removed card fragment still exists: "+forbidden);
 }
 assert.ok(!html.includes("function jobSalaryLabel(j)"),"unneeded salary card formatter removed");
-assert.match(html,/function detailExportMarkButton\(j\)/,"export selection remains possible in details");
-assert.match(html,/detailExportMarkHost"\)\.replaceChildren\(detailExportMarkButton\(j\)\)/);
+assert.match(html,/function syncDetailActions\(j\)/,"detail action bar remains available");
+assert.match(html,/id="detailExportMark"[^>]+aria-pressed="false"/);
+assert.match(html,/el\("detailExportMark"\)\.addEventListener\("click",\(\)=>\{/);
+assert.match(html,/toggleExportSelection\(j\.id\);\s*syncDetailActions\(j\);\s*renderNewJobs\(\);/);
 assert.match(html,/input\.addEventListener\("change",\(\)=>\{setRating\(j\.id,input\.value\);renderNewJobs\(\);/);
 
 // Execute the rating chip and export control in isolation with fake buttons.
 // The importer score must never be presented as a manual rating.
-const source=html.slice(html.indexOf("function detailExportMarkButton(j){"),html.indexOf("function ratingPanel(j){"));
+const source=html.slice(html.indexOf("function cardRatingButton(j){"),html.indexOf("function ratingPanel(j){"));
 assert.match(source,/ratingOf\(j\.id\)\?\.score/);
 assert.doesNotMatch(source,/selection\?\.|classify\(/);
 class Button{
@@ -65,7 +67,7 @@ const context={
  renderNewJobs(){renders++},
  updateMarkedSummary(){markedUpdates++}
 };
-const methods=vm.runInNewContext(source+"\n({cardRatingButton,detailExportMarkButton})",context);
+const methods=vm.runInNewContext(source+"\n({cardRatingButton})",context);
 let button=methods.cardRatingButton(job);
 assert.equal(button.textContent,"Bewerten","no user rating must be shown as missing");
 assert.ok(button.className.includes("unrated"));
@@ -86,17 +88,8 @@ assert.equal(methods.cardRatingButton(job).textContent,"Bewerten","invalid ratin
 userRating={score:100};
 assert.equal(methods.cardRatingButton(job).textContent,"100 / 100");
 
-const exportButton=methods.detailExportMarkButton(job);
-assert.equal(exportButton.textContent,"Für Export markieren");
-assert.equal(exportButton.attributes["aria-pressed"],"false");
-exportButton.click();
-assert.ok(selectedJobIds.has(job.id));
-assert.equal(exportButton.attributes["aria-pressed"],"true");
-assert.match(exportButton.textContent,/Für Export markiert/);
-assert.equal(renders,1,"card selection updates behind detail dialog");
-exportButton.click();
-assert.ok(!selectedJobIds.has(job.id));
-assert.equal(renders,2);
-assert.equal(saved,2);
-assert.equal(markedUpdates,0,"existing toggleExportSelection owns summary update");
+// The detail dialog owns the export icon; the card itself does not.
+assert.ok(html.includes('id="detailExportMark"'));
+assert.ok(!cards.includes("detailExportMark"));
+assert.ok(!cards.includes("exportMarkButton"));
 console.log("Landing card and top-right notification regression checks passed");
