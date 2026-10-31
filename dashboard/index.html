@@ -1696,6 +1696,7 @@ function loadJobs(rows,name,asDemo=false){
 }
 function loadDemo(){
  activityLog=activityLog.filter(item=>!item.job_id.startsWith("DEMO-"));
+ for(const id of [...dismissedJobFeedback.keys()])if(id.startsWith("DEMO-"))dismissedJobFeedback.delete(id);
  for(const id of [...manualOverrides.keys()])if(id.startsWith("DEMO-"))manualOverrides.delete(id);
  const isoAgo=d=>new Date(Date.now()-d*dayMs).toISOString();
  const job=(id,title,company,location,source,days)=>({
