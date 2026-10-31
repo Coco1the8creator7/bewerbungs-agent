@@ -4,6 +4,7 @@ const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const vm=require("node:vm");
 
+async function run(){
 const html=fs.readFileSync("dashboard/index.html","utf8");
 const dossier=fs.readFileSync("dashboard/dossiers.js","utf8");
 const css=fs.readFileSync("dashboard/card-dossier-action.css","utf8");
@@ -162,3 +163,5 @@ assert.equal(failedAction.disabled,false);
 assert.equal(notice.hidden,false);
 assert.match(notice.textContent,/IndexedDB ist gesperrt/);
 console.log("Dossier card transfer, duplicate, deletion and storage-error checks passed");
+}
+run().catch(err=>{console.error(err);process.exitCode=1;});
