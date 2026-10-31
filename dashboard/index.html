@@ -336,6 +336,45 @@ header .sub,.section-heading p{color:#6b5744}
  .floating-save-status{bottom:max(74px,calc(env(safe-area-inset-bottom) + 74px))}
 }
 
+
+/* Filter-KI: floating sync icon uses the existing GitHub save action. */
+#mode-radar #radarPanelReview .radar-sync-anchor{
+ position:sticky;top:12px;z-index:35;height:0;
+ display:flex;justify-content:flex-end;padding-right:17px;pointer-events:none;
+}
+#mode-radar #radarPanelReview .radar-sync-button{
+ position:relative;top:70px;pointer-events:auto;
+ width:46px;height:46px;padding:10px;display:inline-flex;align-items:center;justify-content:center;
+ border-radius:50%;background:var(--ca-paper,#fff);color:var(--ca-accent,#98506c);
+ border:1px solid var(--ca-line,#d9dbe1);box-shadow:0 5px 18px #262a3128;
+ transition:background .15s,border-color .15s,box-shadow .15s;
+}
+#mode-radar #radarPanelReview .radar-sync-button:hover:not(:disabled){
+ background:var(--ca-accent-soft,#f7edf0);border-color:var(--ca-accent,#98506c);
+ box-shadow:0 7px 20px #262a3130;
+}
+#mode-radar #radarPanelReview .radar-sync-button:disabled{opacity:.65;cursor:progress}
+#mode-radar #radarPanelReview .radar-sync-button svg{
+ width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round
+}
+#mode-radar #radarPanelReview .radar-sync-button.is-syncing svg{animation:radar-feedback-sync-spin 1s linear infinite}
+@keyframes radar-feedback-sync-spin{to{transform:rotate(360deg)}}
+#mode-radar #radarPanelReview .radar-sync-status{
+ position:absolute;right:71px;top:73px;max-width:min(310px,calc(100vw - 115px));
+ background:var(--ca-paper,#fff);color:var(--ca-ink,#34302f);
+ border:1px solid var(--ca-line,#d9dbe1);border-radius:9px;
+ box-shadow:0 5px 18px #262a3120;font-size:.75rem;line-height:1.35;padding:8px 11px;
+ pointer-events:none;overflow-wrap:anywhere;
+}
+#mode-radar #radarPanelReview .radar-sync-status.is-error{color:#9c334b}
+@media(max-width:650px){
+ #mode-radar #radarPanelReview .radar-sync-anchor{top:8px;padding-right:9px}
+ #mode-radar #radarPanelReview .radar-sync-button{top:58px;width:42px;height:42px}
+ #mode-radar #radarPanelReview .radar-sync-status{top:61px;right:60px}
+}
+@media(prefers-reduced-motion:reduce){
+ #mode-radar #radarPanelReview .radar-sync-button.is-syncing svg{animation:none}
+}
 </style>
 <link rel="stylesheet" href="./agency-world.css">
 <link rel="stylesheet" href="./light-earth.css">
@@ -597,6 +636,17 @@ header .sub,.section-heading p{color:#6b5744}
     </div>
   </div>
   <div class="radar-panel" role="tabpanel" id="radarPanelReview" data-panel="review" aria-labelledby="radarTabReview" hidden>
+    <div class="radar-sync-anchor">
+      <button type="button" id="radarSyncFeedback" class="radar-sync-button"
+        aria-label="Gesamtrelevanz-Bewertungen mit GitHub synchronisieren"
+        title="Gesamtrelevanz-Bewertungen (1–100) mit GitHub synchronisieren">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M20 11a8 8 0 0 0-14.7-4.3L4 8M4 4v4h4"/>
+          <path d="M4 13a8 8 0 0 0 14.7 4.3L20 16M16 16h4v4"/>
+        </svg>
+      </button>
+      <div id="radarSyncStatus" class="radar-sync-status" role="status" aria-live="polite" hidden></div>
+    </div>
     <section class="radar-surface" aria-labelledby="radarReviewTitle">
       <div class="radar-block-title"><div><span class="radar-kicker">DEINE ENTSCHEIDUNG / UNTERSTÜTZT</span><h3 id="radarReviewTitle">Stellen beurteilen</h3></div><span class="radar-small" id="radarReviewCount">0 reale Kandidaten</span></div>
       <p id="radarReviewIntro" class="radar-small">Bewerte freiwillig einzelne Kriterien von 1 bis 5. Leere Kriterien werden nicht mitgerechnet.</p>
@@ -1721,10 +1771,24 @@ function showFloatingSaveFeedback(message,isError=false){
  if(floatingSaveStatusTimeout!==null)clearTimeout(floatingSaveStatusTimeout);
  floatingSaveStatusTimeout=setTimeout(()=>{status.hidden=true;floatingSaveStatusTimeout=null;},6000);
 }
+let radarSyncStatusTimeout=null;
+function showRadarSyncStatus(message,isError=false){
+ const status=el("radarSyncStatus");
+ if(radarSyncStatusTimeout!==null)clearTimeout(radarSyncStatusTimeout);
+ status.textContent=message;
+ status.classList.toggle("is-error",isError);
+ status.hidden=false;
+ radarSyncStatusTimeout=setTimeout(()=>{status.hidden=true;radarSyncStatusTimeout=null;},6500);
+}
+el("radarSyncFeedback").addEventListener("click",()=>{
+ // Use the single existing GitHub write path, not a second synchronisation client.
+ if(!el("saveGithubFeedback").disabled)el("saveGithubFeedback").click();
+});
 el("floatingSaveGithubFeedback").addEventListener("click",()=>el("saveGithubFeedback").click());
 el("saveGithubFeedback").addEventListener("click",async()=>{
- const button=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback");
+ const button=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback"),radar=el("radarSyncFeedback");
  button.disabled=true;floating.disabled=true;floating.textContent="Speichert …";
+ radar.disabled=true;radar.classList.add("is-syncing");radar.setAttribute("aria-busy","true");
  try{
   if(demoMode)throw Error("Demo-Daten dürfen nicht ins Repository gespeichert werden.");
   if(!window.GithubFeedback.getToken())throw Error("Bitte zuerst den GitHub-Token unten unter Daten & Entwicklung hinterlegen.");
@@ -1734,12 +1798,16 @@ el("saveGithubFeedback").addEventListener("click",async()=>{
   renderMission();
   el("message").textContent="Bewertungen erfolgreich in GitHub gespeichert.";
   showFloatingSaveFeedback("Bewertungen gespeichert ✓");
+  if(!el("radarPanelReview").hidden)showRadarSyncStatus("Synchronisiert ✓");
  }catch(e){
   githubStatus("Nicht gespeichert: "+e.message);
   el("message").textContent="GitHub-Speicherung fehlgeschlagen: "+e.message;
   showFloatingSaveFeedback("Speichern fehlgeschlagen: "+e.message,true);
+  if(!el("radarPanelReview").hidden)showRadarSyncStatus("Synchronisation fehlgeschlagen: "+e.message,true);
+ }finally{
+  button.disabled=false;floating.disabled=false;floating.textContent="💾 Bewertungen speichern";
+  radar.disabled=false;radar.classList.remove("is-syncing");radar.removeAttribute("aria-busy");
  }
- finally{button.disabled=false;floating.disabled=false;floating.textContent="💾 Bewertungen speichern";}
 });
 el("exportMarkedJobs").addEventListener("click",()=>{
  const payload=buildMarkedJobsPayload();
