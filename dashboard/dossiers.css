@@ -75,3 +75,7 @@
  #mode-dossiers .dossier-toolbar input{width:100%}
  .dossier-dialog .dossier-dialog-grid{grid-template-columns:1fr}
 }
+
+/* Dossier Studio: entrypoint only; existing Dossiers cards and uploads stay intact. */
+#mode-dossiers .dossier-studio-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:10px;padding:10px 15px;font-size:.87rem;font-weight:700;white-space:nowrap;min-height:40px}
+#mode-dossiers .dossier-studio-link:focus-visible{outline:3px solid var(--ca-accent,#c8a87e);outline-offset:3px}
