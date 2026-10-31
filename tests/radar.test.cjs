@@ -191,3 +191,17 @@ test("screenshot decluttering keeps only actionable Radar overview content",()=>
  assert.match(css,/body\[data-active-mode="radar"\] \.career-header-notifications\{display:none!important\}/);
  assert.match(html,/id="notificationBell"/); // Still available on the Startseite.
 });
+
+
+test("Radar shows new precise scope reasons and retains the audit queue",()=>{
+ const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
+ const preselector=require("../dashboard/career-filter.js");
+ for(const code of ["electrical_trade","sanitary_trade","ventilation_trade",
+  "building_construction","general_construction_supervision","secondary_heating"]){
+  assert.match(radar,new RegExp(code),"Missing visible reason for "+code);
+ }
+ assert.match(radar,/mode==="filtered"\?!isVisible\(j\)/);
+ assert.match(radar,/adult&&mode==="filtered"\?true/);
+ assert.equal(preselector.classify({title:"Fachbauleiter Fernwärme"}).visible,true);
+ assert.equal(preselector.classify({title:"Bauleiter Fernwärme"}).visible,false);
+});
