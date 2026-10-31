@@ -238,3 +238,4 @@ require("./test_notifications.cjs");
 require("./test_landing_cards.cjs");
 require("./test_landing_cleanup.cjs");
 require("./test_job_card_swipe.cjs");
+require("./test_dossier_transfer.cjs");
