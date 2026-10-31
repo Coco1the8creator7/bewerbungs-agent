@@ -170,7 +170,13 @@
     healthcare_role:"Gesundheitsberuf",
     it_role:"klassischer IT-Beruf",
     healthcare_employer:"Gesundheitsbetrieb ohne nachgewiesenen Technikbezug",
-    out_of_scope_role:"fachfremde Tätigkeit"
+    out_of_scope_role:"fachfremde Tätigkeit",
+    electrical_trade:"Gewerk Elektro",
+    sanitary_trade:"Gewerk Sanitär",
+    ventilation_trade:"Gewerk Lüftung / HLK",
+    building_construction:"Hochbau / Fassaden / Ausbau",
+    general_construction_supervision:"Allgemeine Bauleitung (keine Fachbauleitung)",
+    secondary_heating:"Heizung: sekundärseitige Gebäudeanlagen"
    };
    info.append(make("p","ZURÜCKGESTELLT · "+(reasons[decision.reason]||"Berufsfeld ausserhalb der Vorauswahl"),"radar-prefilter-reason"));
   }

@@ -31,7 +31,7 @@
   // A hospital is not itself a reason for exclusion. Technical construction
   // and facility/infrastructure roles in hospitals must remain visible.
   const hospitalContext = /\b(?:\w*(?:spital|klinik)\w*|krankenhaus\w*|hospital\w*|hirslanden|usz|gesundheitszent(?:rum|ren)\w*|pflegeheim\w*|alterszentrum\w*)\b/;
-  const hospitalEngineering = /\b(?:bauleiter\w*|bauprojekt\w*|bauingenieur\w*|hochbau|tiefbau|baumanagement|bauentwicklungsplanung|bau[- ]?entwicklungsplanung|bauherrenvertret\w*|gebaeudetechnik|haustechnik|technisch\w* hauswart|hauswart\w*|facility\w*|hlk|hlks|tga|heizung\w*|lueftung\w*|kaelte\w*|energieversorgung\w*|energiekonzept\w*|energieberatung\w*|energieplanung\w*|energieprojekt\w*|betriebstechnik|betriebsingenieur\w*|versorgungstechnik|facility management|technisch\w* dienst|medizintechnik|medizin[- ]?technik)\b/;
+  const hospitalEngineering = /\b(?:fachbauleit\w*|bauleiter\w*|bauprojekt\w*|bauingenieur\w*|hochbau|tiefbau|baumanagement|bauentwicklungsplanung|bau[- ]?entwicklungsplanung|bauherrenvertret\w*|gebaeudetechnik|haustechnik|technisch\w* hauswart|hauswart\w*|facility\w*|hlk|hlks|tga|heizung\w*|lueftung\w*|kaelte\w*|fernwaerm\w*|waermenetz\w*|waermeverbund\w*|energieversorgung\w*|energiekonzept\w*|energieberatung\w*|energieplanung\w*|energieprojekt\w*|betriebstechnik|betriebsingenieur\w*|versorgungstechnik|facility management|technisch\w* dienst|medizintechnik|medizin[- ]?technik)\b/;
   const fold = v => String(v || "").toLocaleLowerCase("de").replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[\u0300-\u036f]/g,"").replace(/[\s_]+/g," ").trim();
   const matches = (patterns, title) => patterns.some(re => re.test(title));
   // V2: transparent and intentionally conservative. Learned *directions* from
@@ -45,6 +45,28 @@
     /\b(?:chauffeur\w*|lieferfahrer\w*|paketzusteller\w*|kassierer\w*|detailhandelsfach\w*|verkaufsmitarbeiter\w* detailhandel)\b/,
     /\b(?:cleanroom fabrication|quantum device|quantenphysik|quantencomput\w*|mikrofabrikation)\b/
   ];
+  // User-confirmed scope, 31.10.2026:
+  // A trade in the ROLE TITLE is enough to park it. Merely coordinating
+  // another trade in the description is not a role-level exclusion.
+  const excludedTrades = [
+    ["electrical_trade", /\b(?:elektro\w*|elektriker\w*|elektronik\w*|netzelektriker\w*|elektrisch\w* installat\w*)\b/],
+    ["sanitary_trade", /\b(?:\w*sanitaer\w*)\b/],
+    ["ventilation_trade", /\b(?:\w*lueft\w*|raumluft\w*|ventilation\w*|hlk\w*)\b/]
+  ];
+  // Architectural building construction is distinct from primary heat
+  // networks. Don't reject all 'Bauprojekt...' or 'Projektleiter Tiefbau':
+  // those titles may describe civil works for district heating.
+  const buildingConstruction = /\b(?:hochbau\w*|fassaden\w*|innenausbau\w*|ausbaugewerk\w*|wohnungsbau\w*|architektur\w*|architekt\w*|immobilienprojekt\w*|gebaeudeneubau\w*)\b/;
+  const fachBauleitung = /\bfach(?:[- ]?bauleit(?:er(?:in)?|ung|end\w*)\w*)\b/;
+  const ordinaryBauleitung = /\b(?:\w*bauleit(?:er(?:in)?|ung|end\w*)\w*)\b/;
+  // This is about PRIMARY distribution networks (Fernwärme/thermische Netze),
+  // NOT building-internal secondary heating systems. Heat generation and the
+  // handover station can be interfaces; do not guess a side from them alone.
+  const heatingRole = /\b(?:fernwaerm\w*|waermenetz\w*|waermeverbund\w*|thermisch\w* netz\w*|waermeversorgung\w*|waermetechnik\w*|heiz\w*|waermepump\w*|gebaeudetechnik\w*|hlk\w*)\b/;
+  const primaryTitle = /\b(?:primaer(?:seit\w*|netz\w*)?|fernwaerm\w*|fernkaelt\w*|waermenetz\w*|waermeverbund\w*|thermisch\w* netz\w*|netzausbau\w*|netztrasse\w*|trassenplan\w*)\b/;
+  const secondaryTitle = /\b(?:sekundaer(?:seit\w*|netz\w*)?|heizungsinstallat\w*|heizungsmonteur\w*|heizkoerper\w*|fussbodenheiz\w*|raumheiz\w*|gebaeudeheiz\w*|heizungsverteilung\w*)\b/;
+  const buildingHeatingTitle = /\bgebaeudetechnikplan\w*\b.*\bheiz\w*\b|\bheiz\w*\b.*\b(?:efh|mfh|wohngebaeude\w*|heizzentrale(?:n)? im gebaeude)\b/;
+  const secondaryDescription = /\b(?:heizkreis\w*|heizkoerper\w*|fussbodenheiz\w*|raumheiz\w*|heizungsverteilung\w*|gebaeudeintern\w* heiz\w*|heizungsinstallat\w* im gebaeude|sekundaerseit\w* heiz\w*|heiz\w* sekundaerseit\w*)\b/;
   const careerSignals = [
     ["thermal_networks", /\b(?:fernwaerm\w*|waermenetz\w*|thermisch\w* netz\w*|rohrleitungsbau|waermeversorgung\w*)\b/, 33],
     ["project_management", /\b(?:projektleit\w*|projektmanag\w*|projektkoordin\w*|fachbauleit\w*|bauleit\w*|bauherrenvertret\w*)\b/, 19],
@@ -60,12 +82,35 @@
     const title = fold(job && job.title);
     const company = fold(job && job.company);
     const description = fold(job && job.description);
-    if (!title) return {visible:true,reason:null,priority:40,reason_codes:[],version:"career-preselector-v2",exclusion:false};
+    const version="career-preselector-v2.1";
+    if (!title) return {visible:true,reason:null,priority:40,reason_codes:[],version,exclusion:false,heating_side:"not_applicable"};
     const innovation = matches(agentInnovation, title);
     const hospitalRole = hospitalContext.test(title + " " + company) && hospitalEngineering.test(title);
     const medicalEngineering = hospitalEngineering.test(title) && /\b(?:medizintechnik|medizin[- ]?technik)\b/.test(title);
+    const isHeatRelated = heatingRole.test(title);
+    const explicitlySecondary = isHeatRelated && secondaryTitle.test(title);
+    const clearlyBuildingHeating = isHeatRelated && buildingHeatingTitle.test(title);
+    const hasPrimaryTitle = isHeatRelated && primaryTitle.test(title);
+    // Text may mention an interface to secondary systems while the advertised
+    // role works on the primary network. Title controls role classification.
+    const secondaryFromTasks = isHeatRelated && !hasPrimaryTitle && secondaryDescription.test(description);
+    const heating_side = !isHeatRelated?"not_applicable":
+      explicitlySecondary||clearlyBuildingHeating||secondaryFromTasks?"secondary":
+      hasPrimaryTitle?"primary":"undetermined";
     let reason = null;
-    if (!innovation && !hospitalRole && !medicalEngineering) {
+    const trade=excludedTrades.find(([,pattern])=>pattern.test(title));
+    if(trade) reason=trade[0];
+    else if(buildingConstruction.test(title)) reason="building_construction";
+    else {
+      // 'Fachbauleiter:in' (including hyphenated variants) is deliberately
+      // retained, but 'Bauleiter:in' and generic Bauleitung are not.
+      const withoutFach=title.replace(/\bfach[- ]?bauleit\w*\b/g," ");
+      if(ordinaryBauleitung.test(withoutFach)) reason="general_construction_supervision";
+      else if(heating_side==="secondary") reason="secondary_heating";
+    }
+    // Existing exclusions stay in force, but the newly confirmed discipline
+    // exclusions OVERRIDE legacy hospital/AI exceptions.
+    if (!reason && !innovation && !hospitalRole && !medicalEngineering) {
       if (matches(clinical, title)) reason = "healthcare_role";
       else if (matches(classicalIT, title)) reason = "it_role";
       else if (hospitalContext.test(title + " " + company)) reason = "healthcare_employer";
@@ -80,13 +125,13 @@
     }
     priority += Math.min(12,descriptionBonus);
     if (advancedSeniority.test(title)) {priority -= 14;reason_codes.push("advanced_seniority");}
-    // Unknown or incomplete job descriptions stay reviewable.
+    if (isHeatRelated) reason_codes.push("heating_"+heating_side);
     priority = Math.max(1,Math.min(99,priority));
     if (reason) priority = Math.min(priority,19);
     if (innovation) reason_codes.push("agent_innovation_exception");
     if (hospitalRole) reason_codes.push("hospital_engineering_exception");
     if (medicalEngineering) reason_codes.push("medical_engineering_exception");
-    return {visible:!reason,reason,priority,reason_codes,version:"career-preselector-v2",exclusion:!!reason};
+    return {visible:!reason,reason,priority,reason_codes,version,exclusion:!!reason,heating_side};
   }
   const isVisible = job => classify(job).visible;
   const api = Object.freeze({classify,isVisible});

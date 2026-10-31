@@ -17,3 +17,18 @@ Alle importierten Stellen bleiben unter derselben ID in `dashboard/jobs.json`. I
 
 ## Nächste Validierung
 Eine repräsentative neue Stichprobe manuell beurteilen: Recall interessanter Stellen (>=60/100), Anteil irrtümlich zurückgestellter Stellen und Präzision unter den Top-20. Änderungen nur nach Gegenprüfung und Rückmeldung.
+
+## Präzisierung v2.1 – verbindliche Ausschlüsse vom 31.10.2026
+
+### Sichtbarkeit der Erwachsenenstellen
+- **Zurückstellen:** Rollen mit klarer Zuständigkeit im Gewerk **Elektro**, **Sanitär** oder **Lüftung**, auch bei expliziter Projektleitung und in gemischten Bereichen wie HLK/HLKS. Ein Gewerk wird im **Stellentitel** erkannt; eine beiläufige Erwähnung bei der Schnittstellenkoordination im Beschreibungstext ist kein Ausschlussgrund.
+- **Zurückstellen:** **Hochbau**, **Fassadenbau**, **Innenausbau** und vergleichbare eindeutig architektonische Hochbau-Rollen, einschliesslich Projektleitung. Projektleitung Tiefbau/Leitungsbau wird nicht pauschal ausgeschlossen.
+- **Zurückstellen:** Alle **allgemeinen Bauleiter-/Bauleitungsrollen** einschliesslich Oberbauleitung und bauleitender Funktionen. Nur ausdrücklich als **Fachbauleitung/Fachbauleiter** ausgeschriebene Stellen bestehen diesen konkreten Ausschlusscheck. Fachbauleitung anderer ausgeschlossener Gewerke oder Sekundär-Heizung bleibt dennoch zurückgestellt.
+- **Heizung:** Die Zielrichtung ist **Primärseite thermischer Netze**. Eindeutige sekundärseitige Gebäudeheizung, Heizungsinstallations- oder Heizungsverteilungsrollen werden zurückgestellt. Aus dem Titel oder expliziten Tätigkeiten wird eine Klassifikation `primary`, `secondary` oder `undetermined` abgeleitet; `undetermined` ist ausdrücklich **kein Ausschluss**.
+- **Primärseite:** Fernwärme-/Wärmenetzprojektierung, Wärmeverbund und Trassen-/Netzbau bleiben sichtbar, einschliesslich geeigneter Fachbauleitung. Eine in deren Beschreibung erwähnte Schnittstelle zu Sekundäranlagen allein verwandelt die primärseitige Rolle nicht in einen Heizungsjob auf der Sekundärseite.
+- Frühere Ausnahmen für Spitaltechnik oder KI-Agenteninnovation setzen **die hier bestätigten Gewerke-, Hochbau- oder Bauleitungs-Ausschlüsse nicht ausser Kraft**. Technische primärseitige Wärmeversorgung in Spitälern kann weiterhin passen.
+
+### Daten und Risiken
+Die Regel ist ausschliesslich ein **reversibler Anzeige-Filter** (`career-preselector-v2.1`). Weder Importer noch `dashboard/jobs.json`, IDs, Scores oder private Bewertungswerte werden verändert. Im Radar-Reiter **Filter-KI → Zurückgestellt** bleiben sämtliche zurückgestellten Inserate für die Kontrolle und Bewertung vorhanden; die Gründe werden dort textlich angezeigt.
+
+**Verbleibende Unsicherheit:** Wo Titel und Beschreibung keine verlässliche Zuordnung zur Primär- oder Sekundärseite erlauben, bleibt die Stelle sichtbar. Vollständige Stellenbeschreibungen und qualifizierte Aufgabenextraktion sind deshalb weiterhin eine wichtige Voraussetzung für eine höhere Filtertrefferquote. Die Zuordnung ist regelbasiert und kein überprüftes ML-Modell.
