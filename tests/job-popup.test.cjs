@@ -16,7 +16,7 @@ test("job popup displays exactly one personal relevance slider, no deep criterio
 });
 
 test("pictogram controls have unique IDs and accessible labels",()=>{
- for(const id of ["detailSaveMark","detailPrepareDossier","detailOpenAgency","detailExportMark"]){
+ for(const id of ["detailSaveMark","detailDossierMark","detailOpenAgency","detailExportMark"]){
   const matches=[...html.matchAll(new RegExp('id="'+id+'"','g'))];
   assert.equal(matches.length,1,"exactly one control "+id);
   assert.match(html,new RegExp('id="'+id+'"[^>]*aria-label="[^"]+"'));
@@ -32,7 +32,7 @@ test("bookmark uses CRM saved status without awarding preparation points",()=>{
  assert.match(html,/\["review","saved","later","preparing","applied"/);
 });
 
-test("Agency preparation is recorded only after successful dossier storage",()=>{
+test("Agency preparation is recorded only after successful draft generation",()=>{
  assert.match(dossierJS,/await put\("dossiers",entry\);/);
  assert.match(dossierJS,/new CustomEvent\("career-dossier-prepared"/);
  const put=dossierJS.indexOf('await put("dossiers",entry)');
@@ -40,6 +40,7 @@ test("Agency preparation is recorded only after successful dossier storage",()=>
  assert.ok(dispatched>put);
  assert.match(html,/window\.addEventListener\("career-dossier-prepared"/);
  assert.match(html,/setAnnotation\(id,"preparing",noteOf\(id\)\)/);
+ assert.match(html,/transferJobToDossiers\(j,el\("detailDossierMark"\)\)/);
 });
 
 test("inline app script remains valid JavaScript",()=>{
