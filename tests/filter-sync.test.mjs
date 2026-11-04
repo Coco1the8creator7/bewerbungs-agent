@@ -55,7 +55,7 @@ test("newer concurrent remote rating is never overwritten",async()=>{
  await assert.rejects(h.api.saveFilterRatings({relevance_ratings:{"JOB-1":{id:"JOB-1",score:12,updated_at:"2026-11-04T18:00:00Z"}}}),/Bewertungskonflikt/);
  assert.equal(h.data().relevance_ratings.find(x=>x.id==="JOB-1").score,90);
 });
-function controllerHarness(stored=null){
+function controllerHarness(stored=null,options={}){
  const handlers={},elements={},saved={value:stored},writes=[],rating={id:"JOB-1",score:72,updated_at:"2026-11-04T18:00:00Z"};
  let reply=async()=>({sha:"sha",unchanged:false}),interval;
  const get=id=>{
@@ -68,7 +68,7 @@ function controllerHarness(stored=null){
  const win={CareerFeedbackReady:true,CareerRadarReady:true,
   AgentStore:{loadFilterSync:async()=>saved.value,saveFilterSync:async x=>{saved.value=clone(x)}},
   AgentCareerFeedback:{getEntry:()=>clone(rating),restoreEntry:(_id,x)=>Object.assign(rating,x),getScore:()=>rating.score},
-  CareerRadarBridge:{getCareerRating:()=>null,restoreCareerRating:()=>{}},
+  CareerRadarBridge:{getCareerRating:()=>options.criteria||null,restoreCareerRating:()=>{}},
   GithubFeedback:{loadFilterRatings:async()=>null,saveFilterRatings:async batch=>{writes.push(clone(batch));return reply(batch)}},
   addEventListener:(type,fn)=>(handlers[type]??=[]).push(fn),
   dispatchEvent:e=>(handlers[e.type]||[]).forEach(fn=>fn(e))};
@@ -101,6 +101,15 @@ test("20-second interval automatically uploads only the changed rating",async()=
  assert.equal(h.win.CareerFilterSync.isConfirmed("JOB-1"),true);
  h.tick();await h.flush();
  assert.equal(h.writes.length,1);
+});
+test("criteria sync excludes private free-text notes",async()=>{
+ const h=controllerHarness(null,{criteria:{id:"JOB-1",scores:{tasks:4},note:"Do not publish",updated_at:"2026-11-04T18:00:00Z"}});
+ await h.flush();
+ h.win.dispatchEvent({type:"career-filter-rating-dirty",detail:{kind:"radar_career_ratings",job_id:"JOB-1"}});
+ await h.flush();await h.win.CareerFilterSync.sync();await h.flush();
+ assert.equal(h.writes.length,1);
+ assert.equal(h.writes[0].radar_career_ratings["JOB-1"].scores.tasks,4);
+ assert.equal(Object.hasOwn(h.writes[0].radar_career_ratings["JOB-1"],"note"),false);
 });
 test("network error retains draft, reloaded controller can retry",async()=>{
  const h=controllerHarness();await h.flush();h.rate(82);await h.flush();
