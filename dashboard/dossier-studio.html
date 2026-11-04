@@ -166,6 +166,7 @@
 <div class="modal-backdrop" id="reviewModal" role="presentation"><div class="modal review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle"><h2 id="reviewTitle">Entwurf prüfen</h2><p>Kontrolliere den aktuellen Entwurf vor dem Versand. Die Druckvorschau öffnet den Druckdialog deines Browsers; dort kannst du auch als PDF speichern.</p><ul class="review-list" id="reviewIssues"></ul><div class="modal-actions"><button type="button" id="closeReview" class="btn">Schliessen</button><button type="button" id="reviewPrint" class="btn primary">Druckvorschau öffnen</button></div></div></div><div class="modal-backdrop" id="slotModal" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">Eigene Vorlage speichern</h2><p>Du speicherst den aktuell bearbeiteten Text samt Design und Bausteinanordnung. Die Vorlage kann später als Arbeitskopie verwendet werden.</p><label for="slotName">Vorlagenname</label><input id="slotName" type="text" maxlength="45" autocomplete="off"><div class="modal-actions"><button type="button" id="cancelModal" class="btn">Abbrechen</button><button type="button" id="confirmModal" class="btn primary">Vorlage speichern</button></div></div></div>
 <script src="./dossier-documents.js?v=20261104-1"></script>
 <script src="./dossier-studio-modules.js?v=20261104-free-text-1"></script>
+<script src="./dossier-studio-zoom.js?v=20261104-zoom-1"></script>
 <script src="./dossier-cloud-sync.js?v=20261104-public-demo-1"></script>
 <script>
 (function(){
@@ -202,7 +203,8 @@ function defaultDocs(){return {cv:{type:"cv",data:{name:"Alex Muster",role:"Proj
 function initialState(){return {version:VERSION,activeDoc:"cv",enabled:{cv:true,letter:true,email:true},baseStyle:{theme:"modern",accent:DEFAULT_COLORS[0],font:"sans",fontScale:100,spacing:"normal"},docs:defaultDocs(),slots:[null,null,null],sources:{cv:null,letter:null}};}
 const dossierId=new URLSearchParams(location.search).get("dossier");
 let state=initialState(),database=null,persistTimer=0,toastTimer=0,modalSlot=null,ready=false,storageMode="unavailable";
-let previewZoom=100,selectedFreeBoxId=null,pinchStart=null,lastPaperTap=0;
+let selectedFreeBoxId=null;
+const zoomController=window.CareerStudioZoom.init(document);
 let activeDossier=null,personalWorkspace=initialState(),dossierDb=null,writeQueue=Promise.resolve();
 const cloudClient=window.CareerDossierCloud?.createClient();
 const DEMO_CONSENT_KEY="career-agency-public-demo-optin-v1/";
@@ -630,8 +632,30 @@ function sectionElem(section){if(section.id==="photo"){const host=e("section","d
 function cvContent(page,doc,style){const head=e("header","doc-top");head.append(editable("h2","doc-name","data:name",doc.data.name),editable("div","doc-role","data:role",doc.data.role),editable("div","doc-contact","data:contact",doc.data.contact),e("div","doc-divider"));page.append(head);const visible=doc.sections.filter(s=>s.visible);const wrap=e("div","cv-columns");if(style.theme==="structured"){const side=e("div","column-side"),main=e("div","column-main");for(const s of visible){(s.id==="skills"||s.id==="education"||s.id==="photo"?side:main).append(sectionElem(s))}wrap.append(side,main)}else for(const s of visible)wrap.append(sectionElem(s));page.append(wrap)}
 function letterContent(page,doc){const head=e("header","letter-head");head.append(editable("h2","doc-name","data:name",doc.data.name),editable("div","doc-contact","data:contact",doc.data.contact));page.append(head);page.append(editable("h3","letter-title","data:title",doc.data.title));page.append(editable("p","letter-greeting","data:greeting",doc.data.greeting));for(const s of doc.sections.filter(x=>x.visible)){const div=e("div","letter-paragraph");div.append(editable("div","", "section:"+s.id,s.text));page.append(div)}}
 function emailContent(doc){const card=e("div","email-preview");for(const [field,label] of [["recipient","An"],["subject","Betreff"]]){const row=e("div","email-row");row.append(e("label",null,label),editable("div","","data:"+field,doc.data[field]));card.append(row)}card.append(editable("div","email-body","data:body",doc.data.body));return card}
-function renderPreview(){const host=$("previewHost");host.replaceChildren();$("overflowWarning").classList.remove("show");const doc=currentDoc(),style=currentStyle();if(state.activeDoc==="email"){const email=emailContent(doc);email.style.setProperty("--doc-scale",String((style.fontScale||100)/100));email.style.fontFamily=FONT_FAMILIES[style.font]||FONT_FAMILIES.sans;host.append(email);return}const outer=e("div","page-container"),page=e("article","page doc-page");page.id="a4Page";page.dataset.theme=style.theme;page.classList.add(style.spacing);page.style.setProperty("--doc-accent",style.accent);page.style.setProperty("--doc-body",FONT_FAMILIES[style.font]||FONT_FAMILIES.sans);page.style.setProperty("--doc-scale",String((style.fontScale||100)/100));page.setAttribute("aria-label",LABELS[state.activeDoc]+" Druckvorschau");if(state.activeDoc==="cv")cvContent(page,doc,style);else letterContent(page,doc);outer.append(page);host.append(outer);requestAnimationFrame(checkOverflow)}
-function checkOverflow(){const page=$("a4Page");if(!page)return;const exceeded=page.scrollHeight>page.clientHeight+2;$("overflowWarning").classList.toggle("show",exceeded)}
+function renderPreview(){
+ const host=$("previewHost");host.replaceChildren();
+ $("overflowWarning").classList.remove("show");
+ const doc=currentDoc(),style=currentStyle();
+ if(state.activeDoc==="email"){
+  const email=emailContent(doc);
+  email.id="emailPage";
+  email.style.setProperty("--doc-scale",String((style.fontScale||100)/100));
+  email.style.fontFamily=FONT_FAMILIES[style.font]||FONT_FAMILIES.sans;
+  host.append(email);
+  requestAnimationFrame(zoomController.refresh);return;
+ }
+ const outer=e("div","page-container"),page=e("article","page doc-page");
+ page.id="a4Page";page.dataset.theme=style.theme;page.classList.add(style.spacing);
+ page.style.setProperty("--doc-accent",style.accent);
+ page.style.setProperty("--doc-body",FONT_FAMILIES[style.font]||FONT_FAMILIES.sans);
+ page.style.setProperty("--doc-scale",String((style.fontScale||100)/100));
+ page.setAttribute("aria-label",LABELS[state.activeDoc]+" A4-Druckvorschau");
+ if(state.activeDoc==="cv")cvContent(page,doc,style);else letterContent(page,doc);
+ renderFreeTextOverlay(page);
+ outer.append(page);host.append(outer);
+ requestAnimationFrame(()=>{zoomController.refresh();checkOverflow()});
+}
+function checkOverflow(){const page=$("a4Page");if(!page)return;const exceeded=page.scrollHeight>page.clientHeight+2||[...page.querySelectorAll(".free-text-box")].some(box=>box.offsetTop+box.offsetHeight>page.clientHeight+2||box.offsetLeft+box.offsetWidth>page.clientWidth+2);$("overflowWarning").classList.toggle("show",exceeded)}
 function renderAll(){renderSettings();renderBlocks();renderFreeTextList();renderSlots();renderTabs();renderPreview()}
 async function importPhoto(file){if(!file)return;if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>10*1024*1024||!file.size){flash("Bitte ein JPG-, PNG- oder WebP-Foto bis 10 MB wählen.");return}const url=URL.createObjectURL(file);try{const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error("Bilddatei konnte nicht geladen werden"));img.src=url});const factor=Math.min(1,640/Math.max(img.naturalWidth,img.naturalHeight));const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.naturalWidth*factor));canvas.height=Math.max(1,Math.round(img.naturalHeight*factor));const ctx=canvas.getContext("2d");if(!ctx)throw Error("Bildverarbeitung nicht verfügbar");ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);let value=canvas.toDataURL("image/jpeg",.84);if(value.length>1500000)value=canvas.toDataURL("image/jpeg",.65);if(value.length>1500000)throw Error("Foto zu gross");state.docs.cv.data.photoData=value;const block=state.docs.cv.sections.find(s=>s.id==="photo");if(block)block.visible=true;renderBlocks();renderPreview();scheduleSave();flash("Bewerbungsfoto eingefügt – lokal gespeichert.")}catch(err){flash("Foto konnte nicht verarbeitet werden: "+err.message)}finally{URL.revokeObjectURL(url)}}
  function reviewFindings(){
@@ -680,6 +704,12 @@ window.addEventListener("online",()=>{if(cloudDirty)syncCloud()});
 window.addEventListener("focus",()=>{if(cloudDirty)syncCloud()});
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&cloudDirty)syncCloud()});
 window.addEventListener("beforeunload",ev=>{if(cloudClient?.status().connected&&cloudDirty){ev.preventDefault();ev.returnValue=""}});
+$("addFreeText").addEventListener("click",addFreeBox);
+$("toggleStudioTools").addEventListener("click",()=>{
+ const collapsed=$("workspace").classList.toggle("tools-collapsed");
+ $("toggleStudioTools").setAttribute("aria-expanded",String(!collapsed));
+ requestAnimationFrame(()=>{zoomController.refresh();checkOverflow()});
+});
 $("blockCatalog").addEventListener("change",()=>{$("customBlockName").hidden=$("blockCatalog").value!=="__custom__";});
 $("addBlock").addEventListener("click",addCatalogBlock);
 $("studioModeLabel").addEventListener("click",showReview);
@@ -694,7 +724,7 @@ $("reviewPrint").addEventListener("click",async()=>{
  }catch(err){flash("Druckvorschau wurde nicht geöffnet: Lokale Speicherung fehlgeschlagen – "+err.message)}
 });
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&$("reviewModal").classList.contains("show"))closeReview()});
-$("individualDesign").addEventListener("change",ev=>{currentDoc().individualStyle=ev.target.checked?clone(state.baseStyle):null;renderSettings();renderPreview();scheduleSave()});$("fontChoice").addEventListener("change",ev=>editStyle("font",ev.target.value));$("fontScale").addEventListener("input",ev=>editStyle("fontScale",Number(ev.target.value)));$("uploadPhoto").addEventListener("click",()=>$("photoInput").click());$("photoInput").addEventListener("change",ev=>{importPhoto(ev.target.files?.[0]);ev.target.value=""});$("removePhoto").addEventListener("click",()=>{if(!state.docs.cv.data.photoData)return;if(!confirm("Bewerbungsfoto aus diesem CV entfernen?"))return;state.docs.cv.data.photoData="";const block=state.docs.cv.sections.find(s=>s.id==="photo");if(block)block.visible=false;renderBlocks();renderPreview();scheduleSave()});$("resetDraft").addEventListener("click",resetDraft);$("cancelModal").addEventListener("click",closeSlotModal);$("confirmModal").addEventListener("click",saveSlot);$("slotName").addEventListener("keydown",ev=>{if(ev.key==="Enter")saveSlot();else if(ev.key==="Escape")closeSlotModal()});$("slotModal").addEventListener("click",ev=>{if(ev.target===$("slotModal"))closeSlotModal()});window.addEventListener("resize",()=>requestAnimationFrame(checkOverflow));
+$("individualDesign").addEventListener("change",ev=>{currentDoc().individualStyle=ev.target.checked?clone(state.baseStyle):null;renderSettings();renderPreview();scheduleSave()});$("fontChoice").addEventListener("change",ev=>editStyle("font",ev.target.value));$("fontScale").addEventListener("input",ev=>editStyle("fontScale",Number(ev.target.value)));$("uploadPhoto").addEventListener("click",()=>$("photoInput").click());$("photoInput").addEventListener("change",ev=>{importPhoto(ev.target.files?.[0]);ev.target.value=""});$("removePhoto").addEventListener("click",()=>{if(!state.docs.cv.data.photoData)return;if(!confirm("Bewerbungsfoto aus diesem CV entfernen?"))return;state.docs.cv.data.photoData="";const block=state.docs.cv.sections.find(s=>s.id==="photo");if(block)block.visible=true;renderBlocks();renderPreview();scheduleSave()});$("resetDraft").addEventListener("click",resetDraft);$("cancelModal").addEventListener("click",closeSlotModal);$("confirmModal").addEventListener("click",saveSlot);$("slotName").addEventListener("keydown",ev=>{if(ev.key==="Enter")saveSlot();else if(ev.key==="Escape")closeSlotModal()});$("slotModal").addEventListener("click",ev=>{if(ev.target===$("slotModal"))closeSlotModal()});window.addEventListener("resize",()=>requestAnimationFrame(()=>{zoomController.refresh();checkOverflow()}));
 $("studioDownload").addEventListener("click",async()=>{
  if(!activeDossier)return;
  const b=$("studioDownload");b.disabled=true;
