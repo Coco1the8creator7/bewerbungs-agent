@@ -5,7 +5,7 @@
 (function(root){
 "use strict";
 const LABELS={cv:"Lebenslauf",letter:"Motivationsschreiben",email:"Bewerbungsmail"};
-const BASE_STYLE={theme:"modern",accent:"#955d72",font:"sans",fontScale:100,spacing:"normal"};
+const BASE_STYLE={theme:"modern",accent:"#95516E",font:"sans",fontScale:100,spacing:"normal"};
 function clean(value,max=250){return String(value??"").trim().slice(0,max);}
 function section(id,label,text){return {id,label,text,visible:true};}
 function createDraft(job){
@@ -18,12 +18,12 @@ function createDraft(job){
   docs:{
    cv:{type:"cv",data:{name:"[Vorname Nachname]",role:title,contact:"[Adresse · E-Mail · Telefon]",photoData:""},
     sections:[
-     {id:"photo",label:"Bewerbungsfoto",text:"",visible:false},
+     {id:"photo",label:"Bewerbungsfoto",text:"",visible:true},
      section("profile","Kurzprofil","[Beschreibe kurz deine tatsächlichen Stärken und deinen Bezug zur Stelle.]"),
      section("experience","Berufserfahrung","[Berufserfahrung mit Zeitraum, Funktion und Aufgaben ergänzen.]"),
      section("education","Ausbildung","[Ausbildung und Abschlüsse mit Daten ergänzen.]"),
      section("skills","Fähigkeiten","[Nachweisbare Fähigkeiten ergänzen.]")
-    ],individualStyle:null},
+    ],freeBoxes:[],individualStyle:null},
    letter:{type:"letter",data:{name:"[Vorname Nachname]",contact:"[Adresse · E-Mail · Telefon]",
      title:"Bewerbung als "+title,greeting:"Guten Tag"},
     sections:[
@@ -31,7 +31,7 @@ function createDraft(job){
      section("motivation","Motivation","[Erkläre, warum dich genau diese Stelle und dieses Unternehmen interessieren.]"),
      section("strengths","Stärken","[Nenne passende Erfahrungen und Stärken anhand deiner tatsächlichen Kenntnisse.]"),
      section("closing","Abschluss","Über die Einladung zu einem Gespräch freue ich mich.\n\nFreundliche Grüsse\n[Vorname Nachname]")
-    ],individualStyle:null},
+    ],freeBoxes:[],individualStyle:null},
    email:{type:"email",data:{recipient:"[E-Mail-Adresse des Unternehmens]",
      subject:"Bewerbung als "+title,
      body:"Guten Tag\n\nIm Anhang sende ich Ihnen meine Bewerbung für die Stelle als "+title+" bei "+company+". Ich freue mich über eine Rückmeldung.\n\nFreundliche Grüsse\n[Vorname Nachname]"},
@@ -54,6 +54,14 @@ function linesFor(state,type){
  }else{
   add("An: "+d.data.recipient,"normal");add("Betreff: "+d.data.subject,"heading");
   result.push({text:"",kind:"normal"});add(d.data.body,"normal");
+ }
+ if(type==="cv"||type==="letter"){
+  // Simplified ZIP PDF includes free field text, but not exact field coordinates.
+  const boxes=Array.isArray(d.freeBoxes)?d.freeBoxes.filter(box=>box&&typeof box.text==="string"&&box.text.trim()):[];
+  if(boxes.length){
+   result.push({text:"",kind:"normal"});add("Weitere Textfelder","heading");
+   for(const box of boxes){add(box.text,"normal");result.push({text:"",kind:"normal"});}
+  }
  }
  return result;
 }
