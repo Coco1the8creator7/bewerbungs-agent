@@ -46,7 +46,7 @@
  }
  function durable(){
   const snapshot={version:1,pending:structuredClone(pending),confirmed:[...confirmed]};
-  writing=writing.catch(()=>{}).then(()=>window.AgentStore.saveFilterSync(snapshot));
+  writing=writing.catch(()=>{}).then(async()=>{await window.AgentStore.saveFilterSync(snapshot);storageError="";});
   writing.catch(err=>{storageError="Lokale Sicherung fehlgeschlagen: "+err.message;show();});
   return writing;
  }
