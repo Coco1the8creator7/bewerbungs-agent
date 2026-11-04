@@ -118,7 +118,8 @@
     const scores={};
     for(const c of groups)if(Number.isInteger(item.scores?.[c.id])&&item.scores[c.id]>=1&&item.scores[c.id]<=5)scores[c.id]=item.scores[c.id];
     const note=typeof item.note==="string"?item.note.slice(0,400):"";
-    if(Object.keys(scores).length||note)ratings[id]={scores,note};
+    if(Object.keys(scores).length||note)ratings[id]={scores,note,
+     updated_at:typeof item.updated_at==="string"&&Number.isFinite(Date.parse(item.updated_at))?item.updated_at:null};
    }
   return ratings;
  }
