@@ -135,6 +135,78 @@
 .cloud-destination strong{font-size:11px;color:var(--ink)}
 .cloud-dialog label.cloud-consent{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:9px;border:1px solid var(--border);font-weight:600;line-height:1.5;font-size:12px;cursor:pointer}
 .cloud-consent input{width:auto;flex-shrink:0;accent-color:var(--magenta);margin-top:3px}
+
+/* Dossier Studio: editable free-positioned A4 text components and viewer zoom */
+.free-add{width:100%;min-height:36px;border-radius:8px;margin:3px 0 10px;font-size:12px}
+.free-text-list{display:grid;gap:8px}
+.free-list-item{border:1px solid var(--border);border-radius:9px;background:var(--panel);padding:9px;display:grid;gap:8px}
+.free-list-item.is-selected{border-color:var(--magenta);background:var(--magenta-soft)}
+.free-list-head{display:flex;align-items:center;gap:5px}
+.free-list-select{font-size:11px;font-weight:750;color:var(--ink);background:transparent;border:0;padding:5px;text-align:left;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.free-list-action{flex-shrink:0;width:27px;height:27px;border:1px solid var(--border);background:white;color:var(--muted);border-radius:6px;font-size:17px}
+.free-field-text{display:block;resize:vertical;width:100%;min-height:55px;padding:8px;font-size:11px;color:var(--ink);border:1px solid var(--border);border-radius:7px;background:white;line-height:1.5}
+.free-field-options{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.free-field-options label{display:grid;gap:5px;font-size:10px;font-weight:700;color:var(--muted)}
+.free-field-options .select{min-height:32px;font-size:11px;padding:5px}
+.page-container{touch-action:pan-x pan-y}
+.free-text-box{position:absolute;min-height:1.8em;z-index:2;padding:2px;border:1px dashed transparent;border-radius:3px;font-size:calc(1.75cqw * var(--doc-scale,1) * var(--free-font-scale,1));line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;background:transparent}
+.free-text-box:hover{border-color:#BFC5CD}
+.free-text-box.is-selected,.free-text-box:focus-within{outline:1px dashed var(--magenta);outline-offset:2px;background:#fffafc9c}
+.free-text-edit{display:block;min-height:1.4em;outline:0!important;white-space:pre-wrap;overflow-wrap:anywhere;cursor:text}
+.free-text-edit:empty:before{content:"Text eingeben …";opacity:.48;font-style:italic;pointer-events:none}
+.free-text-drag,.free-text-resize{position:absolute;z-index:3;display:grid;place-items:center;width:25px;height:25px;padding:0;border:1px solid #D6C6D0;border-radius:7px;background:#fff;color:var(--magenta);font-size:15px;line-height:1;box-shadow:0 2px 6px #262A3112;touch-action:none;user-select:none;-webkit-user-select:none}
+.free-text-drag{top:-24px;left:0;cursor:grab}
+.free-text-drag:active{cursor:grabbing}
+.free-text-resize{bottom:-16px;right:-11px;cursor:ew-resize}
+.free-text-box:not(:hover):not(.is-selected):not(:focus-within) .free-text-drag,
+.free-text-box:not(:hover):not(.is-selected):not(:focus-within) .free-text-resize{opacity:.18}
+.free-text-drag:focus-visible,.free-text-resize:focus-visible{opacity:1!important}
+.zoom-controls{display:flex;align-items:center;gap:0;border:1px solid var(--border);border-radius:9px;background:#fff;overflow:hidden}
+.zoom-controls button{height:32px;min-width:30px;background:#fff;color:var(--ink);border:0;font-size:15px;font-weight:700;padding:4px}
+.zoom-controls #zoomReset{min-width:54px;font-size:10px;color:var(--magenta);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+.zoom-controls output{font-variant-numeric:tabular-nums}
+.tool-toggle{display:flex;align-items:center;gap:6px;padding:7px 9px;white-space:nowrap}
+.workspace.tools-collapsed{grid-template-columns:minmax(0,1fr)!important}
+.workspace.tools-collapsed .controls{display:none!important}
+.preview-scroll{overflow:auto;overscroll-behavior:contain}
+#previewHost{min-width:0}
+@media (orientation:landscape) and (max-height:600px){
+ .topbar{height:50px!important;min-width:0!important;padding:0 9px!important;gap:5px}
+ .topbar .brand-name,.topbar .crumb,.topbar .saved{display:none!important}
+ .brand-mark{width:29px;height:29px;border-radius:8px}
+ .studio-name{font-size:12px;max-width:28vw;overflow:hidden;text-overflow:ellipsis}
+ .top-right{gap:5px}.topbar .pill{display:none!important}
+ .workspace{height:calc(100dvh - 50px)!important;min-height:0!important;min-width:0!important;grid-template-columns:minmax(182px,29vw) minmax(0,1fr)!important}
+ .workspace.tools-collapsed{grid-template-columns:minmax(0,1fr)!important}
+ .controls{height:auto!important;overflow-y:auto}
+ .controls-intro{padding:11px 13px}.controls-intro h1{font-size:15px}.controls-intro .quiet{display:none}
+ .tool-section{padding:0 8px}.section-content{padding:0 4px 12px}
+ .tool-section summary{padding:10px 4px;font-size:11px}
+ .preview-area{height:100%!important;min-width:0!important}
+ .preview-head{padding:6px 8px;gap:4px;align-items:center}
+ .preview-left .preview-overline,.preview-count,.mock-tag{display:none!important}
+ .preview-title{font-size:12px}
+ .preview-controls{gap:4px}
+ .preview-controls .toolbar-button{padding:6px 7px;font-size:10px}
+ .tool-toggle span{display:none}
+ .doc-tabs{padding:3px 8px 0;gap:3px}
+ .doc-tab{padding:6px 9px;font-size:10px}
+ .preview-scroll{padding:9px 8px 16px!important}
+ .zoom-controls button{height:27px;min-width:25px;font-size:12px}
+ .zoom-controls #zoomReset{min-width:46px;font-size:9px}
+}
+@media(max-width:550px) and (orientation:landscape){
+ .workspace{grid-template-columns:minmax(164px,33vw) minmax(0,1fr)!important}
+ .preview-head{display:block}.preview-controls{justify-content:flex-start;margin-top:4px}
+}
+@media print{
+ .page-container,.email-preview{zoom:1!important}
+ .free-text-box{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;padding:2px!important;break-inside:avoid}
+ .free-text-box .free-text-drag,.free-text-box .free-text-resize{display:none!important}
+ .free-text-edit{outline:0!important;background:transparent!important}
+ .free-text-edit:empty:before{content:none!important}
+ .page-container{touch-action:auto!important}
+}
 </style>
 </head>
 <body>
