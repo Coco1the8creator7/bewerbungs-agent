@@ -894,10 +894,13 @@ function reflowFrameExclusions(){
   for(const exclusion of obstacles){
    const spacer=e("span","flow-exclusion");spacer.contentEditable="false";spacer.setAttribute("aria-hidden","true");
    spacer.style.cssFloat=exclusion.side;
+   // A margin-top float would incorrectly narrow lines ABOVE the obstacle.
+   // A polygonal CSS exclusion delays wrapping until the obstacle's actual Y.
+   const localTop=Math.max(0,exclusion.y*ratio),localHeight=Math.max(1,exclusion.height*ratio);
    spacer.style.width=Math.max(0,exclusion.width*ratio)+"px";
-   spacer.style.height=Math.max(1,exclusion.height*ratio)+"px";
-   spacer.style.marginTop=Math.max(0,exclusion.y*ratio)+"px";
-   spacer.style.shapeOutside="margin-box";
+   spacer.style.height=(localTop+localHeight)+"px";
+   spacer.style.marginTop="0";
+   spacer.style.shapeOutside="polygon(0 "+localTop+"px,100% "+localTop+"px,100% 100%,0 100%)";
    flow.insertBefore(spacer,flow.querySelector(".frame-edit"));
   }
  }
