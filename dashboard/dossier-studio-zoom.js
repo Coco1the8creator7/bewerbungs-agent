@@ -49,8 +49,8 @@
   host.addEventListener("click",event=>{
    const page=event.target.closest?.("#a4Page");
    if(!page||event.detail>1||event.target.closest("button,[contenteditable],input,select,textarea,.free-text-box"))return;
-   if(event.target===page||event.target.matches(".cv-columns,.column-main,.column-side"))
-    set(step(zoom,1),event);
+   // Any non-editable paper area can zoom; text fields remain usable for editing.
+   set(step(zoom,1),event);
   });
   host.addEventListener("dblclick",event=>{
    if(!event.target.closest?.("#a4Page")||event.target.closest("button,[contenteditable],.free-text-drag,.free-text-resize"))return;
