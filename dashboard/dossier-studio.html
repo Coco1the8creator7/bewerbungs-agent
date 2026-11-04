@@ -213,7 +213,7 @@
 .layered-page>.layer-frame{position:absolute;min-height:1.7em;z-index:2;background:transparent;border:1px dashed transparent;padding:1px 2px;overflow:visible;box-sizing:border-box;overflow-wrap:anywhere;white-space:pre-wrap}
 .layered-page>.layer-frame:hover{border-color:#BFC5CD}
 .layered-page>.layer-frame.is-selected,.layered-page>.layer-frame:focus-within{outline:1px dashed var(--magenta);outline-offset:2px;background:#FFF9FCCC}
-.layer-frame .frame-flow{display:flow-root;white-space:pre-wrap;overflow-wrap:anywhere;min-height:1.3em;line-height:1.5}
+.layer-frame .frame-flow{display:block;white-space:pre-wrap;overflow-wrap:anywhere;min-height:1.3em;line-height:1.5}
 .layer-frame .frame-edit{display:inline;min-height:1.3em;white-space:pre-wrap;overflow-wrap:anywhere;outline:0!important;cursor:text}
 .layer-frame .frame-edit:empty:before{content:"Text eingeben …";opacity:.45;font-style:italic;pointer-events:none}
 .layer-frame .frame-heading{color:var(--doc-accent);font-size:1em;line-height:1.3;text-transform:uppercase;letter-spacing:.05em;font-weight:760;margin:0 0 .35em}
@@ -903,7 +903,7 @@ function reflowFrameExclusions(){
   if(target.source==="section:photo")continue;
   const node=nodes.get(target.id);if(!node)continue;
   const flow=node.querySelector(".frame-flow");if(!flow)continue;
-  const fr=flow.getBoundingClientRect(),tr=MODULES.rectangle(fr.left,fr.top,fr.width,Math.max(0,bounds.bottom-fr.top));
+  const fr=flow.getBoundingClientRect(),tr=MODULES.rectangle(fr.left,fr.top,fr.width,Math.max(0,Math.min(fr.height+5,bounds.bottom-fr.top)));
   const obstacles=[];
   for(const blocker of ordered){
    if(blocker.id===target.id||(blocker.z||0)<=(target.z||0)||blocker.wrap==="front"||blocker.wrap==="behind")continue;
