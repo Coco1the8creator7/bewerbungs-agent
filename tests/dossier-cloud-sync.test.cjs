@@ -3,125 +3,121 @@ const test=require("node:test");
 const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const cloud=require("../dashboard/dossier-cloud-sync.js");
-const html=fs.readFileSync("dashboard/dossier-studio.html","utf8");
+const studio=fs.readFileSync("dashboard/dossier-studio.html","utf8");
 const SRC="Coco1the8creator7/bewerbungs-agent";
-const draft={docs:{cv:{type:"cv",data:{name:"Test"}},letter:{type:"letter"},email:{type:"email"}},activeDoc:"cv",enabled:{cv:true,letter:true,email:true}};
+const PREFIX="demo-dossiers/v1/test-123/";
+const draft={docs:{cv:{type:"cv",data:{name:"Alex Muster"}},letter:{type:"letter"},email:{type:"email"}},activeDoc:"cv",enabled:{cv:true,letter:true,email:true}};
 const zip=Uint8Array.from([80,75,3,4,1,2,3,4]);
-
-function server(){
- const files=new Map();let counter=0,writes=0,privateVisibility=true;
- async function request(url,options){
+function fixture(){
+ const files=new Map(),requests=[];let next=0,writes=0,visibility="public",online=true;
+ const respond=(status,body)=>({status,ok:status>=200&&status<300,json:async()=>body});
+ async function request(url,options={}){
+  requests.push({url,method:options.method||"GET"});
+  if(!online)throw Error("Disconnected");
   const path=url.replace("https://api.github.com/repos/","").split("?")[0];
-  const method=options?.method||"GET";
-  const response=(status,value)=>({ok:status>=200&&status<300,status,json:async()=>value});
-  if(path==="tester/private")return response(200,{private:privateVisibility,visibility:privateVisibility?"private":"public",default_branch:"main"});
-  if(path==="tester/public")return response(200,{private:false,visibility:"public",default_branch:"main"});
-  if(!path.startsWith("tester/private/contents/"))return response(404,{message:"Not found"});
-  const key=path.slice("tester/private/contents/".length);
-  if(method==="GET")return files.has(key)?response(200,files.get(key)):response(404,{message:"Not found"});
-  if(method==="PUT"){
-   assert.match(options.headers.Authorization,/^Bearer token$/);
-   const body=JSON.parse(options.body),prior=files.get(key);
-   if((prior?.sha||null)!==(body.sha||null))return response(409,{message:"Concurrent write"});
-   const sha="rev-"+(++counter);
-   files.set(key,{sha,content:body.content});
+  if(path===SRC)return respond(200,{full_name:SRC,private:visibility==="private",visibility,default_branch:"main"});
+  if(!path.startsWith(SRC+"/contents/"))return respond(404,{message:"Unknown repository"});
+  const name=decodeURIComponent(path.slice((SRC+"/contents/").length));
+  if(!name.startsWith(PREFIX))return respond(400,{message:"Outside demo folder"});
+  if((options.method||"GET")==="GET")return files.has(name)?respond(200,files.get(name)):respond(404,{message:"Not found"});
+  if(options.method==="PUT"){
+   assert.match(options.headers.Authorization,/^Bearer demo-token$/);
+   const body=JSON.parse(options.body),old=files.get(name);
+   if((body.sha||null)!==(old?.sha||null))return respond(409,{message:"Conflict"});
+   const sha="rev-"+(++next);
+   files.set(name,{sha,content:body.content});
    writes++;
-   return response(201,{content:{sha}});
+   return respond(201,{content:{sha}});
   }
-  return response(405,{message:"Unsupported"});
+  return respond(405,{message:"Unsupported"});
  }
- return {request,files,get writes(){return writes;},setVisibility(value){privateVisibility=value;},externalReplace(name,data){
-  const key="dossier-studio/v1/test-123/"+name;
-  const bytes=Buffer.from(JSON.stringify({format:"career-agency-dossier-v1",dossierId:"test-123",savedAt:"external",data}),"utf8");
-  files.set(key,{sha:"external-"+(++counter),content:bytes.toString("base64")});
+ return {request,files,requests,get writes(){return writes;},setVisibility:v=>visibility=v,setOnline:v=>online=v,
+ externalDraft:data=>{
+  const key=PREFIX+"draft.json",content=Buffer.from(JSON.stringify({format:cloud.FORMAT,dossierId:"test-123",savedAt:"external",data})).toString("base64");
+  files.set(key,{sha:"outside-"+(++next),content});
  }};
 }
-test("never write to the public source or other public repositories",async()=>{
- const s=server(),c=cloud.createClient(s.request);
- await assert.rejects(c.connect({repository:SRC,token:"token",id:"test-123",local:draft}),e=>e.code==="PUBLIC");
- await assert.rejects(c.connect({repository:"tester/public",token:"token",id:"test-123",local:draft}),e=>e.code==="PUBLIC");
- assert.equal(s.writes,0);
- assert.equal(c.status().connected,false);
+const connect=(c,local=draft)=>c.connect({token:"demo-token",id:"test-123",local,publicDemoConfirmed:true});
+
+test("public publishing requires affirmative per-dossier demo consent",async()=>{
+ const api=fixture(),client=cloud.createClient(api.request);
+ await assert.rejects(client.connect({token:"demo-token",id:"test-123",local:draft}),e=>e.code==="CONSENT");
+ assert.equal(api.requests.length,0);
+ assert.equal(api.writes,0);
+ assert.equal(client.status().connected,false);
 });
-test("rejects invalid IDs, missing credentials and path traversal",async()=>{
- const c=cloud.createClient(server().request);
- await assert.rejects(c.connect({repository:"tester/private",token:"token",id:"../evil",local:draft}),e=>e.code==="INVALID");
- await assert.rejects(c.connect({repository:"tester/private",token:"",id:"test-123",local:draft}),e=>e.code==="AUTH");
+test("fixed repository and directory; no arbitrary target and no path traversal",async()=>{
+ const api=fixture(),client=cloud.createClient(api.request);
+ await assert.rejects(client.connect({token:"demo-token",id:"../escape",local:draft,publicDemoConfirmed:true}),e=>e.code==="INVALID");
+ await assert.rejects(client.connect({token:"",id:"test-123",local:draft,publicDemoConfirmed:true}),e=>e.code==="AUTH");
+ const result=await client.connect({repository:"attacker/elsewhere",token:"demo-token",id:"test-123",local:draft,publicDemoConfirmed:true});
+ assert.equal(result.remoteExists,false);
+ await client.push(draft,zip);
+ assert.ok(api.requests.every(r=>r.url.startsWith("https://api.github.com/repos/"+SRC)));
+ assert.deepEqual([...api.files.keys()].sort(),[PREFIX+"Dossier.zip",PREFIX+"draft.json"]);
 });
-test("writes editable JSON and downloadable archive; skips unchanged snapshots",async()=>{
- const s=server(),c=cloud.createClient(s.request);
- const r=await c.connect({repository:"tester/private",token:"token",id:"test-123",local:draft});
- assert.equal(r.remoteExists,false);
- assert.equal(c.status().hasToken,true);
- const uploaded=await c.push(draft,zip);
- assert.equal(uploaded.unchanged,false);
- assert.equal(s.writes,2);
- const noChange=await c.push(draft,zip);
- assert.equal(noChange.unchanged,true);
- assert.equal(s.writes,2);
- assert.deepEqual(await c.pull(),draft);
- const names=[...s.files.keys()].sort();
- assert.deepEqual(names,["dossier-studio/v1/test-123/Dossier.zip","dossier-studio/v1/test-123/draft.json"]);
- c.disconnect();
- assert.equal(c.status().hasToken,false);
- await assert.rejects(c.push(draft,zip),e=>e.code==="DISCONNECTED");
+test("upload editable JSON plus ZIP, skip unchanged data and revoke token on disconnect",async()=>{
+ const api=fixture(),client=cloud.createClient(api.request);
+ await connect(client);
+ const result=await client.push(draft,zip);
+ assert.equal(result.unchanged,false);
+ assert.equal(api.writes,2);
+ assert.deepEqual(await client.pull(),draft);
+ assert.equal((await client.push(draft,zip)).unchanged,true);
+ assert.equal(api.writes,2);
+ client.disconnect();
+ assert.equal(client.status().hasToken,false);
+ await assert.rejects(client.push(draft,zip),e=>e.code==="DISCONNECTED");
 });
-test("remote changes are never silently overwritten across devices",async()=>{
- const s=server(),c1=cloud.createClient(s.request),c2=cloud.createClient(s.request);
- await c1.connect({repository:"tester/private",token:"token",id:"test-123",local:draft});
- await c1.push(draft,zip);
+test("reject unknown remote version and retain local changes after conflicts",async()=>{
+ const api=fixture(),a=cloud.createClient(api.request),b=cloud.createClient(api.request);
+ await connect(a);await a.push(draft,zip);
  const changed={...draft,activeDoc:"letter"};
- const divergent=await c2.connect({repository:"tester/private",token:"token",id:"test-123",local:changed});
- assert.equal(divergent.blocked,true);
- await assert.rejects(c2.push(changed,zip),e=>e.code==="CONFLICT");
- assert.deepEqual(await c2.pull(),draft);
- c2.acceptRemote();
- await c2.push(changed,zip);
- await assert.rejects(c1.push({...draft,activeDoc:"email"},zip),e=>e.code==="CONFLICT");
- assert.equal(c1.status().blocked,true);
+ const result=await connect(b,changed);
+ assert.equal(result.blocked,true);
+ await assert.rejects(b.push(changed,zip),e=>e.code==="CONFLICT");
+ assert.deepEqual(await b.pull(),draft);
+ b.keepLocal();
+ await b.push(changed,zip);
+ await assert.rejects(a.push({...draft,activeDoc:"email"},zip),e=>e.code==="CONFLICT");
+ assert.equal(a.status().blocked,true);
 });
-test("external edits and invalid archives fail safely",async()=>{
- const s=server(),c=cloud.createClient(s.request);
- await c.connect({repository:"tester/private",token:"token",id:"test-123",local:draft});
- await assert.rejects(c.push(draft,new Uint8Array(0)),e=>e.code==="INVALID");
- assert.equal(s.writes,0);
- s.externalReplace("draft.json",draft);
- await assert.rejects(c.push(draft,zip),e=>e.code==="CONFLICT");
- assert.equal(s.writes,0);
+test("failed local archive validation and changed cloud revisions cannot upload",async()=>{
+ const api=fixture(),client=cloud.createClient(api.request);
+ await connect(client);
+ await assert.rejects(client.push(draft,new Uint8Array()),e=>e.code==="INVALID");
+ assert.equal(api.writes,0);
+ api.externalDraft(draft);
+ await assert.rejects(client.push(draft,zip),e=>e.code==="CONFLICT");
+ assert.equal(api.writes,0);
 });
-test("studio wires opt-in cloud and change-aware background synchronization",()=>{
- assert.match(html,/dossier-cloud-sync\.js\?v=/);
- assert.match(html,/id="cloudRepo"/);
- assert.match(html,/id="cloudToken" type="password"/);
- assert.match(html,/id="studioPrintPdf"/);
- assert.match(html,/\$\("studioPrintPdf"\)\.addEventListener\("click",showReview\)/);
- assert.match(html,/await persistNow\(\);\s*closeReview\(\);\s*window\.print\(\)/);
- assert.match(html,/id="cloudSync"/);
- assert.match(html,/function cloudChanged\(/);
- assert.match(html,/if\(cloudRevision===revision\)cloudDirty=false/);
- assert.match(html,/setInterval\(\(\)=>\{if\(cloudDirty\)syncCloud\(\)\},30000\)/);
- assert.match(html,/await persistNow\(\)/);
- assert.match(html,/cloudClient\.status\(\)\.blocked/);
- const inline=html.match(/<script>\s*([\s\S]*?)<\/script>/)?.[1];
- assert.ok(inline);
- assert.doesNotThrow(()=>new Function(inline));
-});
-test("repository becoming public after connecting blocks every further upload",async()=>{
- const s=server(),client=cloud.createClient(s.request);
- await client.connect({repository:"tester/private",token:"token",id:"test-123",local:draft});
- s.setVisibility(false);
- await assert.rejects(client.push(draft,zip),e=>e.code==="PUBLIC");
- assert.equal(s.writes,0);
+test("public-demo adapter refuses a repo that was changed to private",async()=>{
+ const api=fixture(),client=cloud.createClient(api.request);
+ await connect(client);
+ api.setVisibility("private");
+ await assert.rejects(client.push(draft,zip),e=>e.code==="INVALID");
+ assert.equal(api.writes,0);
  assert.equal(client.status().blocked,true);
 });
-test("keeping local content requires explicit conflict-resolution action",async()=>{
- const s=server(),first=cloud.createClient(s.request),next=cloud.createClient(s.request);
- await first.connect({repository:"tester/private",token:"token",id:"test-123",local:draft});
- await first.push(draft,zip);
- const changed={...draft,activeDoc:"email"};
- const state=await next.connect({repository:"tester/private",token:"token",id:"test-123",local:changed});
- assert.equal(state.blocked,true);
- next.keepLocal();
- await next.push(changed,zip);
- assert.deepEqual(await next.pull(),changed);
+test("offline cannot falsely report a GitHub save",async()=>{
+ const api=fixture(),client=cloud.createClient(api.request);
+ await connect(client);
+ api.setOnline(false);
+ await assert.rejects(client.push(draft,zip),e=>e.code==="NETWORK");
+ assert.equal(api.writes,0);
+});
+test("studio guards public publishing and reuses prior dashboard token",()=>{
+ assert.match(studio,/id="cloudDemoConsent"/);
+ assert.match(studio,/id="cloudConnect" type="button" disabled/);
+ assert.match(studio,/career-agency-public-demo-optin-v1/);
+ assert.match(studio,/bewerbungs-agent-github-token-v1/);
+ assert.match(studio,/function demoToken\(\)/);
+ assert.match(studio,/publicDemoConfirmed:true/);
+ assert.match(studio,/setInterval\(\(\)=>\{if\(cloudDirty\)syncCloud\(\)\},30000\)/);
+ assert.match(studio,/if\(activeDossier&&demoApproved\(\)&&demoToken\(\)\)connectCloud\(\)/);
+ assert.match(studio,/id="studioPrintPdf"/);
+ assert.match(studio,/await persistNow\(\);\s*closeReview\(\);\s*window\.print\(\)/);
+ assert.doesNotMatch(studio,/id="cloudRepo"/);
+ const inline=studio.match(/<script>\s*([\s\S]*?)<\/script>/)?.[1];
+ assert.ok(inline);assert.doesNotThrow(()=>new Function(inline));
 });
