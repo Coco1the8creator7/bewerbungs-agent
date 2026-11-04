@@ -575,100 +575,201 @@ function addCatalogBlock(){
  flash("Baustein «"+label+"» hinzugefügt. Trage den Inhalt rechts ein.");
 }
 
+
 function freeBoxes(){
  const doc=currentDoc();
  if(!Array.isArray(doc.freeBoxes))doc.freeBoxes=[];
  return doc.freeBoxes;
 }
+function sourceFrames(){
+ return Array.isArray(currentDoc().layoutBoxes)?currentDoc().layoutBoxes:[];
+}
+function allDocumentFrames(){
+ return [...sourceFrames(),...freeBoxes()].filter(item=>item.visible!==false)
+  .sort((a,b)=>(a.z||0)-(b.z||0));
+}
+function sourceEntries(doc){
+ const data=doc.type==="cv"?["name","role","contact"]:["name","contact","title","greeting"];
+ return [...data.map(field=>"data:"+field),
+  ...(doc.sections||[]).filter(section=>section.visible).map(section=>"section:"+section.id)];
+}
+function frameById(id){
+ return [...sourceFrames(),...freeBoxes()].find(item=>item.id===id)||null;
+}
+function frameText(frame){
+ if(!frame?.source)return frame?.text||"";
+ const [kind,key]=frame.source.split(":");
+ if(kind==="data")return String(currentDoc().data[key]||"");
+ return String(currentDoc().sections.find(section=>section.id===key)?.text||"");
+}
+function setFrameText(frame,value){
+ const text=String(value||"").slice(0,20000);
+ if(!frame.source){frame.text=text;return}
+ const [kind,key]=frame.source.split(":");
+ if(kind==="data")currentDoc().data[key]=text;
+ else{const part=currentDoc().sections.find(section=>section.id===key);if(part)part.text=text;}
+}
+function frameLabel(frame,index){
+ if(!frame.source)return "Freies Textfeld "+(index+1);
+ const [kind,key]=frame.source.split(":");
+ if(kind==="section")return currentDoc().sections.find(section=>section.id===key)?.label||key;
+ return {name:"Name",role:"Beruf / Funktion",contact:"Kontaktangaben",title:"Dokumenttitel",greeting:"Anrede"}[key]||key;
+}
+function fallbackSourceFrame(source,index){
+ const id="anchor_"+source.replace(/[^a-zA-Z0-9_-]/g,"_");
+ return MODULES.normalizeFrame({id,source,x:8,y:Math.min(91,23+index*7),width:84,align:"left",fontSize:100,wrap:"square",z:index+1});
+}
+function ensureSourceFrames(doc,page,style){
+ if(!Array.isArray(doc.layoutBoxes)){
+  // Measure the ACTUAL legacy DOM before converting. Preserve user-approved
+  // theme geometry instead of inventing approximate historical coordinates.
+  page.classList.add("measuring-legacy");
+  if(doc.type==="cv")cvContent(page,doc,style);else letterContent(page,doc);
+  const pr=page.getBoundingClientRect(),entries=sourceEntries(doc);
+  const frames=entries.map((source,index)=>{
+   let node=null;
+   if(source==="section:photo")node=page.querySelector(".photo-section");
+   else{
+    const editableNode=[...page.querySelectorAll("[data-edit]")].find(el=>el.dataset.edit===source);
+    if(editableNode){
+     node=source.startsWith("section:")?
+      (editableNode.closest(".doc-section,.letter-paragraph")||editableNode):editableNode;
+    }
+   }
+   if(!node)return fallbackSourceFrame(source,index);
+   const r=node.getBoundingClientRect();
+   let x=100*(r.left-pr.left)/pr.width,y=100*(r.top-pr.top)/pr.height;
+   let width=100*r.width/pr.width;
+   if(source==="section:photo"&&!doc.data.photoData){
+    // A photo placeholder belongs in the upper right of a CV by default.
+    x=74;y=12;width=18;
+   }
+   return MODULES.normalizeFrame({id:"anchor_"+source.replace(/[^a-zA-Z0-9_-]/g,"_"),
+    source,x,y,width:Math.max(14,width),fontSize:100,align:"left",wrap:"square",z:index+1});
+  });
+  doc.layoutBoxes=frames;
+  doc.layoutVersion=2;
+  page.replaceChildren();page.classList.remove("measuring-legacy");
+  renderFreeTextList();scheduleSave();
+ }else{
+  const sources=new Set(doc.layoutBoxes.map(box=>box.source));
+  let changed=false;
+  sourceEntries(doc).forEach((source,index)=>{
+   if(sources.has(source))return;
+   doc.layoutBoxes.push(fallbackSourceFrame(source,index));sources.add(source);changed=true;
+  });
+  if(changed){renderFreeTextList();scheduleSave();}
+ }
+}
 function pickFreeBox(id,focusText=false){
  selectedFreeBoxId=id;
- document.querySelectorAll(".free-text-box").forEach(el=>el.classList.toggle("is-selected",el.dataset.boxId===id));
- document.querySelectorAll(".free-list-item").forEach(el=>el.classList.toggle("is-selected",el.dataset.boxId===id));
- if(focusText)document.querySelector('.free-text-box[data-box-id="'+id+'"] .free-text-edit')?.focus();
+ document.querySelectorAll(".free-text-box,.layer-frame").forEach(node=>node.classList.toggle("is-selected",node.dataset.boxId===id));
+ document.querySelectorAll(".free-list-item").forEach(node=>node.classList.toggle("is-selected",node.dataset.boxId===id));
+ if(focusText)document.querySelector('.layer-frame[data-box-id="'+id+'"] .frame-edit')?.focus();
 }
 function addFreeBox(){
- if(state.activeDoc==="email"){flash("Freie Textfelder sind für A4-Dokumente vorgesehen.");return;}
+ if(state.activeDoc==="email"){flash("A4-Textfelder stehen für Lebenslauf und Motivationsschreiben zur Verfügung.");return}
  const boxes=freeBoxes();
- if(boxes.length>=MODULES.MAX_BOXES){flash("Maximal "+MODULES.MAX_BOXES+" freie Textfelder pro Dokument.");return;}
+ if(boxes.length>=MODULES.MAX_BOXES){flash("Maximal "+MODULES.MAX_BOXES+" zusätzliche Textfelder pro Dokument.");return}
  const id="field_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
- boxes.push(MODULES.createBox(id,boxes.length));renderFreeTextList();renderPreview();scheduleSave();
- pickFreeBox(id,true);
+ const z=Math.max(99,...allDocumentFrames().map(b=>b.z||0))+1;
+ boxes.push({...MODULES.createBox(id,boxes.length),z,wrap:"square",visible:true});
+ renderFreeTextList();renderPreview();scheduleSave();pickFreeBox(id,true);
 }
 function deleteFreeBox(id){
- const boxes=freeBoxes(),index=boxes.findIndex(item=>item.id===id);
- if(index<0)return;
- if(boxes[index].text.trim()&&!confirm("Dieses freie Textfeld samt Inhalt löschen?"))return;
+ const boxes=freeBoxes(),index=boxes.findIndex(box=>box.id===id);
+ if(index<0){flash("Vorhandene Dokumentbausteine über «Inhaltsbausteine» ausblenden.");return}
+ if(boxes[index].text.trim()&&!confirm("Textfeld und dessen gesamten Text entfernen?"))return;
  boxes.splice(index,1);
  if(selectedFreeBoxId===id)selectedFreeBoxId=null;
  renderFreeTextList();renderPreview();scheduleSave();
 }
 function copyFreeBox(id){
- const boxes=freeBoxes(),original=boxes.find(item=>item.id===id);
- if(!original||boxes.length>=MODULES.MAX_BOXES)return;
+ const target=frameById(id),boxes=freeBoxes();
+ if(!target||boxes.length>=MODULES.MAX_BOXES)return;
  const newId="field_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
- boxes.push(MODULES.normalizeBox({...original,id:newId,x:Math.min(100-original.width,original.x+4),y:Math.min(96,original.y+5)}));
+ const z=Math.max(99,...allDocumentFrames().map(b=>b.z||0))+1;
+ boxes.push({...MODULES.normalizeFrame({...target,id:newId,source:"",text:frameText(target),
+  x:Math.min(100-target.width,target.x+4),y:Math.min(96,target.y+4),z}),text:frameText(target)});
  renderFreeTextList();renderPreview();scheduleSave();pickFreeBox(newId);
 }
 function updateFreeBox(id,patch){
- const boxes=freeBoxes(),index=boxes.findIndex(item=>item.id===id);
- if(index<0)return;
- boxes[index]=MODULES.normalizeBox({...boxes[index],...patch});
+ const frame=frameById(id);if(!frame)return;
+ Object.assign(frame,MODULES.normalizeFrame({...frame,...patch}));
+ renderFreeTextList();renderPreview();scheduleSave();pickFreeBox(id);
+}
+function bringFrameForward(id){
+ const frame=frameById(id);if(!frame)return;
+ frame.z=Math.min(10000,Math.max(0,...allDocumentFrames().map(item=>item.z||0))+1);
  renderFreeTextList();renderPreview();scheduleSave();pickFreeBox(id);
 }
 function renderFreeTextList(){
  const host=$("freeTextList");host.replaceChildren();
- const onPaper=state.activeDoc!=="email",boxes=onPaper?freeBoxes():[];
- $("addFreeText").disabled=!onPaper||boxes.length>=MODULES.MAX_BOXES;
- if(!onPaper){host.append(e("p","note","Die E-Mail bleibt ein einfach bearbeitbarer Nachrichtentext."));return;}
- if(!boxes.length){host.append(e("p","note","Noch keine freien Textfelder. Mit «+ Textfeld hinzufügen» beginnen."));return;}
+ const onPaper=state.activeDoc!=="email",boxes=onPaper?allDocumentFrames():[];
+ $("addFreeText").disabled=!onPaper||freeBoxes().length>=MODULES.MAX_BOXES;
+ if(!onPaper){host.append(e("p","note","E-Mail bleibt eine einfache bearbeitbare Nachricht."));return}
+ if(!boxes.length){host.append(e("p","note","Neuen Textbaustein hinzufügen oder zunächst eine Vorlage öffnen."));return}
  boxes.forEach((box,index)=>{
   const item=e("div","free-list-item");item.dataset.boxId=box.id;
   if(selectedFreeBoxId===box.id)item.classList.add("is-selected");
   const header=e("div","free-list-head");
-  const selectBox=clickButton("Textfeld "+(index+1)+(box.text.trim()?" · "+box.text.trim().slice(0,24):""),"free-list-select",()=>{
-   pickFreeBox(box.id);
-   const node=document.querySelector('.free-text-box[data-box-id="'+box.id+'"]');
-   node?.scrollIntoView({block:"nearest",inline:"nearest",behavior:"smooth"});
+  const text=frameText(box);
+  const select=clickButton(frameLabel(box,index)+(text.trim()?" · "+text.trim().slice(0,17):""),"free-list-select",()=>{
+   pickFreeBox(box.id);document.querySelector('.layer-frame[data-box-id="'+box.id+'"]')?.scrollIntoView({block:"nearest",inline:"nearest"});
   });
-  selectBox.title="Textfeld im Dokument auswählen";header.append(selectBox);
-  header.append(clickButton("⧉","free-list-action",()=>copyFreeBox(box.id)));
-  const remove=clickButton("×","free-list-action",()=>deleteFreeBox(box.id));
-  remove.setAttribute("aria-label","Textfeld "+(index+1)+" löschen");remove.title="Textfeld löschen";header.append(remove);
+  select.title="Feld im A4-Dokument auswählen";header.append(select);
+  const cloneBtn=clickButton("⧉","free-list-action",()=>copyFreeBox(box.id));
+  cloneBtn.title="Kopie als unabhängiges Textfeld";header.append(cloneBtn);
+  if(!box.source){
+   const remove=clickButton("×","free-list-action",()=>deleteFreeBox(box.id));
+   remove.title="Textfeld entfernen";remove.setAttribute("aria-label",frameLabel(box,index)+" entfernen");header.append(remove);
+  }
   item.append(header);
-  const textarea=e("textarea","free-field-text");textarea.value=box.text;textarea.rows=2;
-  textarea.setAttribute("aria-label","Text von Textfeld "+(index+1));
-  textarea.addEventListener("focus",()=>pickFreeBox(box.id));
-  textarea.addEventListener("input",()=>{
-   const active=freeBoxes().find(b=>b.id===box.id);if(!active)return;
-   active.text=textarea.value.slice(0,20000);
-   const preview=document.querySelector('.free-text-box[data-box-id="'+box.id+'"] .free-text-edit');
-   if(preview&&document.activeElement!==preview)preview.textContent=active.text;
-   scheduleSave();requestAnimationFrame(checkOverflow);
-  });
-  item.append(textarea);
-  const tools=e("div","free-field-options");
-  const label=e("label",null,"Grösse");
-  const size=e("select","select");
-  for(const [value,name] of [[75,"Klein"],[100,"Normal"],[125,"Mittel"],[150,"Gross"],[200,"Sehr gross"]]){
-   const option=e("option",null,name);option.value=value;size.append(option);
+  if(box.source!=="section:photo"){
+   const textarea=e("textarea","free-field-text");textarea.value=text;textarea.rows=2;
+   textarea.setAttribute("aria-label",frameLabel(box,index)+" bearbeiten");
+   textarea.addEventListener("focus",()=>pickFreeBox(box.id));
+   textarea.addEventListener("input",()=>{
+    setFrameText(box,textarea.value);
+    const preview=document.querySelector('.layer-frame[data-box-id="'+box.id+'"] .frame-edit');
+    if(preview&&document.activeElement!==preview)preview.textContent=frameText(box);
+    scheduleSave();requestAnimationFrame(()=>{reflowFrameExclusions();checkOverflow()});
+   });
+   item.append(textarea);
   }
-  size.value=String(box.fontSize);
+  const opts=e("div","free-field-options");
+  const fontsize=e("label",null,"Grösse"),size=e("select","select");
+  for(const [v,label] of [[75,"Klein"],[100,"Normal"],[125,"Mittel"],[150,"Gross"],[200,"Sehr gross"]]){
+   const op=e("option",null,label);op.value=String(v);size.append(op);
+  }
+  size.value=String(box.fontSize||100);
   size.addEventListener("change",()=>updateFreeBox(box.id,{fontSize:Number(size.value)}));
-  label.append(size);
-  const alignLabel=e("label",null,"Ausrichtung"),align=e("select","select");
-  for(const [value,name] of [["left","Links"],["center","Mitte"],["right","Rechts"]]){
-   const option=e("option",null,name);option.value=value;align.append(option);
+  fontsize.append(size);
+  const al=e("label",null,"Ausrichtung"),align=e("select","select");
+  for(const [v,label] of [["left","Links"],["center","Mitte"],["right","Rechts"]]){
+   const op=e("option",null,label);op.value=v;align.append(op);
   }
-  align.value=box.align;
+  align.value=box.align||"left";
   align.addEventListener("change",()=>updateFreeBox(box.id,{align:align.value}));
-  alignLabel.append(align);tools.append(label,alignLabel);
-  item.append(tools);host.append(item);
+  al.append(align);opts.append(fontsize,al);item.append(opts);
+  const row=e("div","frame-wrap-row"),wrap=e("select","select");
+  for(const [v,label] of [["square","Umbruch: Rechteck"],["top-bottom","Nur oben / unten"],["front","Vor dem Text"],["behind","Hinter dem Text"]]){
+   const op=e("option",null,label);op.value=v;wrap.append(op);
+  }
+  wrap.value=box.wrap||"square";wrap.setAttribute("aria-label","Textumbruch für "+frameLabel(box,index));
+  wrap.addEventListener("change",()=>updateFreeBox(box.id,{wrap:wrap.value}));
+  const front=clickButton("Nach vorn","frame-layer-action",()=>bringFrameForward(box.id));
+  front.title="Feld nach vorn legen, andere Textbereiche darum umbrechen";
+  row.append(wrap,front);item.append(row);
+  host.append(item);
  });
 }
 function positionFreeNode(node,box){
  node.style.left=box.x+"%";node.style.top=box.y+"%";node.style.width=box.width+"%";
- node.style.setProperty("--free-font-scale",String(box.fontSize/100));
- node.style.textAlign=box.align;
+ node.style.setProperty("--free-font-scale",String((box.fontSize||100)/100));
+ node.style.textAlign=box.align||"left";
+ node.style.zIndex=box.wrap==="behind"?"1":String(20+(box.z||0));
+ node.dataset.wrap=box.wrap||"square";
 }
 function wireFreeDrag(handle,box,node,mode){
  handle.addEventListener("pointerdown",event=>{
@@ -687,12 +788,12 @@ function wireFreeDrag(handle,box,node,mode){
    const dy=100*(evt.clientY-startY)/rect.height;
    const next=mode==="width"?MODULES.resizeBox(start,dx):MODULES.translateBox(start,dx,dy);
    Object.assign(box,next);positionFreeNode(node,box);
-   changed=true;requestAnimationFrame(checkOverflow);
+   changed=true;requestAnimationFrame(()=>{reflowFrameExclusions();checkOverflow()});
   };
   const finish=evt=>{
    if(evt.pointerId!==event.pointerId)return;
    handle.removeEventListener("pointermove",move);handle.removeEventListener("pointerup",finish);handle.removeEventListener("pointercancel",finish);
-   if(changed){renderFreeTextList();scheduleSave();}
+   if(changed){renderFreeTextList();scheduleSave();reflowFrameExclusions();}
   };
   handle.addEventListener("pointermove",move);
   handle.addEventListener("pointerup",finish);
@@ -705,38 +806,94 @@ function wireFreeDrag(handle,box,node,mode){
   const [x,y]=moves[event.key],step=event.shiftKey?5:1;
   const next=mode==="width"?MODULES.resizeBox(box,x*step):MODULES.translateBox(box,x*step,y*step);
   Object.assign(box,next);positionFreeNode(node,box);
-  renderFreeTextList();scheduleSave();requestAnimationFrame(checkOverflow);
+  renderFreeTextList();scheduleSave();requestAnimationFrame(()=>{reflowFrameExclusions();checkOverflow()});
  });
 }
 function renderFreeTextOverlay(page){
- if(!Array.isArray(currentDoc().freeBoxes))return;
- for(const box of freeBoxes()){
-  const host=e("div","free-text-box");host.dataset.boxId=box.id;
+ for(const box of allDocumentFrames()){
+  const host=e("div","free-text-box layer-frame");host.dataset.boxId=box.id;
+  if(box.source)host.dataset.source=box.source;
   if(box.id===selectedFreeBoxId)host.classList.add("is-selected");
   positionFreeNode(host,box);
   const drag=clickButton("⠿","free-text-drag",()=>pickFreeBox(box.id));
-  drag.setAttribute("aria-label","Textfeld verschieben; mit Pfeiltasten präzise bewegen");
-  drag.title="Ziehen oder Pfeiltasten: Textfeld verschieben";
-  const content=e("div","free-text-edit",box.text);
-  content.contentEditable="true";content.spellcheck=true;
-  content.setAttribute("role","textbox");
-  content.setAttribute("aria-label","Frei platzierter Text");
-  content.addEventListener("focus",()=>pickFreeBox(box.id));
-  content.addEventListener("input",()=>{
-   box.text=content.innerText.replace(/\r/g,"").slice(0,20000);
-   scheduleSave();requestAnimationFrame(checkOverflow);
-  });
-  content.addEventListener("paste",event=>{
-   event.preventDefault();
-   document.execCommand("insertText",false,event.clipboardData?.getData("text/plain")||"");
-  });
+  drag.title="Mit Maus oder Finger verschieben; Pfeiltasten für genaue Position";
+  drag.setAttribute("aria-label",frameLabel(box,0)+" verschieben");
+  const flow=e("div","frame-flow");
+  if(box.source==="section:photo"){
+   const section=currentDoc().sections.find(s=>s.id==="photo");
+   if(section)flow.append(sectionElem(section));
+  }else{
+   if(box.source?.startsWith("section:")&&state.activeDoc==="cv"){
+    const section=currentDoc().sections.find(s=>s.id===box.source.slice(8));
+    if(section)host.append(e("h3","frame-heading",section.label));
+   }
+   let className="frame-edit";
+   if(box.source==="data:name")className+=" doc-name";
+   else if(box.source==="data:role")className+=" doc-role";
+   else if(box.source==="data:contact")className+=" doc-contact";
+   else if(box.source==="data:title")className+=" letter-title";
+   else if(box.source==="data:greeting")className+=" letter-greeting";
+   else if(box.source?.startsWith("section:"))className+=state.activeDoc==="cv"?" section-body":" letter-paragraph";
+   else className+=" free-text-edit";
+   const content=e("span",className,frameText(box));
+   content.contentEditable="true";content.spellcheck=true;
+   content.setAttribute("role","textbox");content.setAttribute("aria-label",frameLabel(box,0)+" bearbeiten");
+   content.addEventListener("focus",()=>pickFreeBox(box.id));
+   content.addEventListener("input",()=>{
+    setFrameText(box,content.innerText.replace(/\r/g,""));
+    scheduleSave();requestAnimationFrame(()=>{reflowFrameExclusions();checkOverflow()});
+   });
+   content.addEventListener("paste",event=>{
+    event.preventDefault();document.execCommand("insertText",false,event.clipboardData?.getData("text/plain")||"");
+   });
+   flow.append(content);
+  }
   const resize=clickButton("↘","free-text-resize",()=>pickFreeBox(box.id));
-  resize.setAttribute("aria-label","Textfeldbreite ändern; Pfeiltasten links und rechts");
-  resize.title="Ziehen: Textfeld breiter oder schmaler";
-  host.append(drag,content,resize);
+  resize.setAttribute("aria-label",frameLabel(box,0)+" Breite ändern");
+  resize.title="Ziehen, um die Textfeldbreite zu verändern";
+  host.append(drag,flow,resize);
   wireFreeDrag(drag,box,host,"move");
   wireFreeDrag(resize,box,host,"width");
   page.append(host);
+ }
+ requestAnimationFrame(reflowFrameExclusions);
+}
+function reflowFrameExclusions(){
+ const page=$("a4Page");
+ if(!page||!page.classList.contains("layered-page"))return;
+ const ordered=allDocumentFrames();
+ const nodes=new Map([...page.querySelectorAll(".layer-frame")].map(node=>[node.dataset.boxId,node]));
+ // Remove old float shims before measuring text-block heights to avoid stale geometry.
+ for(const node of nodes.values())node.querySelectorAll(".flow-exclusion").forEach(shim=>shim.remove());
+ const rectangles={};
+ const bounds=page.getBoundingClientRect();
+ for(const frame of ordered){
+  const node=nodes.get(frame.id);if(!node)continue;
+  const r=node.getBoundingClientRect();
+  rectangles[frame.id]=MODULES.rectangle(r.left,r.top,r.width,Math.max(r.height,6));
+ }
+ const ratio=page.offsetWidth/Math.max(1,bounds.width);
+ for(const target of ordered){
+  if(target.source==="section:photo")continue;
+  const node=nodes.get(target.id);if(!node)continue;
+  const flow=node.querySelector(".frame-flow");if(!flow)continue;
+  const fr=flow.getBoundingClientRect(),tr=MODULES.rectangle(fr.left,fr.top,fr.width,Math.max(0,bounds.bottom-fr.top));
+  const obstacles=[];
+  for(const blocker of ordered){
+   if(blocker.id===target.id||(blocker.z||0)<=(target.z||0)||blocker.wrap==="front"||blocker.wrap==="behind")continue;
+   const exclusion=MODULES.textExclusion(tr,rectangles[blocker.id],blocker.wrap||"square",6);
+   if(exclusion)obstacles.push(exclusion);
+  }
+  obstacles.sort((a,b)=>a.y-b.y);
+  for(const exclusion of obstacles){
+   const spacer=e("span","flow-exclusion");spacer.contentEditable="false";spacer.setAttribute("aria-hidden","true");
+   spacer.style.cssFloat=exclusion.side;
+   spacer.style.width=Math.max(0,exclusion.width*ratio)+"px";
+   spacer.style.height=Math.max(1,exclusion.height*ratio)+"px";
+   spacer.style.marginTop=Math.max(0,exclusion.y*ratio)+"px";
+   spacer.style.shapeOutside="margin-box";
+   flow.insertBefore(spacer,flow.querySelector(".frame-edit"));
+  }
  }
 }
 function renderSlots(){const host=$("slots");host.replaceChildren();for(let i=0;i<3;i++){const saved=state.slots[i],box=e("div","slot");box.append(e("span","slot-num",i+1));const info=e("div","slot-info");info.append(e("span","slot-title",saved?.name||"Freier Vorlagenslot"),e("span","slot-meta",saved?LABELS[saved.type]+" · Eigene Vorlage":"Noch nicht belegt"));box.append(info);const actions=e("div","slot-actions");if(saved){actions.append(clickButton("Verwenden","tiny-btn primary",()=>useSlot(i)));actions.append(clickButton("Löschen","tiny-btn",()=>{if(!confirm("Vorlage «"+saved.name+"» löschen? Vorhandene Arbeitskopien bleiben erhalten."))return;state.slots[i]=null;for(const type of ["cv","letter"])if(state.sources[type]===i)state.sources[type]=null;renderSlots();scheduleSave();flash("Vorlagenslot geleert.")}))}else{const btn=clickButton("Aktuelles Dokument speichern","tiny-btn primary",()=>openSlotModal(i));btn.disabled=state.activeDoc==="email";actions.append(btn)}box.append(actions);host.append(box)}const idx=state.sources[state.activeDoc],b=$("sourceBanner");if(idx!==null&&idx!==undefined&&state.slots[idx]){b.replaceChildren();b.classList.add("visible");b.append(e("span",null,"Arbeitskopie von «"+state.slots[idx].name+"». Deine Änderungen verändern die Vorlage nicht."));b.append(e("div",null));const apply=clickButton("Änderungen als Vorlage übernehmen","tiny-btn primary",()=>overwriteSlot(idx));apply.style.marginTop="8px";b.append(apply)}else{b.classList.remove("visible");b.textContent=""}}
