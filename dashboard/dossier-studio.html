@@ -126,6 +126,9 @@
 .cloud-dialog #cloudMessage.is-error{color:#A34454}
 .cloud-dialog .note{overflow-wrap:anywhere;font-size:10px;line-height:1.55}
 @media(max-width:850px){.cloud-open span{display:none}.cloud-open{padding:8px}}
+.preview-controls .print-pdf{background:var(--magenta-soft);color:var(--magenta);border-color:#E8D5DF;font-weight:780}
+.preview-controls{flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:760px){.preview-controls .print-pdf{font-size:10px;padding:8px 9px}}
 </style>
 </head>
 <body>
@@ -140,7 +143,7 @@
   <details class="tool-section"><summary class="section-heading"><span>KI-Kurzbefehle</span><svg class="section-chevron" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="section-content"><p class="subtext">Für eine spätere Ausbaustufe vorbereitet.</p><div class="chip-row"><button type="button" disabled class="chip">Prägnanter</button><button type="button" disabled class="chip">Professioneller</button><button type="button" disabled class="chip">Persönlicher</button><button type="button" disabled class="chip">Mehr Stellenbezug</button></div><div class="field"><label class="field-label" for="aiText">Eigene KI-Anweisung · Demnächst</label><textarea disabled class="fake-ai" id="aiText" placeholder="z. B. Formuliere diesen Absatz überzeugender …"></textarea></div><p class="note">Die KI ist in diesem Mockup noch nicht angeschlossen. Kein Text wird an einen externen Dienst gesendet.</p></div></details>
   <div class="footer-control"><button type="button" class="reset-btn" id="resetDraft">↺ Aktuelles Dokument zurücksetzen</button><p class="note">Die Bearbeitung wird lokal gespeichert. Für ein layoutgetreues PDF: «Entwurf prüfen» und im Druckdialog «Als PDF speichern». Der ZIP-Export verwendet derzeit vereinfachte PDF-Layouts.</p></div>
 </aside>
-<section class="preview-area" aria-label="Dokumentvorschau"><div class="preview-head"><div class="preview-left"><div class="preview-overline">Live-Dokument</div><p class="preview-title" id="previewTitle">Lebenslauf</p></div><div class="preview-controls"><span class="preview-count" id="pageCaption">A4 · direkt bearbeitbar</span><span class="mock-tag" id="studioPreviewTag">Musterinhalt</span><button id="studioDownload" class="toolbar-button" type="button" hidden>Dossier herunterladen</button></div></div><nav class="doc-tabs" id="docTabs" aria-label="Dokument wechseln"></nav><div class="preview-scroll" id="previewScroll"><div class="alert" id="overflowWarning" role="alert">Der Inhalt passt nicht vollständig auf eine A4-Seite. Bitte Text kürzen oder Abstände anpassen; es wird nichts gelöscht.</div><div id="previewHost"></div><div class="preview-bottom"><span id="studioPreviewNotice">Bearbeitbarer Entwurf · vor dem Versenden Angaben und Seitenumbrüche kontrollieren</span><span id="docKind">CV · A4</span></div></div></section>
+<section class="preview-area" aria-label="Dokumentvorschau"><div class="preview-head"><div class="preview-left"><div class="preview-overline">Live-Dokument</div><p class="preview-title" id="previewTitle">Lebenslauf</p></div><div class="preview-controls"><span class="preview-count" id="pageCaption">A4 · direkt bearbeitbar</span><span class="mock-tag" id="studioPreviewTag">Musterinhalt</span><button id="studioPrintPdf" class="toolbar-button print-pdf" type="button" title="Aktuelles Dokument prüfen und als A4-PDF drucken">A4-PDF</button><button id="studioDownload" class="toolbar-button" type="button" hidden>Dossier herunterladen</button></div></div><nav class="doc-tabs" id="docTabs" aria-label="Dokument wechseln"></nav><div class="preview-scroll" id="previewScroll"><div class="alert" id="overflowWarning" role="alert">Der Entwurf überschreitet eine A4-Seite. Bitte die zusätzlichen Seiten in der Druckvorschau kontrollieren; Text wird nicht automatisch gekürzt.</div><div id="previewHost"></div><div class="preview-bottom"><span id="studioPreviewNotice">Bearbeitbarer Entwurf · vor dem Versenden Angaben und Seitenumbrüche kontrollieren</span><span id="docKind">CV · A4</span></div></div></section>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <div class="modal-backdrop" id="cloudModal" role="presentation"><div class="modal cloud-dialog" role="dialog" aria-modal="true" aria-labelledby="cloudTitle">
@@ -460,12 +463,15 @@ window.addEventListener("beforeunload",ev=>{if(cloudClient?.status().connected&&
 $("blockCatalog").addEventListener("change",()=>{$("customBlockName").hidden=$("blockCatalog").value!=="__custom__";});
 $("addBlock").addEventListener("click",addCatalogBlock);
 $("studioModeLabel").addEventListener("click",showReview);
+$("studioPrintPdf").addEventListener("click",showReview);
 $("closeReview").addEventListener("click",closeReview);
 $("reviewModal").addEventListener("click",ev=>{if(ev.target===$("reviewModal"))closeReview()});
-$("reviewPrint").addEventListener("click",()=>{
- closeReview();
- persistNow().catch(err=>flash("Druck wird geöffnet, aber Speichern fehlgeschlagen: "+err.message));
- window.print();
+$("reviewPrint").addEventListener("click",async()=>{
+ try{
+  await persistNow();
+  closeReview();
+  window.print();
+ }catch(err){flash("Druckvorschau wurde nicht geöffnet: Lokale Speicherung fehlgeschlagen – "+err.message)}
 });
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&$("reviewModal").classList.contains("show"))closeReview()});
 $("individualDesign").addEventListener("change",ev=>{currentDoc().individualStyle=ev.target.checked?clone(state.baseStyle):null;renderSettings();renderPreview();scheduleSave()});$("fontChoice").addEventListener("change",ev=>editStyle("font",ev.target.value));$("fontScale").addEventListener("input",ev=>editStyle("fontScale",Number(ev.target.value)));$("uploadPhoto").addEventListener("click",()=>$("photoInput").click());$("photoInput").addEventListener("change",ev=>{importPhoto(ev.target.files?.[0]);ev.target.value=""});$("removePhoto").addEventListener("click",()=>{if(!state.docs.cv.data.photoData)return;if(!confirm("Bewerbungsfoto aus diesem CV entfernen?"))return;state.docs.cv.data.photoData="";const block=state.docs.cv.sections.find(s=>s.id==="photo");if(block)block.visible=false;renderBlocks();renderPreview();scheduleSave()});$("resetDraft").addEventListener("click",resetDraft);$("cancelModal").addEventListener("click",closeSlotModal);$("confirmModal").addEventListener("click",saveSlot);$("slotName").addEventListener("keydown",ev=>{if(ev.key==="Enter")saveSlot();else if(ev.key==="Escape")closeSlotModal()});$("slotModal").addEventListener("click",ev=>{if(ev.target===$("slotModal"))closeSlotModal()});window.addEventListener("resize",()=>requestAnimationFrame(checkOverflow));
