@@ -426,7 +426,7 @@ function migrateState(){
   if(doc.type==="cv"||doc.type==="letter"){
    const ids=new Set();
    doc.freeBoxes=(Array.isArray(doc.freeBoxes)?doc.freeBoxes:[]).slice(0,MODULES.MAX_BOXES)
-    .map(box=>MODULES.normalizeFrame(box)).filter(box=>{
+    .map((box,index)=>MODULES.normalizeFrame({...box,z:Number.isFinite(Number(box.z))&&Number(box.z)>0?box.z:100+index})).filter(box=>{
      if(!box.id||ids.has(box.id))return false;ids.add(box.id);return true;
     });
    // Existing approved templates are migrated from their rendered geometry once.
@@ -585,8 +585,14 @@ function sourceFrames(){
  return Array.isArray(currentDoc().layoutBoxes)?currentDoc().layoutBoxes:[];
 }
 function allDocumentFrames(){
- return [...sourceFrames(),...freeBoxes()].filter(item=>item.visible!==false)
-  .sort((a,b)=>(a.z||0)-(b.z||0));
+ return [...sourceFrames(),...freeBoxes()].filter(item=>{
+  if(item.visible===false)return false;
+  if(item.source?.startsWith("section:")){
+   const part=currentDoc().sections.find(section=>section.id===item.source.slice(8));
+   return !!part?.visible;
+  }
+  return true;
+ }).sort((a,b)=>(a.z||0)-(b.z||0));
 }
 function sourceEntries(doc){
  const data=doc.type==="cv"?["name","role","contact"]:["name","contact","title","greeting"];
@@ -645,7 +651,7 @@ function ensureSourceFrames(doc,page,style){
     x=74;y=12;width=18;
    }
    return MODULES.normalizeFrame({id:"anchor_"+source.replace(/[^a-zA-Z0-9_-]/g,"_"),
-    source,x,y,width:Math.max(14,width),fontSize:100,align:"left",wrap:"square",z:index+1});
+    source,x,y,width:Math.max(14,width),fontSize:100,align:["left","right","center"].includes(getComputedStyle(node).textAlign)?getComputedStyle(node).textAlign:"left",wrap:"square",z:index+1});
   });
   doc.layoutBoxes=frames;
   doc.layoutVersion=2;
