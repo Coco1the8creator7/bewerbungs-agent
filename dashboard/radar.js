@@ -395,7 +395,10 @@
   restoreCareerRating:(id,entry)=>{
    if(!entry||entry.id!==id)return;
    const normalized=model.normalizedState({career:{ratings:{[id]:entry}}}).career.ratings[id];
-   if(normalized){state.career.ratings[id]=normalized;renderReviews();persist();}
+   if(normalized)state.career.ratings[id]=normalized;
+   else if(entry.scores&&Object.keys(entry.scores).length===0&&!String(entry.note||"").trim())
+    delete state.career.ratings[id];
+   renderReviews();persist();
   },
   refreshReviews:renderReviews
  });
