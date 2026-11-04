@@ -104,6 +104,12 @@
     }
     async function push(local,archiveBytes){
       requireConnected();
+      // A repository can be made public after connecting. Re-check immediately before writing.
+      const visibility=await request("https://api.github.com/repos/"+repoName);
+      if(visibility.missing||visibility.private!==true||visibility.visibility==="public"){
+        blocked=true;
+        throw fail("PUBLIC","Cloud-Sicherung gestoppt: Ziel-Repository ist nicht mehr nachweislich privat.");
+      }
       if(blocked)throw fail("CONFLICT","Auf GitHub liegt ein anderer Entwurf. Bitte erst «Von GitHub laden» verwenden. Lokale Änderungen bleiben erhalten.");
       if(!(archiveBytes instanceof Uint8Array)||!archiveBytes.length||archiveBytes.length>MAX_ARCHIVE_BYTES)
         throw fail("INVALID","Dossier-ZIP fehlt oder ist grösser als 5 MB. Nichts wurde übertragen.");
