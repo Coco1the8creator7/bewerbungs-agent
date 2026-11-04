@@ -49,6 +49,7 @@
  function normalizeFrame(raw){
   const base=normalizeBox(raw);
   return {...base,
+   text:typeof raw?.text==="string"?raw.text.slice(0,20000):"",
    source:typeof raw?.source==="string"&&SOURCE.test(raw.source)?raw.source:"",
    visible:raw?.visible!==false,
    z:clamp(number(raw?.z,0),0,10000),
