@@ -8,7 +8,7 @@
  const $=id=>document.getElementById(id);
  const DB="career-agency-dossiers-v1",DB_VERSION=1,MAX_BYTES=15*1024*1024,MAX_FILES=50;
  const ALLOWED=new Set(["pdf","doc","docx","odt","txt","png","jpg","jpeg"]);
- const state={dossiers:[],files:[],editingId:null,uploadTarget:null,ready:false};
+ const state={dossiers:[],files:[],uploadTarget:null,ready:false};
  let connection=null,refreshPending=Promise.resolve();
 
  function make(tag,value,klass){
@@ -52,11 +52,6 @@
  function getAll(table){return transact(table,"readonly","getAll");}
  function put(table,value){return transact(table,"readwrite","put",value);}
  function remove(table,id){return transact(table,"readwrite","delete",id);}
- function availableJobs(){
-  const rows=window.CareerDossierJobs?.()||[];
-  return rows.filter(j=>j&&typeof j.id==="string"&&!j.id.startsWith("DEMO-"))
-   .map(j=>({id:j.id,title:String(j.title||""),company:String(j.company||""),location:String(j.location||"")}));
- }
  function formatDate(date){
   const d=new Date(date);return Number.isNaN(d.getTime())?"–":new Intl.DateTimeFormat("de-CH",{day:"2-digit",month:"2-digit",year:"numeric"}).format(d);
  }
@@ -115,35 +110,85 @@
   }
   for(const file of files)host.append(fileRow(file));
  }
- function editDossier(row){
-  state.editingId=row?.id||null;
-  const select=$("dossierJobSelect"),jobs=availableJobs();
-  select.replaceChildren(new Option("Ohne verknüpftes Inserat",""));
-  for(const j of jobs)select.add(new Option(j.title+(j.company?" · "+j.company:""),j.id));
-  if(row?.jobId&&!jobs.some(j=>j.id===row.jobId)){
-   select.add(new Option(row.title+(row.company?" · "+row.company:"")+" (ursprüngliches Inserat)",row.jobId));
-  }
-  select.value=row?.jobId||"";
-  $("dossierTitleInput").value=row?.title||"";
-  $("dossierCompanyInput").value=row?.company||"";
-  $("dossierTone").value=row?.preferences?.tone||"klar";
-  $("dossierLength").value=row?.preferences?.length||"standard";
-  $("dossierFocus").value=row?.preferences?.focus||"";
-  $("dossierDialogTitle").textContent=row?"Dossier bearbeiten":"Dossier vorbereiten";
-  $("dossierSubmit").textContent=row?"Änderungen speichern":"Vorbereitung speichern";
-  $("dossierDialog").showModal();
+ function openGenerationDialog(){
+  const choices=state.dossiers.filter(row=>row.jobId&&!row.generatedStudio&&!String(row.jobId).startsWith("DEMO-"));
+  const select=$("dossierGenerateJobSelect");
+  select.replaceChildren();
+  for(const row of choices)select.add(new Option(row.title+(row.company?" · "+row.company:""),row.id));
+  const empty=!choices.length;
+  $("dossierGenerateConfirm").disabled=empty;
+  select.disabled=empty;
+  $("dossierGenerationHint").textContent=empty
+   ?"Noch keine vorgemerkten Stellen ohne Dossier. Markiere zuerst eine Stelle über das Dokumenten-Piktogramm auf der Startseite."
+   :"CV, Motivationsschreiben und Bewerbungsmail werden als bearbeitbare Entwürfe angelegt. Persönliche Angaben müssen anschliessend geprüft und ergänzt werden.";
+  $("dossierGenerationDialog").showModal();
  }
- function card(row){
-  const files=state.files.filter(file=>file.dossierId===row.id);
+ function openStudio(row){window.location.href="./dossier-studio.html?dossier="+encodeURIComponent(row.id);}
+ async function generateDossier(id){
+  const run=async()=>{
+   await initialRefresh;
+   const previous=await transact("dossiers","readonly","get",id);
+   if(!previous||!previous.jobId||String(previous.jobId).startsWith("DEMO-"))
+    throw Error("Bitte zuerst eine gültige vorgemerkte Stelle wählen.");
+   if(previous.generatedStudio){await refresh();return previous;}
+   const docs=window.CareerDossierDocuments;
+   if(!docs?.createDraft)throw Error("Dokumentenvorlagen sind noch nicht geladen.");
+   const entry={...previous,generatedStudio:docs.createDraft(previous),generationStatus:"draft",
+    updatedAt:new Date().toISOString()};
+   await put("dossiers",entry);
+   await refresh();
+   // Agency: only successful draft generation counts, not bookmarking alone.
+   window.dispatchEvent(new CustomEvent("career-dossier-prepared",{detail:{job_id:entry.jobId}}));
+   notice("Dossierentwürfe erstellt. Bitte persönliche Angaben und Inhalte im Studio überprüfen.");
+   return entry;
+  };
+  const result=refreshPending.then(run,run);
+  refreshPending=result.catch(()=>{});
+  return result;
+ }
+ async function downloadDossier(id,trigger){
+  if(trigger)setBusy(trigger,true);
+  try{
+   const row=await transact("dossiers","readonly","get",id);
+   if(!row?.generatedStudio)throw Error("Das Dossier wurde noch nicht generiert.");
+   window.CareerDossierDocuments.download(row.generatedStudio,row.title);
+  }catch(err){notice("Download fehlgeschlagen: "+err.message,true);}
+  finally{if(trigger)setBusy(trigger,false);}
+ }
+ async function submitGeneration(event){
+  event.preventDefault();
+  const id=$("dossierGenerateJobSelect").value;
+  const button=$("dossierGenerateConfirm");
+  if(!id)return;
+  setBusy(button,true);
+  try{const entry=await generateDossier(id);$("dossierGenerationDialog").close();openStudio(entry);}
+  catch(err){notice("Generierung fehlgeschlagen: "+err.message,true);}
+  finally{setBusy(button,false);}
+ }
+  function card(row){
+  const files=state.files.filter(file=>file.dossierId===row.id),generated=!!row.generatedStudio;
   const card=make("article",undefined,"dossier-card");
   const header=make("div",undefined,"dossier-card-head");
-  const lead=make("div");lead.append(make("h3",row.title),make("p",[row.company,row.location].filter(Boolean).join(" · ")||"Eigene Bewerbung"));
-  const status=make("span",files.length?"Dateien vorhanden":"In Vorbereitung","dossier-status");
+  const lead=make("div");
+  lead.append(make("h3",row.title),make("p",[row.company,row.location].filter(Boolean).join(" · ")||"Ohne verknüpftes Inserat"));
+  const status=make("span",generated?"Entwurf vorhanden":row.jobId?"Stelle vorgemerkt":"Alte Vorbereitung","dossier-status");
   header.append(lead,status);
-  const detail=make("p","Zuletzt bearbeitet "+formatDate(row.updatedAt)+" · "+files.length+" "+(files.length===1?"Datei":"Dateien"),"dossier-card-detail");
+  const detail=make("p",generated
+   ?"CV · Motivationsschreiben · Bewerbungsmail · Zuletzt bearbeitet "+formatDate(row.updatedAt)
+   :"Zuletzt bearbeitet "+formatDate(row.updatedAt),"dossier-card-detail");
   const actions=make("div",undefined,"dossier-card-actions");
-  actions.append(button("Datei hinzufügen",()=>chooseFiles(row.id)),button("Einstellungen",()=>editDossier(row),true));
-  if(files.length===1)actions.append(button("Dossier-Datei laden",()=>downloadable(files[0]),true));
+  if(generated){
+   actions.append(button("Dossier bearbeiten",()=>openStudio(row)));
+   actions.append(button("Dossier herunterladen",event=>downloadDossier(row.id,event.currentTarget),true));
+  }else if(row.jobId){
+   actions.append(button("Dossier generieren",async function(){
+    setBusy(this,true);
+    try{const result=await generateDossier(row.id);openStudio(result);}
+    catch(err){notice("Generierung fehlgeschlagen: "+err.message,true);setBusy(this,false);}
+   }));
+  }
+  const extra=make("details",undefined,"dossier-card-more");
+  extra.append(make("summary","Weitere Optionen"));
   const del=button("Dossier entfernen",async()=>{
    if(!window.confirm("Dossier «"+row.title+"» entfernen? Zugeordnete Dateien bleiben unter Basisunterlagen erhalten."))return;
    try{
@@ -151,14 +196,14 @@
     await remove("dossiers",row.id);await refresh();notice("Dossier entfernt. Dateien bleiben in der Ablage.");
    }catch(err){notice(err.message,true);}
   },true);
-  actions.append(del);
+  extra.append(del);
   const contents=make("div",undefined,"dossier-attachments");
-  if(!files.length)contents.append(make("p","Noch keine Dateien zugeordnet. Generierte Dokumente können später hier erscheinen.","dossier-quiet"));
-  else for(const f of files)contents.append(fileRow(f));
-  card.append(header,detail,actions,contents);
+  if(!generated&&!row.jobId)contents.append(make("p","Diese frühere Vorbereitung bleibt erhalten. Ohne verknüpfte Stelle ist keine automatische Generierung möglich.","dossier-quiet"));
+  if(files.length)for(const f of files)contents.append(fileRow(f));
+  card.append(header,detail,actions,extra,contents);
   return card;
  }
- function render(){
+  function render(){
   if(!state.ready)return;
   const q=$("dossierSearch").value.trim().toLocaleLowerCase("de-CH");
   const rows=state.dossiers.filter(d=>[d.title,d.company,d.location].join(" ").toLocaleLowerCase("de-CH").includes(q));
@@ -168,8 +213,8 @@
   const host=$("dossierList");host.replaceChildren();
   if(!rows.length){
    const empty=make("div",undefined,"dossier-empty");
-   empty.append(make("p",q?"Keine passenden Dossiers gefunden.":"Noch keine Dossiers vorhanden. Starte hier oder direkt aus einem Inserat."));
-   if(!q)empty.append(button("Dossier vorbereiten",()=>editDossier(null)));
+   empty.append(make("p",q?"Keine passenden Dossiers gefunden.":"Noch keine vorgemerkten Stellen. Nutze das Dokumenten-Piktogramm bei einer Stellenkarte."));
+   if(!q)empty.append(button("Dossier generieren",openGenerationDialog));
    host.append(empty);
   }else for(const row of rows)host.append(card(row));
   renderLibrary();
@@ -197,38 +242,6 @@
   if(stored.length)notice(stored.length+" "+(stored.length===1?"Datei":"Dateien")+" lokal gespeichert."+ (rejected.length?" Übersprungen: "+rejected.join(", "):""));
   else if(rejected.length)notice("Keine Datei gespeichert. Zulässig sind PDF, DOC(X), ODT, TXT und Bilder bis 15 MB. "+rejected.join(", "),true);
  }
- function populateFromSelected(){
-  const job=availableJobs().find(j=>j.id===$("dossierJobSelect").value);
-  if(job){$("dossierTitleInput").value=job.title;$("dossierCompanyInput").value=job.company;}
- }
- async function submit(event){
-  event.preventDefault();
-  const title=$("dossierTitleInput").value.trim(),company=$("dossierCompanyInput").value.trim();
-  const jobId=$("dossierJobSelect").value||null;
-  if(!title){notice("Bitte eine Stellenbezeichnung angeben.",true);$("dossierTitleInput").focus();return;}
-  if(jobId){
-   const existing=state.dossiers.find(d=>d.jobId===jobId&&d.id!==state.editingId);
-   if(existing){$("dossierDialog").close();editDossier(existing);notice("Für dieses Inserat gibt es bereits ein Dossier. Du bearbeitest den vorhandenen Eintrag.");return;}
-  }
-  const former=state.dossiers.find(d=>d.id===state.editingId);
-  const now=new Date().toISOString();
-  const job=availableJobs().find(j=>j.id===jobId);
-  const entry={
-   id:former?.id||uniqueId(),ownerId:null,jobId,
-   title:title.slice(0,250),company:company.slice(0,250),
-   location:job?.location||former?.location||"",
-   status:"draft",origin:former?.origin||"local",createdAt:former?.createdAt||now,updatedAt:now,
-   preferences:{tone:$("dossierTone").value,length:$("dossierLength").value,focus:$("dossierFocus").value.trim().slice(0,1000)}
-  };
-  const submit=$("dossierSubmit");setBusy(submit,true);
-  try{
-   await put("dossiers",entry);$("dossierDialog").close();await refresh();
-   // CRM/Agency erst nach einer tatsächlich erfolgreichen Dossierspeicherung fortschreiben.
-   window.dispatchEvent(new CustomEvent("career-dossier-prepared",{detail:{job_id:entry.jobId||null}}));
-   notice("Dossiervorbereitung gespeichert. KI-Dokumentengenerierung ist noch nicht angeschlossen.");
-  }catch(err){notice("Dossier konnte nicht gespeichert werden: "+err.message,true);}
-  finally{setBusy(submit,false);}
- }
  async function addJob(job){
   if(!job||typeof job.id!=="string"||!job.id.trim()||job.id.startsWith("DEMO-")||
      typeof job.title!=="string"||!job.title.trim())
@@ -253,7 +266,7 @@
    };
    await put("dossiers",entry);
    await refresh();
-   notice("Stelle in die Dossierübersicht übernommen. Du kannst das Dossier jetzt vorbereiten.");
+   notice("Stelle vorgemerkt. Du kannst jetzt das Dossier generieren.");
    // Intentionally no career-dossier-prepared event: saving a job is not
    // evidence that an application document was prepared.
    return {added:true,dossierId:entry.id};
@@ -262,29 +275,18 @@
   refreshPending=result.catch(()=>{});
   return result;
  }
- function prepare(job){
-  if(!state.ready){notice("Lokale Ablage wird noch initialisiert. Bitte nochmals versuchen.",true);return;}
-  window.location.hash="#dossiers";
-  const existing=job?.id?state.dossiers.find(d=>d.jobId===job.id):null;
-  editDossier(existing||null);
-  if(job&&!existing){
-   const select=$("dossierJobSelect");
-   if(job.id && ![...select.options].some(o=>o.value===job.id))select.add(new Option(job.title,job.id));
-   select.value=job.id||"";
-   $("dossierTitleInput").value=job.title||"";
-   $("dossierCompanyInput").value=job.company||"";
-  }
- }
- window.CareerDossiers=Object.freeze({prepare,addJob,listJobIds:()=>state.dossiers.map(row=>row.jobId).filter(Boolean)});
- $("dossierCreate").addEventListener("click",()=>editDossier(null));
+ window.CareerDossiers=Object.freeze({
+  addJob,listJobIds:()=>state.dossiers.map(row=>row.jobId).filter(Boolean)
+ });
+ $("dossierGenerate").addEventListener("click",openGenerationDialog);
+ $("dossierGenerationForm").addEventListener("submit",submitGeneration);
+ $("dossierGenerateCancel").addEventListener("click",()=>$("dossierGenerationDialog").close());
  $("dossierUpload").addEventListener("click",()=>chooseFiles());
  $("dossierLibraryUpload").addEventListener("click",()=>chooseFiles());
  $("dossierFileInput").addEventListener("change",e=>handleUpload(e.target.files));
  $("dossierSearch").addEventListener("input",render);
- $("dossierJobSelect").addEventListener("change",populateFromSelected);
- $("dossierForm").addEventListener("submit",submit);
- $("dossierCancel").addEventListener("click",()=>$("dossierDialog").close());
- const initialRefresh=refresh().catch(err=>{
+ window.addEventListener("focus",()=>{if(state.ready)refresh().catch(err=>notice(err.message,true));});
+  const initialRefresh=refresh().catch(err=>{
   notice("Lokale Dateiablage nicht verfügbar: "+err.message,true);
   // Avoid an unhandled rejection when the user never clicks a Dossier action.
   // addJob checks state.ready and reports the failure to the caller.
