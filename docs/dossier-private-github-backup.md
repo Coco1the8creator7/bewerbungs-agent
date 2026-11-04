@@ -1,3 +1,5 @@
+> **Historischer Stand (nicht mehr aktiv):** Die unten dokumentierte private GitHub-Zwischenlösung wurde am 04.11.2026 auf ausdrücklichen Projektentscheid durch eine öffentliche **Demo-only**-Sicherung im bestehenden Repository ersetzt. Aktuelle Anleitung: [Öffentliches Demo-Backup](dossier-public-demo-backup.md). Für echte Bewerberdaten ist weiterhin ausschliesslich eine private, nutzerbezogene Backend-Speicherung vorgesehen.
+
 # Dossier-Studio: private GitHub-Sicherung (Einzelbenutzer-Teststand, 04.11.2026)
 
 ## Geltungsbereich
