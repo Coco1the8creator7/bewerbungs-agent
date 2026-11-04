@@ -57,9 +57,7 @@
 .dossier-dialog p{font-size:.84rem;line-height:1.6;color:#7c6853}
 .dossier-dialog label{display:block;color:#5a4634;font-size:.82rem;font-weight:700;margin:16px 0 5px}
 .dossier-dialog input,.dossier-dialog select,.dossier-dialog textarea{color:#443528;background:#fffaf1;border:1px solid #d7c5b0}
-.dossier-dialog .dossier-dialog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 13px}
 .dossier-dialog .dossier-dialog-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:23px}
-.dossier-dialog .dossier-disclaimer{border-top:1px solid #e6d6bf;padding-top:13px;margin-top:16px}
 @media(max-width:660px){
  #mode-dossiers{padding-top:20px}
  #mode-dossiers .dossier-heading{align-items:stretch}
@@ -73,9 +71,9 @@
  #mode-dossiers .dossier-file{display:block}
  #mode-dossiers .dossier-file-actions{margin-top:8px}
  #mode-dossiers .dossier-toolbar input{width:100%}
- .dossier-dialog .dossier-dialog-grid{grid-template-columns:1fr}
-}
+ }
 
-/* Dossier Studio: entrypoint only; existing Dossiers cards and uploads stay intact. */
-#mode-dossiers .dossier-studio-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:10px;padding:10px 15px;font-size:.87rem;font-weight:700;white-space:nowrap;min-height:40px}
-#mode-dossiers .dossier-studio-link:focus-visible{outline:3px solid var(--ca-accent,#c8a87e);outline-offset:3px}
+/* Single-choice generation dialog; preserve existing Dossiers cards and file library. */
+.dossier-dialog #dossierGenerateJobSelect{width:100%;min-height:42px;border-radius:9px;padding:10px}
+.dossier-dialog .dossier-generation-hint{font-size:.78rem;line-height:1.5;color:var(--ca-text-muted,#746a67);margin:14px 0 0}
+#mode-dossiers .dossier-card-actions button:disabled{opacity:.6;cursor:wait}
