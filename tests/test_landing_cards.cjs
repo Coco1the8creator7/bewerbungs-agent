@@ -76,8 +76,8 @@ const context={
 const methods=vm.runInNewContext(source+"\n({cardRatingButton})",context);
 let button=methods.cardRatingButton(job);
 assert.equal(button.textContent,"99/100","suggestion is shown when user rating is absent");
-assert.ok(button.className.includes("unrated"));
-assert.match(button.attributes["aria-label"],/Inserat bewerten/);
+assert.ok(button.className.includes("suggested"));
+assert.match(button.attributes["aria-label"],/Bewertungsvorschlag/);
 button.click();
 assert.equal(opened,job.id);
 assert.equal(focused,1,"rating chip focuses the existing slider");
