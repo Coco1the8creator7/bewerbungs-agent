@@ -1,0 +1,70 @@
+"use strict";
+const test=require("node:test");
+const assert=require("node:assert/strict");
+const fs=require("node:fs");
+const docs=require("../dashboard/dossier-documents.js");
+const html=fs.readFileSync("dashboard/index.html","utf8");
+const studio=fs.readFileSync("dashboard/dossier-studio.html","utf8");
+const main=fs.readFileSync("dashboard/dossiers.js","utf8");
+const helper=fs.readFileSync("dashboard/dossier-documents.js","utf8");
+const testJob={id:"job-77",title:"Projektleitung Fernwärme",company:"Musterunternehmen AG",location:"Zürich"};
+test("job-linked draft builds exactly three editable documents without invented personal facts",()=>{
+ const d=docs.createDraft(testJob);
+ assert.deepEqual(Object.keys(d.docs).sort(),["cv","email","letter"]);
+ assert.equal(d.docs.cv.data.role,testJob.title);
+ assert.match(d.docs.cv.data.name,/\[Vorname Nachname\]/);
+ assert.match(d.docs.cv.sections.find(x=>x.id==="experience").text,/\[Berufserfahrung/);
+ assert.match(d.docs.letter.data.title,/Projektleitung Fernwärme/);
+ assert.match(d.docs.letter.sections[0].text,/Musterunternehmen AG/);
+ assert.match(d.docs.email.data.subject,/Projektleitung Fernwärme/);
+ assert.match(d.docs.email.data.body,/Musterunternehmen AG/);
+ assert.deepEqual(Object.values(d.enabled),[true,true,true]);
+ assert.doesNotMatch(JSON.stringify(d),/Alex Muster|Muster Energie AG|2024 – heute/);
+});
+test("export writes three valid PDF signatures in a downloadable ZIP",()=>{
+ const d=docs.createDraft(testJob);
+ const zip=docs.bundleBytes(d);
+ const b=Buffer.from(zip);
+ assert.equal(b.readUInt32LE(0),0x04034b50);
+ let p=0,count=0,names=[];
+ while(p+30<b.length && b.readUInt32LE(p)===0x04034b50){
+  const size=b.readUInt32LE(p+18),nameLength=b.readUInt16LE(p+26),extraLength=b.readUInt16LE(p+28);
+  const name=b.subarray(p+30,p+30+nameLength).toString("utf8");
+  const body=b.subarray(p+30+nameLength+extraLength,p+30+nameLength+extraLength+size);
+  assert.ok(body.subarray(0,8).toString("latin1").startsWith("%PDF-1.4"),name);
+  assert.ok(body.toString("latin1").includes("%%EOF"),name);
+  names.push(name);count++;
+  p+=30+nameLength+extraLength+size;
+ }
+ assert.equal(count,3);
+ assert.deepEqual(names,["Lebenslauf.pdf","Motivationsschreiben.pdf","Bewerbungsmail.pdf"]);
+ assert.ok(b.includes(Buffer.from("PK\u0005\u0006","latin1")),"ZIP end-of-central-directory");
+});
+test("PDF export reflects latest edited document text and adds pages for overflow",()=>{
+ const d=docs.createDraft(testJob);
+ d.docs.cv.data.name="Regina Beispiel";
+ d.docs.cv.sections.find(s=>s.id==="skills").text="Eigenständige Prüfung";
+ const buf=Buffer.from(docs.pdfBytes(d,"cv")).toString("latin1");
+ assert.match(buf,/Regina Beispiel/);
+ assert.match(buf,/Eigenständige Prüfung/);
+ d.docs.cv.sections.find(s=>s.id==="skills").text="Viele Erfahrungen\n".repeat(150);
+ assert.match(Buffer.from(docs.pdfBytes(d,"cv")).toString("latin1"),/\/Count [2-9]\b/);
+});
+test("page and studio share the job-linked workflow; old setup cannot reappear",()=>{
+ assert.match(html,/id="dossierGenerate"/);
+ assert.match(html,/id="dossierGenerationDialog"/);
+ assert.match(main,/async function generateDossier/);
+ assert.match(main,/if\(previous\.generatedStudio\)/);
+ assert.match(main,/button\("Dossier bearbeiten"/);
+ assert.match(main,/button\("Dossier herunterladen"/);
+ assert.match(studio,/new URLSearchParams\(location\.search\)\.get\("dossier"\)/);
+ assert.match(studio,/row\.generatedStudio=generatedSnapshot\(snapshot\)/);
+ assert.match(studio,/id="studioDownload"/);
+ assert.match(studio,/await persistNow\(\)/);
+ assert.doesNotMatch(html,/id="dossierDialog"|id="dossierCreate"|id="dossierTone"|id="dossierFocus"/);
+ assert.doesNotMatch(main,/function editDossier\(|function prepare\(|button\("Datei hinzufügen"|button\("Einstellungen"/);
+ assert.doesNotMatch(helper,/fetch\s*\(|XMLHttpRequest|https?:\/\//);
+ const inline=studio.match(/<script>\s*([\s\S]*?)<\/script>/)?.[1];
+ assert.ok(inline,"studio inline script");
+ assert.doesNotThrow(()=>new Function(inline),"studio inline syntax");
+});
