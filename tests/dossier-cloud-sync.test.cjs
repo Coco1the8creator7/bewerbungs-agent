@@ -9,12 +9,12 @@ const draft={docs:{cv:{type:"cv",data:{name:"Test"}},letter:{type:"letter"},emai
 const zip=Uint8Array.from([80,75,3,4,1,2,3,4]);
 
 function server(){
- const files=new Map();let counter=0,writes=0;
+ const files=new Map();let counter=0,writes=0,privateVisibility=true;
  async function request(url,options){
   const path=url.replace("https://api.github.com/repos/","").split("?")[0];
   const method=options?.method||"GET";
   const response=(status,value)=>({ok:status>=200&&status<300,status,json:async()=>value});
-  if(path==="tester/private")return response(200,{private:true,visibility:"private",default_branch:"main"});
+  if(path==="tester/private")return response(200,{private:privateVisibility,visibility:privateVisibility?"private":"public",default_branch:"main"});
   if(path==="tester/public")return response(200,{private:false,visibility:"public",default_branch:"main"});
   if(!path.startsWith("tester/private/contents/"))return response(404,{message:"Not found"});
   const key=path.slice("tester/private/contents/".length);
@@ -30,7 +30,7 @@ function server(){
   }
   return response(405,{message:"Unsupported"});
  }
- return {request,files,get writes(){return writes;},externalReplace(name,data){
+ return {request,files,get writes(){return writes;},setVisibility(value){privateVisibility=value;},externalReplace(name,data){
   const key="dossier-studio/v1/test-123/"+name;
   const bytes=Buffer.from(JSON.stringify({format:"career-agency-dossier-v1",dossierId:"test-123",savedAt:"external",data}),"utf8");
   files.set(key,{sha:"external-"+(++counter),content:bytes.toString("base64")});
@@ -102,4 +102,23 @@ test("studio wires opt-in cloud and change-aware background synchronization",()=
  const inline=html.match(/<script>\s*([\s\S]*?)<\/script>/)?.[1];
  assert.ok(inline);
  assert.doesNotThrow(()=>new Function(inline));
+});
+test("repository becoming public after connecting blocks every further upload",async()=>{
+ const s=server(),client=cloud.createClient(s.request);
+ await client.connect({repository:"tester/private",token:"token",id:"test-123",local:draft});
+ s.setVisibility(false);
+ await assert.rejects(client.push(draft,zip),e=>e.code==="PUBLIC");
+ assert.equal(s.writes,0);
+ assert.equal(client.status().blocked,true);
+});
+test("keeping local content requires explicit conflict-resolution action",async()=>{
+ const s=server(),first=cloud.createClient(s.request),next=cloud.createClient(s.request);
+ await first.connect({repository:"tester/private",token:"token",id:"test-123",local:draft});
+ await first.push(draft,zip);
+ const changed={...draft,activeDoc:"email"};
+ const state=await next.connect({repository:"tester/private",token:"token",id:"test-123",local:changed});
+ assert.equal(state.blocked,true);
+ next.keepLocal();
+ await next.push(changed,zip);
+ assert.deepEqual(await next.pull(),changed);
 });
