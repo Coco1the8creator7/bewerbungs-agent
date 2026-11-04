@@ -113,7 +113,7 @@
  function normalizeRatings(raw,market){
   const ratings={},groups=market==="career"?careerCriteria:criteria;
   if(raw&&typeof raw==="object"&&!Array.isArray(raw))
-   for(const [id,item] of Object.entries(raw).slice(0,400)){
+   for(const [id,item] of Object.entries(raw).slice(0,10000)){
     if(typeof id!=="string"||!id||id.length>180||!item||typeof item!=="object")continue;
     const scores={};
     for(const c of groups)if(Number.isInteger(item.scores?.[c.id])&&item.scores[c.id]>=1&&item.scores[c.id]<=5)scores[c.id]=item.scores[c.id];
