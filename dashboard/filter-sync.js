@@ -68,7 +68,8 @@
  }
  function syncUpdated(){window.dispatchEvent(new Event("career-filter-sync-updated"));}
  function isConfirmed(id){
-  return ready&&confirmed.has(id)&&!kinds.some(kind=>Object.hasOwn(pending[kind],id));
+  return ready&&confirmed.has(id)&&!kinds.some(kind=>Object.hasOwn(pending[kind],id))&&
+   (window.AgentCareerFeedback?.getScore(id)!=null||window.CareerRadarBridge?.getCareerRating(id)!=null);
  }
  async function sync(){
   if(!ready||busy||!hasPending())return;
@@ -117,6 +118,28 @@
     window.AgentCareerFeedback?.restoreEntry(id,value);
    for(const [id,value] of Object.entries(pending.radar_career_ratings))
     window.CareerRadarBridge?.restoreCareerRating(id,value);
+   // Read the committed GitHub state once at startup. Previously synced 1–5
+   // criteria were not part of the dashboard's original feedback loader.
+   // Never overwrite a pending draft or a newer local opt-in rating.
+   if(navigator.onLine!==false){
+    try{
+     const remote=await window.GithubFeedback.loadFilterRatings();
+     if(remote?.type==="bewerbungs-agent-feedback"){
+      for(const item of remote.radar_career_ratings||[]){
+       if(!item||typeof item.id!=="string"||Object.hasOwn(pending.radar_career_ratings,item.id))continue;
+       const local=window.CareerRadarBridge?.getCareerRating(item.id);
+       if(!local||((Date.parse(local.updated_at)||0)<=(Date.parse(item.updated_at)||0))){
+        window.CareerRadarBridge?.restoreCareerRating(item.id,item);
+        if(!Object.hasOwn(pending.relevance_ratings,item.id))confirmed.add(item.id);
+       }
+      }
+      for(const item of remote.relevance_ratings||[]){
+       if(item?.id&&!Object.hasOwn(pending.relevance_ratings,item.id)&&
+          window.AgentCareerFeedback?.getScore(item.id)===item.score)confirmed.add(item.id);
+      }
+     }
+    }catch(_err){/* Offline reads must not block local drafts or retry. */}
+   }
   }catch(err){
    storageError="Lokale Bewertungen konnten nicht geladen werden: "+err.message;
   }
