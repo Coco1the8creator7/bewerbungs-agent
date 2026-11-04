@@ -43,7 +43,7 @@ jobs:
           node --check dashboard/dossier-cloud-sync.js
           node --check dashboard/dossier-studio-modules.js
           node --check dashboard/dossier-studio-zoom.js
-          node --test tests/dossiers.test.cjs tests/job-popup.test.cjs tests/dossier-documents.test.cjs tests/dossier-cloud-sync.test.cjs tests/dossier-studio-layout.test.cjs
+          node --test tests/dossiers.test.cjs tests/job-popup.test.cjs tests/dossier-documents.test.cjs tests/dossier-cloud-sync.test.cjs tests/dossier-studio-layout.test.cjs tests/dossier-studio-wrap.test.cjs
           node tests/test_dossier_transfer.cjs
       - name: Run offline contract tests
         run: python -m unittest discover -s tests -v
