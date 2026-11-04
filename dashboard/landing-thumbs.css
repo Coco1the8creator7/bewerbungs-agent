@@ -1,0 +1,92 @@
+/* Desktop-first card reaction layout. All other approved card parts remain unchanged. */
+#newJobsList .card-feedback-footer{
+ margin-top:auto;
+ width:100%;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:10px;
+ padding-top:12px;
+ border-top:1px solid var(--ca-line,#ded4ce);
+}
+#newJobsList .card-feedback-footer .card-rating{
+ align-self:center;
+ min-width:90px;
+ height:44px;
+ font-variant-numeric:tabular-nums;
+}
+#newJobsList .card-feedback-footer .card-rating.suggested{
+ background:var(--ca-paper-soft,#f4eadc);
+ color:var(--ca-ink,#584737);
+ border:1px solid var(--ca-line,#d9c7b1);
+}
+#newJobsList .card-quick-actions{
+ display:flex;
+ align-items:center;
+ justify-content:flex-end;
+ gap:9px;
+ margin-left:auto;
+}
+#newJobsList .card-thumb{
+ display:inline-grid;
+ place-items:center;
+ width:46px;
+ height:44px;
+ min-height:44px;
+ padding:9px;
+ border:1px solid transparent;
+ border-radius:10px;
+ box-shadow:none;
+ cursor:pointer;
+ transition:background .15s ease,border-color .15s ease,transform .15s ease;
+}
+#newJobsList .card-thumb svg{
+ width:23px;
+ height:23px;
+ stroke:currentColor;
+ stroke-width:1.75;
+ fill:none;
+ stroke-linecap:round;
+ stroke-linejoin:round;
+ pointer-events:none;
+}
+#newJobsList .card-thumb-up{
+ background:#e8f3e9;
+ border-color:#b8d5c0;
+ color:#247448;
+}
+#newJobsList .card-thumb-up:hover,
+#newJobsList .card-thumb-up[aria-pressed="true"]{
+ background:#cfe8d6;
+ border-color:#82bd95;
+ color:#165b33;
+}
+#newJobsList .card-thumb-down{
+ background:#fbe8e8;
+ border-color:#e4baba;
+ color:#a12f38;
+}
+#newJobsList .card-thumb-down:hover{
+ background:#f5d4d4;
+ border-color:#d99095;
+ color:#84232b;
+}
+#newJobsList .card-thumb:focus-visible{
+ outline:3px solid var(--ca-accent,#9a547e);
+ outline-offset:3px;
+}
+#newJobsList .card-thumb:active{transform:scale(.95)}
+#newJobsList .card-feedback-footer .card-restore-button{
+ margin-left:auto;
+ min-height:44px;
+ border:1px solid var(--ca-accent-line,#e3d2de);
+}
+@media(max-width:650px){
+ #newJobsList .card-feedback-footer{gap:8px}
+ #newJobsList .card-quick-actions{gap:8px}
+ #newJobsList .card-thumb{width:44px;height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ #newJobsList .card-thumb{transition:none}
+}
