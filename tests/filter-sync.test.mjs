@@ -93,6 +93,15 @@ test("20-second poll is idle without changes; manual sync and confirmed removal"
  assert.equal(h.win.CareerFilterSync.isConfirmed("JOB-1"),true);
  assert.equal(h.save.value.pending.relevance_ratings["JOB-1"],undefined);
 });
+test("20-second interval automatically uploads only the changed rating",async()=>{
+ const h=controllerHarness();await h.flush();h.rate(91);await h.flush();
+ h.tick();await h.flush();
+ assert.equal(h.writes.length,1);
+ assert.equal(h.writes[0].relevance_ratings["JOB-1"].score,91);
+ assert.equal(h.win.CareerFilterSync.isConfirmed("JOB-1"),true);
+ h.tick();await h.flush();
+ assert.equal(h.writes.length,1);
+});
 test("network error retains draft, reloaded controller can retry",async()=>{
  const h=controllerHarness();await h.flush();h.rate(82);await h.flush();
  h.reply(async()=>{throw Error("offline")});h.tick();await h.flush();
