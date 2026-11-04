@@ -25,15 +25,15 @@ assert.match(html,/dismissedJobFeedback\.clear\(\);for\(const \[id,v\] of dismis
 assert.match(html,/function buildRelevancePayload\(\)/);
 assert.match(html,/signal:value\.signal,source:value\.source,dismissed_at:value\.dismissed_at/);
 assert.match(cards,/window\.CareerJobSwipe\?\.bind\(card,\{onDismiss:direction=>dismissLandingJob\(j\.id,direction==="right"\?"swipe_right":"swipe_left"\)\}\)/);
-assert.match(cards,/dismissLandingJob\(j\.id,"button"\)/);
+assert.match(html,/dismissLandingJob\(job\.id,"button"\)/);
 assert.match(cards,/restoreLandingJob\(j\.id\)/);
-assert.match(cards,/card\.append\(dismissControl\)/);
+assert.match(cards,/footer\.append\(quickActions\);card\.append\(footer\)/);
 assert.match(cards,/openDetails\(j\.id\)/);
 assert.match(html,/\["viewDismissed","dismissed"\]/);
 assert.match(github,/\["dismissals","id"\]/);
 // Exercise the real three-way GitHub feedback merge without network calls.
 const syncContext={window:{}};
-vm.runInNewContext(github.replace("window.GithubFeedback=Object.freeze({getToken,setToken,clearToken,loadPublic,save});",
+vm.runInNewContext(github.replace(/window\.GithubFeedback=Object\.freeze\(\{[^}]+\}\);/,
  "window.__mergeForTest=merge;"),syncContext);
 const merge=syncContext.window.__mergeForTest;
 const oldFeedback={type:"bewerbungs-agent-feedback",schema_version:"1.0.0",

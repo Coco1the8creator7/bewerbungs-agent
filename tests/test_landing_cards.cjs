@@ -29,9 +29,11 @@ const start=html.indexOf("function renderNewJobs(){");
 const end=html.indexOf("\nfunction render(){",start);
 assert.ok(start>=0&&end>start);
 const cards=html.slice(start,end);
-assert.match(cards,/cardActions\.append\(secretDossierButton\(j\),cardRatingButton\(j\)\)/);
+assert.match(cards,/cardActions\.append\(secretDossierButton\(j\)\)/);
+assert.match(cards,/footer\.append\(cardRatingButton\(j\)\)/);
+assert.match(cards,/quickActions\.append\(cardThumbButton\(j,true\),cardThumbButton\(j,false\)\)/);
 assert.match(cards,/top\.append\(info,cardActions\)/);
-assert.match(cards,/card\.append\(tags\)/);
+assert.doesNotMatch(cards,/card\.append\(tags\)/);
 assert.match(cards,/openDetails\(j\.id\)/,"whole card still opens the details dialog");
 for(const forbidden of ["exportMarkButton(j)","jobSalaryLabel(j)","Lohn-Range",
  "V2-Priorität","Vorschlag ","actions.append(actionButton(j))","card-footer"]){
@@ -48,7 +50,8 @@ assert.match(html,/input\.addEventListener\("change",\(\)=>\{setRating\(j\.id,in
 // The importer score must never be presented as a manual rating.
 const source=html.slice(html.indexOf("function cardRatingButton(j){"),html.indexOf("function ratingPanel(j){"));
 assert.match(source,/ratingOf\(j\.id\)\?\.score/);
-assert.doesNotMatch(source,/selection\?\.|classify\(/);
+assert.match(source,/selection\?\.suggested_score/);
+assert.match(source,/Automatischer Bewertungsvorschlag/);
 class Button{
  constructor(){this.attributes={};this.listeners={};this.textContent="";this.title="";this.type="";}
  setAttribute(key,val){this.attributes[key]=String(val);}
@@ -61,6 +64,8 @@ const job={id:"job-7",title:"Projektleiter Fernwärme",selection:{suggested_scor
 const fakeDocument={createElement:()=>new Button()};
 const context={
  document:fakeDocument,selectedJobIds,Number,
+ window:{AgentCareerFilter:{classify:()=>({priority:42})}},
+ getScore:()=>null,
  ratingOf:()=>userRating,
  openDetails:(id)=>{opened=id},
  el:()=>({querySelector:()=>({focus(){focused++}})}),
@@ -70,24 +75,24 @@ const context={
 };
 const methods=vm.runInNewContext(source+"\n({cardRatingButton})",context);
 let button=methods.cardRatingButton(job);
-assert.equal(button.textContent,"Bewerten","no user rating must be shown as missing");
-assert.ok(button.className.includes("unrated"));
-assert.match(button.attributes["aria-label"],/Inserat bewerten/);
+assert.equal(button.textContent,"99/100","suggestion is shown when user rating is absent");
+assert.ok(button.className.includes("suggested"));
+assert.match(button.attributes["aria-label"],/Bewertungsvorschlag/);
 button.click();
 assert.equal(opened,job.id);
 assert.equal(focused,1,"rating chip focuses the existing slider");
 
 userRating={score:87};
 button=methods.cardRatingButton(job);
-assert.equal(button.textContent,"87 / 100");
+assert.equal(button.textContent,"87/100");
 assert.ok(button.className.includes("rated"));
 button.click();
 assert.equal(focused,2);
 
 userRating={score:0};
-assert.equal(methods.cardRatingButton(job).textContent,"Bewerten","invalid ratings must not display");
+assert.equal(methods.cardRatingButton(job).textContent,"99/100","invalid manual ratings never override the suggestion");
 userRating={score:100};
-assert.equal(methods.cardRatingButton(job).textContent,"100 / 100");
+assert.equal(methods.cardRatingButton(job).textContent,"100/100");
 
 // The detail dialog owns the export icon; the card itself does not.
 assert.ok(html.includes('id="detailExportMark"'));

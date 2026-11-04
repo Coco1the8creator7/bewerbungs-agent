@@ -87,7 +87,8 @@ class DashboardContractTests(unittest.TestCase):
         self.assertIsNotNone(details, "Details dialog function not found")
         self.assertNotIn("ratingPanel(", cards.group(1),
                          "The landing-page job cards must not contain rating controls")
-        self.assertIn("card.append(tags);", cards.group(1))
+        self.assertIn("footer.append(cardRatingButton(j))", cards.group(1))
+        self.assertIn("quickActions.append(cardThumbButton(j,true),cardThumbButton(j,false))", cards.group(1))
         self.assertIn("openDetails(j.id)", cards.group(1),
                       "Clicking a job card must still open its details dialog")
         self.assertIn('el("detailReviewHost").replaceChildren(ratingPanel(j))', details.group(1),

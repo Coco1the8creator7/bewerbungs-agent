@@ -14,7 +14,7 @@ async function run(){
  assert.match(html,/await loadLocalSwipeChoices\(\)/);
  assert.ok(html.indexOf("await loadLocalSwipeChoices()")<html.indexOf('fetch("./jobs.json"'),
   "decisions must be restored before imported cards are rendered");
- assert.match(html,/dismissedJobFeedback\.set\(id,record\);\s*lastDismissedId=id;\s*const durability=persistSwipeChoice\(id,record\)/);
+ assert.match(html,/dismissedJobFeedback\.set\(id,record\);\s*positiveJobFeedback\.delete\(id\);[^\n]*\s*lastDismissedId=id;\s*const durability=persistSwipeChoice\(id,record\)/);
  assert.match(html,/persistSwipeChoice\(id,\{signal:"restored",restored_at:new Date\(\)\.toISOString\(\)\}\)/);
  assert.match(html,/applyLocalSwipeChoices\(\);\s*selectedJobIds\.clear\(\)/);
  assert.match(html,/Weggewischte Stellen werden unabhängig davon als Inserat-ID und Entscheidung auf diesem Gerät gespeichert/);
@@ -27,6 +27,7 @@ async function run(){
  const saved={value:undefined,calls:[]};
  const makeContext=()=>{
   const dismissedJobFeedback=new Map();
+  const positiveJobFeedback=new Map();
   const window={AgentStore:{
    async saveSwipePrefs(value){
     // Simulates IndexedDB writes; never stores ratings or entire job records.
@@ -35,7 +36,7 @@ async function run(){
    },
    async loadSwipePrefs(){return structuredClone(saved.value);}
   }};
-  const context={dismissedJobFeedback,window,Date,Promise,Error,String,Map,Number,
+  const context={dismissedJobFeedback,positiveJobFeedback,window,Date,Promise,Error,String,Map,Number,
    validDate:value=>typeof value==="string"&&Number.isFinite(Date.parse(value))?Date.parse(value):null,
    validateDismissals:rows=>{
     const result=new Map();
@@ -46,11 +47,20 @@ async function run(){
     }
     return result;
    },
+   validatePositiveFeedback:rows=>{
+    const result=new Map();
+    for(const r of rows){
+     if(!r||r.signal!=="interested"||r.source!=="thumb_up"||
+        !Number.isFinite(Date.parse(r.marked_at)))throw Error("Ungültige positive Schnellbewertung");
+     result.set(r.id,{signal:r.signal,source:r.source,marked_at:r.marked_at});
+    }
+    return result;
+   },
    el:()=>({textContent:"",hidden:true})
   };
   const source='const localSwipeChoices=new Map();let pendingSwipeSave=Promise.resolve();\n'
    +helpers+'\n({localSwipeChoices,validateSwipeChoices,applyLocalSwipeChoices,loadLocalSwipeChoices,persistSwipeChoice})';
-  return {api:vm.runInNewContext(source,context),dismissedJobFeedback,window};
+  return {api:vm.runInNewContext(source,context),dismissedJobFeedback,positiveJobFeedback,window};
  };
  const now="2026-11-04T12:00:00Z";
  const restoredAt="2026-11-04T12:05:00Z";
@@ -103,6 +113,24 @@ async function run(){
  assert.throws(()=>undone.api.validateSwipeChoices({version:1,entries:[
   {id:"abc",signal:"not_interested",source:"swipe_left",dismissed_at:"bogus"}
  ]}),/Ungültiger/);
+
+ // Positive thumbs use the same durable key, and must survive refresh.
+ await undone.api.persistSwipeChoice("job-liked",{
+  signal:"interested",source:"thumb_up",marked_at:now
+ });
+ const positiveReload=makeContext();
+ await positiveReload.api.loadLocalSwipeChoices();
+ assert.equal(positiveReload.positiveJobFeedback.get("job-liked").signal,"interested");
+ assert.equal(positiveReload.dismissedJobFeedback.has("job-liked"),false);
+ assert.equal(positiveReload.dismissedJobFeedback.has("job-13"),true);
+ // Switching one job from positive to negative deletes its previous reaction.
+ await positiveReload.api.persistSwipeChoice("job-liked",{
+  signal:"not_interested",source:"button",dismissed_at:restoredAt
+ });
+ const negativeReload=makeContext();
+ await negativeReload.api.loadLocalSwipeChoices();
+ assert.equal(negativeReload.positiveJobFeedback.has("job-liked"),false);
+ assert.equal(negativeReload.dismissedJobFeedback.has("job-liked"),true);
 
  // Storage failures must be surfaced, not silently reported as saved.
  undone.window.AgentStore.saveSwipePrefs=async()=>{throw Error("IndexedDB blockiert")};
