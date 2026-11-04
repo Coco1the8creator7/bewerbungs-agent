@@ -40,7 +40,8 @@ jobs:
         run: |
           node --check dashboard/dossiers.js
           node --check dashboard/dossier-documents.js
-          node --test tests/dossiers.test.cjs tests/job-popup.test.cjs tests/dossier-documents.test.cjs
+          node --check dashboard/dossier-cloud-sync.js
+          node --test tests/dossiers.test.cjs tests/job-popup.test.cjs tests/dossier-documents.test.cjs tests/dossier-cloud-sync.test.cjs
           node tests/test_dossier_transfer.cjs
       - name: Run offline contract tests
         run: python -m unittest discover -s tests -v
