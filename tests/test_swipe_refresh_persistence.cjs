@@ -27,6 +27,7 @@ async function run(){
  const saved={value:undefined,calls:[]};
  const makeContext=()=>{
   const dismissedJobFeedback=new Map();
+  const positiveJobFeedback=new Map();
   const window={AgentStore:{
    async saveSwipePrefs(value){
     // Simulates IndexedDB writes; never stores ratings or entire job records.
@@ -35,7 +36,7 @@ async function run(){
    },
    async loadSwipePrefs(){return structuredClone(saved.value);}
   }};
-  const context={dismissedJobFeedback,window,Date,Promise,Error,String,Map,Number,
+  const context={dismissedJobFeedback,positiveJobFeedback,window,Date,Promise,Error,String,Map,Number,
    validDate:value=>typeof value==="string"&&Number.isFinite(Date.parse(value))?Date.parse(value):null,
    validateDismissals:rows=>{
     const result=new Map();
