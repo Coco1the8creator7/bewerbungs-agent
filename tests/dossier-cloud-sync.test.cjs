@@ -93,6 +93,9 @@ test("studio wires opt-in cloud and change-aware background synchronization",()=
  assert.match(html,/dossier-cloud-sync\.js\?v=/);
  assert.match(html,/id="cloudRepo"/);
  assert.match(html,/id="cloudToken" type="password"/);
+ assert.match(html,/id="studioPrintPdf"/);
+ assert.match(html,/\$\("studioPrintPdf"\)\.addEventListener\("click",showReview\)/);
+ assert.match(html,/await persistNow\(\);\s*closeReview\(\);\s*window\.print\(\)/);
  assert.match(html,/id="cloudSync"/);
  assert.match(html,/function cloudChanged\(/);
  assert.match(html,/if\(cloudRevision===revision\)cloudDirty=false/);
