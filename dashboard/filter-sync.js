@@ -7,6 +7,7 @@
  const confirmed=new Set();
  const touchedBeforeReady=[];
  let ready=false,busy=false,lastError="",successUntil=0,writing=Promise.resolve(),storageError="";
+ let writeRevision=0,savedRevision=0;
  const button=document.getElementById("radarSyncFeedback");
  const status=document.getElementById("radarSyncStatus");
  const equals=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
@@ -46,7 +47,11 @@
  }
  function durable(){
   const snapshot={version:1,pending:structuredClone(pending),confirmed:[...confirmed]};
-  writing=writing.catch(()=>{}).then(async()=>{await window.AgentStore.saveFilterSync(snapshot);storageError="";});
+  const revision=++writeRevision;
+  writing=writing.catch(()=>{}).then(async()=>{
+   await window.AgentStore.saveFilterSync(snapshot);
+   savedRevision=revision;storageError="";
+  });
   writing.catch(err=>{storageError="Lokale Sicherung fehlgeschlagen: "+err.message;show();});
   return writing;
  }
@@ -161,7 +166,8 @@
  window.addEventListener("focus",()=>{if(hasPending())sync();});
  document.addEventListener("visibilitychange",()=>{if(!document.hidden&&hasPending())sync();});
  window.addEventListener("beforeunload",e=>{
-  if(!hasPending()||!storageError)return;
+  if(!hasPending()&&writeRevision===savedRevision)return;
+  if(!storageError&&writeRevision===savedRevision)return;
   e.preventDefault();e.returnValue="";
  });
  setInterval(()=>{if(hasPending()&&navigator.onLine!==false)sync();else show();},20000);
