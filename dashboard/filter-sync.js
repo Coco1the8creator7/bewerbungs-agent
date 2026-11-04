@@ -53,8 +53,10 @@
  function entry(kind,id){
   if(kind==="relevance_ratings")return window.AgentCareerFeedback?.getEntry(id)||null;
   const current=window.CareerRadarBridge?.getCareerRating(id);
-  // Empty values are explicit tombstones so a removed rating is never silently lost.
-  return current||{id,scores:{},note:"",updated_at:new Date().toISOString()};
+  // Synchronise numeric criteria only. Personal notes remain in opt-in local Radar storage.
+  // Empty scores are explicit tombstones for cleared ratings.
+  return {id,scores:structuredClone(current?.scores||{}),
+   updated_at:current?.updated_at||new Date().toISOString()};
  }
  function capture(kind,id){
   if(!kinds.includes(kind)||typeof id!=="string"||!id||id.startsWith("DEMO-"))return;
@@ -69,7 +71,8 @@
  function syncUpdated(){window.dispatchEvent(new Event("career-filter-sync-updated"));}
  function isConfirmed(id){
   return ready&&confirmed.has(id)&&!kinds.some(kind=>Object.hasOwn(pending[kind],id))&&
-   (window.AgentCareerFeedback?.getScore(id)!=null||window.CareerRadarBridge?.getCareerRating(id)!=null);
+   (window.AgentCareerFeedback?.getScore(id)!=null||
+    Object.keys(window.CareerRadarBridge?.getCareerRating(id)?.scores||{}).length>0);
  }
  async function sync(){
   if(!ready||busy||!hasPending())return;
