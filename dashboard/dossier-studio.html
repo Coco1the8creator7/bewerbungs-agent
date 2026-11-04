@@ -244,6 +244,26 @@
  .layer-frame .flow-exclusion{visibility:hidden!important;display:block!important}
  .layer-frame[data-source="section:photo"] .doc-photo-empty{display:grid!important}
 }
+
+/* Preserve established template signatures when source blocks become page frames. */
+.layered-page[data-theme="structured"]::before{content:"";position:absolute;inset:0 0 auto;height:18%;background:var(--doc-accent);pointer-events:none;z-index:0}
+.layered-page[data-theme="structured"] .layer-frame[data-source="data:name"] .frame-edit,
+.layered-page[data-theme="structured"] .layer-frame[data-source="data:role"] .frame-edit,
+.layered-page[data-theme="structured"] .layer-frame[data-source="data:contact"] .frame-edit{color:#fff}
+.layered-page[data-theme="classic"] .layer-frame .frame-edit.doc-name{font-weight:550;letter-spacing:.01em}
+.layered-page[data-theme="minimal"] .layer-frame .frame-edit.doc-name{font-weight:500;letter-spacing:-.07em}
+.layered-page[data-theme="editorial"] .layer-frame .frame-edit.doc-name{font-family:var(--doc-body);font-weight:500;font-style:italic;letter-spacing:-.05em}
+.layered-page .layer-frame .frame-edit.doc-name{font-size:clamp(calc(20px * var(--doc-scale,1) * var(--free-font-scale,1)),calc(4.3cqw * var(--doc-scale,1) * var(--free-font-scale,1)),calc(38px * var(--doc-scale,1) * var(--free-font-scale,1)))}
+.layered-page .layer-frame .frame-edit.doc-role,
+.layered-page .layer-frame .frame-edit.doc-contact,
+.layered-page .layer-frame .frame-edit.section-body,
+.layered-page .layer-frame .frame-edit.letter-paragraph,
+.layered-page .layer-frame .frame-edit.letter-greeting{font-size:calc(1em * var(--free-font-scale,1))}
+.layered-page .layer-frame .frame-edit.doc-role{font-size:calc(1.05em * var(--free-font-scale,1))}
+.layered-page .layer-frame .frame-edit.doc-contact{font-size:calc(.77em * var(--free-font-scale,1))}
+.layered-page .layer-frame .frame-edit.section-body{font-size:calc(.93em * var(--free-font-scale,1))}
+.layered-page .layer-frame .frame-edit.letter-title{font-size:calc(1.35em * var(--free-font-scale,1))}
+@media print{.layered-page[data-theme="structured"]::before{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
 </style>
 </head>
 <body>
