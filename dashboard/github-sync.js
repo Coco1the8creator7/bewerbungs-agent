@@ -42,7 +42,7 @@
   if(remote.type!=="bewerbungs-agent-feedback"||remote.schema_version!=="1.0.0")throw Error("Unbekanntes GitHub-Feedbackformat");
   if(!base){if(!equal(remote,local))throw Error("GitHub enthält bereits Daten. Bitte erst GitHub-Bewertungen laden bzw. lokale Daten sichern, um Überschreiben zu vermeiden.");return remote;}
   const result={...remote,updated_at:new Date().toISOString()};
-  for(const [field,k] of [["annotations","id"],["relevance_ratings","id"],["dismissals","id"],["overrides","id"],["manual_jobs","id"],["activity_log","id"]]){
+  for(const [field,k] of [["annotations","id"],["relevance_ratings","id"],["dismissals","id"],["positive_feedback","id"],["overrides","id"],["manual_jobs","id"],["activity_log","id"]]){
    const old=entries(base[field],k),ours=entries(local[field],k),theirs=entries(remote[field],k);
    for(const id of new Set([...old.keys(),...ours.keys()])){
     const before=old.get(id),mine=ours.get(id),other=theirs.get(id);
@@ -76,7 +76,7 @@
   for(let attempt=0;attempt<3;attempt++){
    const current=await read();
    const remote=current.data||{type:"bewerbungs-agent-feedback",schema_version:"1.0.0",
-    annotations:[],relevance_ratings:[],dismissals:[],export_selection:[],
+    annotations:[],relevance_ratings:[],dismissals:[],positive_feedback:[],export_selection:[],
     activity_log:[],overrides:[],manual_jobs:[]};
    if(remote.type!=="bewerbungs-agent-feedback"||remote.schema_version!=="1.0.0")throw Error("Unbekanntes GitHub-Feedbackformat.");
    const merged={...remote};
