@@ -4,32 +4,42 @@ const html=fs.readFileSync("dashboard/index.html","utf8");
 const js=fs.readFileSync("dashboard/dossiers.js","utf8");
 const css=fs.readFileSync("dashboard/dossiers.css","utf8");
 
-test("dossier mode is a real page with one overview tab, not a placeholder",()=>{
+test("Dossiers: one simple job selector, old creation form fully removed",()=>{
  assert.match(html,/<section id="mode-dossiers" class="career-mode-view"[^>]*data-mode-page="dossiers"/);
- assert.match(html,/id="dossierOverviewTab"[^>]*>Übersicht/);
  for(const id of ["dossierList","dossierLibrary","dossierCount","dossierFileCount","dossierMessage",
-  "dossierSearch","dossierCreate","dossierUpload","dossierLibraryUpload","dossierFileInput"]){
+  "dossierSearch","dossierGenerate","dossierUpload","dossierLibraryUpload","dossierFileInput",
+  "dossierGenerationDialog","dossierGenerationForm","dossierGenerateJobSelect","dossierGenerateConfirm"]){
   assert.ok(html.includes('id="'+id+'"'),id);
  }
- assert.match(html,/href="\.\/dossiers\.css\?v=/);
+ for(const removed of ["dossierCreate","dossierDialog","dossierJobSelect","dossierTitleInput",
+  "dossierCompanyInput","dossierTone","dossierLength","dossierFocus","dossierSubmit",
+  "Dossier vorbereiten","Dossier gestalten"]){
+  assert.ok(!html.includes('id="'+removed+'"'),removed+" absent");
+  assert.ok(!js.includes('$("'+removed+'")'),removed+" no JS references");
+ }
+ const dialog=html.match(/<dialog id="dossierGenerationDialog"[\s\S]*?<\/dialog>/)?.[0];
+ assert.ok(dialog);
+ assert.equal((dialog.match(/<select\b/g)||[]).length,1,"only one dropdown");
+ assert.doesNotMatch(dialog,/<textarea\b|type="text"/);
+ assert.match(html,/src="\.\/dossier-documents\.js\?v=/);
  assert.match(html,/src="\.\/dossiers\.js\?v=/);
- assert.match(css,/#mode-dossiers/);
 });
-
-test("job popup can open a job-linked dossier preparation form",()=>{
- for(const id of ["detailPrepareDossier","dossierDialog","dossierJobSelect","dossierTitleInput",
-  "dossierCompanyInput","dossierTone","dossierLength","dossierFocus","dossierSubmit"]){
-  assert.ok(html.includes('id="'+id+'"'),id);
- }
- assert.match(html,/window\.CareerDossierJobs=/);
- assert.match(html,/window\.CareerDossiers\?\.prepare\(/);
- assert.match(js,/window\.CareerDossiers=Object\.freeze\(\{prepare,addJob,listJobIds:/);
- assert.match(js,/async function addJob\(job\)/);
+test("one generation path for central selection and card; actions depend on generatedStudio",()=>{
+ assert.match(js,/async function generateDossier\(id\)/);
+ assert.match(js,/async function submitGeneration\(event\)/);
+ assert.match(js,/const result=await generateDossier\(row\.id\)/);
+ assert.match(js,/const entry=await generateDossier\(id\)/);
+ assert.match(js,/if\(previous\.generatedStudio\)/);
+ assert.match(js,/if\(generated\)/);
+ assert.match(js,/button\("Dossier bearbeiten"/);
+ assert.match(js,/button\("Dossier herunterladen"/);
+ assert.match(js,/button\("Dossier generieren"/);
+ assert.doesNotMatch(js,/button\("Datei hinzufügen"|button\("Einstellungen"/);
+ assert.match(js,/\.\/dossier-studio\.html\?dossier=/);
  assert.match(js,/career-dossier-jobs-changed/);
- assert.match(js,/jobId/);
- assert.match(js,/preferences:\{tone:/);
+ assert.match(js,/window\.CareerDossiers=Object\.freeze\(/);
+ assert.doesNotMatch(js,/\bfunction prepare\(/);
 });
-
 test("dossiers stay local and the public GitHub panel is fully removed",()=>{
  assert.match(js,/window\.indexedDB/);
  assert.match(js,/createObjectStore\("dossiers"/);
@@ -45,7 +55,7 @@ test("dossiers stay local and the public GitHub panel is fully removed",()=>{
   assert.ok(!html.includes(obsolete),obsolete+" must be removed");
  }
  assert.doesNotMatch(css,/dossier-public/);
- assert.match(html,/Deine Eingaben werden vorerst lokal auf diesem Gerät gespeichert/);
+ assert.match(html,/Persönliche Angaben musst du im Studio ergänzen und überprüfen/);
 });
 
 test("deleting a dossier preserves uploaded documents; files require confirmation",()=>{
