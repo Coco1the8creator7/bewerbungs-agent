@@ -14,7 +14,7 @@ assert.doesNotThrow(()=>new Function(script));
 assert.doesNotThrow(()=>new Function(dossier));
 assert.match(html,/id="dossierTransferNotice"/);
 assert.match(html,/card-dossier-action\.css\?v=/);
-assert.match(html,/dossiers\.js\?v=20261031-secret-file-1/);
+assert.match(html,/dossiers\.js\?v=20261104-generation-1/);
 assert.match(html,/const dossierLinkedJobIds=new Set\(\)/);
 assert.match(html,/dossierLinkedJobIds\.has\(j\.id\)/);
 assert.match(html,/window\.addEventListener\("career-dossier-jobs-changed"/);
@@ -23,7 +23,7 @@ assert.match(html,/cardActions\.append\(secretDossierButton\(j\),cardRatingButto
 assert.match(html,/window\.location\.hash="#dossiers"/);
 assert.match(html,/result\?\.dossierId/);
 assert.match(html,/button\.setAttribute\("aria-busy","true"\)/);
-assert.match(dossier,/window\.CareerDossiers=Object\.freeze\(\{prepare,addJob,listJobIds:/);
+assert.match(dossier,/window\.CareerDossiers=Object\.freeze\(/);
 assert.match(dossier,/origin:"job-card"/);
 assert.match(dossier,/status:"draft"/);
 assert.match(dossier,/career-dossier-jobs-changed/);
@@ -32,7 +32,7 @@ assert.match(css,/#newJobsList \.card-header-actions/);
 assert.match(css,/min-height:44px/);
 
 const addStart=dossier.indexOf(" async function addJob(job){");
-const addEnd=dossier.indexOf("\n function prepare(job){",addStart);
+const addEnd=dossier.indexOf("\n window.CareerDossiers=Object.freeze(",addStart);
 assert.ok(addStart>=0&&addEnd>addStart);
 const addSource=dossier.slice(addStart,addEnd);
 assert.doesNotMatch(addSource.replace(/\/\/[^\n]*/g,""),/career-dossier-prepared|setAnnotation|setRating/);
@@ -72,7 +72,7 @@ assert.equal(saved[0].origin,"job-card");
 assert.equal(saved[0].ownerId,null);
 assert.equal(saved[0].preferences.tone,"klar");
 assert.equal(saved[0].preferences.length,"standard");
-assert.ok(messages.some(x=>x.includes("Dossierübersicht")));
+assert.ok(messages.some(x=>x.includes("vorgemerkt")));
 
 await assert.rejects(addJob({id:"DEMO-1",title:"Fiktives Inserat"}),/kann nicht/);
 await assert.rejects(addJob({id:"",title:""}),/kann nicht/);
