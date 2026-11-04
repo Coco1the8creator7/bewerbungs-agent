@@ -6,6 +6,7 @@
   const DB_NAME = "bewerbungs-agent-local-v1";
   const STORE = "snapshots";
   const KEY = "current";
+  const SWIPE_PREFS_KEY = "landing-swipe-preferences-v1"; // Only job IDs and swipe decisions; independent of opt-in workspace storage.
   const FILTER_SYNC_KEY = "filter-ki-sync-v1"; // Durable unsent ratings and confirmed IDs.
   const RADAR_KEY = "radar-prototype-v1"; // Private, opt-in and isolated from legacy CRM/feedback.
   const LAST_VISIT_KEY = "last-dashboard-visit"; // Only an ISO timestamp; not job or applicant data.
@@ -47,6 +48,8 @@
     save: snapshot => operation("readwrite", store => store.put(snapshot, KEY)),
     // Anonymous UI timestamp used solely to compare new job imports across visits.
     loadLastVisit: () => operation("readonly", store => store.get(LAST_VISIT_KEY)),
+    loadSwipePrefs: () => operation("readonly", store => store.get(SWIPE_PREFS_KEY)),
+    saveSwipePrefs: value => operation("readwrite", store => store.put(value, SWIPE_PREFS_KEY)),
     loadFilterSync: () => operation("readonly", store => store.get(FILTER_SYNC_KEY)),
     saveFilterSync: value => operation("readwrite", store => store.put(value, FILTER_SYNC_KEY)),
     loadRadar: () => operation("readonly", store => store.get(RADAR_KEY)),
