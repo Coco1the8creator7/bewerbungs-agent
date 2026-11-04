@@ -225,7 +225,7 @@
    if(!Object.keys(rating.scores).length&&!rating.note.trim())delete ratings[job.id];
    else {rating.updated_at=new Date().toISOString();ratings[job.id]=rating;}
    refreshBadge();changed();
-   if(market()==="career"&&!job.id.startsWith("DEMO-"))
+   if(key!=="note"&&market()==="career"&&!job.id.startsWith("DEMO-"))
     window.dispatchEvent(new CustomEvent("career-filter-rating-dirty",{detail:{job_id:job.id,kind:"radar_career_ratings"}}));
   }
   for(const c of criteria()){
@@ -394,7 +394,8 @@
   },
   restoreCareerRating:(id,entry)=>{
    if(!entry||entry.id!==id)return;
-   const normalized=model.normalizedState({career:{ratings:{[id]:entry}}}).career.ratings[id];
+   const ownNote=state.career.ratings[id]?.note||"";
+   const normalized=model.normalizedState({career:{ratings:{[id]:{...entry,note:ownNote}}}}).career.ratings[id];
    if(normalized)state.career.ratings[id]=normalized;
    else if(entry.scores&&Object.keys(entry.scores).length===0&&!String(entry.note||"").trim())
     delete state.career.ratings[id];
