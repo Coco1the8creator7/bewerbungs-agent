@@ -1,6 +1,8 @@
 "use strict";
-/* Explicit opt-in, device-bound storage for a public static GitHub Pages dashboard.
- * Never sends data to GitHub or another server; no automatic cross-device sync.
+/* Device-bound storage for a public static GitHub Pages dashboard.
+ * Full CRM workspace storage remains opt-in. Only the user's deliberate
+ * swipe / restore decisions are persisted by default as minimal job-ID signals.
+ * Nothing is automatically sent to GitHub or synced across devices.
  */
 (function () {
   const DB_NAME = "bewerbungs-agent-local-v1";
