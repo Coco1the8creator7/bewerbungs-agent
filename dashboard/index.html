@@ -643,8 +643,8 @@ header .sub,.section-heading p{color:#6b5744}
   <div class="radar-panel" role="tabpanel" id="radarPanelReview" data-panel="review" aria-labelledby="radarTabReview" hidden>
     <div class="radar-sync-anchor">
       <button type="button" id="radarSyncFeedback" class="radar-sync-button"
-        aria-label="Gesamtrelevanz-Bewertungen mit GitHub synchronisieren"
-        title="Gesamtrelevanz-Bewertungen (1–100) mit GitHub synchronisieren">
+        aria-label="Filter-KI-Bewertungen synchronisieren"
+        title="Filter-KI-Bewertungen synchronisieren">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M20 11a8 8 0 0 0-14.7-4.3L4 8M4 4v4h4"/>
           <path d="M4 13a8 8 0 0 0 14.7 4.3L20 16M16 16h4v4"/>
@@ -1195,11 +1195,19 @@ function setRating(id,score,reasons){
  // Radar's optional 1–5 criterion notes remain separate and do not create labels.
  window.AgentCareerFeedback=Object.freeze({
   getScore:id=>ratingOf(id)?.score??null,
+  getEntry:id=>{const entry=ratingOf(id);return entry?structuredClone({id,...entry}):null;},
+  restoreEntry:(id,entry)=>{
+   if(!jobs.some(j=>j.id===id)||!entry||entry.id!==id)return;
+   const validated=validateRelevanceRatings([entry]).get(id);
+   if(!validated)return;
+   relevanceRatings.set(id,validated);render();saveChanges();
+  },
   setScore:(id,score)=>{
    if(!jobs.some(j=>j.id===id))throw Error("Unbekannte Inserat-ID.");
    setRating(id,score);
    render();
    window.dispatchEvent(new CustomEvent("career-relevance-changed",{detail:{job_id:id}}));
+   window.dispatchEvent(new CustomEvent("career-filter-rating-dirty",{detail:{job_id:id,kind:"relevance_ratings"}}));
   }
  });
 function setReasons(id,reasons){updateRating(id,undefined,reasons);}
@@ -1895,10 +1903,6 @@ function showRadarSyncStatus(message,isError=false){
  status.hidden=false;
  radarSyncStatusTimeout=setTimeout(()=>{status.hidden=true;radarSyncStatusTimeout=null;},6500);
 }
-el("radarSyncFeedback").addEventListener("click",()=>{
- // Use the single existing GitHub write path, not a second synchronisation client.
- if(!el("saveGithubFeedback").disabled)el("saveGithubFeedback").click();
-});
 el("floatingSaveGithubFeedback").addEventListener("click",()=>el("saveGithubFeedback").click());
 el("saveGithubFeedback").addEventListener("click",async()=>{
  const button=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback"),radar=el("radarSyncFeedback");
@@ -2097,12 +2101,18 @@ window.addEventListener("career-dossier-prepared",event=>{
  if(["open","review","later","saved"].includes(stageOf(id)))
   setAnnotation(id,"preparing",noteOf(id));
 });
-initialize();
+initialize().catch(err=>{
+ el("message").textContent="Initialisierung fehlgeschlagen: "+err.message;
+}).finally(()=>{
+ window.CareerFeedbackReady=true;
+ window.dispatchEvent(new Event("career-feedback-ready"));
+});
 </script>
 <script src="./radar-explorer-model.js"></script>
 <script src="./radar-model.js?v=20261027-zen-magenta-1"></script>
 <script src="./radar-designs.js?v=20261027-zen-magenta-1"></script>
 <script src="./radar.js?v=20261027-zen-magenta-1"></script>
+<script src="./filter-sync.js?v=20261104-sync-1"></script>
 <script src="./radar-interest-pictograms.js"></script>
 <script src="./radar-explorer-ui.js"></script>
 <script src="./dossiers.js?v=20261031-secret-file-1"></script>
