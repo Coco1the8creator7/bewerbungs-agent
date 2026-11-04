@@ -204,7 +204,7 @@
     try{
      window.AgentCareerFeedback.setScore(job.id,Number(slider.value));
      output.textContent=slider.value+" / 100";
-     message("Relevanzbewertung aktualisiert. Für dauerhafte GitHub-Sicherung auf der Startseite «Bewertungen speichern» verwenden.");
+     message("Relevanzbewertung erfasst. Die Filter-KI synchronisiert Änderungen automatisch.");
     }catch(err){message("Relevanz konnte nicht gespeichert werden: "+err.message);}
    });
    relevance.append(header,slider);
@@ -223,8 +223,10 @@
    else if(value===null)delete rating.scores[key];
    else rating.scores[key]=value;
    if(!Object.keys(rating.scores).length&&!rating.note.trim())delete ratings[job.id];
-   else ratings[job.id]=rating;
+   else {rating.updated_at=new Date().toISOString();ratings[job.id]=rating;}
    refreshBadge();changed();
+   if(market()==="career"&&!job.id.startsWith("DEMO-"))
+    window.dispatchEvent(new CustomEvent("career-filter-rating-dirty",{detail:{job_id:job.id,kind:"radar_career_ratings"}}));
   }
   for(const c of criteria()){
    const label=make("label",c.label);
@@ -259,16 +261,17 @@
   const matching=available.filter(j=>adult&&mode==="filtered"?true:
    model.matchesPreferences(j,profile(),bucket().selectedSources,market()))
    .sort((a,b)=>(Date.parse(b.first_seen_at)||0)-(Date.parse(a.first_seen_at)||0));
-  const selected=matching.slice(0,reviewLimit),examples=!adult&&showDemo?sampleJobs:[];
-  get("radarReviewCount").textContent=matching.length+" echte Stellen"+(adult?" · "+parked.length+" zurückgestellt":"")+(examples.length?" · 3 Beispiele":"");
+  const pendingJobs=adult?matching.filter(j=>!window.CareerFilterSync?.isConfirmed(j.id)):matching;
+  const selected=pendingJobs.slice(0,reviewLimit),examples=!adult&&showDemo?sampleJobs:[];
+  get("radarReviewCount").textContent=pendingJobs.length+" offene Stellen"+(adult?" · "+parked.length+" zurückgestellt":"")+(examples.length?" · 3 Beispiele":"");
   get("radarReviewScopeGroup").hidden=!adult;
-  const more=get("radarReviewMore");more.hidden=matching.length<=reviewLimit;
-  more.textContent="Weitere "+Math.min(50,matching.length-reviewLimit)+" anzeigen · "+selected.length+" von "+matching.length;
+  const more=get("radarReviewMore");more.hidden=pendingJobs.length<=reviewLimit;
+  more.textContent="Weitere "+Math.min(50,pendingJobs.length-reviewLimit)+" anzeigen · "+selected.length+" von "+pendingJobs.length;
   if(!selected.length&&!examples.length){
    const empty=make("div",undefined,"radar-empty");
    empty.append(make("strong",!feedLoaded?"Stellenimport wird geladen …":mode==="filtered"?
     "Keine zurückgestellten Inserate.":available.length?
-    "Keine Stellen passen zu den gewählten Filtern.":"Keine "+(adult?"Berufsstellen":"Lehrstellen")+" im bisherigen Import."));
+    "Keine offenen Stellen passen zu den gewählten Filtern.":"Keine "+(adult?"Berufsstellen":"Lehrstellen")+" im bisherigen Import."));
    empty.append(make("p",adult?
     "Unter «Zurückgestellt» sind auch die aus der Startseite ausgeblendeten Inserate vollständig erreichbar. Die Importdaten bleiben erhalten.":
     "Die Jugend-Lehrstellenquellen werden erst später angebunden. Drei fiktive Beispiele stehen zum Testen bereit."));
@@ -307,7 +310,7 @@
   get("radar-example").placeholder=adult?"Ein Projekt, das deine fachlichen Kompetenzen zeigt.":
    "Ein Schulprojekt, ein Hobby oder eine Schnupperlehre.";
   get("radarReviewNotice").textContent=adult?
-   "Radar-Kriterienbewertungen bleiben separat und werden nur bei aktivierter Gerätespeicherung dauerhaft gespeichert. Sie verändern den Vorselektor nicht automatisch und werden nicht ins CRM oder GitHub übertragen.":
+   "Erwachsenen-Bewertungen werden bei bestehender GitHub-Verbindung automatisch synchronisiert. GitHub-Feedback ist öffentlich; ausstehende Änderungen bleiben lokal zwischengespeichert. Der Vorselektor bleibt unverändert.":
    "Lehrstellen-Bewertungen bleiben vom Erwachsenen-CRM getrennt. Für den produktiven Einsatz mit Jugendlichen braucht es zuerst geschützte Benutzerkonten.";
   reviewLimit=50;updateForm();renderSkills();renderSources();updateStats();renderReviews();
   window.CareerRadarExplorer?.render();
@@ -384,7 +387,19 @@
   }
  });
  // The explorer reads only this audience's opt-in local profile, not shared CRM ratings.
- window.CareerRadarBridge=Object.freeze({market,profile,changed});
+ window.CareerRadarBridge=Object.freeze({
+  market,profile,changed,
+  getCareerRating:id=>{
+   const r=state.career.ratings[id];return r?structuredClone({id,...r}):null;
+  },
+  restoreCareerRating:(id,entry)=>{
+   if(!entry||entry.id!==id)return;
+   const normalized=model.normalizedState({career:{ratings:{[id]:entry}}}).career.ratings[id];
+   if(normalized){state.career.ratings[id]=normalized;renderReviews();persist();}
+  },
+  refreshReviews:renderReviews
+ });
+ window.addEventListener("career-filter-sync-updated",renderReviews);
  // Re-evaluate calendar boundaries and import changes while the dashboard stays open.
  // Browser timers may be paused in background tabs; visibility/focus restores accuracy.
  function scheduleMidnight(){
@@ -402,5 +417,8 @@
  window.setInterval(()=>{
   if(!document.hidden&&window.location.hash==="#radar")loadFeed(true);
  },15*60*1000);
- initialize();
+ initialize().then(()=>{
+  window.CareerRadarReady=true;
+  window.dispatchEvent(new Event("career-radar-ready"));
+ }).catch(err=>message("Radar-Initialisierung fehlgeschlagen: "+err.message));
 })();
