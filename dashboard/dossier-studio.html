@@ -150,7 +150,7 @@
 <label for="cloudRepo">Privates Repository (Besitzer/Name)</label><input id="cloudRepo" type="text" autocomplete="off" spellcheck="false" placeholder="benutzername/privates-dossier-backup">
 <label for="cloudToken">Fine-grained GitHub-Token (Contents: Read &amp; Write)</label><input id="cloudToken" type="password" autocomplete="off" placeholder="Nur für diese Sitzung">
 <p id="cloudMessage" class="note" role="status" aria-live="polite">Noch nicht verbunden. Lokal gespeicherte Daten bleiben erhalten.</p>
-<div class="cloud-actions"><button class="btn primary" id="cloudConnect" type="button">Verbinden</button><button class="btn" id="cloudSync" type="button" disabled>Jetzt sichern</button><button class="btn" id="cloudRestore" type="button" disabled>GitHub-Version laden</button><button class="btn" id="cloudDisconnect" type="button" disabled>Trennen</button></div>
+<div class="cloud-actions"><button class="btn primary" id="cloudConnect" type="button">Verbinden</button><button class="btn" id="cloudSync" type="button" disabled>Jetzt sichern</button><button class="btn" id="cloudRestore" type="button" disabled>GitHub-Version laden</button><button class="btn" id="cloudKeepLocal" type="button" disabled>Lokale Version behalten</button><button class="btn" id="cloudDisconnect" type="button" disabled>Trennen</button></div>
 <div class="modal-actions"><button type="button" id="cloudClose" class="btn">Schliessen</button></div>
 <p class="note">Dateien: <code>dossier-studio/v1/&lt;Dossier-ID&gt;/draft.json</code> und <code>Dossier.zip</code>. Hochgeladene externe Anhänge aus der Dossier-Bibliothek sind noch nicht Teil dieser Sicherung. ZIP-PDFs verwenden weiterhin das vereinfachte Basislayout.</p></div></div>
 <div class="modal-backdrop" id="reviewModal" role="presentation"><div class="modal review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle"><h2 id="reviewTitle">Entwurf prüfen</h2><p>Kontrolliere den aktuellen Entwurf vor dem Versand. Die Druckvorschau öffnet den Druckdialog deines Browsers; dort kannst du auch als PDF speichern.</p><ul class="review-list" id="reviewIssues"></ul><div class="modal-actions"><button type="button" id="closeReview" class="btn">Schliessen</button><button type="button" id="reviewPrint" class="btn primary">Druckvorschau öffnen</button></div></div></div><div class="modal-backdrop" id="slotModal" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">Eigene Vorlage speichern</h2><p>Du speicherst den aktuell bearbeiteten Text samt Design und Bausteinanordnung. Die Vorlage kann später als Arbeitskopie verwendet werden.</p><label for="slotName">Vorlagenname</label><input id="slotName" type="text" maxlength="45" autocomplete="off"><div class="modal-actions"><button type="button" id="cancelModal" class="btn">Abbrechen</button><button type="button" id="confirmModal" class="btn primary">Vorlage speichern</button></div></div></div>
@@ -202,11 +202,13 @@ function cloudUI(){
  $("cloudConnect").disabled=cloudBusy;
  $("cloudSync").disabled=!connected||blocked||cloudBusy||!cloudDirty;
  $("cloudRestore").disabled=!connected||cloudBusy||!cloudClient.status().remoteExists;
+ $("cloudKeepLocal").disabled=!connected||cloudBusy||!blocked;
  $("cloudDisconnect").disabled=!connected||cloudBusy;
 }
 function cloudChanged(){
+ cloudRevision++;
  if(!cloudClient?.status().connected)return;
- cloudRevision++;cloudDirty=true;cloudError="";cloudUI();
+ cloudDirty=true;cloudError="";cloudUI();
 }
 async function syncCloud(){
  if(!activeDossier||!cloudClient?.status().connected||cloudClient.status().blocked||!cloudDirty||cloudBusy)return;
@@ -225,11 +227,11 @@ async function syncCloud(){
 }
 async function connectCloud(){
  if(!activeDossier||!cloudClient)return;
- const repository=$("cloudRepo").value.trim(),token=$("cloudToken").value;
+ const repository=$("cloudRepo").value.trim(),token=$("cloudToken").value,revisionAtConnect=cloudRevision;
  $("cloudToken").value="";cloudBusy=true;cloudUI();
  try{
   const result=await cloudClient.connect({repository,token,id:dossierId,local:generatedSnapshot(clone(state))});
-  cloudError="";cloudDirty=!result.remoteExists;cloudRevision++;
+  cloudError="";cloudDirty=!result.remoteExists||cloudRevision!==revisionAtConnect;cloudRevision++;
   cloudNote(result.blocked?"Auf GitHub liegt eine andere Version. Sie wird nicht überschrieben; vor dem Laden lokale Version sichern.":result.remoteExists?"Cloudstand und lokaler Entwurf stimmen überein.":"Privat verbunden. Erste Sicherung ausstehend.",result.blocked);
  }catch(error){cloudError=error.message;cloudNote("Verbindung fehlgeschlagen: "+error.message,true)}
  finally{cloudBusy=false;cloudUI()}
@@ -441,6 +443,11 @@ $("cloudModal").addEventListener("click",ev=>{if(ev.target===$("cloudModal"))hid
 $("cloudConnect").addEventListener("click",connectCloud);
 $("cloudSync").addEventListener("click",syncCloud);
 $("cloudRestore").addEventListener("click",restoreCloud);
+$("cloudKeepLocal").addEventListener("click",()=>{
+ if(!cloudClient?.status().blocked||cloudBusy)return;
+ if(!confirm("Auf GitHub existiert ein anderer Dossierstand. Die bestehende Cloud-Version durch deinen lokalen Entwurf ersetzen? Vorher die gewünschte Version prüfen. Die bisherige GitHub-Version bleibt nur über den Git-Verlauf nachvollziehbar."))return;
+ cloudClient.keepLocal();cloudDirty=true;cloudRevision++;cloudNote("Lokale Version ausgewählt. GitHub-Sicherung steht aus.");cloudUI();syncCloud();
+});
 $("cloudDisconnect").addEventListener("click",()=>{
  if(cloudBusy)return;cloudClient?.disconnect();cloudDirty=false;cloudError="";
  cloudNote("GitHub-Verbindung getrennt. Lokaler Entwurf bleibt erhalten.");cloudUI();
