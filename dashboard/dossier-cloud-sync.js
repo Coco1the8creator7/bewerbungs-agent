@@ -1,7 +1,8 @@
 /*
- * Career.Agency Dossier Studio: opt-in, private GitHub backup for one dossier.
- * Single-user pilot only. Tokens live in memory, never localStorage or Git.
- * NEVER send personal files to the public Career.Agency source repository.
+ * Career.Agency public DEMO dossier backup. Only synthetic application data.
+ * Explicit per-dossier public-data acknowledgement is required. Token is kept
+ * in memory by this module (the existing Feedback token may be reused by UI).
+ * Do NOT reuse this GitHub storage adapter for real applicant information.
  */
 (function(root,factory){
   "use strict";
@@ -11,11 +12,10 @@
 })(typeof window!=="undefined"?window:typeof globalThis!=="undefined"?globalThis:null,function(){
   "use strict";
   const SOURCE_REPO="Coco1the8creator7/bewerbungs-agent";
-  const PREFIX="dossier-studio/v1";
+  const PREFIX="demo-dossiers/v1";
   const MAX_ARCHIVE_BYTES=5*1024*1024;
   const ID=/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,119}$/;
-  const REPO=/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/;
-  const FORMAT="career-agency-dossier-v1";
+  const FORMAT="career-agency-public-demo-dossier-v1";
   const utf8=new TextEncoder();
   function fail(code,message){const err=new Error(message);err.code=code;return err;}
   function bytesToBase64(bytes){
@@ -71,20 +71,22 @@
         throw fail("FORMAT","Unbekannte oder unpassende Dossier-Datei auf GitHub.");
       return {sha:file.sha,data:parsed.data,savedAt:parsed.savedAt};
     }
-    function requireConnected(){if(!connected)throw fail("DISCONNECTED","Bitte zuerst mit einem privaten GitHub-Repository verbinden.");}
-    async function connect({repository,token,id,local}){
+    function requireConnected(){if(!connected)throw fail("DISCONNECTED","Bitte zuerst die öffentliche Demo-Sicherung verbinden.");}
+    async function connect({token,id,local,publicDemoConfirmed=false}){
       disconnect();
-      if(!REPO.test(repository||"")||!ID.test(id||""))throw fail("INVALID","Repository oder Dossier-ID ist ungültig.");
-      if(typeof token!=="string"||!token.trim())throw fail("AUTH","Bitte ein GitHub-Token eingeben.");
-      if(repository.toLowerCase()===SOURCE_REPO.toLowerCase())
-        throw fail("PUBLIC","Das öffentliche Career.Agency-Repository ist für persönliche Daten gesperrt.");
-      repoName=repository;credential=token.trim();dossierId=id;
+      if(!ID.test(id||""))throw fail("INVALID","Dossier-ID ungültig.");
+      if(publicDemoConfirmed!==true)
+        throw fail("CONSENT","Vor einer öffentlichen Sicherung müssen ausdrücklich ausschliesslich fiktive Demo-Daten bestätigt werden.");
+      if(typeof token!=="string"||!token.trim())throw fail("AUTH","GitHub-Token fehlt. Bitte zuerst den bestehenden GitHub-Zugang verbinden.");
+      repoName=SOURCE_REPO;credential=token.trim();dossierId=id;
       try{
-        const info=await request("https://api.github.com/repos/"+repository);
-        if(info.missing)throw fail("AUTH","Repository nicht gefunden oder Token ohne Zugriff.");
-        if(info.private!==true||info.visibility==="public")
-          throw fail("PUBLIC","Sicherung abgelehnt: GitHub bestätigt kein privates Repository.");
-        if(info.archived||info.disabled)throw fail("INVALID","Das private Repository ist nicht beschreibbar.");
+        const info=await request("https://api.github.com/repos/"+SOURCE_REPO);
+        if(info.missing)throw fail("AUTH","Öffentliches Demo-Repository nicht erreichbar.");
+        if(info.full_name&&info.full_name.toLowerCase()!==SOURCE_REPO.toLowerCase())
+          throw fail("INVALID","GitHub hat ein anderes Repository geliefert.");
+        if(info.private!==false||info.visibility==="private")
+          throw fail("INVALID","Der öffentliche Demo-Modus erwartet das bekannte öffentliche Repository.");
+        if(info.archived||info.disabled)throw fail("INVALID","Das Repository ist nicht beschreibbar.");
         branch=info.default_branch;
         if(!branch)throw fail("FORMAT","Standardbranch konnte nicht ermittelt werden.");
         const remote=await readRemote();
@@ -104,11 +106,11 @@
     }
     async function push(local,archiveBytes){
       requireConnected();
-      // A repository can be made public after connecting. Re-check immediately before writing.
-      const visibility=await request("https://api.github.com/repos/"+repoName);
-      if(visibility.missing||visibility.private!==true||visibility.visibility==="public"){
+      // The user approved publication only in this fixed, public demo repository.
+      const visibility=await request("https://api.github.com/repos/"+SOURCE_REPO);
+      if(visibility.missing||visibility.private!==false||visibility.visibility==="private"){
         blocked=true;
-        throw fail("PUBLIC","Cloud-Sicherung gestoppt: Ziel-Repository ist nicht mehr nachweislich privat.");
+        throw fail("INVALID","Öffentliches Demo-Repository nicht mehr verfügbar; Sicherung gestoppt.");
       }
       if(blocked)throw fail("CONFLICT","Auf GitHub liegt ein anderer Entwurf. Bitte erst «Von GitHub laden» verwenden. Lokale Änderungen bleiben erhalten.");
       if(!(archiveBytes instanceof Uint8Array)||!archiveBytes.length||archiveBytes.length>MAX_ARCHIVE_BYTES)
@@ -134,6 +136,7 @@
       requireConnected();
       const remote=await readRemote();
       if(!remote)throw fail("MISSING","Auf GitHub wurde noch kein Dossier-Entwurf gefunden.");
+      knownSha=remote.sha;remoteExists=true;
       return structuredClone(remote.data);
     }
     function acceptRemote(){
@@ -152,5 +155,5 @@
     function status(){return {connected,repository:repoName,blocked,remoteExists,hasToken:!!credential};}
     return Object.freeze({connect,push,pull,acceptRemote,keepLocal,disconnect,status});
   }
-  return Object.freeze({createClient,SOURCE_REPO,PREFIX,MAX_ARCHIVE_BYTES});
+  return Object.freeze({createClient,SOURCE_REPO,PREFIX,MAX_ARCHIVE_BYTES,FORMAT});
 });
