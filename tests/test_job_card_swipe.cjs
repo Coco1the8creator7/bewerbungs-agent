@@ -25,9 +25,9 @@ assert.match(html,/dismissedJobFeedback\.clear\(\);for\(const \[id,v\] of dismis
 assert.match(html,/function buildRelevancePayload\(\)/);
 assert.match(html,/signal:value\.signal,source:value\.source,dismissed_at:value\.dismissed_at/);
 assert.match(cards,/window\.CareerJobSwipe\?\.bind\(card,\{onDismiss:direction=>dismissLandingJob\(j\.id,direction==="right"\?"swipe_right":"swipe_left"\)\}\)/);
-assert.match(cards,/dismissLandingJob\(j\.id,"button"\)/);
+assert.match(html,/dismissLandingJob\(job\.id,"button"\)/);
 assert.match(cards,/restoreLandingJob\(j\.id\)/);
-assert.match(cards,/card\.append\(dismissControl\)/);
+assert.match(cards,/footer\.append\(quickActions\);card\.append\(footer\)/);
 assert.match(cards,/openDetails\(j\.id\)/);
 assert.match(html,/\["viewDismissed","dismissed"\]/);
 assert.match(github,/\["dismissals","id"\]/);
