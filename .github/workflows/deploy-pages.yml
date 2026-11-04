@@ -36,6 +36,14 @@ jobs:
         run: |
           node --check dashboard/agency-world.js
           node --test tests/agency-world.test.mjs
+      - name: Prüfe Filter-KI Synchronisation
+        run: |
+          node --check dashboard/filter-sync.js
+          node --check dashboard/github-sync.js
+          node --check dashboard/radar.js
+          node --check dashboard/radar-model.js
+          node --check dashboard/storage.js
+          node --test tests/filter-sync.test.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
