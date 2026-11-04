@@ -53,7 +53,7 @@
     set(step(zoom,1),event);
   });
   host.addEventListener("dblclick",event=>{
-   if(!event.target.closest?.("#a4Page")||event.target.closest("button,.free-text-drag,.free-text-resize"))return;
+   if(!event.target.closest?.("#a4Page")||event.target.closest("button,[contenteditable],.free-text-drag,.free-text-resize"))return;
    event.preventDefault();set(step(zoom,1),event);
   });
   host.addEventListener("touchstart",event=>{
