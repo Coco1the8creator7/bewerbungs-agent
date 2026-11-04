@@ -202,6 +202,7 @@ function defaultDocs(){return {cv:{type:"cv",data:{name:"Alex Muster",role:"Proj
 function initialState(){return {version:VERSION,activeDoc:"cv",enabled:{cv:true,letter:true,email:true},baseStyle:{theme:"modern",accent:DEFAULT_COLORS[0],font:"sans",fontScale:100,spacing:"normal"},docs:defaultDocs(),slots:[null,null,null],sources:{cv:null,letter:null}};}
 const dossierId=new URLSearchParams(location.search).get("dossier");
 let state=initialState(),database=null,persistTimer=0,toastTimer=0,modalSlot=null,ready=false,storageMode="unavailable";
+let previewZoom=100,selectedFreeBoxId=null,pinchStart=null,lastPaperTap=0;
 let activeDossier=null,personalWorkspace=initialState(),dossierDb=null,writeQueue=Promise.resolve();
 const cloudClient=window.CareerDossierCloud?.createClient();
 const DEMO_CONSENT_KEY="career-agency-public-demo-optin-v1/";
@@ -449,6 +450,171 @@ function addCatalogBlock(){
  $("customBlockName").value="";
  renderBlocks();renderPreview();scheduleSave();
  flash("Baustein «"+label+"» hinzugefügt. Trage den Inhalt rechts ein.");
+}
+
+function freeBoxes(){
+ const doc=currentDoc();
+ if(!Array.isArray(doc.freeBoxes))doc.freeBoxes=[];
+ return doc.freeBoxes;
+}
+function pickFreeBox(id,focusText=false){
+ selectedFreeBoxId=id;
+ document.querySelectorAll(".free-text-box").forEach(el=>el.classList.toggle("is-selected",el.dataset.boxId===id));
+ document.querySelectorAll(".free-list-item").forEach(el=>el.classList.toggle("is-selected",el.dataset.boxId===id));
+ if(focusText)document.querySelector('.free-text-box[data-box-id="'+id+'"] .free-text-edit')?.focus();
+}
+function addFreeBox(){
+ if(state.activeDoc==="email"){flash("Freie Textfelder sind für A4-Dokumente vorgesehen.");return;}
+ const boxes=freeBoxes();
+ if(boxes.length>=MODULES.MAX_BOXES){flash("Maximal "+MODULES.MAX_BOXES+" freie Textfelder pro Dokument.");return;}
+ const id="field_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
+ boxes.push(MODULES.createBox(id,boxes.length));renderFreeTextList();renderPreview();scheduleSave();
+ pickFreeBox(id,true);
+}
+function deleteFreeBox(id){
+ const boxes=freeBoxes(),index=boxes.findIndex(item=>item.id===id);
+ if(index<0)return;
+ if(boxes[index].text.trim()&&!confirm("Dieses freie Textfeld samt Inhalt löschen?"))return;
+ boxes.splice(index,1);
+ if(selectedFreeBoxId===id)selectedFreeBoxId=null;
+ renderFreeTextList();renderPreview();scheduleSave();
+}
+function copyFreeBox(id){
+ const boxes=freeBoxes(),original=boxes.find(item=>item.id===id);
+ if(!original||boxes.length>=MODULES.MAX_BOXES)return;
+ const newId="field_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
+ boxes.push(MODULES.normalizeBox({...original,id:newId,x:Math.min(100-original.width,original.x+4),y:Math.min(96,original.y+5)}));
+ renderFreeTextList();renderPreview();scheduleSave();pickFreeBox(newId);
+}
+function updateFreeBox(id,patch){
+ const boxes=freeBoxes(),index=boxes.findIndex(item=>item.id===id);
+ if(index<0)return;
+ boxes[index]=MODULES.normalizeBox({...boxes[index],...patch});
+ renderFreeTextList();renderPreview();scheduleSave();pickFreeBox(id);
+}
+function renderFreeTextList(){
+ const host=$("freeTextList");host.replaceChildren();
+ const onPaper=state.activeDoc!=="email",boxes=onPaper?freeBoxes():[];
+ $("addFreeText").disabled=!onPaper||boxes.length>=MODULES.MAX_BOXES;
+ if(!onPaper){host.append(e("p","note","Die E-Mail bleibt ein einfach bearbeitbarer Nachrichtentext."));return;}
+ if(!boxes.length){host.append(e("p","note","Noch keine freien Textfelder. Mit «+ Textfeld hinzufügen» beginnen."));return;}
+ boxes.forEach((box,index)=>{
+  const item=e("div","free-list-item");item.dataset.boxId=box.id;
+  if(selectedFreeBoxId===box.id)item.classList.add("is-selected");
+  const header=e("div","free-list-head");
+  const selectBox=clickButton("Textfeld "+(index+1)+(box.text.trim()?" · "+box.text.trim().slice(0,24):""),"free-list-select",()=>{
+   pickFreeBox(box.id);
+   const node=document.querySelector('.free-text-box[data-box-id="'+box.id+'"]');
+   node?.scrollIntoView({block:"nearest",inline:"nearest",behavior:"smooth"});
+  });
+  selectBox.title="Textfeld im Dokument auswählen";header.append(selectBox);
+  header.append(clickButton("⧉","free-list-action",()=>copyFreeBox(box.id)));
+  const remove=clickButton("×","free-list-action",()=>deleteFreeBox(box.id));
+  remove.setAttribute("aria-label","Textfeld "+(index+1)+" löschen");remove.title="Textfeld löschen";header.append(remove);
+  item.append(header);
+  const textarea=e("textarea","free-field-text");textarea.value=box.text;textarea.rows=2;
+  textarea.setAttribute("aria-label","Text von Textfeld "+(index+1));
+  textarea.addEventListener("focus",()=>pickFreeBox(box.id));
+  textarea.addEventListener("input",()=>{
+   const active=freeBoxes().find(b=>b.id===box.id);if(!active)return;
+   active.text=textarea.value.slice(0,20000);
+   const preview=document.querySelector('.free-text-box[data-box-id="'+box.id+'"] .free-text-edit');
+   if(preview&&document.activeElement!==preview)preview.textContent=active.text;
+   scheduleSave();requestAnimationFrame(checkOverflow);
+  });
+  item.append(textarea);
+  const tools=e("div","free-field-options");
+  const label=e("label",null,"Grösse");
+  const size=e("select","select");
+  for(const [value,name] of [[75,"Klein"],[100,"Normal"],[125,"Mittel"],[150,"Gross"],[200,"Sehr gross"]]){
+   const option=e("option",null,name);option.value=value;size.append(option);
+  }
+  size.value=String(box.fontSize);
+  size.addEventListener("change",()=>updateFreeBox(box.id,{fontSize:Number(size.value)}));
+  label.append(size);
+  const alignLabel=e("label",null,"Ausrichtung"),align=e("select","select");
+  for(const [value,name] of [["left","Links"],["center","Mitte"],["right","Rechts"]]){
+   const option=e("option",null,name);option.value=value;align.append(option);
+  }
+  align.value=box.align;
+  align.addEventListener("change",()=>updateFreeBox(box.id,{align:align.value}));
+  alignLabel.append(align);tools.append(label,alignLabel);
+  item.append(tools);host.append(item);
+ });
+}
+function positionFreeNode(node,box){
+ node.style.left=box.x+"%";node.style.top=box.y+"%";node.style.width=box.width+"%";
+ node.style.setProperty("--free-font-scale",String(box.fontSize/100));
+ node.style.textAlign=box.align;
+}
+function wireFreeDrag(handle,box,node,mode){
+ handle.addEventListener("pointerdown",event=>{
+  if(event.button!==0)return;
+  event.preventDefault();event.stopPropagation();
+  pickFreeBox(box.id);
+  const page=$("a4Page");if(!page)return;
+  const rect=page.getBoundingClientRect();
+  const startX=event.clientX,startY=event.clientY;
+  const start=MODULES.normalizeBox(box);let changed=false;
+  handle.setPointerCapture?.(event.pointerId);
+  const move=evt=>{
+   if(evt.pointerId!==event.pointerId)return;
+   evt.preventDefault();
+   const dx=100*(evt.clientX-startX)/rect.width;
+   const dy=100*(evt.clientY-startY)/rect.height;
+   const next=mode==="width"?MODULES.resizeBox(start,dx):MODULES.translateBox(start,dx,dy);
+   Object.assign(box,next);positionFreeNode(node,box);
+   changed=true;requestAnimationFrame(checkOverflow);
+  };
+  const finish=evt=>{
+   if(evt.pointerId!==event.pointerId)return;
+   handle.removeEventListener("pointermove",move);handle.removeEventListener("pointerup",finish);handle.removeEventListener("pointercancel",finish);
+   if(changed){renderFreeTextList();scheduleSave();}
+  };
+  handle.addEventListener("pointermove",move);
+  handle.addEventListener("pointerup",finish);
+  handle.addEventListener("pointercancel",finish);
+ });
+ handle.addEventListener("keydown",event=>{
+  const moves={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+  if(!moves[event.key])return;
+  event.preventDefault();event.stopPropagation();
+  const [x,y]=moves[event.key],step=event.shiftKey?5:1;
+  const next=mode==="width"?MODULES.resizeBox(box,x*step):MODULES.translateBox(box,x*step,y*step);
+  Object.assign(box,next);positionFreeNode(node,box);
+  renderFreeTextList();scheduleSave();requestAnimationFrame(checkOverflow);
+ });
+}
+function renderFreeTextOverlay(page){
+ if(!Array.isArray(currentDoc().freeBoxes))return;
+ for(const box of freeBoxes()){
+  const host=e("div","free-text-box");host.dataset.boxId=box.id;
+  if(box.id===selectedFreeBoxId)host.classList.add("is-selected");
+  positionFreeNode(host,box);
+  const drag=clickButton("⠿","free-text-drag",()=>pickFreeBox(box.id));
+  drag.setAttribute("aria-label","Textfeld verschieben; mit Pfeiltasten präzise bewegen");
+  drag.title="Ziehen oder Pfeiltasten: Textfeld verschieben";
+  const content=e("div","free-text-edit",box.text);
+  content.contentEditable="true";content.spellcheck=true;
+  content.setAttribute("role","textbox");
+  content.setAttribute("aria-label","Frei platzierter Text");
+  content.addEventListener("focus",()=>pickFreeBox(box.id));
+  content.addEventListener("input",()=>{
+   box.text=content.innerText.replace(/\r/g,"").slice(0,20000);
+   scheduleSave();requestAnimationFrame(checkOverflow);
+  });
+  content.addEventListener("paste",event=>{
+   event.preventDefault();
+   document.execCommand("insertText",false,event.clipboardData?.getData("text/plain")||"");
+  });
+  const resize=clickButton("↘","free-text-resize",()=>pickFreeBox(box.id));
+  resize.setAttribute("aria-label","Textfeldbreite ändern; Pfeiltasten links und rechts");
+  resize.title="Ziehen: Textfeld breiter oder schmaler";
+  host.append(drag,content,resize);
+  wireFreeDrag(drag,box,host,"move");
+  wireFreeDrag(resize,box,host,"width");
+  page.append(host);
+ }
 }
 function renderSlots(){const host=$("slots");host.replaceChildren();for(let i=0;i<3;i++){const saved=state.slots[i],box=e("div","slot");box.append(e("span","slot-num",i+1));const info=e("div","slot-info");info.append(e("span","slot-title",saved?.name||"Freier Vorlagenslot"),e("span","slot-meta",saved?LABELS[saved.type]+" · Eigene Vorlage":"Noch nicht belegt"));box.append(info);const actions=e("div","slot-actions");if(saved){actions.append(clickButton("Verwenden","tiny-btn primary",()=>useSlot(i)));actions.append(clickButton("Löschen","tiny-btn",()=>{if(!confirm("Vorlage «"+saved.name+"» löschen? Vorhandene Arbeitskopien bleiben erhalten."))return;state.slots[i]=null;for(const type of ["cv","letter"])if(state.sources[type]===i)state.sources[type]=null;renderSlots();scheduleSave();flash("Vorlagenslot geleert.")}))}else{const btn=clickButton("Aktuelles Dokument speichern","tiny-btn primary",()=>openSlotModal(i));btn.disabled=state.activeDoc==="email";actions.append(btn)}box.append(actions);host.append(box)}const idx=state.sources[state.activeDoc],b=$("sourceBanner");if(idx!==null&&idx!==undefined&&state.slots[idx]){b.replaceChildren();b.classList.add("visible");b.append(e("span",null,"Arbeitskopie von «"+state.slots[idx].name+"». Deine Änderungen verändern die Vorlage nicht."));b.append(e("div",null));const apply=clickButton("Änderungen als Vorlage übernehmen","tiny-btn primary",()=>overwriteSlot(idx));apply.style.marginTop="8px";b.append(apply)}else{b.classList.remove("visible");b.textContent=""}}
 function openSlotModal(i){if(state.activeDoc==="email"){flash("Vorlagenslots sind für CV und Motivationsschreiben vorgesehen.");return}modalSlot=i;$("slotName").value=LABELS[state.activeDoc]+" – eigene Vorlage";$("slotModal").classList.add("show");$("slotName").focus();$("slotName").select()}
