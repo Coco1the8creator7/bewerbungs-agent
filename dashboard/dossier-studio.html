@@ -928,10 +928,11 @@ function renderPreview(){
  page.style.setProperty("--doc-body",FONT_FAMILIES[style.font]||FONT_FAMILIES.sans);
  page.style.setProperty("--doc-scale",String((style.fontScale||100)/100));
  page.setAttribute("aria-label",LABELS[state.activeDoc]+" A4-Druckvorschau");
- if(state.activeDoc==="cv")cvContent(page,doc,style);else letterContent(page,doc);
- renderFreeTextOverlay(page);
  outer.append(page);host.append(outer);
- requestAnimationFrame(()=>{zoomController.refresh();checkOverflow()});
+ ensureSourceFrames(doc,page,style);
+ page.classList.add("layered-page");
+ renderFreeTextOverlay(page);
+ requestAnimationFrame(()=>{zoomController.refresh();reflowFrameExclusions();checkOverflow()});
 }
 function checkOverflow(){const page=$("a4Page");if(!page)return;const exceeded=page.scrollHeight>page.clientHeight+2||[...page.querySelectorAll(".free-text-box")].some(box=>box.offsetTop+box.offsetHeight>page.clientHeight+2||box.offsetLeft+box.offsetWidth>page.clientWidth+2);$("overflowWarning").classList.toggle("show",exceeded)}
 function renderAll(){renderSettings();renderBlocks();renderFreeTextList();renderSlots();renderTabs();renderPreview()}
