@@ -1,5 +1,6 @@
 // Bottom score + explicit positive/negative quick feedback: data and UI regression.
 "use strict";
+async function run(){
 const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const vm=require("node:vm");
@@ -115,3 +116,6 @@ assert.throws(()=>merge({...empty,positive_feedback:[like]},
  {...empty,positive_feedback:[{...like,marked_at:"2026-11-04T13:00:00Z"}]},
  {...empty,positive_feedback:[{...like,marked_at:"2026-11-04T14:00:00Z"}]}),/Konflikt/);
 console.log("Desktop thumbs, separate positive feedback, undo and GitHub merge checks passed");
+
+}
+run().catch(err=>{console.error(err);process.exitCode=1;});
