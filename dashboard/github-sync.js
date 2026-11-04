@@ -58,5 +58,50 @@
   baseline=structuredClone(data);
   return written.commit.sha;
  }
- window.GithubFeedback=Object.freeze({getToken,setToken,clearToken,loadPublic,save});
+ // Filter-KI sends only explicitly changed job IDs. All unrelated CRM records remain intact.
+ // A concurrent writer is detected by the GitHub blob SHA; differing newer values are not overwritten.
+ async function saveFilterRatings(patches){
+  if(!getToken())throw Error("Kein GitHub-Token hinterlegt. Unter «Daten & Entwicklung» verbinden.");
+  const kinds=["relevance_ratings","radar_career_ratings"];
+  if(!patches||typeof patches!=="object")throw Error("Ungültige Bewertungsänderungen.");
+  for(let attempt=0;attempt<3;attempt++){
+   const current=await read();
+   const remote=current.data||{type:"bewerbungs-agent-feedback",schema_version:"1.0.0",
+    annotations:[],relevance_ratings:[],dismissals:[],export_selection:[],
+    activity_log:[],overrides:[],manual_jobs:[]};
+   if(remote.type!=="bewerbungs-agent-feedback"||remote.schema_version!=="1.0.0")throw Error("Unbekanntes GitHub-Feedbackformat.");
+   const merged={...remote};
+   let changed=false;
+   for(const kind of kinds){
+    const edits=patches[kind]||{};
+    const items=new Map((remote[kind]||[]).map(item=>[item.id,item]));
+    for(const [id,entry] of Object.entries(edits)){
+     if(!id||id.startsWith("DEMO-")||!entry||entry.id!==id)throw Error("Ungültige Inserat-ID beim Synchronisieren.");
+     const previous=items.get(id);
+     if(JSON.stringify(previous)===JSON.stringify(entry))continue;
+     // A newer remote edit to the same job needs a manual conflict resolution.
+     const remoteTime=Date.parse(previous?.updated_at||"")||0;
+     const localTime=Date.parse(entry.updated_at||"")||0;
+     if(previous&&remoteTime>localTime)
+      throw Error("Bewertungskonflikt bei "+id+": Auf GitHub liegt eine neuere Bewertung. Bitte manuell abgleichen.");
+     items.set(id,entry);changed=true;
+    }
+    if(Object.keys(edits).length)merged[kind]=[...items.values()];
+   }
+   if(!changed)return {sha:current.sha,unchanged:true};
+   merged.updated_at=new Date().toISOString();
+   const body={message:"data: sync changed Filter-KI ratings",content:encode(merged),branch:"main"};
+   if(current.sha)body.sha=current.sha;
+   try{
+    const written=await request(api,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    baseline=structuredClone(merged);
+    return {sha:written.commit.sha,unchanged:false};
+   }catch(err){
+    if(/HTTP (409|422)/.test(err.message)&&attempt<2)continue;
+    throw err;
+   }
+  }
+  throw Error("GitHub wurde gleichzeitig geändert. Bitte erneut synchronisieren.");
+ }
+ window.GithubFeedback=Object.freeze({getToken,setToken,clearToken,loadPublic,save,saveFilterRatings});
 })();
