@@ -511,7 +511,7 @@ header .sub,.section-heading p{color:#6b5744}
       <label for="persistEnabled"><input type="checkbox" id="persistEnabled">
         <span><strong>Auf diesem Gerät dauerhaft speichern</strong> (Browser-Datenbank, freiwillig)</span>
       </label>
-      <p>Nur auf einem privaten, vertrauenswürdigen Gerät aktivieren. Ohne Aktivierung bleiben Änderungen nur bis zum Neuladen erhalten. Diese Option synchronisiert keine Daten zwischen Geräten und speichert nichts in GitHub.</p><p>Für «Neue Inserate» wird unabhängig davon ausschliesslich der letzte Besuchszeitpunkt auf diesem Gerät gespeichert. Beim Löschen der lokalen Daten wird auch dieser Zeitstempel entfernt.</p>
+      <p>Nur auf einem privaten, vertrauenswürdigen Gerät aktivieren. Ohne Aktivierung bleiben andere Arbeitsstand-Änderungen nur bis zum Neuladen erhalten. Weggewischte Stellen werden unabhängig davon als Inserat-ID und Entscheidung auf diesem Gerät gespeichert. Diese Option synchronisiert keine Daten zwischen Geräten und speichert nichts in GitHub.</p><p>Für «Neue Inserate» wird unabhängig davon ausschliesslich der letzte Besuchszeitpunkt auf diesem Gerät gespeichert. Beim Löschen der lokalen Daten wird auch dieser Zeitstempel entfernt.</p>
       <div class="data-state" id="storageStatus" role="status" aria-live="polite">Nur aktuelle Sitzung · nicht dauerhaft gespeichert</div>
     </div>
     <p id="message" role="status" aria-live="polite" class="status-message">Demo-Daten geladen. Kein Zugriff auf Gmail oder ein Backend.</p>
@@ -840,6 +840,8 @@ const activeStages=new Set(["review","saved","later","preparing","applied","inte
 const annotations=new Map();
 const relevanceRatings=new Map();
 const dismissedJobFeedback=new Map(); // Negative preference signal; never an invented 1–100 rating.
+const localSwipeChoices=new Map(); // Only swipe choices; persisted independently of opt-in full-workspace backup.
+let pendingSwipeSave=Promise.resolve();
 const dossierLinkedJobIds=new Set(); // Derived from Dossiers IndexedDB; never duplicate persist.
 const selectedJobIds=new Set(); // Private Auswahl nur für einen späteren Export, kein Statuswechsel.
 const reasonOptions=[["field","Berufsfeld"],["distance","Arbeitsweg"],["seniority","Seniorität"],["tasks","Aufgaben"],["employer","Arbeitgeber"],["conditions","Arbeitsbedingungen"]];
@@ -1065,6 +1067,7 @@ function applyCloudFeedback(data){
   annotations.clear();for(const [id,v] of a)annotations.set(id,v);
   relevanceRatings.clear();for(const [id,v] of r)relevanceRatings.set(id,v);
   dismissedJobFeedback.clear();for(const [id,v] of dismissed)dismissedJobFeedback.set(id,v);
+  applyLocalSwipeChoices();
   selectedJobIds.clear();for(const id of sel)selectedJobIds.add(id);
   manualOverrides.clear();for(const [id,v] of ov)manualOverrides.set(id,v);
   activityLog=activities;
@@ -1139,6 +1142,47 @@ function validateDismissals(records){
   result.set(item.id,{signal:"not_interested",source:item.source,dismissed_at:item.dismissed_at});
  }
  return result;
+}
+function validateSwipeChoices(data){
+ if(data==null)return new Map();
+ if(data.version!==1||!Array.isArray(data.entries)||data.entries.length>10000)throw Error("Ungültige gespeicherte Wischentscheidungen.");
+ const choices=new Map();
+ for(const item of data.entries){
+  if(!item||typeof item.id!=="string"||!item.id.trim()||item.id.length>500||choices.has(item.id))
+   throw Error("Ungültiger Wischentscheid.");
+  if(item.signal==="not_interested"){
+   const record=validateDismissals([item]).get(item.id);
+   choices.set(item.id,{id:item.id,...record});
+  }else if(item.signal==="restored"&&validDate(item.restored_at)!==null){
+   choices.set(item.id,{id:item.id,signal:"restored",restored_at:item.restored_at});
+  }else throw Error("Ungültiger Wischentscheid.");
+ }
+ return choices;
+}
+function applyLocalSwipeChoices(){
+ for(const [id,entry] of localSwipeChoices){
+  if(entry.signal==="not_interested")
+   dismissedJobFeedback.set(id,{signal:entry.signal,source:entry.source,dismissed_at:entry.dismissed_at});
+  else dismissedJobFeedback.delete(id); // Explicit undo overrides older GitHub dismissals.
+ }
+}
+async function loadLocalSwipeChoices(){
+ const saved=await window.AgentStore.loadSwipePrefs();
+ const choices=validateSwipeChoices(saved);
+ localSwipeChoices.clear();
+ for(const [id,record] of choices)localSwipeChoices.set(id,record);
+ applyLocalSwipeChoices();
+}
+function persistSwipeChoice(id,entry){
+ if(id.startsWith("DEMO-"))return Promise.resolve(); // Demo gestures are session-only.
+ localSwipeChoices.set(id,{id,...entry});
+ const payload={version:1,entries:[...localSwipeChoices.values()]};
+ pendingSwipeSave=pendingSwipeSave.catch(()=>{}).then(()=>window.AgentStore.saveSwipePrefs(payload));
+ return pendingSwipeSave;
+}
+function swipeStorageWarning(label,error){
+ el("swipeUndoText").textContent=label+" – lokal nicht dauerhaft gespeichert: "+error.message;
+ el("swipeUndoToast").hidden=false;
 }
 function dismissedLandingJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&dismissedJobFeedback.has(j.id));}
 function ratingOf(id){return relevanceRatings.get(id)||null;}
@@ -1648,22 +1692,29 @@ let lastDismissedId=null;
 function dismissLandingJob(id,source="button"){
  if(!jobs.some(j=>j.id===id)||dismissedJobFeedback.has(id))return false;
  if(!["button","swipe_left","swipe_right"].includes(source))throw Error("Ungültige Ausblendungsquelle.");
- dismissedJobFeedback.set(id,{signal:"not_interested",source,dismissed_at:new Date().toISOString()});
+ const record={signal:"not_interested",source,dismissed_at:new Date().toISOString()};
+ dismissedJobFeedback.set(id,record);
  lastDismissedId=id;
+ const durability=persistSwipeChoice(id,record);
  saveChanges();
  render();
  const job=jobs.find(j=>j.id===id);
- el("swipeUndoText").textContent=(job?.title||"Stelleninserat")+" ausgeblendet · Nicht interessant"+
-  (persistEnabled?"":" · ohne Gerätespeicherung nur bis zum Neuladen.");
+ el("swipeUndoText").textContent=(job?.title||"Stelleninserat")+" ausgeblendet · Nicht interessant · wird auf diesem Gerät gesichert";
  el("swipeUndoToast").hidden=false;
+ durability.then(()=>{
+  if(lastDismissedId===id&&dismissedJobFeedback.has(id))
+   el("swipeUndoText").textContent=(job?.title||"Stelleninserat")+" ausgeblendet · auf diesem Gerät gespeichert";
+ }).catch(error=>swipeStorageWarning("Ausblendung",error));
  return true;
 }
 function restoreLandingJob(id){
  if(!dismissedJobFeedback.delete(id))return false;
  if(lastDismissedId===id){lastDismissedId=null;el("swipeUndoToast").hidden=true;}
+ const durability=persistSwipeChoice(id,{signal:"restored",restored_at:new Date().toISOString()});
  reviewListView=hasReviewFeedback(id)?"reviewed":"unrated";
  saveChanges();
  render();
+ durability.catch(error=>swipeStorageWarning("Wiederherstellung",error));
  return true;
 }
 el("swipeUndoButton").addEventListener("click",()=>{if(lastDismissedId)restoreLandingJob(lastDismissedId);});
@@ -1975,6 +2026,7 @@ function applyWorkspace(data,name){
   for(const [id,item] of records)annotations.set(id,item);
   relevanceRatings.clear();for(const [id,entry] of ratings)relevanceRatings.set(id,entry);
   dismissedJobFeedback.clear();for(const [id,entry] of dismissed)dismissedJobFeedback.set(id,entry);
+  applyLocalSwipeChoices();
   selectedJobIds.clear();for(const id of exportSelection)selectedJobIds.add(id);
   manualOverrides.clear();
   for(const [id,patch] of overrides)manualOverrides.set(id,patch);
@@ -2004,7 +2056,7 @@ el("persistEnabled").addEventListener("change",async e=>{
   persistEnabled=false;
   el("storageStatus").textContent="Lokale Speicherung wird entfernt …";
   pendingSave=pendingSave.catch(()=>{}).then(()=>window.AgentStore.clear()).then(()=>{
-   el("storageStatus").textContent="Nur aktuelle Sitzung · gespeicherte Browserdaten gelöscht";
+   el("storageStatus").textContent="Arbeitsstand gelöscht · Wischentscheidungen bleiben separat auf diesem Gerät erhalten";
   }).catch(err=>{
    el("storageStatus").textContent="Entfernen fehlgeschlagen: "+err.message;
   });
@@ -2025,6 +2077,12 @@ async function initialize(){
   }
  }catch(err){
   el("storageStatus").textContent="Lokale Datenspeicherung nicht verfügbar: "+err.message;
+ }
+ // Restore and overlay saved swipes before the imported jobs are first rendered.
+ try{
+  await loadLocalSwipeChoices();
+ }catch(err){
+  el("storageStatus").textContent="Wischentscheidungen konnten nicht geladen werden: "+err.message;
  }
  try {
   const response=await fetch("./jobs.json",{cache:"no-store"});
