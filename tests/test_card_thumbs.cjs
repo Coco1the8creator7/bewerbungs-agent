@@ -99,7 +99,7 @@ assert.ok(workspaceSaves>=2);
 
 // The data exchange has separate arrays and conflict-safe 3-way GitHub merges.
 const syncContext={window:{}};
-vm.runInNewContext(gh.replace("window.GithubFeedback=Object.freeze({getToken,setToken,clearToken,loadPublic,save});",
+vm.runInNewContext(gh.replace(/window\.GithubFeedback=Object\.freeze\(\{[^}]+\}\);/,
  "window.__mergeForTest=merge;"),syncContext);
 const merge=syncContext.window.__mergeForTest;
 const empty={type:"bewerbungs-agent-feedback",schema_version:"1.0.0",
