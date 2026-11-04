@@ -18,10 +18,19 @@
   catch(e){if(/HTTP 404/.test(e.message))return {sha:null,data:null};throw e;}
  }
  async function loadPublic(){
-  const response=await fetch("./feedback.json?nocache="+Date.now(),{cache:"no-store"});
-  if(response.status===404)return null;
-  if(!response.ok)throw Error("HTTP "+response.status);
-  const data=await response.json();
+  // A connected device reads the committed version directly. Pages deployment can lag.
+  // Without a token, preserve the existing read-only Pages fallback.
+  let data;
+  if(getToken()){
+   const current=await read();
+   data=current.data;
+  }else{
+   const response=await fetch("./feedback.json?nocache="+Date.now(),{cache:"no-store"});
+   if(response.status===404)return null;
+   if(!response.ok)throw Error("HTTP "+response.status);
+   data=await response.json();
+  }
+  if(!data)return null;
   if(data.type!=="bewerbungs-agent-feedback")throw Error("Unerwartetes Feedbackformat");
   baseline=structuredClone(data);
   return data;
