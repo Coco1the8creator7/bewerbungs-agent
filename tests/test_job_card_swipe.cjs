@@ -33,7 +33,7 @@ assert.match(html,/\["viewDismissed","dismissed"\]/);
 assert.match(github,/\["dismissals","id"\]/);
 // Exercise the real three-way GitHub feedback merge without network calls.
 const syncContext={window:{}};
-vm.runInNewContext(github.replace("window.GithubFeedback=Object.freeze({getToken,setToken,clearToken,loadPublic,save});",
+vm.runInNewContext(github.replace(/window\.GithubFeedback=Object\.freeze\(\{[^}]+\}\);/,
  "window.__mergeForTest=merge;"),syncContext);
 const merge=syncContext.window.__mergeForTest;
 const oldFeedback={type:"bewerbungs-agent-feedback",schema_version:"1.0.0",
