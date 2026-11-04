@@ -426,9 +426,16 @@ function migrateState(){
   if(doc.type==="cv"||doc.type==="letter"){
    const ids=new Set();
    doc.freeBoxes=(Array.isArray(doc.freeBoxes)?doc.freeBoxes:[]).slice(0,MODULES.MAX_BOXES)
-    .map(box=>MODULES.normalizeBox(box)).filter(box=>{
+    .map(box=>MODULES.normalizeFrame(box)).filter(box=>{
      if(!box.id||ids.has(box.id))return false;ids.add(box.id);return true;
     });
+   // Existing approved templates are migrated from their rendered geometry once.
+   // Never guess historical source-frame positions when they have already been saved.
+   if(Array.isArray(doc.layoutBoxes)){
+    const used=new Set();
+    doc.layoutBoxes=doc.layoutBoxes.map(item=>MODULES.normalizeFrame(item))
+     .filter(item=>item.id&&item.source&&!used.has(item.source)&&used.add(item.source));
+   }
   }
  };
  fixStyle(state.baseStyle);
