@@ -108,7 +108,7 @@
       if(!(archiveBytes instanceof Uint8Array)||!archiveBytes.length||archiveBytes.length>MAX_ARCHIVE_BYTES)
         throw fail("INVALID","Dossier-ZIP fehlt oder ist grösser als 5 MB. Nichts wurde übertragen.");
       const current=await readRemote();
-      if(current?.sha!==(knownSha||null)){
+      if((current?.sha||null)!==(knownSha||null)){
         blocked=true;
         throw fail("CONFLICT","Auf GitHub wurde dieser Entwurf inzwischen geändert. Keine lokale Version überschrieben.");
       }
