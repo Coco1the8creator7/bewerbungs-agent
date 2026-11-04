@@ -51,7 +51,10 @@ jobs:
           node --check dashboard/radar-explorer-ui.js
           node --test tests/radar-explorer.test.cjs
           node --check dashboard/dossiers.js
+          node --check dashboard/dossier-documents.js
           node --test tests/dossiers.test.cjs
+          node --test tests/dossier-documents.test.cjs
+          node tests/test_dossier_transfer.cjs
           node --test tests/job-popup.test.cjs
           node --test tests/radar.test.cjs
           node --test tests/agency-world.test.mjs
