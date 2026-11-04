@@ -831,6 +831,7 @@ const activeStages=new Set(["review","saved","later","preparing","applied","inte
 const annotations=new Map();
 const relevanceRatings=new Map();
 const dismissedJobFeedback=new Map(); // Negative preference signal; never an invented 1–100 rating.
+const positiveJobFeedback=new Map(); // Explicit thumbs-up feedback; never a fabricated numeric rating.
 const localSwipeChoices=new Map(); // Only swipe choices; persisted independently of opt-in full-workspace backup.
 let pendingSwipeSave=Promise.resolve();
 const dossierLinkedJobIds=new Set(); // Derived from Dossiers IndexedDB; never duplicate persist.
@@ -1020,6 +1021,7 @@ function snapshot(){
   annotations:[...annotations.entries()].map(([id,entry])=>({id,decision:entry.decision,note:entry.note,stage_changed_at:entry.stage_changed_at||null})),
   relevance_ratings:[...relevanceRatings.entries()].map(([id,value])=>({id,...value,reasons:[...(value.reasons||[])],aspects:{...(value.aspects||{})}})),
   dismissals:[...dismissedJobFeedback.entries()].map(([id,value])=>({id,...value})),
+  positive_feedback:[...positiveJobFeedback.entries()].map(([id,value])=>({id,...value})),
   export_selection:[...selectedJobIds],
   activity_log:structuredClone(activityLog),
   overrides:[...manualOverrides.entries()].map(([id,patch])=>({id,patch:structuredClone(patch)}))
@@ -1044,6 +1046,7 @@ function feedbackSnapshot(){
  const state=snapshot();
  return {type:"bewerbungs-agent-feedback",schema_version:"1.0.0",updated_at:new Date().toISOString(),
   annotations:state.annotations,relevance_ratings:state.relevance_ratings,dismissals:state.dismissals,
+  positive_feedback:state.positive_feedback,
   export_selection:state.export_selection,
   activity_log:state.activity_log,overrides:state.overrides,
   manual_jobs:state.jobs.filter(j=>j.id.startsWith("MANUAL-"))};
@@ -1051,13 +1054,15 @@ function feedbackSnapshot(){
 function applyCloudFeedback(data){
  if(!data||data.type!=="bewerbungs-agent-feedback"||data.schema_version!=="1.0.0")throw Error("Unbekanntes Feedbackformat");
  const a=validateAnnotations(data.annotations),r=validateRelevanceRatings(data.relevance_ratings),
-  dismissed=validateDismissals(data.dismissals),sel=validateExportSelection(data.export_selection),ov=validateOverrides(data.overrides),
+  dismissed=validateDismissals(data.dismissals),positives=validatePositiveFeedback(data.positive_feedback),
+  sel=validateExportSelection(data.export_selection),ov=validateOverrides(data.overrides),
   activities=validateActivityLog(data.activity_log),manual=validateJobs(data.manual_jobs||[]);
  isRestoring=true;
  try{
   annotations.clear();for(const [id,v] of a)annotations.set(id,v);
   relevanceRatings.clear();for(const [id,v] of r)relevanceRatings.set(id,v);
   dismissedJobFeedback.clear();for(const [id,v] of dismissed)dismissedJobFeedback.set(id,v);
+  positiveJobFeedback.clear();for(const [id,v] of positives)positiveJobFeedback.set(id,v);
   applyLocalSwipeChoices();
   selectedJobIds.clear();for(const id of sel)selectedJobIds.add(id);
   manualOverrides.clear();for(const [id,v] of ov)manualOverrides.set(id,v);
@@ -1134,6 +1139,18 @@ function validateDismissals(records){
  }
  return result;
 }
+function validatePositiveFeedback(records){
+ if(records==null)return new Map(); // Older workspaces and feedback exports are compatible.
+ if(!Array.isArray(records)||records.length>10000)throw Error("Ungültige positive Schnellbewertungen.");
+ const result=new Map();
+ for(const item of records){
+  if(!item||typeof item.id!=="string"||!item.id.trim()||result.has(item.id)||
+     item.signal!=="interested"||item.source!=="thumb_up"||
+     validDate(item.marked_at)===null)throw Error("Ungültige positive Schnellbewertung.");
+  result.set(item.id,{signal:"interested",source:"thumb_up",marked_at:item.marked_at});
+ }
+ return result;
+}
 function validateSwipeChoices(data){
  if(data==null)return new Map();
  if(data.version!==1||!Array.isArray(data.entries)||data.entries.length>10000)throw Error("Ungültige gespeicherte Wischentscheidungen.");
@@ -1144,6 +1161,9 @@ function validateSwipeChoices(data){
   if(item.signal==="not_interested"){
    const record=validateDismissals([item]).get(item.id);
    choices.set(item.id,{id:item.id,...record});
+  }else if(item.signal==="interested"){
+   const record=validatePositiveFeedback([item]).get(item.id);
+   choices.set(item.id,{id:item.id,...record});
   }else if(item.signal==="restored"&&validDate(item.restored_at)!==null){
    choices.set(item.id,{id:item.id,signal:"restored",restored_at:item.restored_at});
   }else throw Error("Ungültiger Wischentscheid.");
@@ -1152,9 +1172,16 @@ function validateSwipeChoices(data){
 }
 function applyLocalSwipeChoices(){
  for(const [id,entry] of localSwipeChoices){
-  if(entry.signal==="not_interested")
+  if(entry.signal==="not_interested"){
    dismissedJobFeedback.set(id,{signal:entry.signal,source:entry.source,dismissed_at:entry.dismissed_at});
-  else dismissedJobFeedback.delete(id); // Explicit undo overrides older GitHub dismissals.
+   positiveJobFeedback.delete(id);
+  }else if(entry.signal==="interested"){
+   positiveJobFeedback.set(id,{signal:entry.signal,source:entry.source,marked_at:entry.marked_at});
+   dismissedJobFeedback.delete(id);
+  }else {
+   dismissedJobFeedback.delete(id);
+   positiveJobFeedback.delete(id); // Explicit undo overrides older GitHub feedback.
+  }
  }
 }
 async function loadLocalSwipeChoices(){
@@ -1179,8 +1206,8 @@ function dismissedLandingJobs(){return visibleJobs().filter(j=>!dossierLinkedJob
 function ratingOf(id){return relevanceRatings.get(id)||null;}
 function hasReviewFeedback(id){const r=ratingOf(id);return !!r&&(Number.isInteger(r.score)||storedReasons(r).length>0||!!r.note?.trim()||Object.keys(r.aspects||{}).length>0||!!r.field_relation||!!r.seniority_assessment);}
 function visibleJobs(){return jobs.filter(j=>!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j));}
-function unratedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
-function reviewedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&hasReviewFeedback(j.id));}
+function unratedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&!positiveJobFeedback.has(j.id)&&stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
+function reviewedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&(hasReviewFeedback(j.id)||positiveJobFeedback.has(j.id)));}
 function normalizeReasons(value){
  const items=typeof value==="string"?(value?[value]:[]):value??[];
  if(!Array.isArray(items)||items.some(code=>typeof code!=="string"||!reasonCodes.has(code)))throw Error("Ungültige Bewertungsgründe.");
@@ -1299,6 +1326,12 @@ function buildMarkedJobsPayload(){
 function buildRelevancePayload(){
  return {type:"bewerbungs-agent-relevance-feedback",schema_version:"1.1.0",
   generated_at:new Date().toISOString(),selection_policy:"suggestion_only_no_exclusion",
+  positive_feedback:[...positiveJobFeedback.entries()].filter(([id])=>!id.startsWith("DEMO-")).map(([id,value])=>{
+   const j=jobs.find(x=>x.id===id);
+   return {job_id:id,signal:value.signal,source:value.source,marked_at:value.marked_at,
+    job:j?{title:j.title,company:j.company,location:j.location,source:j.source,
+      categories:j.categories,description:j.description}:null};
+  }),
   dismissals:[...dismissedJobFeedback.entries()].filter(([id])=>!id.startsWith("DEMO-")).map(([id,value])=>{
    const j=jobs.find(x=>x.id===id);
    return {job_id:id,signal:value.signal,source:value.source,dismissed_at:value.dismissed_at,
@@ -1444,11 +1477,18 @@ function secretDossierButton(job){
 function cardRatingButton(j){
  const score=ratingOf(j.id)?.score;
  const rated=Number.isInteger(score)&&score>=1&&score<=100;
+ // Display the existing suggestion as a recommendation, never as a manual rating.
+ const suggested=j.selection?.suggested_score;
+ const predicted=Number.isFinite(suggested)&&suggested>=0&&suggested<=100?
+  Math.round(suggested):getScore(j)??window.AgentCareerFilter?.classify(j)?.priority??null;
+ const display=rated?score:predicted;
  const b=document.createElement("button");b.type="button";
- b.className="card-rating"+(rated?" rated":" unrated");
- b.textContent=rated?score+" / 100":"Bewerten";
- b.setAttribute("aria-label",rated?"Eigene Bewertung "+score+" von 100 ändern: "+j.title:"Inserat bewerten: "+j.title);
- b.title="Eigene Relevanzbewertung (1–100) öffnen";
+ b.className="card-rating"+(rated?" rated":" suggested");
+ b.textContent=(display==null?"–":Math.round(display))+"/100";
+ b.setAttribute("aria-label",rated?"Eigene Bewertung "+score+" von 100 ändern: "+j.title:
+  "Bewertungsvorschlag "+(predicted==null?"ausstehend":Math.round(predicted)+" von 100")+". Eigene Bewertung festlegen: "+j.title);
+ b.title=rated?"Eigene Relevanzbewertung – anklicken zum Ändern":
+  "Automatischer Bewertungsvorschlag (keine eigene Bewertung) – anklicken zum Beurteilen";
  b.addEventListener("click",()=>{
   openDetails(j.id);
   el("detailReviewHost").querySelector(".relevance-slider")?.focus();
@@ -1788,6 +1828,7 @@ function loadJobs(rows,name,asDemo=false){
  if(!asDemo){
   activityLog=activityLog.filter(entry=>!entry.job_id.startsWith("DEMO-"));
   for(const key of dismissedJobFeedback.keys())if(key.startsWith("DEMO-"))dismissedJobFeedback.delete(key);
+  for(const key of positiveJobFeedback.keys())if(key.startsWith("DEMO-"))positiveJobFeedback.delete(key);
  }
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(visibleJobs().flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
@@ -1799,6 +1840,7 @@ function loadJobs(rows,name,asDemo=false){
 function loadDemo(){
  activityLog=activityLog.filter(item=>!item.job_id.startsWith("DEMO-"));
  for(const id of [...dismissedJobFeedback.keys()])if(id.startsWith("DEMO-"))dismissedJobFeedback.delete(id);
+ for(const id of [...positiveJobFeedback.keys()])if(id.startsWith("DEMO-"))positiveJobFeedback.delete(id);
  for(const id of [...manualOverrides.keys()])if(id.startsWith("DEMO-"))manualOverrides.delete(id);
  const isoAgo=d=>new Date(Date.now()-d*dayMs).toISOString();
  const job=(id,title,company,location,source,days)=>({
@@ -2009,6 +2051,7 @@ function applyWorkspace(data,name){
   throw Error("Ungültige Gesamtsicherung v0.3.0.");
  const rows=validateJobs(data.jobs),records=validateAnnotations(data.annotations),overrides=validateOverrides(data.overrides),activities=validateActivityLog(data.activity_log),
   ratings=validateRelevanceRatings(data.relevance_ratings),dismissed=validateDismissals(data.dismissals),
+  positives=validatePositiveFeedback(data.positive_feedback),
   exportSelection=validateExportSelection(data.export_selection);
  isRestoring=true;
  try{
@@ -2017,6 +2060,7 @@ function applyWorkspace(data,name){
   for(const [id,item] of records)annotations.set(id,item);
   relevanceRatings.clear();for(const [id,entry] of ratings)relevanceRatings.set(id,entry);
   dismissedJobFeedback.clear();for(const [id,entry] of dismissed)dismissedJobFeedback.set(id,entry);
+  positiveJobFeedback.clear();for(const [id,entry] of positives)positiveJobFeedback.set(id,entry);
   applyLocalSwipeChoices();
   selectedJobIds.clear();for(const id of exportSelection)selectedJobIds.add(id);
   manualOverrides.clear();
