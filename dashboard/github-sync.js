@@ -103,5 +103,7 @@
   }
   throw Error("GitHub wurde gleichzeitig geändert. Bitte erneut synchronisieren.");
  }
- window.GithubFeedback=Object.freeze({getToken,setToken,clearToken,loadPublic,save,saveFilterRatings});
+ // The read-only check retrieves the latest committed state, not the delayed Pages deployment.
+ async function loadFilterRatings(){const current=await read();return current.data;}
+ window.GithubFeedback=Object.freeze({getToken,setToken,clearToken,loadPublic,save,saveFilterRatings,loadFilterRatings});
 })();
