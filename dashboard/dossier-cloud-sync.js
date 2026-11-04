@@ -134,11 +134,17 @@
       requireConnected();blocked=false;
       // The caller MUST have safely persisted the data returned by pull() before calling this.
     }
+    function keepLocal(){
+      requireConnected();
+      // Only call after an explicit, informed conflict-resolution decision.
+      // knownSha remains the observed remote revision; later external edits still block.
+      blocked=false;
+    }
     function disconnect(){
       credential="";repoName="";branch="";dossierId="";knownSha=null;bundleSha=null;remoteExists=false;blocked=false;connected=false;
     }
     function status(){return {connected,repository:repoName,blocked,remoteExists,hasToken:!!credential};}
-    return Object.freeze({connect,push,pull,acceptRemote,disconnect,status});
+    return Object.freeze({connect,push,pull,acceptRemote,keepLocal,disconnect,status});
   }
   return Object.freeze({createClient,SOURCE_REPO,PREFIX,MAX_ARCHIVE_BYTES});
 });
