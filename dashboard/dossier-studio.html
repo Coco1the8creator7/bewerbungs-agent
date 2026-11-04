@@ -666,7 +666,7 @@ function ensureSourceFrames(doc,page,style){
    const r=node.getBoundingClientRect();
    let x=100*(r.left-pr.left)/pr.width,y=100*(r.top-pr.top)/pr.height;
    let width=100*r.width/pr.width;
-   if(source==="section:photo"&&!doc.data.photoData){
+   if(source==="section:photo"&&!doc.data.photoData&&style.theme!=="structured"){
     // A photo placeholder belongs in the upper right of a CV by default.
     x=74;y=12;width=18;
    }
@@ -851,7 +851,7 @@ function renderFreeTextOverlay(page){
   }else{
    if(box.source?.startsWith("section:")&&state.activeDoc==="cv"){
     const section=currentDoc().sections.find(s=>s.id===box.source.slice(8));
-    if(section)host.append(e("h3","frame-heading",section.label));
+    if(section)flow.append(e("h3","frame-heading",section.label));
    }
    let className="frame-edit";
    if(box.source==="data:name")className+=" doc-name";
@@ -921,7 +921,7 @@ function reflowFrameExclusions(){
    spacer.style.height=(localTop+localHeight)+"px";
    spacer.style.marginTop="0";
    spacer.style.shapeOutside="polygon(0 "+localTop+"px,100% "+localTop+"px,100% 100%,0 100%)";
-   flow.insertBefore(spacer,flow.querySelector(".frame-edit"));
+   flow.insertBefore(spacer,flow.firstChild);
   }
  }
 }
