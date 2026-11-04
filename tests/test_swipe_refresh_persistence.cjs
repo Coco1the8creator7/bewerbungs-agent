@@ -14,7 +14,7 @@ async function run(){
  assert.match(html,/await loadLocalSwipeChoices\(\)/);
  assert.ok(html.indexOf("await loadLocalSwipeChoices()")<html.indexOf('fetch("./jobs.json"'),
   "decisions must be restored before imported cards are rendered");
- assert.match(html,/dismissedJobFeedback\.set\(id,record\);\s*lastDismissedId=id;\s*const durability=persistSwipeChoice\(id,record\)/);
+ assert.match(html,/dismissedJobFeedback\.set\(id,record\);\s*positiveJobFeedback\.delete\(id\);[^\n]*\s*lastDismissedId=id;\s*const durability=persistSwipeChoice\(id,record\)/);
  assert.match(html,/persistSwipeChoice\(id,\{signal:"restored",restored_at:new Date\(\)\.toISOString\(\)\}\)/);
  assert.match(html,/applyLocalSwipeChoices\(\);\s*selectedJobIds\.clear\(\)/);
  assert.match(html,/Weggewischte Stellen werden unabhängig davon als Inserat-ID und Entscheidung auf diesem Gerät gespeichert/);
