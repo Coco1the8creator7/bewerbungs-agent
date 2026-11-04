@@ -36,6 +36,12 @@ jobs:
           node-version: "22"
       - name: Install JSON Schema validator
         run: python -m pip install "jsonschema>=4.23,<5"
+      - name: Verify Dossier generation workflow independently
+        run: |
+          node --check dashboard/dossiers.js
+          node --check dashboard/dossier-documents.js
+          node --test tests/dossiers.test.cjs tests/job-popup.test.cjs tests/dossier-documents.test.cjs
+          node tests/test_dossier_transfer.cjs
       - name: Run offline contract tests
         run: python -m unittest discover -s tests -v
       - name: Verify Agency artwork, levels and UI contracts
