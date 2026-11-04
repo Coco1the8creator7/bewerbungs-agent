@@ -111,10 +111,25 @@
  .email-preview{max-width:none!important;width:210mm!important;border:0!important;border-radius:0!important;box-shadow:none!important;padding:16mm!important;margin:0!important;min-height:297mm!important}
  .doc-photo-empty{display:none!important}
 }
+
+/* Private GitHub Dossier backup (separate from public CRM feedback). */
+.cloud-open{display:flex;align-items:center;gap:6px;white-space:nowrap;order:3;font-size:11px}
+.cloud-open.is-cloud-error{border-color:#E7B5BE;color:#A34454}
+.cloud-open.is-cloud-dirty{border-color:#E5CDA0;color:#815A35}
+.studio-close{order:4}
+.cloud-dialog{max-width:540px;max-height:90dvh;overflow-y:auto}
+.cloud-dialog input{margin-top:0}.cloud-dialog label{margin-top:13px}
+.cloud-dialog .cloud-warning{padding:10px;border:1px solid #ECD8C2;background:#FFF6EB;border-radius:9px;color:#815A35}
+.cloud-actions{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.cloud-actions .btn{font-size:11px;padding:8px 10px}
+.cloud-dialog #cloudMessage{margin-top:13px;padding:8px 0}
+.cloud-dialog #cloudMessage.is-error{color:#A34454}
+.cloud-dialog .note{overflow-wrap:anywhere;font-size:10px;line-height:1.55}
+@media(max-width:850px){.cloud-open span{display:none}.cloud-open{padding:8px}}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M5 3.5h10l4 4V20H5z"/><path d="M15 3.5v4h4M8 11h8M8 14h8M8 17h5"/></svg></div><div class="brand-name">Career.<em>Agency</em></div><span class="crumb">/</span><span class="studio-name">Dossier-Studio</span></div><div class="top-right"><a class="toolbar-button studio-close" href="./index.html#dossiers" aria-label="Dossier-Studio schliessen und zu Dossiers zurückkehren" title="Dossier-Studio schliessen"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></a><div id="saveStatus" class="saved"><i class="saved-dot"></i><span>Lade lokalen Entwurf …</span></div><button class="pill studio-review" id="studioModeLabel" type="button" title="Dokument prüfen und Druckvorschau öffnen">Entwurf prüfen</button></div></header>
+<header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M5 3.5h10l4 4V20H5z"/><path d="M15 3.5v4h4M8 11h8M8 14h8M8 17h5"/></svg></div><div class="brand-name">Career.<em>Agency</em></div><span class="crumb">/</span><span class="studio-name">Dossier-Studio</span></div><div class="top-right"><button class="toolbar-button cloud-open" id="cloudOpen" type="button" aria-label="Private GitHub-Sicherung öffnen" title="Private GitHub-Sicherung"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 18a5 5 0 0 1-1-9.9A7 7 0 0 1 19 10a4 4 0 0 1-1 8H7Z"/><path d="m10 15 2 2 3-4"/></svg><span id="cloudTopLabel">GitHub-Sicherung</span></button><a class="toolbar-button studio-close" href="./index.html#dossiers" aria-label="Dossier-Studio schliessen und zu Dossiers zurückkehren" title="Dossier-Studio schliessen"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5 5 19"/></svg></a><div id="saveStatus" class="saved"><i class="saved-dot"></i><span>Lade lokalen Entwurf …</span></div><button class="pill studio-review" id="studioModeLabel" type="button" title="Dokument prüfen und Druckvorschau öffnen">Entwurf prüfen</button></div></header>
 <main class="workspace" id="workspace">
 <aside class="controls" aria-label="Bearbeitungswerkzeuge">
   <div class="controls-intro"><p class="eyebrow">Dein Bewerbungsstudio</p><h1>Gestalte dein Dossier</h1><p class="quiet">Wähle ein Design, ordne Inhalte neu und bearbeite Texte direkt in der Vorschau.</p></div>
@@ -128,8 +143,19 @@
 <section class="preview-area" aria-label="Dokumentvorschau"><div class="preview-head"><div class="preview-left"><div class="preview-overline">Live-Dokument</div><p class="preview-title" id="previewTitle">Lebenslauf</p></div><div class="preview-controls"><span class="preview-count" id="pageCaption">A4 · direkt bearbeitbar</span><span class="mock-tag" id="studioPreviewTag">Musterinhalt</span><button id="studioDownload" class="toolbar-button" type="button" hidden>Dossier herunterladen</button></div></div><nav class="doc-tabs" id="docTabs" aria-label="Dokument wechseln"></nav><div class="preview-scroll" id="previewScroll"><div class="alert" id="overflowWarning" role="alert">Der Inhalt passt nicht vollständig auf eine A4-Seite. Bitte Text kürzen oder Abstände anpassen; es wird nichts gelöscht.</div><div id="previewHost"></div><div class="preview-bottom"><span id="studioPreviewNotice">Bearbeitbarer Entwurf · vor dem Versenden Angaben und Seitenumbrüche kontrollieren</span><span id="docKind">CV · A4</span></div></div></section>
 </main>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div class="modal-backdrop" id="cloudModal" role="presentation"><div class="modal cloud-dialog" role="dialog" aria-modal="true" aria-labelledby="cloudTitle">
+<h2 id="cloudTitle">Private GitHub-Sicherung</h2>
+<p>Bei Änderungen wird der bearbeitbare Dossierstand zusammen mit einem PDF-ZIP ungefähr alle 30 Sekunden in ein <strong>privates</strong> GitHub-Repository gesichert. Kein Upload in öffentliche Repositories.</p>
+<p class="cloud-warning">Nur für einen persönlichen Einzelbenutzer-Test. Das GitHub-Token bleibt im Arbeitsspeicher und muss nach einem Neuladen erneut eingegeben werden. Für Jugendliche und einen Mehrbenutzerbetrieb ist ein authentifiziertes Backend nötig.</p>
+<label for="cloudRepo">Privates Repository (Besitzer/Name)</label><input id="cloudRepo" type="text" autocomplete="off" spellcheck="false" placeholder="benutzername/privates-dossier-backup">
+<label for="cloudToken">Fine-grained GitHub-Token (Contents: Read &amp; Write)</label><input id="cloudToken" type="password" autocomplete="off" placeholder="Nur für diese Sitzung">
+<p id="cloudMessage" class="note" role="status" aria-live="polite">Noch nicht verbunden. Lokal gespeicherte Daten bleiben erhalten.</p>
+<div class="cloud-actions"><button class="btn primary" id="cloudConnect" type="button">Verbinden</button><button class="btn" id="cloudSync" type="button" disabled>Jetzt sichern</button><button class="btn" id="cloudRestore" type="button" disabled>GitHub-Version laden</button><button class="btn" id="cloudDisconnect" type="button" disabled>Trennen</button></div>
+<div class="modal-actions"><button type="button" id="cloudClose" class="btn">Schliessen</button></div>
+<p class="note">Dateien: <code>dossier-studio/v1/&lt;Dossier-ID&gt;/draft.json</code> und <code>Dossier.zip</code>. Hochgeladene externe Anhänge aus der Dossier-Bibliothek sind noch nicht Teil dieser Sicherung. ZIP-PDFs verwenden weiterhin das vereinfachte Basislayout.</p></div></div>
 <div class="modal-backdrop" id="reviewModal" role="presentation"><div class="modal review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle"><h2 id="reviewTitle">Entwurf prüfen</h2><p>Kontrolliere den aktuellen Entwurf vor dem Versand. Die Druckvorschau öffnet den Druckdialog deines Browsers; dort kannst du auch als PDF speichern.</p><ul class="review-list" id="reviewIssues"></ul><div class="modal-actions"><button type="button" id="closeReview" class="btn">Schliessen</button><button type="button" id="reviewPrint" class="btn primary">Druckvorschau öffnen</button></div></div></div><div class="modal-backdrop" id="slotModal" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h2 id="modalTitle">Eigene Vorlage speichern</h2><p>Du speicherst den aktuell bearbeiteten Text samt Design und Bausteinanordnung. Die Vorlage kann später als Arbeitskopie verwendet werden.</p><label for="slotName">Vorlagenname</label><input id="slotName" type="text" maxlength="45" autocomplete="off"><div class="modal-actions"><button type="button" id="cancelModal" class="btn">Abbrechen</button><button type="button" id="confirmModal" class="btn primary">Vorlage speichern</button></div></div></div>
 <script src="./dossier-documents.js?v=20261104-1"></script>
+<script src="./dossier-cloud-sync.js?v=20261104-private-1"></script>
 <script>
 (function(){
 "use strict";
@@ -165,6 +191,68 @@ function initialState(){return {version:VERSION,activeDoc:"cv",enabled:{cv:true,
 const dossierId=new URLSearchParams(location.search).get("dossier");
 let state=initialState(),database=null,persistTimer=0,toastTimer=0,modalSlot=null,ready=false,storageMode="unavailable";
 let activeDossier=null,personalWorkspace=initialState(),dossierDb=null,writeQueue=Promise.resolve();
+const cloudClient=window.CareerDossierCloud?.createClient();
+let cloudRevision=0,cloudDirty=false,cloudBusy=false,cloudError="";
+function cloudNote(message,error=false){const el=$("cloudMessage");el.textContent=message;el.classList.toggle("is-error",error)}
+function cloudUI(){
+ const connected=!!cloudClient?.status().connected,blocked=!!cloudClient?.status().blocked;
+ $("cloudTopLabel").textContent=!connected?"GitHub-Sicherung":blocked?"Cloud-Konflikt":cloudError?"Cloud-Fehler":cloudDirty?"Cloud ausstehend":"Cloud gesichert";
+ $("cloudOpen").classList.toggle("is-cloud-error",connected&&(blocked||!!cloudError));
+ $("cloudOpen").classList.toggle("is-cloud-dirty",connected&&cloudDirty);
+ $("cloudConnect").disabled=cloudBusy;
+ $("cloudSync").disabled=!connected||blocked||cloudBusy||!cloudDirty;
+ $("cloudRestore").disabled=!connected||cloudBusy||!cloudClient.status().remoteExists;
+ $("cloudDisconnect").disabled=!connected||cloudBusy;
+}
+function cloudChanged(){
+ if(!cloudClient?.status().connected)return;
+ cloudRevision++;cloudDirty=true;cloudError="";cloudUI();
+}
+async function syncCloud(){
+ if(!activeDossier||!cloudClient?.status().connected||cloudClient.status().blocked||!cloudDirty||cloudBusy)return;
+ if(navigator.onLine===false){cloudError="Offline. Später erneut sichern.";cloudUI();return;}
+ cloudBusy=true;cloudUI();
+ const revision=cloudRevision,data=generatedSnapshot(clone(state));
+ try{
+  await persistNow();
+  const bytes=window.CareerDossierDocuments.bundleBytes(data);
+  const write=()=>cloudClient.push(data,bytes);
+  const result=await(navigator.locks?.request?navigator.locks.request("career-private-dossier-"+dossierId,{mode:"exclusive"},write):write());
+  if(cloudRevision===revision)cloudDirty=false;
+  cloudError="";cloudNote(result.unchanged?"GitHub-Stand bereits aktuell.":"Dossier privat auf GitHub gesichert.");
+ }catch(error){cloudError=error.message||"GitHub nicht erreichbar.";cloudNote(cloudError,true)}
+ finally{cloudBusy=false;cloudUI()}
+}
+async function connectCloud(){
+ if(!activeDossier||!cloudClient)return;
+ const repository=$("cloudRepo").value.trim(),token=$("cloudToken").value;
+ $("cloudToken").value="";cloudBusy=true;cloudUI();
+ try{
+  const result=await cloudClient.connect({repository,token,id:dossierId,local:generatedSnapshot(clone(state))});
+  cloudError="";cloudDirty=!result.remoteExists;cloudRevision++;
+  cloudNote(result.blocked?"Auf GitHub liegt eine andere Version. Sie wird nicht überschrieben; vor dem Laden lokale Version sichern.":result.remoteExists?"Cloudstand und lokaler Entwurf stimmen überein.":"Privat verbunden. Erste Sicherung ausstehend.",result.blocked);
+ }catch(error){cloudError=error.message;cloudNote("Verbindung fehlgeschlagen: "+error.message,true)}
+ finally{cloudBusy=false;cloudUI()}
+}
+async function restoreCloud(){
+ if(!cloudClient?.status().connected||cloudBusy)return;
+ if(!confirm("Lokalen Dossierentwurf durch GitHub-Version ersetzen? Nicht gesicherte lokale Änderungen gehen verloren. Bitte vorher lokal herunterladen."))return;
+ cloudBusy=true;cloudUI();const previous=clone(state);
+ try{
+  const remote=await cloudClient.pull();
+  state={...initialState(),...remote,slots:previous.slots};
+  migrateState();renderAll();await persistNow();
+  cloudClient.acceptRemote();cloudDirty=false;cloudError="";cloudRevision++;
+  cloudNote("GitHub-Version geladen und lokal gespeichert.");
+ }catch(error){state=previous;renderAll();cloudError=error.message;cloudNote("Laden fehlgeschlagen: "+error.message,true)}
+ finally{cloudBusy=false;cloudUI()}
+}
+function showCloud(){
+ if(!dossierId||!activeDossier){flash("Bitte zuerst ein Dossier generieren.");return}
+ $("cloudModal").classList.add("show");cloudUI();$("cloudRepo").focus();
+}
+function hideCloud(){$("cloudModal").classList.remove("show")}
+
 function clone(x){return structuredClone(x)}
 function flash(message){const t=$("toast");t.textContent=message;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),3600)}
 function savedLabel(label,mode="ok"){$("saveStatus").className="saved"+(mode==="error"?" is-error":mode==="busy"?" is-busy":"");$("saveStatus").lastElementChild.textContent=label}
@@ -225,6 +313,7 @@ function persistNow(){
 }
 function scheduleSave(){
  if(!ready)return;
+ cloudChanged();
  savedLabel("Speichert lokal …","busy");
  clearTimeout(persistTimer);
  persistTimer=setTimeout(()=>{persistNow().catch(()=>{});},350);
@@ -346,6 +435,21 @@ function showReview(){
 }
 function closeReview(){$("reviewModal").classList.remove("show")}
 function resetDraft(){const type=state.activeDoc,source=state.sources[type];if(!confirm("Aktuellen "+LABELS[type]+"-Entwurf zurücksetzen? Manuelle Änderungen an diesem Dokument gehen verloren. Gespeicherte Vorlagen bleiben erhalten."))return;if(source!==null&&state.slots[source])state.docs[type]=clone(state.slots[source].doc);else state.docs[type]=dossierId&&activeDossier?window.CareerDossierDocuments.createDraft(activeDossier).docs[type]:defaultDocs()[type];renderAll();scheduleSave();flash("Aktueller Entwurf zurückgesetzt.")}
+$("cloudOpen").addEventListener("click",showCloud);
+$("cloudClose").addEventListener("click",hideCloud);
+$("cloudModal").addEventListener("click",ev=>{if(ev.target===$("cloudModal"))hideCloud()});
+$("cloudConnect").addEventListener("click",connectCloud);
+$("cloudSync").addEventListener("click",syncCloud);
+$("cloudRestore").addEventListener("click",restoreCloud);
+$("cloudDisconnect").addEventListener("click",()=>{
+ if(cloudBusy)return;cloudClient?.disconnect();cloudDirty=false;cloudError="";
+ cloudNote("GitHub-Verbindung getrennt. Lokaler Entwurf bleibt erhalten.");cloudUI();
+});
+setInterval(()=>{if(cloudDirty)syncCloud()},30000);
+window.addEventListener("online",()=>{if(cloudDirty)syncCloud()});
+window.addEventListener("focus",()=>{if(cloudDirty)syncCloud()});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&cloudDirty)syncCloud()});
+window.addEventListener("beforeunload",ev=>{if(cloudClient?.status().connected&&cloudDirty){ev.preventDefault();ev.returnValue=""}});
 $("blockCatalog").addEventListener("change",()=>{$("customBlockName").hidden=$("blockCatalog").value!=="__custom__";});
 $("addBlock").addEventListener("click",addCatalogBlock);
 $("studioModeLabel").addEventListener("click",showReview);
@@ -370,7 +474,14 @@ $("studioDownload").addEventListener("click",async()=>{
 document.querySelector('a[href="./index.html#dossiers"]').addEventListener("click",async ev=>{
  if(!dossierId)return;
  ev.preventDefault();
- try{await persistNow();window.location.href="./index.html#dossiers";}
+ try{
+  await persistNow();
+  if(cloudClient?.status().connected&&cloudDirty){
+   await syncCloud();
+   if(cloudDirty&&!confirm("Dossier ist nur lokal gespeichert, nicht auf GitHub. Trotzdem schliessen?"))return;
+  }
+  window.location.href="./index.html#dossiers";
+ }
  catch(err){flash("Bitte zuerst den Speicherfehler beheben: "+err.message)}
 });
 (async()=>{
@@ -407,6 +518,8 @@ document.querySelector('a[href="./index.html#dossiers"]').addEventListener("clic
    $("studioPreviewTag").textContent="Angaben prüfen";
    $("studioPreviewNotice").textContent="Bearbeitbarer Entwurf – persönliche Angaben vor dem Versand prüfen. Layoutgetreues PDF über «Entwurf prüfen» → Druckvorschau. Der ZIP-Download enthält einfach formatierte PDFs mit abweichendem Layout.";
    $("studioDownload").hidden=false;
+    $("studioDownload").textContent="PDF-ZIP (Basislayout)";
+    $("studioDownload").title="PDF-ZIP mit vereinfachtem Layout; für layoutgetreues PDF Entwurf prüfen → Druckvorschau.";
   }catch(err){
    document.querySelector(".workspace").hidden=true;
    savedLabel("Dossier nicht verfügbar","error");
@@ -415,7 +528,7 @@ document.querySelector('a[href="./index.html#dossiers"]').addEventListener("clic
   }
  }
  migrateState();
- ready=true;renderAll();
+ ready=true;renderAll();cloudUI();
  savedLabel(storageMode==="unavailable"&&!dossierId?"Speicherung nicht verfügbar":"Lokal gespeichert",storageMode==="unavailable"&&!dossierId?"error":"ok");
 })();
 })();
