@@ -87,7 +87,11 @@
    await writing;
    if(storageError)throw Error(storageError);
    const batch=structuredClone(pending);
-   const result=await window.GithubFeedback.saveFilterRatings(batch);
+   // Browser Web Locks serialise writes across tabs of the same origin when supported.
+   // GitHub SHA conflict checks remain the fallback for other browsers/devices.
+   const write=()=>window.GithubFeedback.saveFilterRatings(batch);
+   const result=await (navigator.locks?.request?
+    navigator.locks.request("career-filter-ki-github-writer",{mode:"exclusive"},write):write());
    // A newer edit may have arrived during the network request: acknowledge only
    // the version actually sent. A second batch will be sent on the next tick.
    const touched=new Set();
