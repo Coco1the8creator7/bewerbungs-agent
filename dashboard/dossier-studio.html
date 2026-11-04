@@ -379,7 +379,12 @@ function migrateState(){
    if(!doc.sections.some(s=>s.id==="photo"))doc.sections.unshift({id:"photo",label:"Bewerbungsfoto",text:"",visible:true});
    if(typeof doc.data.photoData!=="string")doc.data.photoData="";
    const photo=doc.sections.find(s=>s.id==="photo");
-   if(photo&&photo.visible===false&&!doc.data.photoData)photo.visible=true;
+   // One-time migration of older hidden-by-default placeholders; future explicit
+   // user decisions to hide an optional photo remain respected.
+   if(doc.photoPlaceholderMigrated!==true){
+    if(photo&&photo.visible===false&&!doc.data.photoData)photo.visible=true;
+    doc.photoPlaceholderMigrated=true;
+   }
   }
   if(doc.type==="cv"||doc.type==="letter"){
    const ids=new Set();
