@@ -77,3 +77,8 @@
 .dossier-dialog #dossierGenerateJobSelect{width:100%;min-height:42px;border-radius:9px;padding:10px}
 .dossier-dialog .dossier-generation-hint{font-size:.78rem;line-height:1.5;color:var(--ca-text-muted,#746a67);margin:14px 0 0}
 #mode-dossiers .dossier-card-actions button:disabled{opacity:.6;cursor:wait}
+
+#mode-dossiers .dossier-card-more{margin:4px 0 12px;color:var(--ca-text-muted,#756b65);font-size:.76rem}
+#mode-dossiers .dossier-card-more summary{width:max-content;cursor:pointer;padding:6px 0}
+#mode-dossiers .dossier-card-more button{margin:6px 0 3px;font-size:.72rem;padding:7px 10px}
+#mode-dossiers .dossier-attachments:empty{display:none}
