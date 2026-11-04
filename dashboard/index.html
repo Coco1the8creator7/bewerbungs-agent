@@ -470,7 +470,7 @@ header .sub,.section-heading p{color:#6b5744}
 <section class="section" aria-labelledby="newJobsTitle">
   <div class="section-heading"><h2 id="newJobsTitle">Meine Inserate</h2></div>
   <p id="dossierTransferNotice" class="job-dossier-transfer-notice" role="status" aria-live="polite" hidden></p>
-  <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Offen (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button><button type="button" id="viewDismissed" aria-pressed="false">Ausgeblendet (0)</button></div>
+  <div class="review-tabs" role="group" aria-label="Inserate nach Bearbeitungsstand"><button type="button" id="viewUnrated" aria-pressed="true">Offen (0)</button><button type="button" id="viewReviewed" aria-pressed="false">Bearbeitet (0)</button><button type="button" id="viewInterested" aria-pressed="false">Interessant (0)</button><button type="button" id="viewDismissed" aria-pressed="false">Ausgeblendet (0)</button></div>
   <p class="job-swipe-hint">Auf dem Smartphone nach links oder rechts wischen: Nicht interessant</p>
   <div id="newJobsList" class="cards" aria-live="polite"></div>
   <div id="mobileJobSentinel" class="mobile-load" hidden><span id="mobileJobCount"></span><button type="button" class="secondary" onclick="appendJobBatch();observeMobileJobs()">Weitere 5 anzeigen</button></div>
@@ -1207,7 +1207,8 @@ function ratingOf(id){return relevanceRatings.get(id)||null;}
 function hasReviewFeedback(id){const r=ratingOf(id);return !!r&&(Number.isInteger(r.score)||storedReasons(r).length>0||!!r.note?.trim()||Object.keys(r.aspects||{}).length>0||!!r.field_relation||!!r.seniority_assessment);}
 function visibleJobs(){return jobs.filter(j=>!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j));}
 function unratedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&!positiveJobFeedback.has(j.id)&&stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
-function reviewedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&(hasReviewFeedback(j.id)||positiveJobFeedback.has(j.id)));}
+function reviewedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&!positiveJobFeedback.has(j.id)&&hasReviewFeedback(j.id));}
+function interestedLandingJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&positiveJobFeedback.has(j.id));}
 function normalizeReasons(value){
  const items=typeof value==="string"?(value?[value]:[]):value??[];
  if(!Array.isArray(items)||items.some(code=>typeof code!=="string"||!reasonCodes.has(code)))throw Error("Ungültige Bewertungsgründe.");
@@ -1725,6 +1726,7 @@ function dismissLandingJob(id,source="button"){
  if(!["button","swipe_left","swipe_right"].includes(source))throw Error("Ungültige Ausblendungsquelle.");
  const record={signal:"not_interested",source,dismissed_at:new Date().toISOString()};
  dismissedJobFeedback.set(id,record);
+ positiveJobFeedback.delete(id); // A negative reaction replaces any previous thumbs-up.
  lastDismissedId=id;
  const durability=persistSwipeChoice(id,record);
  saveChanges();
@@ -1748,17 +1750,66 @@ function restoreLandingJob(id){
  durability.catch(error=>swipeStorageWarning("Wiederherstellung",error));
  return true;
 }
-el("swipeUndoButton").addEventListener("click",()=>{if(lastDismissedId)restoreLandingJob(lastDismissedId);});
+function markLandingJobInteresting(id){
+ if(!jobs.some(j=>j.id===id)||dismissedJobFeedback.has(id)||positiveJobFeedback.has(id))return false;
+ const record={signal:"interested",source:"thumb_up",marked_at:new Date().toISOString()};
+ positiveJobFeedback.set(id,record);
+ lastDismissedId=id; // Reuse existing undo toast for both explicit reactions.
+ const durability=persistSwipeChoice(id,record);
+ saveChanges();
+ render(); // Card immediately leaves current tab, but remains under «Interessant».
+ const job=jobs.find(j=>j.id===id);
+ el("swipeUndoText").textContent=(job?.title||"Stelleninserat")+" als interessant markiert · wird auf diesem Gerät gesichert";
+ el("swipeUndoToast").hidden=false;
+ durability.then(()=>{
+  if(lastDismissedId===id&&positiveJobFeedback.has(id))
+   el("swipeUndoText").textContent=(job?.title||"Stelleninserat")+" als interessant markiert · auf diesem Gerät gespeichert";
+ }).catch(error=>swipeStorageWarning("Positive Bewertung",error));
+ return true;
+}
+function restoreInterestingJob(id){
+ if(!positiveJobFeedback.delete(id))return false;
+ if(lastDismissedId===id){lastDismissedId=null;el("swipeUndoToast").hidden=true;}
+ const durability=persistSwipeChoice(id,{signal:"restored",restored_at:new Date().toISOString()});
+ reviewListView=hasReviewFeedback(id)?"reviewed":"unrated";
+ saveChanges();
+ render();
+ durability.catch(error=>swipeStorageWarning("Positive Bewertung zurücknehmen",error));
+ return true;
+}
+function cardThumbButton(job,positive){
+ const button=document.createElement("button");button.type="button";
+ button.className=positive?"card-thumb card-thumb-up":"card-thumb card-thumb-down";
+ const alreadyLiked=positiveJobFeedback.has(job.id);
+ button.setAttribute("aria-label",(positive?(alreadyLiked?"Positive Bewertung zurücknehmen: ":"Interessant: "):"Nicht interessant: ")+job.title);
+ button.setAttribute("aria-pressed",String(positive&&alreadyLiked));
+ button.title=positive?(alreadyLiked?"Interessant rückgängig":"Interessant – für Filter-KI merken"):
+  "Nicht interessant – ausblenden";
+ button.innerHTML=positive?
+  '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 10.5v10H4.3A2.3 2.3 0 0 1 2 18.2v-5.4a2.3 2.3 0 0 1 2.3-2.3H7zM7 10.5l5-7.3a2 2 0 0 1 3.6 1.2l-.4 4.2H19a2.9 2.9 0 0 1 2.8 3.6l-1.9 7.1a2.9 2.9 0 0 1-2.8 2.1H7"/></svg>':
+  '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 13.5v-10H4.3A2.3 2.3 0 0 0 2 5.8v5.4a2.3 2.3 0 0 0 2.3 2.3H7zM7 13.5l5 7.3a2 2 0 0 0 3.6-1.2l-.4-4.2H19a2.9 2.9 0 0 0 2.8-3.6l-1.9-7.1A2.9 2.9 0 0 0 17.1 2H7"/></svg>';
+ button.addEventListener("click",()=>{
+  if(positive)(alreadyLiked?restoreInterestingJob:markLandingJobInteresting)(job.id);
+  else dismissLandingJob(job.id,"button");
+ });
+ return button;
+}
+el("swipeUndoButton").addEventListener("click",()=>{
+ if(!lastDismissedId)return;
+ if(positiveJobFeedback.has(lastDismissedId))restoreInterestingJob(lastDismissedId);
+ else restoreLandingJob(lastDismissedId);
+});
 function renderNewJobs(){
  const query=el("query").value.trim().toLocaleLowerCase("de-CH");
  const category=el("category").value,source=el("source").value;
- const unreviewed=unratedJobs(),reviewed=reviewedJobs(),dismissed=dismissedLandingJobs();
+ const unreviewed=unratedJobs(),reviewed=reviewedJobs(),interested=interestedLandingJobs(),dismissed=dismissedLandingJobs();
   el("viewUnrated").textContent="Offen ("+unreviewed.length+")";
   el("viewReviewed").textContent="Bearbeitet ("+reviewed.length+")";
+  el("viewInterested").textContent="Interessant ("+interested.length+")";
   el("viewDismissed").textContent="Ausgeblendet ("+dismissed.length+")";
-  for(const [id,mode] of [["viewUnrated","unrated"],["viewReviewed","reviewed"],["viewDismissed","dismissed"]])
+  for(const [id,mode] of [["viewUnrated","unrated"],["viewReviewed","reviewed"],["viewInterested","interested"],["viewDismissed","dismissed"]])
    el(id).setAttribute("aria-pressed",String(reviewListView===mode));
-  const allNew=reviewListView==="reviewed"?reviewed:reviewListView==="dismissed"?dismissed:unreviewed;
+  const allNew=reviewListView==="reviewed"?reviewed:reviewListView==="interested"?interested:reviewListView==="dismissed"?dismissed:unreviewed;
  const filtered=allNew.filter(j=>{
   const categories=Array.isArray(j.categories)?j.categories:[];
   const hay=[j.title,j.company,j.location,j.source,...categories].map(text).join(" ").toLocaleLowerCase("de-CH");
@@ -1777,7 +1828,7 @@ function renderNewJobs(){
  const signature=JSON.stringify([reviewListView,query,category,source,el("sort").value,filtered.map(j=>j.id)]);
  if(signature!==mobileJobSignature){mobileJobLimit=5;mobileJobSignature=signature;}
  const target=el("newJobsList");target.replaceChildren();
- if(!filtered.length){target.append(node("div",allNew.length?"Keine Inserate mit diesen Filtern.":(reviewListView==="dismissed"?"Keine ausgeblendeten Inserate.":reviewListView==="reviewed"?"Noch keine Inserate beurteilt.":"Alle neuen Inserate sind bearbeitet – oder befinden sich im Bewerbungsprozess."),"empty panel"));return;}
+ if(!filtered.length){target.append(node("div",allNew.length?"Keine Inserate mit diesen Filtern.":(reviewListView==="dismissed"?"Keine ausgeblendeten Inserate.":reviewListView==="interested"?"Noch keine interessanten Inserate markiert.":reviewListView==="reviewed"?"Noch keine Inserate beurteilt.":"Alle neuen Inserate sind bearbeitet – oder befinden sich im Bewerbungsprozess."),"empty panel"));return;}
  for(const j of filtered){
   const card=document.createElement("article");card.className="card"+(selectedJobIds.has(j.id)?" export-marked":"");
   card.tabIndex=0;card.setAttribute("aria-label","Details öffnen: "+j.title);
@@ -1792,27 +1843,24 @@ function renderNewJobs(){
   const top=document.createElement("div");top.className="card-top";
   const info=document.createElement("div");info.append(node("div",j.source+" · "+dateLabel(j.first_seen_at),"job-meta"),linkedTitle(j),node("div",[j.company,j.location].filter(Boolean).join(" · ")||"Arbeitgeber / Standort unbekannt","job-meta"));
   const cardActions=document.createElement("div");cardActions.className="card-header-actions";
-  cardActions.append(secretDossierButton(j),cardRatingButton(j));
+  cardActions.append(secretDossierButton(j));
   top.append(info,cardActions);card.append(top);
   card.append(node("p",jobTaskPreview(j.description),"job-meta"));
-  const tags=document.createElement("div");tags.className="tags";
-  for(const item of Array.isArray(j.categories)?j.categories:[])tags.append(node("span",item,"tag"));
-  card.append(tags);
-  const dismissControl=document.createElement("button");
-  dismissControl.type="button";
+  const footer=document.createElement("div");footer.className="card-feedback-footer";
+  footer.append(cardRatingButton(j)); // Bottom left: X/100, opens full 1–100 rating.
+  const quickActions=document.createElement("div");quickActions.className="card-quick-actions";
   if(reviewListView==="dismissed"){
-   dismissControl.className="card-restore-button";
-   dismissControl.textContent="Wieder anzeigen";
-   dismissControl.setAttribute("aria-label","Ausgeblendetes Inserat wieder anzeigen: "+j.title);
-   dismissControl.addEventListener("click",()=>restoreLandingJob(j.id));
+   const restore=document.createElement("button");restore.type="button";
+   restore.className="card-restore-button";
+   restore.textContent="Wieder anzeigen";
+   restore.setAttribute("aria-label","Ausgeblendetes Inserat wieder anzeigen: "+j.title);
+   restore.addEventListener("click",()=>restoreLandingJob(j.id));
+   quickActions.append(restore);
   }else{
-   dismissControl.className="card-dismiss-button";
-   dismissControl.textContent="× Nicht interessant";
-   dismissControl.setAttribute("aria-label","Inserat als nicht interessant ausblenden: "+j.title);
-   dismissControl.addEventListener("click",()=>dismissLandingJob(j.id,"button"));
+   quickActions.append(cardThumbButton(j,true),cardThumbButton(j,false));
    window.CareerJobSwipe?.bind(card,{onDismiss:direction=>dismissLandingJob(j.id,direction==="right"?"swipe_right":"swipe_left")});
   }
-  card.append(dismissControl);
+  footer.append(quickActions);card.append(footer);
   if(mobileJobQuery.matches&&target.children.length>=mobileJobLimit)card.hidden=true;
   target.append(card);
  }
@@ -2149,7 +2197,7 @@ async function initialize(){
  }
  if(!restored)loadDemo();
 }
-for(const [id,view] of [["viewUnrated","unrated"],["viewReviewed","reviewed"],["viewDismissed","dismissed"]])el(id).addEventListener("click",()=>{reviewListView=view;el("swipeUndoToast").hidden=true;renderNewJobs();});
+for(const [id,view] of [["viewUnrated","unrated"],["viewReviewed","reviewed"],["viewInterested","interested"],["viewDismissed","dismissed"]])el(id).addEventListener("click",()=>{reviewListView=view;el("swipeUndoToast").hidden=true;renderNewJobs();});
 mobileJobQuery.addEventListener("change",()=>{mobileJobLimit=5;mobileJobSignature="";renderNewJobs();});
 ["query","category","source","sort"].forEach(id=>el(id).addEventListener("input",renderNewJobs));
 for(const [code,label] of stages)el("detailDecision").add(new Option(label,code));
