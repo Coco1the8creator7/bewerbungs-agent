@@ -69,6 +69,8 @@ class PoliteClient:
 
 def init_db(con):
     con.executescript("""
+      CREATE TABLE IF NOT EXISTS run_settings(
+        key TEXT PRIMARY KEY, value TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS pages(
         page_number INTEGER PRIMARY KEY, seen_at TEXT NOT NULL,
         reported_total INTEGER NOT NULL, count INTEGER NOT NULL);
@@ -111,6 +113,13 @@ def run(path, *, target=200, max_pages=40, max_details=250, client=None,
               "rejected": 0, "skipped": 0, "stopped": None, "committed": 0}
     with sqlite3.connect(path) as con:
         init_db(con)
+        mode = "test_db_commit" if commit_test_db else "local_staging_only"
+        saved_mode = con.execute(
+            "SELECT value FROM run_settings WHERE key='mode'").fetchone()
+        if saved_mode is not None and saved_mode[0] != mode:
+            raise ValueError("Checkpoint belongs to another import mode; choose a separate file")
+        with con:
+            con.execute("INSERT OR IGNORE INTO run_settings VALUES ('mode',?)", (mode,))
         # Discover through the dedicated canton filter; no country-wide search.
         for page in range(1, max_pages + 1):
             if con.execute("SELECT 1 FROM pages WHERE page_number=?", (page,)).fetchone():
