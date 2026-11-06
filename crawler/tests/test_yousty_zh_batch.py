@@ -57,7 +57,7 @@ class ZurichBatchTests(unittest.TestCase):
                 return detail_html(n)
             from crawler.yousty_zh_batch import PoliteClient
             sleeper = Mock()
-            client = PoliteClient(reader=reader, delay=sleeper, jitter=lambda a,b: 6)
+            client = PoliteClient(reader=reader, delay=sleeper, jitter=lambda a,b: 6, min_delay=5, max_delay=10)
             first = run(db, target=2, max_pages=1, max_details=2, client=client)
             self.assertEqual(first["total_accepted"], 2)
             self.assertEqual(first["committed"], 0)
@@ -66,6 +66,16 @@ class ZurichBatchTests(unittest.TestCase):
                          client=PoliteClient(reader=reader, delay=Mock()))
             self.assertEqual(second["total_accepted"], 2)
             self.assertEqual(second["details_attempted"], 0)
+
+    def test_default_no_artificial_pause(self):
+        from crawler.yousty_zh_batch import PoliteClient
+        reader = Mock(side_effect=["User-agent: *\\nAllow: /", "<html>One</html>", "<html>Two</html>"])
+        pause = Mock()
+        client = PoliteClient(reader=reader, delay=pause)
+        client.get("https://www.yousty.ch/de-CH/lehrstellen/?locale=de-CH&page=1")
+        client.get("https://www.yousty.ch/de-CH/lehrstellen/?locale=de-CH&page=2")
+        self.assertEqual(client.calls, 2)
+        pause.assert_not_called()
 
     def test_malformed_detail_does_not_abort_batch(self):
         with tempfile.TemporaryDirectory() as temp:
