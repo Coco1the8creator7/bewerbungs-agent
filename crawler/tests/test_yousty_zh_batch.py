@@ -69,7 +69,7 @@ class ZurichBatchTests(unittest.TestCase):
 
     def test_default_no_artificial_pause(self):
         from crawler.yousty_zh_batch import PoliteClient
-        reader = Mock(side_effect=["User-agent: *\\nAllow: /", "<html>One</html>", "<html>Two</html>"])
+        reader = Mock(side_effect=["User-agent: *\nAllow: /", "<html>One</html>", "<html>Two</html>"])
         pause = Mock()
         client = PoliteClient(reader=reader, delay=pause)
         client.get("https://www.yousty.ch/de-CH/lehrstellen/?locale=de-CH&page=1")
