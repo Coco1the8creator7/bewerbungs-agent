@@ -64,8 +64,9 @@ class PoliteClient:
     def get(self, url):
         if not self.policy.can_fetch(AGENT, url):
             raise PermissionError("Robots disallows URL")
-        if self.calls and self.max_delay > 0:
-            self.delay(self.jitter(self.min_delay, self.max_delay))
+        crawl_delay = self.policy.crawl_delay(AGENT) or 0
+        if self.calls and (self.max_delay > 0 or crawl_delay > 0):
+            self.delay(max(crawl_delay, self.jitter(self.min_delay, self.max_delay)))
         text = self.reader(url)
         self.calls += 1
         return text
