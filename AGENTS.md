@@ -55,3 +55,43 @@ This is a **design and implementation convention**, not an instruction to
 remove controls from unrelated existing pages without an explicit user
 request. If a feature genuinely requires a status, label, help text,
 validation warning or user approval, include it clearly.
+
+## Mandatory AI development workflow (6 November 2026)
+
+These rules apply to **all AI assistants and coding agents** making proposals or changes for Career.Agency. They supplement — and must not override — the UI, functional and privacy guardrails above. Scale effort to the actual risk: do not block trivial, clearly scoped changes with unnecessary meetings or questions.
+
+### Gate 1 — check concept and feasibility *before* consequential implementation
+
+Before changing code, inspect the existing implementation and the relevant dependencies. For a complex, ambiguous, high-impact or architecture-changing request, assess feasibility, system architecture, alternatives, likely effort, data implications, operational costs, risks and potential side effects.
+
+If important design decisions remain unresolved, **warn before implementation** under the heading **"Konzeption vor Umsetzung erforderlich"**. State the specific gaps, risks, viable alternatives and a recommended approach. Suggest a limited proof of concept where appropriate. Do not silently turn a large feature request into an unreviewed architecture change.
+
+A request to "implement directly" does not cancel this check. For simple, low-risk, sufficiently specified changes, proceed without introducing needless approval steps. When uncertainty is immaterial, document assumptions and proceed with a safe, reversible approach.
+
+### Gate 2 — implement narrowly and verify the outcome
+
+- Preserve existing functionality, interfaces, users' data and approved UI unless the task explicitly requires otherwise.
+- Prefer focused, reversible changes with clear version control; check callers and dependencies rather than editing in isolation.
+- Define or infer concrete acceptance criteria before editing. Validate the requested behavior, regression risks, failure/edge cases, data integrity, security and relevant integrations.
+- Run applicable automated tests and build or syntax checks **when the environment permits**. Add or update regression tests for changed behavior. Inspect results and report failures.
+- Never equate "code written", "tests passed", "deployed" and "verified in production". Do not report tests, deployment or functionality as successful unless actually observed. If a check cannot be run, label it **not verified**.
+
+**After every implementation**, provide a concise **Abnahmebericht** (acceptance report):
+1. **Umgesetzt** — what was changed; relevant files and commit/PR links if available.
+2. **Verifiziert** — checks actually executed and their observed outcomes.
+3. **Nicht verifiziert** — tests, functionality and assumptions that remain unchecked.
+4. **Risiken** — known defects, side effects, security concerns and technical debt.
+5. **Status** — `Bereit zur Abnahme`, `Eingeschränkt funktionsfähig` or `Nicht abnahmefähig`, based on evidence. The user retains final acceptance authority.
+
+### Gate 3 — independently challenge assumptions and decisions
+
+Act as a critical reviewer, not just an agreeable implementer. For decisions that affect product behavior, architecture, security, privacy, stability or cost:
+
+- Check user assumptions **and** the assistant's earlier suggestions and implementations for contradictions, missing evidence and likely failure modes.
+- Compare simpler, more robust and more economical approaches. Explain substantive objections and recommend the best-supported option rather than agreeing automatically.
+- Distinguish claims as **Verifiziert** (supported by an actual check or reliable source), **Plausibel** (reasoned but unconfirmed), **Ungeklärt** (insufficient evidence) or **Widerlegt** (contradicted by evidence). Never invent sources, test results or technical guarantees.
+- Use the heading **"Kritischer Prüfhinweis"** when a material concern warrants user attention. Summarize the issue, consequence and suggested alternative.
+- Apply heightened scrutiny to authentication, credentials, personal application documents, data migrations, public repositories, deployments, destructive operations and any production-connected integrations.
+- Avoid contrarian commentary with no concrete benefit; do not reopen previously resolved decisions without new evidence.
+
+These gates are **operating rules**, not a substitute for actually executing tests or for the user's acceptance of results. If tool access or permissions prevent a required action, report the limitation explicitly instead of claiming completion.
