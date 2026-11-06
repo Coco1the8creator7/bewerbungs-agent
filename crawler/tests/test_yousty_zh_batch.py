@@ -67,6 +67,27 @@ class ZurichBatchTests(unittest.TestCase):
             self.assertEqual(second["total_accepted"], 2)
             self.assertEqual(second["details_attempted"], 0)
 
+    def test_malformed_detail_does_not_abort_batch(self):
+        with tempfile.TemporaryDirectory() as temp:
+            db = Path(temp) / "resume.sqlite3"
+            count = {"details": 0}
+            def reader(url, limit=None):
+                if url.endswith("robots.txt"):
+                    return "User-agent: *\\nAllow: /"
+                if "/lehrstellen/ZH?" in url:
+                    return page_html(1)
+                count["details"] += 1
+                n = url.split("/profile/")[1].split("-")[0]
+                if count["details"] == 1:
+                    return '<html><script type="application/ld+json">{}</script></html>'
+                return detail_html(n)
+            from crawler.yousty_zh_batch import PoliteClient
+            result = run(db, target=1, max_pages=1, max_details=2,
+                client=PoliteClient(reader=reader, delay=Mock()))
+            self.assertEqual(result["rejected"], 1)
+            self.assertEqual(result["accepted"], 1)
+            self.assertIsNone(result["stopped"])
+
 
 if __name__ == "__main__":
     unittest.main()
