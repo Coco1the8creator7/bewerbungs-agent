@@ -73,7 +73,7 @@ class ZurichBatchTests(unittest.TestCase):
             count = {"details": 0}
             def reader(url, limit=None):
                 if url.endswith("robots.txt"):
-                    return "User-agent: *\\nAllow: /"
+                    return "User-agent: *\nAllow: /"
                 if "/lehrstellen/ZH?" in url:
                     return page_html(1)
                 count["details"] += 1
