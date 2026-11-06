@@ -30,8 +30,9 @@ class _Links(HTMLParser):
         if tag == "a":
             href = attrs.get("href", "")
             path = urlsplit(urljoin(BASE, href)).path
+            resolved = urlsplit(urljoin(BASE, href))
             matched = PROFILE.fullmatch(path)
-            if matched:
+            if matched and resolved.scheme == "https" and resolved.hostname == "www.yousty.ch":
                 self.current = {"source_listing_id": matched.group(1),
                                 "source_url": urljoin(BASE, href), "_text": []}
                 self.depth = 1
