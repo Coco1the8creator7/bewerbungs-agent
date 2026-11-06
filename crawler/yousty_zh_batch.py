@@ -48,11 +48,15 @@ def read(url, limit=MAX_BYTES):
 
 
 class PoliteClient:
-    def __init__(self, reader=read, delay=time.sleep, jitter=random.uniform):
+    def __init__(self, reader=read, delay=time.sleep, jitter=random.uniform, min_delay=0.0, max_delay=0.0):
         self.reader = reader
         self.delay = delay
         self.jitter = jitter
         self.calls = 0
+        if not (0 <= min_delay <= max_delay <= 10):
+            raise ValueError("Invalid delay bounds")
+        self.min_delay = min_delay
+        self.max_delay = max_delay
         policy = RobotFileParser()
         policy.parse(reader(HOST + "/robots.txt", limit=200_000).splitlines())
         self.policy = policy
@@ -60,8 +64,8 @@ class PoliteClient:
     def get(self, url):
         if not self.policy.can_fetch(AGENT, url):
             raise PermissionError("Robots disallows URL")
-        if self.calls:
-            self.delay(self.jitter(5.0, 10.0))
+        if self.calls and self.max_delay > 0:
+            self.delay(self.jitter(self.min_delay, self.max_delay))
         text = self.reader(url)
         self.calls += 1
         return text
@@ -245,9 +249,13 @@ def main():
     cli.add_argument("--max-pages", type=int, default=40)
     cli.add_argument("--max-details", type=int, default=250)
     cli.add_argument("--commit-test-db", action="store_true")
+    cli.add_argument("--min-delay", type=float, default=0.0)
+    cli.add_argument("--max-delay", type=float, default=0.0)
     args = cli.parse_args()
+    client = PoliteClient(min_delay=args.min_delay, max_delay=args.max_delay)
     result = run(args.checkpoint, target=args.target, max_pages=args.max_pages,
-                 max_details=args.max_details, commit_test_db=args.commit_test_db)
+                 max_details=args.max_details, commit_test_db=args.commit_test_db,
+                 client=client)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
