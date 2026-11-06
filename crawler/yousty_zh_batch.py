@@ -121,7 +121,13 @@ def run(path, *, target=200, max_pages=40, max_details=250, client=None,
         with con:
             con.execute("INSERT OR IGNORE INTO run_settings VALUES ('mode',?)", (mode,))
         # Discover through the dedicated canton filter; no country-wide search.
+        pending_initial = con.execute("""SELECT COUNT(*) FROM candidates
+            WHERE outcome IS NULL AND qualification_group='basic_efz_eba'""").fetchone()[0]
+        accepted_initial = con.execute(
+            "SELECT COUNT(*) FROM candidates WHERE outcome='accepted'").fetchone()[0]
         for page in range(1, max_pages + 1):
+            if accepted_initial + pending_initial >= target + 25:
+                break
             if con.execute("SELECT 1 FROM pages WHERE page_number=?", (page,)).fetchone():
                 continue
             try:
@@ -167,12 +173,37 @@ def run(path, *, target=200, max_pages=40, max_details=250, client=None,
                     break
                 counts["details_attempted"] += 1
                 try:
-                    detail = extract_detail(client.get(url))
+                    document = client.get(url)
+                except HTTPError as exc:
+                    counts["stopped"] = f"detail:http_{exc.code}"
+                    break
+                except (URLError, TimeoutError, PermissionError, OSError, ValueError) as exc:
+                    counts["stopped"] = f"detail:network:{type(exc).__name__}"
+                    break
+                try:
+                    detail = extract_detail(document)
                     if detail["source_listing_id"] != source_id:
                         raise ValueError("Mismatching source ID")
                     ok, reason = accepted(detail)
                     if ok:
                         normalized = normalize(detail)
+                    else:
+                        normalized = None
+                except (ValueError, TypeError, KeyError) as exc:
+                    # Bad data is a rejected record, not a fatal batch error.
+                    # Preserve the error category, not potentially sensitive payloads.
+                    with con:
+                        con.execute("""UPDATE candidates SET outcome='rejected',
+                            reason=? WHERE source_listing_id=?""",
+                            ("invalid_detail:" + type(exc).__name__ + ":" +
+                             str(exc)[:150], source_id))
+                    counts["rejected"] += 1
+                    print(json.dumps({"source_listing_id": source_id,
+                                      "outcome": "rejected",
+                                      "reason": str(exc)[:150]}, ensure_ascii=False), flush=True)
+                    continue
+                try:
+                    if ok:
                         # POC SQL has limited fields: a complete audit record is
                         # retained in local SQLite, not silently inferred in SQL.
                         if db_conn is not None:
@@ -188,12 +219,15 @@ def run(path, *, target=200, max_pages=40, max_details=250, client=None,
                             con.execute("UPDATE candidates SET outcome='rejected',reason=? WHERE source_listing_id=?",
                                         (reason, source_id))
                         counts["rejected"] += 1
-                except HTTPError as exc:
-                    counts["stopped"] = f"detail:http_{exc.code}"
+                except (ValueError, OSError) as exc:
+                    counts["stopped"] = f"detail:db:{type(exc).__name__}"
                     break
-                except (URLError, TimeoutError, ValueError, PermissionError, OSError) as exc:
-                    counts["stopped"] = f"detail:{type(exc).__name__}"
-                    break
+                if counts["details_attempted"] % 10 == 0:
+                    current_good = con.execute(
+                        "SELECT COUNT(*) FROM candidates WHERE outcome='accepted'").fetchone()[0]
+                    print(json.dumps({"details_attempted": counts["details_attempted"],
+                                      "total_accepted": current_good,
+                                      "rejected_this_run": counts["rejected"]}), flush=True)
         finally:
             if db_conn is not None:
                 db_conn.close()
