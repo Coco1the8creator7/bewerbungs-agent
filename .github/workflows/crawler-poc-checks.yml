@@ -1,0 +1,24 @@
+name: Lehrstellen-Crawler POC tests (isolated)
+on:
+  push:
+    branches: [poc/lehrstellen-crawler-isolated]
+    paths:
+      - 'crawler/**'
+      - '.github/workflows/crawler-poc-checks.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax check
+        run: python -m compileall -q crawler
+      - name: Isolated unit tests
+        run: python -m unittest discover -s crawler/tests -v
+      - name: Synthetic fixture smoke test
+        run: python -m crawler.prototype --source synthetic --html crawler/fixtures/synthetic.html
