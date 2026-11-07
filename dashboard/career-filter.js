@@ -83,6 +83,16 @@
     const company = fold(job && job.company);
     const description = fold(job && job.description);
     const version="career-preselector-v2.1";
+    // The adult-sector exclusions must not hide verified EFZ/EBA vacancies.
+    // This is source-scoped: existing adult jobs retain their exact rules.
+    if (job?.source==="yousty.ch" &&
+        /^apprenticeship-[a-f0-9]{24}$/.test(job.id||"") &&
+        /\\b(?:efz|eba)\\b/.test(title) &&
+        /\\b(?:lehrstelle|lehrling|ausbildungsplatz|lehre als)\\b/.test(title)) {
+      return {visible:true,reason:null,priority:50,
+        reason_codes:["yousty_apprenticeship"],version,
+        exclusion:false,heating_side:"not_applicable"};
+    }
     if (!title) return {visible:true,reason:null,priority:40,reason_codes:[],version,exclusion:false,heating_side:"not_applicable"};
     const innovation = matches(agentInnovation, title);
     const hospitalRole = hospitalContext.test(title + " " + company) && hospitalEngineering.test(title);
