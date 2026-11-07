@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       operation:
-        description: "Allowlisted diagnostics (no database writes or deployment)"
+        description: "Allowlisted server operation (stage writes a code workspace)"
         required: true
         type: choice
         options:
@@ -17,6 +17,11 @@ on:
           - feed-audit
           - crawler-probe
           - release-check
+          - stage
+      commit_sha:
+        description: "Required for stage: immutable 40-character Git commit SHA"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -38,7 +43,8 @@ jobs:
             github.event.issue.title == 'CA-OPS: tests' ||
             github.event.issue.title == 'CA-OPS: feed-audit' ||
             github.event.issue.title == 'CA-OPS: crawler-probe' ||
-            github.event.issue.title == 'CA-OPS: release-check'
+            github.event.issue.title == 'CA-OPS: release-check' ||
+            startsWith(github.event.issue.title, 'CA-OPS: stage ')
           )
         ) ||
         (
@@ -49,7 +55,8 @@ jobs:
             inputs.operation == 'tests' ||
             inputs.operation == 'feed-audit' ||
             inputs.operation == 'crawler-probe' ||
-            inputs.operation == 'release-check'
+            inputs.operation == 'release-check' ||
+            inputs.operation == 'stage'
           )
         )
       )
@@ -63,6 +70,7 @@ jobs:
       CA_OPS_SSH_PRIVATE_KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
       ISSUE_TITLE: ${{ github.event.issue.title }}
       MANUAL_OPERATION: ${{ inputs.operation }}
+      MANUAL_SHA: ${{ inputs.commit_sha }}
       EVENT_NAME: ${{ github.event_name }}
     steps:
       - name: Validate operation and configured credentials
@@ -77,11 +85,13 @@ jobs:
               'CA-OPS: feed-audit') operation='feed-audit' ;;
               'CA-OPS: crawler-probe') operation='crawler-probe' ;;
               'CA-OPS: release-check') operation='release-check' ;;
+              'CA-OPS: stage '*) operation='stage'; target_sha="${ISSUE_TITLE#CA-OPS: stage }" ;;
               *) echo "::error::Issue title is not an allowlisted server operation"; exit 1 ;;
             esac
           elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             case "$MANUAL_OPERATION" in
               status|tests|feed-audit|crawler-probe|release-check) operation="$MANUAL_OPERATION" ;;
+              stage) operation="stage"; target_sha="$MANUAL_SHA" ;;
               *) echo "::error::Not an allowlisted operation"; exit 1 ;;
             esac
           else
@@ -97,7 +107,15 @@ jobs:
             echo "::error::Invalid server hostname"
             exit 1
           fi
-          printf 'operation=%s\n' "$operation" >> "$GITHUB_OUTPUT"
+          if [[ "$operation" == "stage" ]]; then
+            if [[ ! "$target_sha" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "::error::Staging requires an immutable 40-character lowercase Git commit SHA"
+              exit 1
+            fi
+            printf 'remote_command=stage %s\n' "$target_sha" >> "$GITHUB_OUTPUT"
+          else
+            printf 'remote_command=%s\n' "$operation" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Install pinned SSH credentials in temporary files
         shell: bash
@@ -116,7 +134,7 @@ jobs:
       - name: Run operation through forced-command SSH key
         shell: bash
         env:
-          OPERATION: ${{ steps.select.outputs.operation }}
+          REMOTE_COMMAND: ${{ steps.select.outputs.remote_command }}
         run: |
           set -euo pipefail
           ssh -T \
@@ -130,4 +148,4 @@ jobs:
             -o ConnectTimeout=10 \
             -o ConnectionAttempts=1 \
             "careeragency_runner@$CA_OPS_HOST" \
-            "$OPERATION"
+            "$REMOTE_COMMAND"
