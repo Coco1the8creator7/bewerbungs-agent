@@ -27,7 +27,10 @@ grep -Fq 'restrict,command="/usr/local/bin/careeragency-ops-command"' \
 
 bash -n "$HERE/ca-ops-command"
 bash -n "$HERE/stage_commit.sh"
-python3 -m py_compile "$HERE/feed_audit.py"
+python3 - "$HERE/feed_audit.py" <<'PY'
+import ast, pathlib, sys
+ast.parse(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'))
+PY
 
 ROOT=/home/careeragency_runner/careeragency-workspace
 [[ ! -L /home/careeragency_runner && ! -L "$ROOT" && ! -L "$ROOT/releases" ]] || die "Symlink in runner home or workspace"
@@ -48,8 +51,10 @@ mv -f /usr/local/lib/careeragency-ops/stage_commit.sh.new \
   /usr/local/lib/careeragency-ops/stage_commit.sh
 
 # Keep a previous dispatcher backup without overwriting the last known one.
-cp -a /usr/local/bin/careeragency-ops-command \
-  /usr/local/bin/careeragency-ops-command.before-write
+if [[ ! -e /usr/local/bin/careeragency-ops-command.before-write ]]; then
+  cp -a /usr/local/bin/careeragency-ops-command \
+    /usr/local/bin/careeragency-ops-command.before-write
+fi
 install -o root -g root -m 0755 "$HERE/ca-ops-command" \
   /usr/local/bin/careeragency-ops-command.new
 mv -f /usr/local/bin/careeragency-ops-command.new \
