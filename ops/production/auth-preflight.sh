@@ -8,7 +8,7 @@ state() { printf '%s=%s\n' "$1" "$2"; }
 state audit_time_utc "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 state auth_backend_service "$(systemctl is-active careeragency-auth.service 2>/dev/null || true)"
 state auth_backend_unit_present "$([[ -f /etc/systemd/system/careeragency-auth.service ]] && echo yes || echo no)"
-state auth_directory_present "$([[ -d /opt/careeragency/authservice ]] && echo yes || echo no)"
+state auth_directory_present "$([[ -d /opt/careeragency/auth-current/authservice ]] && echo yes || echo no)"
 state postgres_active "$(systemctl is-active postgresql 2>/dev/null || true)"
 state pg_dump_present "$(command -v pg_dump >/dev/null && echo yes || echo no)"
 state python3_present "$(command -v python3 >/dev/null && echo yes || echo no)"
