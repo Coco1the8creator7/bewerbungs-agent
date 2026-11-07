@@ -1,0 +1,135 @@
+name: Career.Agency scoped Radar production release
+run-name: "Radar ${{ github.event.issue.title || inputs.operation }}"
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "Read-only check, scoped deploy or rollback"
+        required: true
+        type: choice
+        options: [check, deploy, rollback]
+      argument:
+        description: "Exact current main SHA (check/deploy) or release ID (rollback)"
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: careeragency-production
+  cancel-in-progress: false
+jobs:
+  radar:
+    if: >-
+      github.repository == 'Coco1the8creator7/bewerbungs-agent' &&
+      (
+        (github.event_name == 'issues' &&
+         github.event.issue.user.id == 343900642 &&
+         startsWith(github.event.issue.title, 'CA-RADAR: ')) ||
+        (github.event_name == 'workflow_dispatch' &&
+         github.actor == 'Coco1the8creator7' &&
+         github.ref == 'refs/heads/main')
+      )
+    runs-on: ubuntu-latest
+    environment: careeragency-ops
+    timeout-minutes: 15
+    steps:
+      - name: Validate exact owner-issued operation and SSH host
+        id: request
+        shell: bash
+        env:
+          EVENT: ${{ github.event_name }}
+          TITLE: ${{ github.event.issue.title }}
+          OPERATION: ${{ inputs.operation }}
+          ARGUMENT: ${{ inputs.argument }}
+          HOST: ${{ secrets.CA_OPS_HOST }}
+          KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
+          HOSTS: ${{ secrets.CA_OPS_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT" == issues ]]; then
+            if [[ "$TITLE" =~ ^CA-RADAR:\ (check|deploy)\ ([0-9a-f]{40})$ ]]; then
+              OPERATION="${BASH_REMATCH[1]}"
+              ARGUMENT="${BASH_REMATCH[2]}"
+            elif [[ "$TITLE" =~ ^CA-RADAR:\ rollback\ ([0-9]{8}T[0-9]{6}Z-[0-9a-f]{12})$ ]]; then
+              OPERATION=rollback
+              ARGUMENT="${BASH_REMATCH[1]}"
+            else
+              echo "::error::Not an exact allowlisted owner request"
+              exit 64
+            fi
+          fi
+          case "$OPERATION" in
+            check|deploy) [[ "$ARGUMENT" =~ ^[0-9a-f]{40}$ ]] ;;
+            rollback) [[ "$ARGUMENT" =~ ^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}$ ]] ;;
+            *) exit 64 ;;
+          esac
+          [[ "$HOST" =~ ^[a-zA-Z0-9.-]+$ && -n "$KEY" && -n "$HOSTS" ]] || exit 65
+          umask 077
+          printf '%s\n' "$KEY" > "$RUNNER_TEMP/radar_key"
+          printf '%s\n' "$HOSTS" > "$RUNNER_TEMP/radar_known_hosts"
+          chmod 600 "$RUNNER_TEMP/radar_key" "$RUNNER_TEMP/radar_known_hosts"
+          ssh-keygen -y -f "$RUNNER_TEMP/radar_key" >/dev/null
+          ssh-keygen -F "$HOST" -f "$RUNNER_TEMP/radar_known_hosts" >/dev/null
+          printf 'request=radar-release-%s %s\n' "$OPERATION" "$ARGUMENT" >> "$GITHUB_OUTPUT"
+          printf 'operation=%s\n' "$OPERATION" >> "$GITHUB_OUTPUT"
+      - name: Apply only allowlisted Radar operation over pinned SSH
+        env:
+          HOST: ${{ secrets.CA_OPS_HOST }}
+          REQUEST: ${{ steps.request.outputs.request }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -T -i "$RUNNER_TEMP/radar_key" -o BatchMode=yes \
+            -o IdentitiesOnly=yes -o PasswordAuthentication=no \
+            -o KbdInteractiveAuthentication=no -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$RUNNER_TEMP/radar_known_hosts" \
+            -o ConnectTimeout=12 "careeragency_runner@$HOST" "$REQUEST" |
+            tee "$RUNNER_TEMP/radar_release_result"
+      - name: Public smoke check for apprenticeship-only Radar
+        if: steps.request.outputs.operation == 'deploy'
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --retry 3 --retry-delay 3 --fail --silent --show-error \
+            -H 'Cache-Control: no-cache' \
+            "https://careeragency.ch/?radar_release=${{ github.run_id }}" \
+            -o "$RUNNER_TEMP/live_index.html"
+          curl --retry 3 --retry-delay 3 --fail --silent --show-error \
+            -H 'Cache-Control: no-cache' \
+            "https://careeragency.ch/radar.js?v=20261107-lehrstellen-radar-1" \
+            -o "$RUNNER_TEMP/live_radar.js"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])
+          html=(p/"live_index.html").read_text(encoding="utf-8")
+          js=(p/"live_radar.js").read_text(encoding="utf-8")
+          assert 'class="radar-markets"' not in html, "market switch visible"
+          assert 'fetch("./lehrstellen.json",{cache:"no-store"})' in html, "public landing feed patch lost"
+          assert 'const market=()=>"apprentice"' in js, "Radar not apprenticeship-only"
+          assert 'fetch("./lehrstellen.json",{cache:"no-store"})' in js, "Radar wrong source"
+          assert 'id="radarDial"' in html, "Zen radar missing"
+          print("radar_production_smoke=passed")
+          PY
+      - name: Rollback after failed production smoke
+        if: failure() && steps.request.outputs.operation == 'deploy'
+        shell: bash
+        env:
+          HOST: ${{ secrets.CA_OPS_HOST }}
+        run: |
+          set -euo pipefail
+          test -f "$RUNNER_TEMP/radar_release_result" || exit 0
+          release="$(sed -n 's/^radar_release_id=//p' "$RUNNER_TEMP/radar_release_result" | tail -n 1)"
+          if [[ -z "$release" ]]; then
+            echo 'No deployment release ID; the server-side script already handles rollback on write failures.'
+            exit 0
+          fi
+          [[ "$release" =~ ^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}$ ]] || exit 64
+          ssh -T -i "$RUNNER_TEMP/radar_key" -o BatchMode=yes \
+            -o IdentitiesOnly=yes -o PasswordAuthentication=no \
+            -o KbdInteractiveAuthentication=no -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$RUNNER_TEMP/radar_known_hosts" \
+            -o ConnectTimeout=12 "careeragency_runner@$HOST" \
+            "radar-release-rollback $release"

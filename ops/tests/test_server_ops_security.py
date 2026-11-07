@@ -83,6 +83,7 @@ class ServerOpsSecurityTests(unittest.TestCase):
             "sudo -n /usr/local/sbin/careeragency-auth-preflight",
             'sudo -n /usr/local/sbin/careeragency-release "$mode" "$argument"',
             'sudo -n /usr/local/sbin/careeragency-production "${operation#production-}" "$sha"',
+            'sudo -n /usr/local/sbin/careeragency-radar-release "${operation#radar-release-}" "$argument"',
         )
         for command in permitted:
             self.assertEqual(executable_lines.count(command), 1)

@@ -112,6 +112,23 @@ case "${SSH_ORIGINAL_COMMAND:-}" in
     # Read-only root preflight, gated by a dedicated sudoers entry.
     exec sudo -n /usr/local/sbin/careeragency-auth-preflight
     ;;
+  radar-release-check\ *|radar-release-deploy\ *|radar-release-rollback\ *)
+    # Scoped release: index patch, radar.js and radar-model.js ONLY.
+    # No user-controlled shell, Caddy changes, databases or feed writes.
+    request="$SSH_ORIGINAL_COMMAND"
+    operation="${request%% *}"
+    argument="${request#* }"
+    case "$operation" in
+      radar-release-check|radar-release-deploy)
+        [[ "$argument" =~ ^[0-9a-f]{40}$ ]] || exit 64
+        ;;
+      radar-release-rollback)
+        [[ "$argument" =~ ^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}$ ]] || exit 64
+        ;;
+      *) exit 64 ;;
+    esac
+    exec sudo -n /usr/local/sbin/careeragency-radar-release "${operation#radar-release-}" "$argument"
+    ;;
   release-check\ *|release-deploy\ *|release-rollback\ *)
     # Do not pass unchecked SSH_ORIGINAL_COMMAND to a privileged program.
     request="$SSH_ORIGINAL_COMMAND"
