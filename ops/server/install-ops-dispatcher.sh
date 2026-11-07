@@ -71,6 +71,7 @@ known = {
     'publish-lehrstellen', 'release-check', 'auth-preflight',
     r'production-plan\ *|production-lockdown\ *|production-prepare\ *|production-activate\ *',
     r'release-check\ *|release-deploy\ *|release-rollback\ *',
+    r'radar-release-check\ *|radar-release-deploy\ *|radar-release-rollback\ *',
     r'release-check\ [0-9a-f]*|release-deploy\ [0-9a-f]*|release-rollback\ *',
     '*',
 }
@@ -83,7 +84,7 @@ PY
 fi
 # Denial checks never invoke sudo or touch server state.
 for request in 'sudo id' 'status;id' 'auth-preflight --debug' \
-               'release-deploy not-a-sha' 'release-rollback ../etc/passwd' \
+               'release-deploy not-a-sha' 'release-rollback ../etc/passwd' 'radar-release-deploy not-a-sha' 'radar-release-rollback ../../index.html' \
                'release-check '; do
   if env SSH_ORIGINAL_COMMAND="$request" bash "$src" >/dev/null 2>&1; then
     fail "dispatcher unexpectedly accepts invalid operation"
