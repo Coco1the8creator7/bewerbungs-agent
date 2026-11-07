@@ -144,6 +144,45 @@ jobs:
               -o ConnectTimeout=12 "careeragency_runner@$SSH_HOST" "$REMOTE"
           fi
 
+      - name: Compare live landingpage with repository commit
+        if: steps.request.outputs.operation == 'frontend-check'
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --retry 3 --retry-delay 3 --fail --silent --show-error \
+            -H 'Cache-Control: no-cache' \
+            "https://careeragency.ch/?index_audit=${{ github.run_id }}" \
+            -o "$RUNNER_TEMP/live_index.html"
+          python3 - <<'PY'
+          import difflib
+          import hashlib
+          from pathlib import Path
+
+          repo = Path("dashboard/index.html").read_bytes()
+          live = Path(__import__("os").environ["RUNNER_TEMP"], "live_index.html").read_bytes()
+          print(f"repository_sha256={hashlib.sha256(repo).hexdigest()} bytes={len(repo)}")
+          print(f"live_sha256={hashlib.sha256(live).hexdigest()} bytes={len(live)}")
+          if repo == live:
+              print("live_index_comparison=identical")
+              raise SystemExit(0)
+
+          print("live_index_comparison=different")
+          a = repo.decode("utf-8", errors="replace")
+          b = live.decode("utf-8", errors="replace")
+          matcher = difflib.SequenceMatcher(a=a, b=b, autojunk=True)
+          shown = 0
+          for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+              if tag == "equal":
+                  continue
+              print(f"hunk={tag} repo_chars={i1}:{i2} live_chars={j1}:{j2}")
+              print("repo_excerpt=" + repr(a[i1:i2][:320]))
+              print("live_excerpt=" + repr(b[j1:j2][:320]))
+              shown += 1
+              if shown >= 40:
+                  print("diff_truncated=true")
+                  break
+          PY
+
       - name: Verify public site and protected routes
         if: startsWith(steps.request.outputs.operation, 'frontend-') || steps.request.outputs.operation == 'backend-activate'
         shell: bash
