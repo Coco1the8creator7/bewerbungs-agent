@@ -147,3 +147,12 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - **SSH-Nachweis:** Read-only-Plan über [Run 42388395669](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42388395669) abgewiesen (Exit 64, Befehl nicht auf installierter Allowlist). Das belegt die Erreichbarkeit des eingeschränkten SSH-Zugangs, nicht die Installation des neuen Produktionsgateways.
 - **Auswirkungen:** Nur Installationsprüfung/Deployment. Keine UI-, Proxy-, Datenbank-, Auth- oder Whitelist-Erweiterung durch diesen Fix. Die bestehende Sicherung und atomare Dispatcher-Installation bleiben erhalten.
 - **Offen:** CI und Merge von PR #108; danach Betreiber-Bootstrap mit aktuellem main wiederholen und erst anschliessend HTTP-, Dienst-, Migrations- und Zugriffsschutzprüfungen aktualisieren. Serverseitiger Rollout dieses Fixes ist noch nicht nachgewiesen.
+
+## Rollout-Fortsetzung nach Betreiberbestätigung (07.11.2026)
+
+- **Verifiziert:** PR #108 gemergt in caed51e698d0e663c49d201d40c9ea508e58dfb3; beide CI-Prüfungen erfolgreich.
+- **Verifiziert:** Neuer Produktionsgateway erreichbar: Read-only-Plan [Run 42388967343](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42388967343) erfolgreich. Auth-Dienst inaktiv, auth.env fehlt, auth-current vorhanden. Kein Secret-Inhalt gelesen.
+- **Verifiziert:** Erneuter HTTPS-Abruf: Login/App/private API noch 404; Feedback weiterhin 200; Lehrstellenfeed HTTP 200 mit 185 Einträgen. Installation ist daher noch nicht abgeschlossen.
+- **Verifiziert:** Autorisierter Lockdown [Run 42389011901](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42389011901) vor Änderungen mit Exit 65 abgebrochen. Der bisherige Webroot-Guard verbietet sämtliche current-Symlinks; der kanonische Zielpfad ist noch auszulesen.
+- **Korrektur:** Rollout akzeptiert ein geprüftes current-Verzeichnis oder einen Verweis auf ein direktes Release unter /var/www/careeragency/releases. Eigentümer und Schreibrechte sowie Asset-Symlinks werden geprüft; externe Ziele bleiben gesperrt. Der Plan meldet Zielpfad/Dateityp/Rechte, ohne Inhalte oder Secrets auszugeben.
+- **Offen:** Korrektur integrieren, Read-only-Plan erneut ausführen, tatsächlichen Zielpfad bestätigen und Lockdown/Backend-Vorbereitung kontrolliert fortsetzen. SMTP und abschliessende Auth-Aktivierung bleiben offen.
