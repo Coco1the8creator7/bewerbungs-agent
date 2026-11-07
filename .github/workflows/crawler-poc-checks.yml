@@ -6,6 +6,8 @@ on:
       - 'crawler/**'
       - 'dashboard/career-filter.js'
       - 'tests/yousty-landing-feed.test.mjs'
+      - 'tests/landing-unfiltered.test.mjs'
+      - 'dashboard/index.html'
       - '.github/workflows/crawler-poc-checks.yml'
   workflow_dispatch:
 permissions:
@@ -28,4 +30,4 @@ jobs:
         with:
           node-version: '22'
       - name: Apprenticeship landing filter regression
-        run: node --test tests/yousty-landing-feed.test.mjs
+        run: node --test tests/yousty-landing-feed.test.mjs tests/landing-unfiltered.test.mjs
