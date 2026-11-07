@@ -47,14 +47,8 @@ install -o root -g root -m 0440 "$SUDOERS_TMP" \
 visudo -cf /etc/sudoers.d/careeragency-publisher >/dev/null ||
   die "Restricted sudo policy verification failed"
 
-if [[ ! -e /usr/local/bin/careeragency-ops-command.before-publish ]]; then
-  cp -a /usr/local/bin/careeragency-ops-command \
-    /usr/local/bin/careeragency-ops-command.before-publish
-fi
-install -o root -g root -m 0755 "$HERE/ca-ops-command" \
-  /usr/local/bin/careeragency-ops-command.new
-mv -f /usr/local/bin/careeragency-ops-command.new \
-  /usr/local/bin/careeragency-ops-command
+# One canonical dispatcher preserves other previously installed SSH commands.
+bash "$HERE/install-ops-dispatcher.sh"
 
 echo "publish_setup=installed"
 echo "next_operation=CA-OPS: publish-lehrstellen"
