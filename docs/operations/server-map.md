@@ -7,8 +7,8 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Repository-Stand | **VERIFIZIERT** | 861c1e076d06d09a10133bb126a4cfa906c7cf9b, 07.11.2026; GitHub Commit API |
-| PR-Lage | **VERIFIZIERT** | #115 UI-Bereich „Daten & Entwicklung“ auf `main` gemergt (Merge-SHA 7685b15). |
+| geprüfter Repository-Stand | **VERIFIZIERT** | be274736924b2b48ca08a7043fa967520147f591, 07.11.2026; GitHub Commit API |
+| PR-Lage | **VERIFIZIERT** | #115 (UI) in 7685b15 und #118 (Radar-Releasepfad) in be27473 gemergt. |
 | aktuelle Serverkonfiguration | **OFFEN** | Bei dieser Bestandsaufnahme kein Live-Statusabruf; frühere Nachweise sind zeitgebunden und teils widersprüchlich. |
 | Rollout des geprüften Commits | **OFFEN** | Repository-Commit oder CI allein belegt kein Produktionsdeployment. |
 | letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub Repository-, Datei-, Commit- und PR-API; keine Serverabfrage oder Änderung. |
@@ -159,7 +159,7 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 
 ## Rollout-Fortsetzung nach Betreiberbestätigung (07.11.2026)
 
-- **Verifiziert:** PR #108 gemergt in 7685b15945bab46edc801d78ca64d44c2592f14c; beide CI-Prüfungen erfolgreich.
+- **Verifiziert:** PR #108 gemergt in caed51e698d0e663c49d201d40c9ea508e58dfb3; beide CI-Prüfungen erfolgreich.
 - **Verifiziert:** Neuer Produktionsgateway erreichbar: Read-only-Plan [Run 42388967343](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42388967343) erfolgreich. Auth-Dienst inaktiv, auth.env fehlt, auth-current vorhanden. Kein Secret-Inhalt gelesen.
 - **Verifiziert:** Erneuter HTTPS-Abruf: Login/App/private API noch 404; Feedback weiterhin 200; Lehrstellenfeed HTTP 200 mit 185 Einträgen. Installation ist daher noch nicht abgeschlossen.
 - **Verifiziert:** Autorisierter Lockdown [Run 42389011901](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42389011901) vor Änderungen mit Exit 65 abgebrochen. Der bisherige Webroot-Guard verbietet sämtliche current-Symlinks; der kanonische Zielpfad ist noch auszulesen.
