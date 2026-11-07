@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       operation:
-        description: "Frontend or scoped Radar check, deploy, or rollback"
+        description: "Backend, frontend or scoped Radar operation"
         required: true
         type: choice
         options:
@@ -16,6 +16,10 @@ on:
           - radar-check
           - radar-deploy
           - radar-rollback
+          - backend-plan
+          - backend-lockdown
+          - backend-prepare
+          - backend-activate
       argument:
         description: "Current main SHA for check/deploy, or release ID for rollback"
         required: true
@@ -61,7 +65,7 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$EVENT" == issues ]]; then
-            [[ "$TITLE" =~ ^CA-RELEASE:\ (frontend-check|frontend-deploy|frontend-rollback|radar-check|radar-deploy|radar-rollback)\ ([A-Za-z0-9T-]+)$ ]] || exit 64
+            [[ "$TITLE" =~ ^CA-RELEASE:\ (frontend-check|frontend-deploy|frontend-rollback|radar-check|radar-deploy|radar-rollback|backend-plan|backend-lockdown|backend-prepare|backend-activate)\ ([A-Za-z0-9T-]+)$ ]] || exit 64
             operation="${BASH_REMATCH[1]}"
             argument="${BASH_REMATCH[2]}"
           else
@@ -69,7 +73,7 @@ jobs:
             argument="$INPUT_ARGUMENT"
           fi
           case "$operation" in
-            frontend-check|frontend-deploy|radar-check|radar-deploy)
+            frontend-check|frontend-deploy|radar-check|radar-deploy|backend-plan|backend-lockdown|backend-prepare|backend-activate)
               [[ "$argument" =~ ^[0-9a-f]{40}$ && "$argument" == "$COMMIT" ]] || {
                 echo "::error::Check/deploy must target this exact main commit"
                 exit 64
@@ -85,6 +89,10 @@ jobs:
             radar-check) remote="radar-release-check $argument" ;;
             radar-deploy) remote="radar-release-deploy $argument" ;;
             radar-rollback) remote="radar-release-rollback $argument" ;;
+            backend-plan) remote="production-plan $argument" ;;
+            backend-lockdown) remote="production-lockdown $argument" ;;
+            backend-prepare) remote="production-prepare $argument" ;;
+            backend-activate) remote="production-activate $argument" ;;
           esac
           printf 'operation=%s\n' "$operation" >> "$GITHUB_OUTPUT"
           printf 'remote=%s\n' "$remote" >> "$GITHUB_OUTPUT"
@@ -137,7 +145,7 @@ jobs:
           fi
 
       - name: Verify public site and protected routes
-        if: startsWith(steps.request.outputs.operation, 'frontend-')
+        if: startsWith(steps.request.outputs.operation, 'frontend-') || steps.request.outputs.operation == 'backend-activate'
         shell: bash
         run: python3 ops/production/smoke-production.py
 
