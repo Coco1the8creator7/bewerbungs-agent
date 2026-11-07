@@ -74,7 +74,8 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
         "remove_adult_score_prediction",
         ("const predicted=null;",),
     )
-    change(
+    if 'async function archiveLegacyWorkspaceOnce(saved){' not in html:
+        change(
         'async function initialize(){\n await initializeNewJobsWindow();',
         '''async function archiveLegacyWorkspaceOnce(saved){
  // Keep an independent, local-only copy before replacing old job listings.
@@ -97,7 +98,7 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
 async function initialize(){
  await initializeNewJobsWindow();''',
         "archive_old_local_workspace_before_feed_import",
-    )
+        )
     change(
         '  if(saved!==undefined&&saved!==null){\n   applyWorkspace(saved,"lokal gespeicherter Arbeitsstand");',
         '  if(saved!==undefined&&saved!==null){\n'
