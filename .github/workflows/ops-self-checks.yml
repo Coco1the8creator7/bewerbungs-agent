@@ -37,8 +37,8 @@ jobs:
           sudo install -o root -g root -m 0755 ops/server/stage_commit.sh /usr/local/lib/careeragency-ops/stage_commit.sh
           sudo -u careeragency_runner bash -c 'cd /home/careeragency_runner && /usr/local/lib/careeragency-ops/stage_commit.sh "$1"' bash "$git_sha"
           sudo -u careeragency_runner bash -c 'cd /home/careeragency_runner && /usr/local/lib/careeragency-ops/stage_commit.sh "$1"' bash "$git_sha"
-          test -f "/home/careeragency_runner/careeragency-workspace/releases/$git_sha/AGENTS.md"
-          test -d "/home/careeragency_runner/careeragency-workspace/releases/$git_sha/dashboard"
+          sudo -u careeragency_runner test -f "/home/careeragency_runner/careeragency-workspace/releases/$git_sha/AGENTS.md"
+          sudo -u careeragency_runner test -d "/home/careeragency_runner/careeragency-workspace/releases/$git_sha/dashboard"
           echo "Workspace write integration: success"
       - name: Parse workflow YAML and verify issue trigger
         run: |
