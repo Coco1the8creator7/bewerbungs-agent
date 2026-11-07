@@ -74,6 +74,22 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
         "remove_adult_score_prediction",
         ("const predicted=null;",),
     )
+    # A previous temporary privacy safeguard deliberately stopped the
+    # initializer before its network request. It is no longer appropriate now
+    # that the validated Yousty-only public feed is available. Remove only the
+    # exact observed block; leave all other live JavaScript and UI untouched.
+    change(
+        'async function initialize(){\n'
+        ' await initializeNewJobsWindow();\n'
+        ' // Temporär: Erwachsenen-Stellen aus produktiver Ansicht ausblenden.\n'
+        ' // Gespeicherte Benutzer- und Dossierdaten bleiben unverändert.\n'
+        ' loadJobs([], "Lehrstellenumstellung");\n'
+        ' el("message").textContent =\n'
+        '   "Der Lehrstellenpool wird vorbereitet. Aktuell sind keine Lehrstellen verfügbar.";\n'
+        ' return;\n',
+        'async function initialize(){\n await initializeNewJobsWindow();\n',
+        "remove_obsolete_temporary_early_return",
+    )
     if 'async function archiveLegacyWorkspaceOnce(saved){' not in html:
         change(
         'async function initialize(){\n await initializeNewJobsWindow();',
@@ -161,6 +177,12 @@ async function initialize(){
         raise ValueError("Adult relevance prediction remains on public landing")
     if 'fetch("./lehrstellen.json",{cache:"no-store"})' not in html:
         raise ValueError("Public feed fetch missing")
+    if 'loadJobs([], "Lehrstellenumstellung")' in html or 'Der Lehrstellenpool wird vorbereitet.' in html:
+        raise ValueError("Temporary empty-pool guard remains in the live landing")
+    initializer_start = html.index('async function initialize(){')
+    loader_start = html.index('fetch("./lehrstellen.json"', initializer_start)
+    if '\n return;\n' in html[initializer_start:loader_start]:
+        raise ValueError("Unconditional early return still blocks the apprenticeship feed")
     if '<script src="./radar.js' not in html or 'id="newJobsList"' not in html:
         raise ValueError("Unexpected live page structure")
     return html, changes

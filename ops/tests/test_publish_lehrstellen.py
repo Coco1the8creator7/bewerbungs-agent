@@ -102,6 +102,42 @@ class LandingPublishingTests(unittest.TestCase):
         self.assertIn('const predicted=null;', changed)
         self.assertIn('function visibleJobs(){return jobs;}', changed)
 
+    def test_exact_live_temporary_guard_is_removed_and_feed_reaches_initializer(self):
+        guard = (
+            'async function initialize(){\n'
+            ' await initializeNewJobsWindow();\n'
+            ' // Temporär: Erwachsenen-Stellen aus produktiver Ansicht ausblenden.\n'
+            ' // Gespeicherte Benutzer- und Dossierdaten bleiben unverändert.\n'
+            ' loadJobs([], "Lehrstellenumstellung");\n'
+            ' el("message").textContent =\n'
+            '   "Der Lehrstellenpool wird vorbereitet. Aktuell sind keine Lehrstellen verfügbar.";\n'
+            ' return;\n'
+        )
+        original = 'async function initialize(){\n await initializeNewJobsWindow();\n'
+        self.assertEqual(self.current.count(original), 1)
+        live_simulation = self.current.replace(original, guard)
+        repaired, changed = module.patch_landing(live_simulation)
+        baseline, _ = module.patch_landing(self.current)
+        self.assertEqual(repaired, baseline)
+        self.assertIn("remove_obsolete_temporary_early_return", changed)
+        self.assertNotIn("Lehrstellenumstellung", repaired)
+        self.assertIn('fetch("./lehrstellen.json"', repaired)
+        repaired_again, repeated_changes = module.patch_landing(repaired)
+        self.assertEqual(repaired, repaired_again)
+        self.assertEqual(repeated_changes, [])
+
+    def test_modified_unknown_temporary_guard_fails_closed(self):
+        insertion = (
+            'async function initialize(){\n'
+            ' await initializeNewJobsWindow();\n'
+            ' loadJobs([], "Lehrstellenumstellung");\n'
+            ' return;\n'
+        )
+        original = 'async function initialize(){\n await initializeNewJobsWindow();\n'
+        modified_live = self.current.replace(original, insertion)
+        with self.assertRaisesRegex(ValueError, "Temporary empty-pool guard remains"):
+            module.patch_landing(modified_live)
+
     def test_unknown_live_html_rejected_not_overwritten(self):
         with self.assertRaises(ValueError):
             module.patch_landing("<html><body>unknown UI</body></html>")
