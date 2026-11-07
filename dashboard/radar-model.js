@@ -37,6 +37,12 @@
  const fold=v=>String(v??"").toLocaleLowerCase("de-CH").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ß/g,"ss").trim();
  const slug=s=>fold(s).replace(/[^a-z0-9]+/g,"");
  function isApprenticeship(job){
+  // The published, server-audited Yousty feed has an apprenticeship marker,
+  // even where titles omit "Lehrstelle" (e.g. "Kauffrau EFZ 2027").
+  // Require its stable ID and its explicit category; source alone is not proof.
+  if(job?.source==="yousty.ch"&&
+     /^apprenticeship-[0-9a-f]{24}$/.test(job?.id||"")&&
+     Array.isArray(job?.categories)&&job.categories.includes("Lehrstelle"))return true;
   const title=fold(job?.title);
   if(!title)return false;
   // Deliberately conservative: EFZ/EBA alone identifies a qualification,
