@@ -20,7 +20,7 @@ role_exists="$(runuser -u postgres -- psql -XAt -d postgres -c "SELECT 1 FROM pg
 [[ "$role_exists" == 1 ]] || { echo "Expected role missing; refusing recovery"; exit 65; }
 # Ensure the target is empty. A partial or already live schema requires investigation.
 schema="$(runuser -u postgres -- psql -XAt -d "$db" -c "SELECT coalesce(to_regnamespace('career_auth')::text,'none')")"
-objects="$(runuser -u postgres -- psql -XAt -d "$db" -c "SELECT count(*) FROM pg_class WHERE relnamespace NOT IN ('pg_catalog'::regnamespace, 'information_schema'::regnamespace) AND relpersistence <> 't'")"
+objects="$(runuser -u postgres -- psql -XAt -d "$db" -c "SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname NOT LIKE 'pg_%' AND n.nspname <> 'information_schema'")"
 [[ "$schema" == none && "$objects" == 0 ]] || {
   echo "Existing schema or user objects found: recovery blocked"; exit 73;
 }
