@@ -58,14 +58,20 @@ def validate_live(trusted_owner: int = 0) -> None:
     if not LIVE.exists() or not LIVE.is_dir():
         raise ValueError("live webroot unavailable")
     if LIVE.is_symlink():
-        target = LIVE.resolve(strict=True)
-        if target == root or not target.is_relative_to(root):
+        # Resolve ".." lexically first, without following intermediate links.
+        # This rejects hidden symlinks inside the release-directory chain.
+        raw = LIVE.readlink()
+        raw = raw if raw.is_absolute() else LIVE.parent / raw
+        lexical = Path(os.path.normpath(str(raw)))
+        if lexical == root or not lexical.is_relative_to(root):
             raise ValueError("webroot symlink target escapes approved webroot")
+        target = LIVE.resolve(strict=True)
+        if target != lexical:
+            raise ValueError("nested symlink in webroot target")
         # A directory name could itself be a symlink; reject every link in
         # the chain. The only permitted link is /current itself.
         parts = [root]
-        rel = target.relative_to(root)
-        for name in rel.parts:
+        for name in lexical.relative_to(root).parts:
             parts.append(parts[-1] / name)
         for directory in [LIVE.parent, *parts]:
             if directory.is_symlink() or not directory.is_dir():
