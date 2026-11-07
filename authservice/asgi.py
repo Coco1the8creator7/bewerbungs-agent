@@ -34,6 +34,8 @@ def protected_dashboard(request: Request,asset_path: str = ""):
     if asset_path.startswith("/") or "\\\\" in asset_path:
         raise HTTPException(404,"Not found")
     parts=[p for p in asset_path.split("/") if p]
+    if parts and parts[0] in {"account.html","account.js","account-config.js","account-core.mjs"}:
+        raise HTTPException(404,"Old account prototype not available in the protected app")
     if any(p in (".","..") or p.startswith(".") for p in parts):
         raise HTTPException(404,"Not found")
     root=DASHBOARD_ROOT.resolve(strict=True)
