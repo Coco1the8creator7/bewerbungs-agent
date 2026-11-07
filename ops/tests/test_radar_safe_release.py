@@ -138,7 +138,7 @@ class SafeRadarReleaseTests(unittest.TestCase):
             current=base/"current"
             current.symlink_to(target,target_is_directory=True)
             with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
-                release.validate_live(trusted_uids={os.geteuid()})
+                release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_rejects_webroot_symlink_escape(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -151,7 +151,7 @@ class SafeRadarReleaseTests(unittest.TestCase):
             current.symlink_to(external,target_is_directory=True)
             with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
                 with self.assertRaisesRegex(ValueError,"outside direct application releases"):
-                    release.validate_live(trusted_uids={os.geteuid()})
+                    release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_rejects_nested_symlinks_even_within_webroot(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -164,7 +164,7 @@ class SafeRadarReleaseTests(unittest.TestCase):
             current.symlink_to(alias/"real",target_is_directory=True)
             with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
                 with self.assertRaisesRegex(ValueError,"nested symlink"):
-                    release.validate_live(trusted_uids={os.geteuid()})
+                    release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_rejects_world_writable_webroot_parent(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -178,7 +178,7 @@ class SafeRadarReleaseTests(unittest.TestCase):
             base.chmod(0o777)
             with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
                 with self.assertRaisesRegex(ValueError,"world-writable path"):
-                    release.validate_live(trusted_uids={os.geteuid()})
+                    release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_installer_bundles_canonical_helper_with_reviewed_gateway(self):
         installer=(ROOT/"ops/production/install-radar-release.sh").read_text()
@@ -200,7 +200,7 @@ class SafeRadarReleaseTests(unittest.TestCase):
             target.chmod(0o775)
             # The canonical production rule validates group membership.
             with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
-                release.validate_live(trusted_uids={os.geteuid()})
+                release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_production_workflow_requires_owner_and_pinned_ssh(self):
         workflow = (ROOT / ".github/workflows/radar-safe-release.yml").read_text()
