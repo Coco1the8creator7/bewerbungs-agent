@@ -27,7 +27,7 @@ class AuthIntegration(unittest.TestCase):
         return self.client.post(path,json=data or {},headers={"Origin":"https://testserver"})
     def test_registration_admin_approval_and_block(self):
         data={"first_name":"Ada","last_name":"Test","residence":"Zürich",
-              "email":"ada@example.invalid","password":"a reasonably long password"}
+              "email":"ada@example.com","password":"a reasonably long password"}
         r=self.post("/api/auth/register",data)
         self.assertEqual(r.status_code,202,r.text)
         self.assertEqual(len(self.messages),1)
@@ -45,11 +45,11 @@ class AuthIntegration(unittest.TestCase):
             con.execute("""INSERT INTO career_auth.users
                 (id,email,first_name,last_name,residence,password_hash,role,status,email_verified_at)
                 VALUES(%s,%s,%s,%s,%s,%s,%s,%s,now())""",
-                (admin_id,"admin@example.invalid","Admin","Test","Zürich",
+                (admin_id,"admin@example.com","Admin","Test","Zürich",
                  hash_password("another long password"),"admin","active"))
             user_id=con.execute("SELECT id FROM career_auth.users WHERE email=%s",(data["email"],)).fetchone()[0]
         self.client.cookies.clear()
-        r=self.post("/api/auth/login",{"email":"admin@example.invalid","password":"another long password"})
+        r=self.post("/api/auth/login",{"email":"admin@example.com","password":"another long password"})
         self.assertEqual(r.json()["next"],"admin_2fa_setup",r.text)
         self.assertEqual(self.client.get("/api/admin/users").status_code,403)
         setup=self.post("/api/auth/totp/setup").json()
@@ -68,7 +68,7 @@ class AuthIntegration(unittest.TestCase):
         self.assertEqual(self.client.get("/api/auth/check-app").status_code,401)
 
     def test_throttle_rollback_protected(self):
-        data={"email":"absent@example.invalid","password":"wrongwrongwrong"}
+        data={"email":"absent@example.com","password":"wrongwrongwrong"}
         for _ in range(8):
             self.assertEqual(self.post("/api/auth/login",data).status_code,401)
         self.assertEqual(self.post("/api/auth/login",data).status_code,429)
