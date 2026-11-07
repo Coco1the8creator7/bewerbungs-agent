@@ -1,0 +1,66 @@
+name: Career.Agency auth backend readiness report
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    if: >-
+      github.repository == 'Coco1the8creator7/bewerbungs-agent' &&
+      github.event.issue.user.id == 343900642 &&
+      github.event.issue.title == 'CA-AUTH: readiness-report'
+    environment: careeragency-ops
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect installed auth gateway and report safe summary
+        shell: bash
+        env:
+          KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
+          KNOWN: ${{ secrets.CA_OPS_KNOWN_HOSTS }}
+          HOST: ${{ secrets.CA_OPS_HOST }}
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          umask 077
+          [[ "$HOST" =~ ^[A-Za-z0-9.-]+$ ]]
+          mkdir -p "$RUNNER_TEMP/auth-ssh"
+          printf '%s\n' "$KEY" > "$RUNNER_TEMP/auth-ssh/key"
+          printf '%s\n' "$KNOWN" > "$RUNNER_TEMP/auth-ssh/known_hosts"
+          chmod 600 "$RUNNER_TEMP/auth-ssh/key" "$RUNNER_TEMP/auth-ssh/known_hosts"
+          ssh-keygen -y -f "$RUNNER_TEMP/auth-ssh/key" >/dev/null
+          ssh-keygen -F "$HOST" -f "$RUNNER_TEMP/auth-ssh/known_hosts" >/dev/null
+          state=failed
+          if timeout 60s ssh -T -i "$RUNNER_TEMP/auth-ssh/key" -o BatchMode=yes \
+             -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes \
+             -o UserKnownHostsFile="$RUNNER_TEMP/auth-ssh/known_hosts" \
+             -o ConnectTimeout=10 "careeragency_runner@$HOST" auth-preflight \
+             > "$RUNNER_TEMP/auth-results" 2> "$RUNNER_TEMP/auth-errors"; then
+            state=ok
+          fi
+          {
+            echo '## Career.Agency – Auth-Readiness (nur Status, keine Secrets)'
+            printf 'Remote-Preflight: **%s**\n\n' "$state"
+            if [[ "$state" == ok ]]; then
+              echo '~~~text'
+              while IFS='=' read -r key value; do
+                case "$key" in
+                  auth_backend_service|auth_backend_unit_present|auth_directory_present|postgres_active|pg_dump_present|python3_present|caddy_active|caddy_config_present|caddy_route_apiauth_mentioned|caddy_route_apiadmin_mentioned|caddy_route_account_mentioned|caddy_route_admin_mentioned|caddy_route_app_mentioned|env_file_present|backup_root_present|postgres_local_admin)
+                    if [[ "$value" =~ ^[a-zA-Z0-9_-]{1,25}$ ]]; then
+                      printf '%s=%s\n' "$key" "$value"
+                    fi ;;
+                esac
+              done < "$RUNNER_TEMP/auth-results"
+              echo '~~~'
+            else
+              echo 'SSH-Befehl konnte nicht erfolgreich ausgeführt werden. Details nur im GitHub-Actions-Log.'
+            fi
+          } > "$RUNNER_TEMP/report.md"
+          gh issue comment "$ISSUE" --repo "$REPO" --body-file "$RUNNER_TEMP/report.md"
+          [[ "$state" == ok ]]
