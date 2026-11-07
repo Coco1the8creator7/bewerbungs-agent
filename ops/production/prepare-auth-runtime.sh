@@ -14,10 +14,9 @@ for cmd in git python3 systemctl install flock; do command -v "$cmd" >/dev/null 
 python3 -m venv --help >/dev/null 2>&1 || {
   echo 'Missing python3-venv; install it before running this script' >&2; exit 69;
 }
-[[ ! -e /etc/systemd/system/careeragency-auth.service ]] || {
-  echo 'Existing auth unit found; refusing to overwrite' >&2; exit 73;
-}
-[[ ! -e /opt/careeragency/auth-current ]] || {
+# Existing unit is permitted only if byte-identical to the reviewed unit.
+# Existing live or conflicting auth deployment must never be replaced by staging.
+[[ ! -e /opt/careeragency/auth-current && ! -L /opt/careeragency/auth-current ]] || {
   echo 'Existing auth deployment found; refusing to overwrite' >&2; exit 73;
 }
 exec 9>/run/lock/careeragency-auth-setup.lock
@@ -34,8 +33,20 @@ git -C "$tmp/repo" checkout -q --detach "$sha"
 for required in auth/security.py authservice/asgi.py authservice/requirements.txt db/migrations/001_auth_foundation.sql db/migrations/002_auth_runtime.sql ops/production/careeragency-auth.service; do
   [[ -f "$tmp/repo/$required" ]] || { echo "Missing $required" >&2; exit 66; }
 done
+unit="/etc/systemd/system/careeragency-auth.service"
+if [[ -e "$unit" ]]; then
+  [[ ! -L "$unit" ]] || { echo 'Refusing symlinked systemd unit' >&2; exit 73; }
+  if ! cmp -s "$tmp/repo/ops/production/careeragency-auth.service" "$unit"; then
+    echo 'Existing auth unit differs from reviewed template. Inspect before modifying.' >&2
+    exit 73
+  fi
+  echo 'auth_existing_unit=verified_identical'
+fi
+[[ "$(systemctl is-active careeragency-auth.service || true)" != active ]] || {
+  echo 'Service is running; refusing staging or service change' >&2; exit 73;
+}
 release="/opt/careeragency/auth-releases/$sha"
-[[ ! -e "$release" ]] || { echo 'Release directory already exists' >&2; exit 73; }
+[[ ! -e "$release" && ! -L "$release" ]] || { echo 'Release directory already exists' >&2; exit 73; }
 mkdir -p "$tmp/runtime"
 cp -a "$tmp/repo/auth" "$tmp/repo/authservice" "$tmp/runtime/"
 python3 -m venv "$tmp/runtime/.venv"
@@ -54,9 +65,11 @@ find "$release" -type d -exec chmod 0750 {} +
 find "$release" -type f -exec chmod 0640 {} +
 find "$release/.venv/bin" -maxdepth 1 -type f -exec chmod 0750 {} +
 ln -s "auth-releases/$sha" /opt/careeragency/auth-current
-install -o root -g root -m 0644 "$tmp/repo/ops/production/careeragency-auth.service" /etc/systemd/system/careeragency-auth.service
-systemctl daemon-reload
-systemctl disable careeragency-auth.service >/dev/null 2>&1 || true
+if [[ ! -e "$unit" ]]; then
+  install -o root -g root -m 0644 "$tmp/repo/ops/production/careeragency-auth.service" "$unit"
+  systemctl daemon-reload
+fi
+# Never disable an existing unit implicitly; the service is verified inactive.
 logger -p authpriv.notice -t careeragency-auth "STAGED sha=$sha service_disabled=true database_unchanged=true caddy_unchanged=true"
 printf 'auth_stage=prepared\nauth_service=disabled\nauth_database=untouched\nauth_caddy=untouched\nauth_commit=%s\n' "$sha"
 echo 'NEXT: provision /etc/careeragency/auth.env, DB roles/migrations, route authorization and smoke tests before service start.'
