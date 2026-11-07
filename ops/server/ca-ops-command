@@ -77,6 +77,11 @@ case "${SSH_ORIGINAL_COMMAND:-}" in
     fi
     timeout 180s /usr/local/lib/careeragency-ops/stage_commit.sh "$target_sha"
     ;;
+  publish-lehrstellen)
+    # The ONLY permitted production write. Root-owned publisher has no arguments,
+    # validates 185 source records, preserves live UI and keeps a dated backup.
+    timeout 60s sudo -n /usr/local/sbin/careeragency-publish-lehrstellen
+    ;;
   release-check)
     # Read-only comparison; never copy files or restart services.
     workdir="$(mktemp -d /tmp/careeragency-ops-release.XXXXXXXX)"

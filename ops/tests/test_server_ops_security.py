@@ -11,12 +11,14 @@ BOOTSTRAP = ROOT / "ops/server/bootstrap.sh"
 UPGRADE = ROOT / "ops/server/upgrade.sh"
 ENABLE_WRITE = ROOT / "ops/server/enable-write.sh"
 STAGE_SCRIPT = ROOT / "ops/server/stage_commit.sh"
+INSTALL_PUBLISH = ROOT / "ops/server/enable-landing-publish.sh"
+PUBLISH = ROOT / "ops/server/publish_lehrstellen.py"
 WORKFLOW = ROOT / ".github/workflows/controlled-server-ops.yml"
 
 
 class ServerOpsSecurityTests(unittest.TestCase):
     def test_shell_syntax(self):
-        for script in (WRAPPER, BOOTSTRAP, UPGRADE, ENABLE_WRITE, STAGE_SCRIPT):
+        for script in (WRAPPER, BOOTSTRAP, UPGRADE, ENABLE_WRITE, STAGE_SCRIPT, INSTALL_PUBLISH):
             with self.subTest(script=script.name):
                 subprocess.run(["bash", "-n", str(script)], check=True)
 
@@ -28,6 +30,7 @@ class ServerOpsSecurityTests(unittest.TestCase):
             "crawler-probe;curl evil.com", "release-check && id", "crawler-sync",
             "stage", "stage 000", "stage " + "a"*39 + "Z",
             "stage " + "f"*40 + ";id", "stage " + "e"*41,
+            "publish-lehrstellen --force", "publish-lehrstellen;id",
         ):
             with self.subTest(command=command):
                 proc = subprocess.run(
@@ -43,7 +46,7 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn("github.event.issue.user.id == 343900642", yaml_text)
         self.assertIn("github.event.issue.title == 'CA-OPS: status'", yaml_text)
         self.assertIn("github.event.issue.title == 'CA-OPS: tests'", yaml_text)
-        for operation in ("feed-audit", "crawler-probe", "release-check"):
+        for operation in ("feed-audit", "crawler-probe", "release-check", "publish-lehrstellen"):
             self.assertIn("github.event.issue.title == 'CA-OPS: " + operation + "'", yaml_text)
         self.assertIn("github.repository == 'Coco1the8creator7/bewerbungs-agent'", yaml_text)
         self.assertIn("permissions:\n  contents: read", yaml_text)
@@ -66,7 +69,9 @@ class ServerOpsSecurityTests(unittest.TestCase):
             line for line in wrapper.splitlines()
             if not line.lstrip().startswith("#")
         )
-        self.assertNotIn("sudo ", executable_lines)
+        permitted = "sudo -n /usr/local/sbin/careeragency-publish-lehrstellen"
+        self.assertEqual(executable_lines.count(permitted), 1)
+        self.assertNotIn("sudo ", executable_lines.replace(permitted, ""))
         self.assertNotIn("eval ", wrapper)
         self.assertNotIn("exec $", wrapper)
         self.assertNotIn("workflow_dispatch:", wrapper)
@@ -82,8 +87,9 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn("timeout 60s python3 -m crawler.yousty_probe", wrapper)
         self.assertIn("python3 /usr/local/lib/careeragency-ops/feed_audit.py", wrapper)
         self.assertIn("cmp -s", wrapper)
-        self.assertNotIn("sudo ", "\\n".join(line for line in wrapper.splitlines()
-                                           if not line.lstrip().startswith("#")))
+        self.assertIn("NOPASSWD: /usr/local/sbin/careeragency-publish-lehrstellen",
+                      INSTALL_PUBLISH.read_text())
+        self.assertNotIn("NOPASSWD: ALL", INSTALL_PUBLISH.read_text())
 
 
 if __name__ == "__main__":
