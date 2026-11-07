@@ -23,6 +23,7 @@ if [[ "$mode" == plan ]]; then
   for f in /etc/careeragency/auth.env /etc/caddy/Caddyfile /opt/careeragency/auth-current; do
     if [[ -e "$f" ]]; then printf 'present=%s\n' "$f"; else printf 'missing=%s\n' "$f"; fi
   done
+  python3 "$src/ops/production/caddy-routing-summary.py"
   exit
 fi
 # Never run a checkout different from reviewed, current main; never install dirty code.

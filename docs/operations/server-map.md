@@ -181,3 +181,10 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - **Aktivierung:** Eine vorbereitete, root-verlinkte Runtime darf nach reinen Dokumentations-/Ops-Änderungen aktiviert werden, wenn ihre Git-Revision Vorfahr des aktuellen main ist und Auth-, Backend-, Crawler-, Dashboard-, Migrations- und Unit-Dateien identisch sind. Änderungen an diesen produktiven Artefakten erzwingen erneutes prepare. Das verhindert, dass die Aktualisierung dieser Landkarte allein ein erneutes Runtime-Deployment verlangt.
 - **Konfigurationsbackup:** Vor Aktivierung wird auth.env einschliesslich des Verschlüsselungsschlüssels im root-only Release-Backup gesichert; Werte erscheinen nicht in Logs.
 - **Offen:** lokale SMTP-/Admin-Eingabe, Auth-/Caddy-Aktivierung und HTTP-Negativtests; echte E-Mail-Zustellung, Admin-MFA, zwei reale Testkonten und Crawler-Quellenfreigabe. Crawler-Timer bleibt ohne dokumentierte Freigabe deaktiviert. Dossier Studio bleibt ausgeklammert.
+
+## Auth-Aktivierungsprüfung nach SMTP-/Admin-Eingabe (07.11.2026)
+
+- Betreiber-Terminal bestätigt erfolgreiche SMTP-TLS-Anmeldung und lokale Erstellung des ersten Administrators. Kein Passwort/Schlüssel im Chat oder Repository übernommen; echte Mailzustellung und TOTP-Einrichtung weiterhin offen.
+- [Aktivierungsversuch 42391932466](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42391932466) bestätigt `auth_environment=complete` und identische vorbereitete App-/Migrations-/Unit-Dateien (staged 7685b15, current 4b20cd8). Abbruch vor Dienststart/Caddy-Änderung wegen bestehender Request-Transformations-/Auth-Direktive.
+- Neuer Read-only-Plan ergänzt eine whitelist-basierte Routing-Zusammenfassung aus `caddy adapt`: Matcher-Hosts/Pfade, Handler-Arten und Statuscodes; keine Auth-Provider-Felder, Benutzernamen, Passwort-Hashes, Headerwerte oder Response-Bodies. Dadurch kann die bestehende Regel geprüft werden, ohne Konfigurationssecrets offenzulegen.
+- Lokal 18 Rollout-Tests und 45 Ops-Tests erfolgreich; Datenschutz-Negativtests für Routing-Zusammenfassung enthalten. Öffentliche Auth-Aktivierung weiterhin nicht erfolgt.
