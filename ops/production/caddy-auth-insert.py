@@ -77,7 +77,7 @@ def insert_routes(data: str) -> str:
         raise ValueError("Site block is not at top level")
     start,end=opener,pair[opener]
     block=data[start:end]
-    if re.search(r"(?im)^\s*(?:import|route|rewrite)\b",block):
+    if re.search(r"(?:^|[{}\n])\s*(?:import|route|rewrite)\b",block):
         # Those existing directives can reorder/expose protected routes.
         raise ValueError("Existing Caddy routing requires manual compatibility review")
     if any(x in data for x in ("/api/auth/", "/api/admin/", "/account/", "/app/")):
