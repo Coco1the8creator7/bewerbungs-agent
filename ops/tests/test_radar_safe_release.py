@@ -4,6 +4,7 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 import tempfile
+import os
 import unittest
 from unittest.mock import patch
 
@@ -124,6 +125,59 @@ class SafeRadarReleaseTests(unittest.TestCase):
         self.assertIn('! -L "$dir"',script)
         self.assertIn('mktemp -d /root/',documentation)
         self.assertNotIn("sudo bash /home/careeragency_runner",documentation)
+
+
+    def test_versioned_webroot_symlink_inside_approved_directory(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base=Path(folder)/"careeragency"
+            releases=base/"releases"
+            target=releases/"release-01"
+            target.mkdir(parents=True)
+            for name in release.FILES:
+                (target/name).write_text("test",encoding="utf-8")
+            current=base/"current"
+            current.symlink_to(target,target_is_directory=True)
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current):
+                release.validate_live(trusted_owner=os.geteuid())
+
+    def test_rejects_webroot_symlink_escape(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base=Path(folder)/"careeragency"
+            base.mkdir()
+            external=Path(folder)/"other-project"
+            external.mkdir()
+            current=base/"current"
+            current.symlink_to(external,target_is_directory=True)
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current):
+                with self.assertRaisesRegex(ValueError,"escapes approved webroot"):
+                    release.validate_live(trusted_owner=os.geteuid())
+
+    def test_rejects_nested_symlinks_even_within_webroot(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base=Path(folder)/"careeragency"
+            target=base/"releases"/"real"
+            target.mkdir(parents=True)
+            alias=base/"alias"
+            alias.symlink_to(base/"releases",target_is_directory=True)
+            current=base/"current"
+            current.symlink_to(alias/"real",target_is_directory=True)
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current):
+                with self.assertRaisesRegex(ValueError,"nested symlink"):
+                    release.validate_live(trusted_owner=os.geteuid())
+
+    def test_rejects_group_writable_webroot_parent(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base=Path(folder)/"careeragency"
+            target=base/"releases"/"rev"
+            target.mkdir(parents=True)
+            for name in release.FILES:
+                (target/name).write_text("test",encoding="utf-8")
+            current=base/"current"
+            current.symlink_to(target,target_is_directory=True)
+            base.chmod(0o775)
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current):
+                with self.assertRaisesRegex(ValueError,"not root-owned and read-only"):
+                    release.validate_live(trusted_owner=os.geteuid())
 
     def test_production_workflow_requires_owner_and_pinned_ssh(self):
         workflow = (ROOT / ".github/workflows/radar-safe-release.yml").read_text()
