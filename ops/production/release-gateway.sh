@@ -7,13 +7,19 @@ umask 077
 [[ "$EUID" -eq 0 && "${SUDO_USER:-}" == careeragency_runner ]] || exit 77
 [[ $# -eq 2 ]] || exit 64
 action="$1"; argument="$2"
-base=/var/www/careeragency/current
 backups=/var/backups/careeragency-ops/releases
 install -d -o root -g root -m 0700 "$backups"
 exec 9>/run/lock/careeragency-release.lock
 flock -n 9 || { echo "Another release is running"; exit 75; }
 log() { logger -p authpriv.notice -t careeragency-release -- "$*"; printf '%s\n' "$*"; }
 fail() { log "FAILED action=$action reason=$1"; exit 1; }
+helper=/usr/local/lib/careeragency-ops/radar-public-root.py
+[[ -f "$helper" && ! -L "$helper" && "$(stat -c %u "$helper")" == 0 ]] || fail "missing or untrusted public root helper"
+base="$(timeout 10s python3 "$helper")" || fail "public root validation failed"
+case "$base" in
+  /var/www/careeragency/current|/var/www/careeragency/releases/*) ;;
+  *) fail "unexpected live root" ;;
+esac
 [[ -d "$base" && ! -L "$base" && -f "$base/index.html" && ! -L "$base/index.html" ]] || fail "unexpected live directory"
 if [[ "$action" == rollback ]]; then
   [[ "$argument" =~ ^[0-9]{8}T[0-9]{6}Z-[a-f0-9]{12}$ ]] || exit 64

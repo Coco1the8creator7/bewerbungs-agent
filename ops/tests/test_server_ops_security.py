@@ -50,6 +50,17 @@ class ServerOpsSecurityTests(unittest.TestCase):
                 self.assertEqual(proc.returncode, 64)
                 self.assertIn("Denied", proc.stderr)
 
+    def test_release_gateway_uses_the_canonical_public_root_guard(self):
+        gateway = (ROOT / "ops/production/release-gateway.sh").read_text()
+        installer = RELEASE_INSTALL.read_text()
+        self.assertIn("/usr/local/lib/careeragency-ops/radar-public-root.py", gateway)
+        self.assertIn('timeout 10s python3 "$helper"', gateway)
+        self.assertIn("/var/www/careeragency/releases/*", gateway)
+        self.assertIn("public_root.py", installer)
+        self.assertIn("Refusing to install from a non-root-owned repository checkout", installer)
+        self.assertIn("install-ops-dispatcher.sh", installer)
+        self.assertIn("production_content_modified=false", installer)
+
     def test_auth_preflight_uses_active_release_path(self):
         preflight = (ROOT / "ops/production/auth-preflight.sh").read_text()
         self.assertIn("/opt/careeragency/auth-current/authservice", preflight)

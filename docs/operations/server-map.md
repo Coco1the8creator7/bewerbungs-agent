@@ -7,7 +7,7 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Repository-Stand | **VERIFIZIERT** | Produktionsaudit am Stand `7ce2df7fd35c2916a1e1b60457eceb273302ae58`, 07.11.2026; Implementierung folgt in diesem Branch/PR. |
+| geprüfter Repository-Stand | **VERIFIZIERT** | Stand `eb551491045718e9e54d7b10ad6f17eb73506088`, 08.11.2026; Live-Diff und Release-Gateway-Korrektur unten. |
 | PR-Lage | **VERIFIZIERT** | #115 (UI) in 7685b15 und #118 (Radar-Releasepfad) in be27473 gemergt. |
 | aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Caddy, Auth-Backend, PostgreSQL und geschützte Kontorouten produktiv aktiv; anonyme Smoke-Checks erfolgreich. Echte Admin-/Mail-/Zwei-Konten-Abnahme offen. |
 | Rollout des geprüften Commits | **TEILWEISE VERIFIZIERT** | Auth-Aktivierung erfolgreich. Read-only Frontend-Abgleich meldet eine Abweichung zwischen Live-`index.html` und `main`; vollständiger Frontend-Deploy ist deshalb gesperrt. |
@@ -20,7 +20,7 @@ flowchart TD
  B[Browser] --> D[careeragency.ch / DNS + HTTPS]
  D --> C[Infomaniak: Caddy / statische Website]
  C --> F[Lehrstellen-Feed]
- B -->|nach Aktivierung: /app und /api/auth| A[FastAPI Auth-Dienst]
+ B -->|/app und /api/auth| A[FastAPI Auth-Dienst]
  A --> DB[(PostgreSQL)]
  GH[GitHub main / Actions] -->|kontrollierter, gescopter Release| C
  GH -.->|deaktivierte Legacy Pages/Importer| B
@@ -38,8 +38,8 @@ Pfeile zu Auth und Datenbank sind durch den erfolgreichen Aktivierungs- und Live
 | dashboard/ | Statisches Frontend, Landingpage und Radar | Live-Landingpage weicht von `main` ab; keine Vollauslieferung bis zum Abgleich produktiver Anpassungen. Scoped Radar-Release ist read-only geprüft. |
 | careeragency.ch | Domain in Workflows und Live-Preflight | HTTPS und produktive Kontorouten im serverseitigen Smoke geprüft; Mailzustellung und interaktive Admin-Nutzung offen. |
 | Infomaniak / Caddy | Produktionsziel und Reverse Proxy | Caddy aktiv; Auth-/Admin-/Account-/App-Routen im Read-only-Produktionsplan bestätigt. |
-| /var/www/careeragency/current | Im SSH-Dispatcher geprüfter Landingpage-Pfad | **AUS REPOSITORY**: status prüft index.html dort. Inhalt und Symlink-Ziel nicht live geprüft. |
-| /srv/careeragency-landing-feed/jobs.json | Im Dispatcher geprüfte Feed-Datei | **AUS REPOSITORY**. Abgleich mit lehrstellen.json ist **OFFEN**. |
+| /var/www/careeragency/current | Produktiver Webroot-Symlink | Read-only geprüft; zeigt in einen direkten Release-Ordner. Der installierte Frontend-Gateway lehnte diesen gültigen Symlink zuvor irrtümlich ab. |
+| /srv/careeragency-landing-feed/jobs.json | Legacy-Pfad des SSH-Statuschecks | Der öffentliche Endpunkt `/lehrstellen.json` wurde im Live-Smoke mit HTTP 200 bestätigt; dieser alte Statuspfad ist kein Nachweis des Feed-Zielpfads. |
 | authservice/ | FastAPI Authentifizierung und private API | Produktiv aktiv; private Pfade ohne Sitzung verweigert. Reale Kontenabnahme offen. |
 | PostgreSQL / careeragency_auth | Auth- und Nutzerdaten gemäß Migrationen | PostgreSQL und Auth-Runtime aktiv; DB-Backup/Restore wurden im Rollout geprüft. Keine DB-Inhalte im Audit ausgegeben. |
 | Yousty-Crawler | Zentraler Lehrstellenfeed und Statusprotokoll | Service/Timer sind nach PR #102 **AUS REPOSITORY**; Timer bleibt laut PR ohne dokumentierte Quellenfreigabe deaktiviert. Auf dem Server installiert/aktiv: **OFFEN**. |
@@ -234,3 +234,10 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - **Korrektur:** Auth-Preflight prüft nun den aktiven Release-Symlink `/opt/careeragency/auth-current/authservice` statt eines nicht vorhandenen alten Direktpfads. Offline-Regressionstest ergänzt.
 - **Kritischer Prüfhinweis:** Laufende Backend-Runtime-Updates und Schemaänderungen haben noch keinen regulären Release-/Rollback-Pfad. Diese Änderung behauptet nicht, Backend-Deployment bereits gelöst zu haben. Bis dahin keine Laufzeit-/Schemaänderung über den regulären Releaseweg freigeben; der gebündelte Auth-Rollout bleibt der einzige vorhandene geprüfte Prozess.
 - **Kritischer Prüfhinweis:** Admin-TOTP, echte Mailzustellung und Zwei-Konten-Isolation sind nicht abgenommen. Der anonyme HTTP-Smoke belegt Erreichbarkeit und Zugriffsschutz ohne Session, aber keinen erfolgreichen Benutzerablauf.
+## Live-Diff Landingpage (08.11.2026)
+
+- **VERIFIZIERT:** Der öffentliche Vergleich im erfolgreichen `frontend-check`-Run `42425155907` meldet `main` SHA-256 `350e59b4f66b2bf4ef0762f199994574d1b5f008c24547d624a7ad9fc9dd8cae` (156638 Byte) und Live SHA-256 `46befcc89569953786fb0e98f6d6fae3ad297588480959f127996c1c3112b4a5` (156450 Byte). Kein Produktionsinhalt wurde geschrieben.
+- **VERIFIZIERT:** Vier Abweichungen: Live hat das `hidden`-Attribut am Footer mit „Daten & Entwicklung“ nicht; Live setzt `persistEnabled` fest auf `false`; Live fehlt die Funktion, die Floating-Speichersteuerung auszublenden, wenn der Footer verborgen ist; Live fehlt `archiveLegacyWorkspaceOnce`, das alte lokale Browser-Inserate vor dem Ersetzen einmalig lokal sichert.
+- **VERIFIZIERT:** Die Unterschiede entsprechen den Änderungen im Repository: Account-Persistenz/Archivierung in der späteren Lehrstellen-/Account-Version und die Footer-Ausblendung in den Commits `104d306c2a` und `d009011131`. Die Ausblendung entspricht dem zuvor erteilten Auftrag zur Entfernung des Abschnitts. Kein blindes Überschreiben; die Account-Datenlogik bleibt separat zu beurteilen.
+- **VERIFIZIERT:** Der installierte SSH-Releasehelfer schlug mit `unexpected live directory` fehl, weil er `current` als Symlink pauschal verbietet. Der vorhandene `public_root.py`-Guard akzeptiert nur einen geprüften direkten Release-Symlink. PR für die Wiederverwendung dieses Guards und einen gehärteten Installer ist in Arbeit.
+- **OFFEN:** Der korrigierte Gateway ist noch nicht auf dem Server installiert. Deshalb ist trotz erfolgreichem öffentlichen Diff kein sicherer SSH-Deploy-/Rollback-Test erfolgt. Das Installationsskript verändert nur root-eigene Release-Helfer/Sudoers und prüft zuvor per Backup; Produktionsdateien werden dabei nicht ersetzt.
