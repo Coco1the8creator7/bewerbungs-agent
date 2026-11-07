@@ -116,6 +116,15 @@ class SafeRadarReleaseTests(unittest.TestCase):
             self.assertTrue(release.is_reviewed_asset(Path("/unused"), "radar.js",
                                                       b"new", b"new"))
 
+    def test_privileged_installer_rejects_unprivileged_staging_paths(self):
+        script=(ROOT/"ops/production/install-radar-release.sh").read_text()
+        documentation=(ROOT/"docs/operations/radar-safe-release.md").read_text()
+        self.assertIn('[[ "$root" == /root/*',script)
+        self.assertIn('stat -c %u',script)
+        self.assertIn('! -L "$dir"',script)
+        self.assertIn('mktemp -d /root/',documentation)
+        self.assertNotIn("sudo bash /home/careeragency_runner",documentation)
+
     def test_production_workflow_requires_owner_and_pinned_ssh(self):
         workflow = (ROOT / ".github/workflows/radar-safe-release.yml").read_text()
         self.assertIn("github.event.issue.user.id == 343900642", workflow)
