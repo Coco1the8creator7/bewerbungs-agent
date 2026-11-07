@@ -1,8 +1,8 @@
 """Career.Agency auth API. Requires verified Postgres, SMTP and reverse proxy.
 No public deployment until all integration tests and direct URL access checks pass.
 """
-import os, uuid, smtplib, secrets, hashlib, hmac
-from datetime import timedelta, datetime, timezone
+import os, uuid, smtplib, ssl, secrets, hashlib, hmac
+from datetime import timedelta, datetime, timezone, date
 from email.message import EmailMessage
 from urllib.parse import quote
 import psycopg, pyotp
@@ -84,7 +84,7 @@ class Registration(BaseModel):
     first_name:str=Field(min_length=1,max_length=120)
     last_name:str=Field(min_length=1,max_length=120)
     residence:str=Field(min_length=1,max_length=250)
-    birth_date:str|None=None
+    birth_date:date|None=None
     email:EmailStr
     password:str=Field(min_length=12,max_length=1024)
 class Credentials(BaseModel):
@@ -101,6 +101,8 @@ class Recovery(BaseModel): code:str
 
 @app.post("/api/auth/register",status_code=202)
 def register(data:Registration,request:Request):
+    if data.birth_date and data.birth_date > date.today():
+        raise HTTPException(422,"Geburtsdatum liegt in der Zukunft")
     email=canonical_email(data.email)
     limit("register-ip",ip(request),12,3600)
     with db() as con:

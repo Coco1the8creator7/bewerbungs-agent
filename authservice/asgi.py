@@ -35,6 +35,7 @@ def health():
                 raise HTTPException(503,"Migration missing")
     return {"ok":True}
 
+@app.get("/app")
 @app.get("/app/")
 @app.get("/app/{asset:path}")
 def private_app(request:Request,asset:str=""):
@@ -42,6 +43,10 @@ def private_app(request:Request,asset:str=""):
         u=session(con,request);gate(u)
     root=Path(os.environ["CAREER_APP_ROOT"]).resolve()
     name=asset or "index.html"
+    # Dossier Studio is explicitly deferred. Do not expose its shared local database
+    # through an authenticated account or load its storage adapters into this page.
+    if name.startswith(("dossier","account")) and not name.endswith(".css"):
+        raise HTTPException(404,"Dossier storage is deferred")
     if name=="lehrstellen.json":
         return FileResponse(os.environ["CAREER_PUBLIC_FEED"],media_type="application/json",headers={"Cache-Control":"no-store"})
     target=(root/name).resolve()
@@ -49,6 +54,8 @@ def private_app(request:Request,asset:str=""):
         raise HTTPException(404)
     if name=="index.html":
         html=target.read_text()
+        import re
+        html=re.sub(r'<script src="\./dossier[^"<>]*"></script>', '', html)
         marker='<script src="./github-sync.js"></script>'
         if html.count(marker)!=1: raise HTTPException(503,"Unreviewed app HTML")
         context=json.dumps({"id":str(u["id"])})

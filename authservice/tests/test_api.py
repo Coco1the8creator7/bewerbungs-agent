@@ -15,6 +15,7 @@ class AuthIntegration(unittest.TestCase):
         os.environ["CAREER_AUTH_PUBLIC_ORIGIN"]="https://testserver"
         os.environ["CAREER_AUTH_MAIL_FROM"]="noreply@careeragency.ch"
         os.environ["CAREER_AUTH_TOTP_KEY"]=Fernet.generate_key().decode()
+        os.environ["CAREER_APP_ROOT"]=str(__import__("pathlib").Path(__file__).resolve().parents[2]/"dashboard")
         cls.messages=[]
         api_module.queue_mail=lambda con,to,subject,body:cls.messages.append((to,subject,body))
         cls.client=TestClient(server.app,base_url="https://testserver")
@@ -41,6 +42,7 @@ class AuthIntegration(unittest.TestCase):
         r=self.post("/api/auth/login",{"email":data["email"],"password":data["password"]})
         self.assertEqual(r.json()["next"],"waiting",r.text)
         self.assertEqual(self.client.get("/api/auth/check-app").status_code,403)
+        self.assertEqual(self.client.get("/app/").status_code,403)
         user_session=self.client.cookies.get("ca_session")
         admin_id=uuid.uuid4()
         with psycopg.connect(os.environ["CAREER_AUTH_DATABASE_URL"]) as con:
@@ -63,6 +65,11 @@ class AuthIntegration(unittest.TestCase):
         self.assertEqual(len(r.json()["recovery_codes"]),10)
         self.assertEqual(self.client.get("/api/admin/users").status_code,200)
         self.assertEqual(self.client.get("/admin").status_code,200)
+        self.assertEqual(self.client.get("/app/").status_code,200)
+        self.assertIn("CareerAccount",self.client.get("/app/").text)
+        self.assertNotIn('<script src="./dossiers.js',self.client.get("/app/").text)
+        self.assertEqual(self.client.get("/app/dossier-studio.html").status_code,404)
+        self.assertEqual(self.client.get("/app/../authservice/app.py").status_code,404)
         r=self.post("/api/admin/users/"+str(user_id)+"/activate")
         self.assertEqual(r.status_code,200,r.text)
         self.assertIn("freigeschaltet",self.messages[-1][1])
@@ -71,6 +78,7 @@ class AuthIntegration(unittest.TestCase):
         self.client.cookies.clear()
         self.client.cookies.set("ca_session",user_session,path="/")
         self.assertEqual(self.client.get("/api/auth/check-app").status_code,401)
+        self.assertEqual(self.client.get("/app/").status_code,401)
 
     def test_throttle_rollback_protected(self):
         data={"email":"absent@example.com","password":"wrongwrongwrong"}

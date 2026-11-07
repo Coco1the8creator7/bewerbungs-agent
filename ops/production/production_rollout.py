@@ -15,6 +15,13 @@ def patch_caddy(text):
         if path in text:raise ValueError('Existing private routes require review')
     insertion='''
     # Career.Agency private API v1
+    handle /account.html {
+        redir /account/login 308
+    }
+    handle /lehrstellen.json {
+        root * /srv/careeragency-public
+        file_server
+    }
     @ca_legacy path /feedback.json /jobs.json
     handle @ca_legacy {
         respond 404

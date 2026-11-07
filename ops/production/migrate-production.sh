@@ -52,7 +52,8 @@ SQL
  sed '/^BEGIN;$/d; /^COMMIT;$/d' "$file" >> "$work"
  printf "\nINSERT INTO career_ops.migrations(name,checksum) VALUES('%s','%s');\nCOMMIT;\n" "$name" "$checksum" >> "$work"
  if [[ "$name" == 001_* || "$name" == 002_* ]]; then
-  printf "\\endif\nINSERT INTO career_ops.migrations(name,checksum) VALUES('%s','%s') ON CONFLICT DO NOTHING;\n" "$name" "$checksum" >> "$work"
+  printf '%s\n' '\endif' >> "$work"
+  printf "INSERT INTO career_ops.migrations(name,checksum) VALUES('%s','%s') ON CONFLICT DO NOTHING;\n" "$name" "$checksum" >> "$work"
  fi
  printf '\\endif\n' >> "$work"
 done

@@ -8,9 +8,9 @@ Status: implementation for review and CI; no live change is implied by this docu
 - UI changes are limited to necessary login/register/logout access in the existing sidebar account area and storage wording. Landing cards, Radar layout, Agency art, Dossier Studio and the global design system are unchanged.
 - Keep the approved public landing UI. `dashboard/index.html` uses the actual HTML retrieved from careeragency.ch on 7 November 2026, with only account persistence hooks. The rollout compares the live HTML with that reference before replacing it.
 - Keep a shared apprenticeship pool and private non-dossier account state in PostgreSQL. `career_private.user_state` stores workspace, swipes, Radar/profile and feedback; server session supplies ownership. Row policies add a second ownership check. No separate database per user.
-- Keep Dossier Studio, its editor, export and storage adapters unchanged. Existing local dossiers remain device-local demo data and are **not** made safe for shared-device multiuser use by this release. Do not use real dossiers during the pilot until the separately deferred work is completed.
+- Keep Dossier Studio, its editor, export and storage adapters unchanged. The new authenticated app does not load the Dossier scripts and denies Studio routes until that separate work is completed. Existing public local dossiers remain device-local demo data and are **not** made safe for shared-device multiuser use by this release. Do not use real dossiers during the pilot until the separately deferred work is completed.
 - No automatic attribution/import of old browser data to a new account. Old IndexedDB and public GitHub history are not deleted. Private unsent filter drafts use an account-specific IndexedDB database; server state is accessed through `/api/user`.
-- Retire automatic SFTP, Pages, adult Gmail and manual URL importer deployments. Only reviewed Infomaniak releases should change production. PR #30 (Supabase pilot) is not part of this architecture and must not be merged as-is.
+- Retire automatic SFTP, Pages, adult Gmail and manual URL importer deployments. Only reviewed Infomaniak releases should change production. The historical Supabase pilot from PR #30 is already merged but remains inactive; the canonical login decision on main remains Infomaniak/FastAPI (PR #97).
 
 ## First installation
 

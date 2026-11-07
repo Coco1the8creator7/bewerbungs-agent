@@ -1,0 +1,38 @@
+name: Career.Agency auth production safety gates
+on:
+  pull_request:
+    paths:
+      - 'ops/production/**'
+      - 'authservice/**'
+      - 'auth/**'
+      - '.github/workflows/auth-production-gates.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate all production shell scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          for script in ops/production/*.sh; do bash -n "$script"; done
+      - name: Validate Python and Caddy structural guards
+        run: |
+          python -m compileall -q authservice auth ops/production
+          python -m unittest discover -s ops/production/tests -v
+      - name: Ensure non-destructive auth DB bootstrap
+        run: |
+          ! grep -Eiq '\bDROP[[:space:]]+(TABLE|DATABASE|SCHEMA)\b' ops/production/bootstrap-auth-db-safe.sh
+          grep -Fq 'auth_data_modified=false' ops/production/bootstrap-auth-db-safe.sh
+          grep -Fq 'caddy validate --config' ops/production/install-auth-caddy.sh
+          grep -Fq 'auth_caddy=rolled_back' ops/production/install-auth-caddy.sh
+          grep -Fq 'smtp_tls_login=verified' ops/production/configure-auth-secrets.py
+          grep -Fq 'CAREER_AUTH_PUBLIC_ORIGIN' ops/production/configure-auth-secrets.py
+          grep -Fq 'cmp -s' ops/production/prepare-auth-runtime.sh

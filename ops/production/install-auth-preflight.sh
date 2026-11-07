@@ -16,4 +16,6 @@ chmod 0440 "$sudoers"
 visudo -cf "$sudoers"
 # Do not patch the forced command: the central version includes all approved actions.
 bash "$src/../server/install-ops-dispatcher.sh"
+# Preserve the previous read-only end-to-end preflight validation.
+sudo -n -u careeragency_runner env SSH_ORIGINAL_COMMAND=auth-preflight "$runner"
 echo "Auth preflight installed; production application and database unchanged."
