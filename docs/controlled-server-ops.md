@@ -8,9 +8,10 @@ GitHub identity** through an Actions workflow to a restricted Infomaniak SSH
 user. The assistant can request execution and inspect GitHub workflow results,
 without the user manually typing every SSH command.
 
-Minimal test version is deliberately limited to two fixed commands:
-`CA-OPS: status` and `CA-OPS: tests`. This is an executor, not an open shell,
-server agent, full deployment system or persistent ChatGPT Work session.
+Initial version: `CA-OPS: status` and `CA-OPS: tests`. The second reviewed
+release extends this with `feed-audit`, `crawler-probe`, and `release-check`.
+This remains a restricted executor, **not** an open shell, server agent,
+full deployment system or persistent ChatGPT Work session.
 
 ## 0 – Prerequisites / explicit human acceptance
 - Review and merge this PR into `main` **after** examining the workflow,
@@ -75,7 +76,7 @@ create a new issue through its connected GitHub tool with exact title
 That event starts `.github/workflows/controlled-server-ops.yml` on `main`.
 
 Or manually: Actions > Career.Agency - controlled SSH server operations >
-Run workflow > operation `status` (or `tests`).
+Run workflow > one of the explicitly listed operations.
 
 `status` reads the Caddy service state, existence of the current website
 index and staged Yousty JSON; no private content is printed.
@@ -91,7 +92,61 @@ Expected first test: the status workflow completes with
 `careeragency_operations=connected`. Do not claim SSH is connected before
 this observed result.
 
-## 4 – Future operations / security boundaries
+## 4 – Reviewed diagnostic extension (five operations)
+
+This step needs a **one-time root-owned dispatcher update**. Merging the PR
+alone changes only the GitHub workflow; the already-installed SSH forced
+command still recognises only the original `status` and `tests` until updated.
+
+After reviewing and merging the second PR, run ONCE on Infomaniak:
+
+```bash
+cd /tmp/careeragency-server-ops-bootstrap
+git pull --ff-only origin main
+sudo bash ops/server/upgrade.sh
+```
+
+The upgrade checks the installed forced-command key and root ownership,
+validates the two scripts, preserves a backup of the original dispatcher,
+and installs only the new root-owned wrapper and read-only feed validator.
+It does **not** change SSH keys, GitHub secrets, Caddy, PostgreSQL or website.
+
+New exact GitHub issue titles (only GitHub owner ID 343900642 can trigger):
+- `CA-OPS: feed-audit`: read and validate the existing
+  `/srv/careeragency-landing-feed/jobs.json` locally, print only counts
+  and validity. It rejects older adult jobs and mismatched Yousty URLs.
+- `CA-OPS: crawler-probe`: read Yousty robots.txt and at most one page
+  to assess crawler feasibility. No records are saved. The pilot code is
+  verified against **pinned commit**
+  `1fdff1b1c17feb21332c83bce66bb262788eb370` before execution.
+- `CA-OPS: release-check`: read-only byte comparison of live
+  `/var/www/careeragency/current/index.html` and current `main`
+  `dashboard/index.html`. Exit 2 on drift; does not deploy.
+
+The existing `tests` operation is additionally pinned to the same
+reviewed pilot commit. When the pilot branch moves, these operations
+stop until its contents and revision are reviewed again.
+
+For a negative test, an unsupported command must still exit with 64.
+Public GitHub Action logs must never include private job applicant data.
+
+### Important limitations
+- `crawler-probe` is not a full job import or live refresh and cannot
+  establish commercial reuse rights.
+- `feed-audit` validates the LOCAL existing feed, not live HTTPS fetch,
+  login, browser rendering or the DB export process.
+- `release-check` diagnoses divergence only. It must not overwrite a
+  manually modified / approved production UI.
+- The previously configured restricted SSH user has **no write rights**
+  to the production feed or the isolated PostgreSQL role.
+- For automatic refresh, design a dedicated service identity and controlled
+  staging-publish pipeline; review source reuse rights, data isolation,
+  atomic release/rollback, and production approvals before giving access.
+- GitHub rulesets were not present in the examined public repository
+  endpoint; the older branch-protection endpoint was inaccessible to
+  this GitHub integration, so overall branch protection is not verified.
+
+## 5 – Future operations / security boundaries
 
 Adding a new operation such as a read-only DB health-check, controlled
 Yousty export or approved deployment requires a separately reviewed
