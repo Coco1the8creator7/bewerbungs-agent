@@ -41,6 +41,7 @@ class AuthIntegration(unittest.TestCase):
         r=self.post("/api/auth/login",{"email":data["email"],"password":data["password"]})
         self.assertEqual(r.json()["next"],"waiting",r.text)
         self.assertEqual(self.client.get("/api/auth/check-app").status_code,403)
+        self.assertEqual(self.client.get("/app/").status_code,403)
         user_session=self.client.cookies.get("ca_session")
         admin_id=uuid.uuid4()
         with psycopg.connect(os.environ["CAREER_AUTH_DATABASE_URL"]) as con:
@@ -63,6 +64,8 @@ class AuthIntegration(unittest.TestCase):
         self.assertEqual(len(r.json()["recovery_codes"]),10)
         self.assertEqual(self.client.get("/api/admin/users").status_code,200)
         self.assertEqual(self.client.get("/admin").status_code,200)
+        self.assertEqual(self.client.get("/app/").status_code,200)
+        self.assertEqual(self.client.get("/app/../authservice/app.py").status_code,404)
         r=self.post("/api/admin/users/"+str(user_id)+"/activate")
         self.assertEqual(r.status_code,200,r.text)
         self.assertIn("freigeschaltet",self.messages[-1][1])
@@ -71,6 +74,7 @@ class AuthIntegration(unittest.TestCase):
         self.client.cookies.clear()
         self.client.cookies.set("ca_session",user_session,path="/")
         self.assertEqual(self.client.get("/api/auth/check-app").status_code,401)
+        self.assertEqual(self.client.get("/app/").status_code,401)
 
     def test_throttle_rollback_protected(self):
         data={"email":"absent@example.com","password":"wrongwrongwrong"}
