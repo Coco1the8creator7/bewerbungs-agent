@@ -149,6 +149,8 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn('cp -p -- "$dest" "$previous"', shared)
         self.assertIn('mv -f -- "$candidate" "$dest"', shared)
         self.assertIn('previous_dispatcher_backup=', shared)
+        self.assertIn('unexpected = installed - known', shared)
+        self.assertIn('unrecognized installed SSH actions', shared)
         self.assertNotIn("NOPASSWD: ALL", shared)
 
 
