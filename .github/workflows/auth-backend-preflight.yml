@@ -1,0 +1,36 @@
+name: Auth backend production preflight
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: careeragency-ops
+    timeout-minutes: 5
+    steps:
+      - name: SSH setup
+        shell: bash
+        env:
+          PRIVATE_KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.CA_OPS_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$PRIVATE_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          test -s ~/.ssh/id_ed25519
+          test -s ~/.ssh/known_hosts
+      - name: Inspect server readiness without writing production data
+        shell: bash
+        env:
+          SERVER: ${{ secrets.CA_OPS_HOST }}
+        run: |
+          set -euo pipefail
+          [[ "$SERVER" =~ ^[a-zA-Z0-9.-]+$ ]]
+          ssh -T -i ~/.ssh/id_ed25519 \
+            -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o IdentitiesOnly=yes -o ConnectTimeout=15 \
+            "careeragency_runner@$SERVER" auth-preflight
