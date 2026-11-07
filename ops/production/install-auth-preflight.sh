@@ -8,9 +8,6 @@ target=/usr/local/sbin/careeragency-auth-preflight
 test -f "$runner"
 test -f "$src/auth-preflight.sh"
 id careeragency_runner >/dev/null
-install -d -o root -g root -m 0700 /var/backups/careeragency-ops
-stamp="$(date -u +%Y%m%dT%H%M%SZ)"
-cp -p "$runner" "/var/backups/careeragency-ops/forced-command-before-auth-preflight-$stamp"
 install -o root -g root -m 0750 "$src/auth-preflight.sh" "$target"
 bash -n "$target"
 sudoers=/etc/sudoers.d/careeragency-auth-preflight
