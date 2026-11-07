@@ -1,0 +1,32 @@
+[Unit]
+Description=Career.Agency authentication API (loopback-only, private until routed)
+After=network-online.target postgresql.service
+Wants=network-online.target
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=careeragency_auth
+Group=careeragency_auth
+WorkingDirectory=/opt/careeragency/auth-current
+EnvironmentFile=/etc/careeragency/auth.env
+ExecStart=/opt/careeragency/auth-current/.venv/bin/uvicorn authservice.asgi:app --host 127.0.0.1 --port 8765 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
