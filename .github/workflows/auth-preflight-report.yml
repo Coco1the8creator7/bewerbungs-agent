@@ -37,12 +37,41 @@ jobs:
           ssh-keygen -y -f "$RUNNER_TEMP/auth-ssh/key" >/dev/null
           ssh-keygen -F "$HOST" -f "$RUNNER_TEMP/auth-ssh/known_hosts" >/dev/null
           state=failed
+          rc=0
+          diagnostic=unclassified
           if timeout 60s ssh -T -i "$RUNNER_TEMP/auth-ssh/key" -o BatchMode=yes \
              -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes \
              -o UserKnownHostsFile="$RUNNER_TEMP/auth-ssh/known_hosts" \
              -o ConnectTimeout=10 "careeragency_runner@$HOST" auth-preflight \
              > "$RUNNER_TEMP/auth-results" 2> "$RUNNER_TEMP/auth-errors"; then
             state=ok
+          else
+            rc=$?
+            # Only publish static classifications, never raw SSH stderr.
+            if grep -Eiq 'Permission denied|publickey' "$RUNNER_TEMP/auth-errors"; then
+              diagnostic=ssh_auth_denied
+            elif grep -Eiq 'Host key verification failed' "$RUNNER_TEMP/auth-errors"; then
+              diagnostic=host_key_mismatch
+            elif grep -Eiq 'Connection refused|Connection timed out|Network is unreachable' "$RUNNER_TEMP/auth-errors"; then
+              diagnostic=network_unreachable
+            elif grep -Eiq 'Denied: SSH command|not on the Career.Agency allowlist' "$RUNNER_TEMP/auth-results" "$RUNNER_TEMP/auth-errors"; then
+              diagnostic=forced_command_denied
+            elif grep -Eiq 'sudo:|not allowed to execute|password is required' "$RUNNER_TEMP/auth-errors"; then
+              diagnostic=sudo_denied
+            elif [[ "$rc" == 124 ]]; then
+              diagnostic=timeout
+            fi
+            # A permitted read-only status command distinguishes preflight errors
+            # from general SSH connectivity problems.
+            if timeout 30s ssh -T -i "$RUNNER_TEMP/auth-ssh/key" \
+              -o BatchMode=yes -o StrictHostKeyChecking=yes -o IdentitiesOnly=yes \
+              -o UserKnownHostsFile="$RUNNER_TEMP/auth-ssh/known_hosts" \
+              -o ConnectTimeout=10 "careeragency_runner@$HOST" status \
+              > "$RUNNER_TEMP/status-results" 2> "$RUNNER_TEMP/status-errors"; then
+              state=preflight_failed_ssh_status_ok
+            else
+              state=ssh_status_and_preflight_failed
+            fi
           fi
           {
             echo '## Career.Agency – Auth-Readiness (nur Status, keine Secrets)'
@@ -59,7 +88,7 @@ jobs:
               done < "$RUNNER_TEMP/auth-results"
               echo '~~~'
             else
-              echo 'SSH-Befehl konnte nicht erfolgreich ausgeführt werden. Details nur im GitHub-Actions-Log.'
+              printf 'SSH exit code: %s; Fehlerklasse: %s. Keine Zugangsdaten ausgegeben.\n' "$rc" "$diagnostic"
             fi
           } > "$RUNNER_TEMP/report.md"
           gh issue comment "$ISSUE" --repo "$REPO" --body-file "$RUNNER_TEMP/report.md"
