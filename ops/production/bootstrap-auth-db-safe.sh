@@ -18,6 +18,10 @@ status="$(runuser -u postgres -- psql -XAt -d careeragency_auth -c "
 SELECT CASE
  WHEN to_regclass('career_auth.users') IS NOT NULL
   AND to_regclass('career_auth.sessions') IS NOT NULL
+  AND to_regclass('career_auth.one_time_tokens') IS NOT NULL
+  AND to_regclass('career_auth.totp_credentials') IS NOT NULL
+  AND to_regclass('career_auth.recovery_codes') IS NOT NULL
+  AND to_regclass('career_auth.admin_audit') IS NOT NULL
   AND to_regclass('career_auth.rate_counters') IS NOT NULL
   AND EXISTS (
     SELECT 1 FROM information_schema.columns
