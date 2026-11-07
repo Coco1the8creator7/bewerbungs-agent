@@ -137,3 +137,13 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - Produktion: **VERIFIZIERT** / **ungeprüft** / **nicht ausgerollt**
 - Live-Prüfmethode, Zeitpunkt und Endpunkte/Dienste:
 - Offene Prüfungen / Rollback-Referenz:
+
+## Prüfung zu PR #108 — Dispatcher-Installer
+
+- **Repository/Base:** main, ffbcc95bb8bb9b6fcdbeb31c6d73fff27d518790. Änderung: `ops/server/install-ops-dispatcher.sh`; Regressionen: `ops/tests/test_dispatcher_upgrade.py`.
+- **Verifiziert, lokaler Test:** 31 Ops-Tests erfolgreich. Der Validator unterscheidet nun äussere SSH-Aktionen von verschachtelten Release-Unterfällen; die Befehls-Whitelist bleibt unverändert. Unbekannte äussere Aktionen werden weiterhin abgewiesen.
+- **Verifiziert, Betreiber-Terminal vom 07.11.2026:** `owner-setup.sh` brach beim Dispatcher-Validator mit den fälschlich erkannten Unterfällen `release-check|release-deploy`, `release-rollback` und `*` ab. Dieser Abbruch liegt vor Dispatcher-Installation, Gateway-Installation, Migrationen und Dienstaktivierung.
+- **Letzter direkter HTTPS-Nachweis (07.11.2026, vor dem erneuten Installationsversuch):** `/` und `/lehrstellen.json` HTTP 200, Feed 185 Yousty-Inserate; `/jobs.json` 401; `/feedback.json` 200; `/account/login`, `/app/`, `/api/auth/me` 404. Auth-Produktivbetrieb ist damit nicht bestätigt; die Feedback-Sperre war noch nicht aktiv.
+- **SSH-Nachweis:** Read-only-Plan über [Run 42388395669](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42388395669) abgewiesen (Exit 64, Befehl nicht auf installierter Allowlist). Das belegt die Erreichbarkeit des eingeschränkten SSH-Zugangs, nicht die Installation des neuen Produktionsgateways.
+- **Auswirkungen:** Nur Installationsprüfung/Deployment. Keine UI-, Proxy-, Datenbank-, Auth- oder Whitelist-Erweiterung durch diesen Fix. Die bestehende Sicherung und atomare Dispatcher-Installation bleiben erhalten.
+- **Offen:** CI und Merge von PR #108; danach Betreiber-Bootstrap mit aktuellem main wiederholen und erst anschliessend HTTP-, Dienst-, Migrations- und Zugriffsschutzprüfungen aktualisieren. Serverseitiger Rollout dieses Fixes ist noch nicht nachgewiesen.
