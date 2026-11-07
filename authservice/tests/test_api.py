@@ -65,7 +65,8 @@ class AuthIntegration(unittest.TestCase):
         self.assertIn("freigeschaltet",self.messages[-1][1])
         r=self.post("/api/admin/users/"+str(user_id)+"/block")
         self.assertEqual(r.status_code,200,r.text)
-        self.client.cookies.set("ca_session",user_session,domain="testserver",path="/")
+        self.client.cookies.clear()
+        self.client.cookies.set("ca_session",user_session,path="/")
         self.assertEqual(self.client.get("/api/auth/check-app").status_code,401)
 
     def test_throttle_rollback_protected(self):
