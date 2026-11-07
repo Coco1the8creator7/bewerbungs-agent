@@ -6,6 +6,8 @@ import base64
 import getpass
 import os
 import re
+import ssl
+import smtplib
 import secrets
 import stat
 import sys
@@ -47,6 +49,16 @@ def main():
         raise SystemExit("Invalid SMTP settings")
     if not sender.lower().endswith("@careeragency.ch"):
         raise SystemExit("Sender must be under careeragency.ch")
+    print("Prüfe SMTP TLS-Zertifikat und Zugangsdaten (keine E-Mail wird gesendet) ...")
+    try:
+        with smtplib.SMTP(host, 587, timeout=15) as smtp:
+            smtp.ehlo()
+            smtp.starttls(context=ssl.create_default_context())
+            smtp.ehlo()
+            smtp.login(user, password)
+    except (OSError, ssl.SSLError, smtplib.SMTPException):
+        raise SystemExit("SMTP connection/authentication failed; auth.env was NOT written.")
+    print("smtp_tls_login=verified")
     # Secret is generated on the host and must be backed up securely, never logged.
     key = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode("ascii")
     values = {
