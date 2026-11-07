@@ -74,8 +74,7 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
         "remove_adult_score_prediction",
         ("const predicted=null;",),
     )
-    if 'async function archiveLegacyWorkspaceOnce(saved){' not in html:
-        # A previous temporary privacy safeguard deliberately stopped the
+    # A previous temporary privacy safeguard deliberately stopped the
     # initializer before its network request. It is no longer appropriate now
     # that the validated Yousty-only public feed is available. Remove only the
     # exact observed block; leave all other live JavaScript and UI untouched.
@@ -91,7 +90,8 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
         'async function initialize(){\n await initializeNewJobsWindow();\n',
         "remove_obsolete_temporary_early_return",
     )
-    change(
+    if 'async function archiveLegacyWorkspaceOnce(saved){' not in html:
+        change(
         'async function initialize(){\n await initializeNewJobsWindow();',
         '''async function archiveLegacyWorkspaceOnce(saved){
  // Keep an independent, local-only copy before replacing old job listings.
