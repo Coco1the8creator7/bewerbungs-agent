@@ -9,7 +9,7 @@ die() { echo "ERROR: $*" >&2; exit 1; }
 [[ $EUID -eq 0 ]] || die "Run with sudo."
 [[ $# -eq 0 ]] || die "No arguments accepted."
 HERE="$(cd "$(dirname "$0")" && pwd -P)"
-[[ -f "$HERE/ca-ops-command" && -f "$HERE/stage_commit.sh" ]] ||
+[[ -f "$HERE/ca-ops-command" && -f "$HERE/stage_commit.sh" && -f "$HERE/feed_audit.py" ]] ||
   die "Required reviewed scripts not found."
 id careeragency_runner >/dev/null 2>&1 || die "Service user not found."
 [[ "$(id -u careeragency_runner)" != 0 ]] || die "Unsafe service user UID."
@@ -27,8 +27,10 @@ grep -Fq 'restrict,command="/usr/local/bin/careeragency-ops-command"' \
 
 bash -n "$HERE/ca-ops-command"
 bash -n "$HERE/stage_commit.sh"
+python3 -m py_compile "$HERE/feed_audit.py"
 
 ROOT=/home/careeragency_runner/careeragency-workspace
+[[ ! -L /home/careeragency_runner && ! -L "$ROOT" && ! -L "$ROOT/releases" ]] || die "Symlink in runner home or workspace"
 install -d -o careeragency_runner -g careeragency_runner -m 0700 "$ROOT"
 install -d -o careeragency_runner -g careeragency_runner -m 0700 "$ROOT/releases"
 for p in "$ROOT" "$ROOT/releases"; do
@@ -38,6 +40,8 @@ for p in "$ROOT" "$ROOT/releases"; do
 done
 
 install -d -o root -g root -m 0755 /usr/local/lib/careeragency-ops
+install -o root -g root -m 0644 "$HERE/feed_audit.py" /usr/local/lib/careeragency-ops/feed_audit.py.new
+mv -f /usr/local/lib/careeragency-ops/feed_audit.py.new /usr/local/lib/careeragency-ops/feed_audit.py
 install -o root -g root -m 0755 "$HERE/stage_commit.sh" \
   /usr/local/lib/careeragency-ops/stage_commit.sh.new
 mv -f /usr/local/lib/careeragency-ops/stage_commit.sh.new \
