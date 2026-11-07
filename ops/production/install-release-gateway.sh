@@ -12,7 +12,8 @@ root="$(cd -- "$(dirname -- "$0")/../.." && pwd -P)"
   exit 77
 }
 for dir in "$root" "$root/ops" "$root/ops/production" "$root/ops/server"; do
-  [[ -d "$dir" && ! -L "$dir" && "$(stat -c %u "$dir")" == 0 ]] || {
+  mode="$(stat -c %a "$dir" 2>/dev/null || true)"
+  [[ -d "$dir" && ! -L "$dir" && "$(stat -c %u "$dir")" == 0 ]] && (( (8#$mode & 022) == 0 )) || {
     echo 'Refusing writable or symlinked source path' >&2
     exit 77
   }
@@ -27,10 +28,15 @@ release_dest=/usr/local/sbin/careeragency-release
 sudoers=/etc/sudoers.d/careeragency-release
 backups=/var/backups/careeragency-ops/release-gateway-install
 [[ -f "$src" && ! -L "$src" && -f "$helper_src" && ! -L "$helper_src" ]] || exit 66
-[[ -f "$dispatcher_src" && ! -L "$dispatcher_src" ]] || exit 66
+[[ -f "$dispatcher_src" && ! -L "$dispatcher_src" && "$(stat -c %u "$dispatcher_src")" == 0 ]] || exit 66
+for file in "$src" "$helper_src"; do
+  mode="$(stat -c %a "$file" 2>/dev/null || true)"
+  [[ -f "$file" && ! -L "$file" && "$(stat -c %u "$file")" == 0 ]] && (( (8#$mode & 022) == 0 )) || exit 66
+done
 [[ -f /usr/local/bin/careeragency-ops-command && ! -L /usr/local/bin/careeragency-ops-command ]] || exit 66
 id careeragency_runner >/dev/null 2>&1
-bash -n "$src" "$root/ops/server/ca-ops-command"
+bash -n "$src"
+bash -n "$root/ops/server/ca-ops-command"
 python3 - "$helper_src" <<'PY'
 from pathlib import Path
 import sys
@@ -40,11 +46,15 @@ PY
 install -d -o root -g root -m 0700 "$backups"
 timestamp="$(date -u +%Y%m%dT%H%M%SZ)"
 for file in "$helper_dest" "$release_dest" "$sudoers"; do
-  if [[ -f "$file" && ! -L "$file" ]]; then
+  if [[ -e "$file" || -L "$file" ]]; then
+    [[ -f "$file" && ! -L "$file" && "$(stat -c %u "$file")" == 0 ]] || exit 66
     cp -p -- "$file" "$backups/$(basename "$file").$timestamp"
   fi
 done
 
+if [[ -e "$helper_dir" || -L "$helper_dir" ]]; then
+  [[ -d "$helper_dir" && ! -L "$helper_dir" && "$(stat -c %u "$helper_dir")" == 0 ]] || exit 66
+fi
 install -d -o root -g root -m 0755 "$helper_dir"
 helper_candidate="$(mktemp "$helper_dir/.radar-public-root.XXXXXXXX")"
 release_candidate="$(mktemp /usr/local/sbin/.careeragency-release.XXXXXXXX)"
