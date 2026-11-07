@@ -50,15 +50,8 @@ install -o root -g root -m 0755 "$HERE/stage_commit.sh" \
 mv -f /usr/local/lib/careeragency-ops/stage_commit.sh.new \
   /usr/local/lib/careeragency-ops/stage_commit.sh
 
-# Keep a previous dispatcher backup without overwriting the last known one.
-if [[ ! -e /usr/local/bin/careeragency-ops-command.before-write ]]; then
-  cp -a /usr/local/bin/careeragency-ops-command \
-    /usr/local/bin/careeragency-ops-command.before-write
-fi
-install -o root -g root -m 0755 "$HERE/ca-ops-command" \
-  /usr/local/bin/careeragency-ops-command.new
-mv -f /usr/local/bin/careeragency-ops-command.new \
-  /usr/local/bin/careeragency-ops-command
+# Refresh the shared allowlist without dropping auth/release capabilities.
+bash "$HERE/install-ops-dispatcher.sh"
 
 echo "ssh_workspace_write=enabled"
 echo "workspace=$ROOT/releases"
