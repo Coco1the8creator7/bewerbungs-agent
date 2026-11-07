@@ -1,6 +1,8 @@
 """Pre-production regression tests: patch only approved landing behavior."""
 import importlib.util
 import json
+import re
+import subprocess
 from pathlib import Path
 import sys
 import tempfile
@@ -56,6 +58,28 @@ class LandingPublishingTests(unittest.TestCase):
         )
         for marker in ('id="newJobsList"', 'id="details"', './radar.js', './dossiers.js'):
             self.assertIn(marker, updated)
+
+    def test_patched_browser_javascript_is_valid_syntax(self):
+        updated, _ = module.patch_landing(self.current)
+        inline = re.findall(r'<script(?: [^>]*)?>(.*?)</script>', updated, re.S)
+        self.assertTrue(any(len(script) > 5000 for script in inline))
+        with tempfile.TemporaryDirectory() as folder:
+            for i, script in enumerate(inline):
+                if not script.strip():
+                    continue
+                path = Path(folder) / f'inline_{i}.js'
+                path.write_text(script, encoding='utf-8')
+                subprocess.run(['node', '--check', str(path)], check=True,
+                               capture_output=True, text=True)
+
+    def test_old_browser_workspace_archived_before_feed_replaces_jobs(self):
+        updated, _ = module.patch_landing(self.current)
+        self.assertIn('legacy-workspace-before-apprenticeships-v1', updated)
+        archive = updated.index('await archiveLegacyWorkspaceOnce(saved);')
+        workspace = updated.index('applyWorkspace(saved,"lokal gespeicherter Arbeitsstand");')
+        feed = updated.index('fetch("./lehrstellen.json"')
+        self.assertLess(archive, workspace)
+        self.assertLess(workspace, feed)
 
     def test_idempotent_and_never_restores_protected_feed(self):
         once, _ = module.patch_landing(self.current)
