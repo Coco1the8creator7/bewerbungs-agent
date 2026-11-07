@@ -24,7 +24,7 @@ from datetime import datetime, timezone
 REPO = "https://github.com/Coco1the8creator7/bewerbungs-agent.git"
 LIVE = Path("/var/www/careeragency/current")
 BACKUPS = Path("/var/backups/careeragency-ops/radar-releases")
-LOCK = Path("/run/lock/careeragency-radar-release.lock")
+LOCK = Path("/run/lock/careeragency-release.lock")
 FILES = ("index.html", "radar.js", "radar-model.js")
 ASSETS = ("radar.js", "radar-model.js")
 SHA = re.compile(r"[0-9a-f]{40}\Z")
