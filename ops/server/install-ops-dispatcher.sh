@@ -25,6 +25,63 @@ if [[ -e "$dest" || -L "$dest" ]]; then
 fi
 
 bash -n "$src"
+# First migration: fail closed rather than silently drop unknown server-local actions.
+# Existing historical auth/release variants are known; new actions require review.
+if [[ -f "$dest" ]]; then
+  python3 - "$dest" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+content = Path(sys.argv[1]).read_text(encoding="utf-8")
+# Only two-space-indented, top-level Bash case arms; ignore nested cases.
+installed = set(re.findall(r'(?m)^  (.+?)\)\s*
+for request in 'sudo id' 'status;id' 'auth-preflight --debug' \
+               'release-deploy not-a-sha' 'release-rollback ../etc/passwd' \
+               'release-check '; do
+  if env SSH_ORIGINAL_COMMAND="$request" bash "$src" >/dev/null 2>&1; then
+    fail "dispatcher unexpectedly accepts invalid operation"
+  fi
+done
+
+if [[ -f "$dest" ]] && cmp -s "$src" "$dest"; then
+  echo "dispatcher_install=unchanged"
+  exit 0
+fi
+
+install -d -o root -g root -m 0700 "$backups"
+previous=none
+if [[ -f "$dest" ]]; then
+  previous="$(mktemp "$backups/dispatcher.$(date -u +%Y%m%dT%H%M%SZ).XXXXXXXX")"
+  cp -p -- "$dest" "$previous"
+fi
+candidate="$(mktemp /usr/local/bin/.careeragency-ops-command.XXXXXXXX)"
+trap 'rm -f -- "$candidate"' EXIT
+install -o root -g root -m 0755 "$src" "$candidate"
+bash -n "$candidate"
+mv -f -- "$candidate" "$dest"
+cmp -s "$src" "$dest" || fail "installed contents differ"
+[[ "$(stat -c %U:%G "$dest")" == root:root && "$(stat -c %a "$dest")" == 755 ]] ||
+  fail "installed permissions differ"
+echo "dispatcher_install=installed"
+echo "previous_dispatcher_backup=$previous"
+echo "production_application_modified=false"
+, content))
+known = {
+    'status', 'tests', 'feed-audit', 'crawler-probe',
+    r'stage\ [0-9a-f][0-9a-f][0-9a-f]*',
+    'publish-lehrstellen', 'release-check', 'auth-preflight',
+    r'release-check\ *|release-deploy\ *|release-rollback\ *',
+    r'release-check\ [0-9a-f]*|release-deploy\ [0-9a-f]*|release-rollback\ *',
+    '*',
+}
+unexpected = installed - known
+if not installed or '*' not in installed or unexpected:
+    print('dispatcher_install=denied: unrecognized installed SSH actions: '
+          + ','.join(sorted(unexpected)), file=sys.stderr)
+    raise SystemExit(65)
+PY
+fi
 # Denial checks never invoke sudo or touch server state.
 for request in 'sudo id' 'status;id' 'auth-preflight --debug' \
                'release-deploy not-a-sha' 'release-rollback ../etc/passwd' \
