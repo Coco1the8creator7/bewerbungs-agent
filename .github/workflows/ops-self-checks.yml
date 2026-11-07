@@ -1,0 +1,42 @@
+name: Career.Agency - offline checks for server ops
+
+on:
+  push:
+    branches: [feat/careeragency-controlled-server-ops]
+    paths:
+      - 'ops/**'
+      - '.github/workflows/controlled-server-ops.yml'
+      - '.github/workflows/ops-self-checks.yml'
+  pull_request:
+    paths:
+      - 'ops/**'
+      - '.github/workflows/controlled-server-ops.yml'
+      - '.github/workflows/ops-self-checks.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    name: Check SSH allowlist without server credentials
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell syntax and denylist tests
+        run: python3 -m unittest discover -s ops/tests -v
+      - name: Parse workflow YAML and verify issue trigger
+        run: |
+          python3 -m pip install --quiet 'PyYAML==6.0.2'
+          python3 - <<'PY'
+          import yaml
+          from pathlib import Path
+          data=yaml.safe_load(Path('.github/workflows/controlled-server-ops.yml').read_text())
+          triggers=data.get('on',data.get(True))
+          assert triggers['issues']['types']==['opened']
+          assert 'workflow_dispatch' in triggers
+          job=data['jobs']['restricted-ssh']
+          assert job['environment']=='careeragency-ops'
+          assert job['timeout-minutes']==8
+          print('Workflow YAML and bounded triggers: valid')
+          PY

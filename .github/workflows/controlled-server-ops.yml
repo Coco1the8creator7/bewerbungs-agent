@@ -1,0 +1,121 @@
+name: Career.Agency - controlled SSH server operations
+
+# ChatGPT can create an exact-title issue via the connected GitHub account.
+# Public issue content is NEVER interpreted as executable shell code.
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "Allowlisted non-productive server operation"
+        required: true
+        type: choice
+        options:
+          - status
+          - tests
+
+permissions:
+  contents: read
+
+concurrency:
+  group: careeragency-controlled-server-ops
+  cancel-in-progress: false
+
+jobs:
+  restricted-ssh:
+    if: >-
+      github.repository == 'Coco1the8creator7/bewerbungs-agent' &&
+      (
+        (
+          github.event_name == 'issues' &&
+          github.event.issue.user.id == 343900642 &&
+          (
+            github.event.issue.title == 'CA-OPS: status' ||
+            github.event.issue.title == 'CA-OPS: tests'
+          )
+        ) ||
+        (
+          github.event_name == 'workflow_dispatch' &&
+          github.actor == 'Coco1the8creator7' &&
+          (
+            inputs.operation == 'status' ||
+            inputs.operation == 'tests'
+          )
+        )
+      )
+    name: Execute restricted operation over SSH
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    environment: careeragency-ops
+    env:
+      CA_OPS_HOST: ${{ secrets.CA_OPS_HOST }}
+      CA_OPS_KNOWN_HOSTS: ${{ secrets.CA_OPS_KNOWN_HOSTS }}
+      CA_OPS_SSH_PRIVATE_KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
+      ISSUE_TITLE: ${{ github.event.issue.title }}
+      MANUAL_OPERATION: ${{ inputs.operation }}
+      EVENT_NAME: ${{ github.event_name }}
+    steps:
+      - name: Validate operation and configured credentials
+        id: select
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == "issues" ]]; then
+            case "$ISSUE_TITLE" in
+              'CA-OPS: status') operation='status' ;;
+              'CA-OPS: tests') operation='tests' ;;
+              *) echo "::error::Issue title is not an allowlisted server operation"; exit 1 ;;
+            esac
+          elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            case "$MANUAL_OPERATION" in
+              status|tests) operation="$MANUAL_OPERATION" ;;
+              *) echo "::error::Not an allowlisted operation"; exit 1 ;;
+            esac
+          else
+            exit 1
+          fi
+          for key in CA_OPS_HOST CA_OPS_KNOWN_HOSTS CA_OPS_SSH_PRIVATE_KEY; do
+            if [[ -z "${!key}" ]]; then
+              echo "::error::Missing required GitHub environment secret: $key"
+              exit 1
+            fi
+          done
+          if [[ ! "$CA_OPS_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]; then
+            echo "::error::Invalid server hostname"
+            exit 1
+          fi
+          printf 'operation=%s\n' "$operation" >> "$GITHUB_OUTPUT"
+
+      - name: Install pinned SSH credentials in temporary files
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s\n' "$CA_OPS_SSH_PRIVATE_KEY" > "$RUNNER_TEMP/careeragency_ops_key"
+          printf '%s\n' "$CA_OPS_KNOWN_HOSTS" > "$RUNNER_TEMP/careeragency_ops_hosts"
+          chmod 600 "$RUNNER_TEMP/careeragency_ops_key" "$RUNNER_TEMP/careeragency_ops_hosts"
+          ssh-keygen -y -f "$RUNNER_TEMP/careeragency_ops_key" >/dev/null
+          ssh-keygen -F "$CA_OPS_HOST" -f "$RUNNER_TEMP/careeragency_ops_hosts" >/dev/null || {
+            echo "::error::No pinned SSH host key for configured host"
+            exit 1
+          }
+
+      - name: Run operation through forced-command SSH key
+        shell: bash
+        env:
+          OPERATION: ${{ steps.select.outputs.operation }}
+        run: |
+          set -euo pipefail
+          ssh -T \
+            -i "$RUNNER_TEMP/careeragency_ops_key" \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o PasswordAuthentication=no \
+            -o KbdInteractiveAuthentication=no \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$RUNNER_TEMP/careeragency_ops_hosts" \
+            -o ConnectTimeout=10 \
+            -o ConnectionAttempts=1 \
+            "careeragency_runner@$CA_OPS_HOST" \
+            "$OPERATION"
