@@ -113,3 +113,23 @@ jobs:
           assert 'id="radarDial"' in html, "Zen radar missing"
           print("radar_production_smoke=passed")
           PY
+      - name: Rollback after failed production smoke
+        if: failure() && steps.request.outputs.operation == 'deploy'
+        shell: bash
+        env:
+          HOST: ${{ secrets.CA_OPS_HOST }}
+        run: |
+          set -euo pipefail
+          test -f "$RUNNER_TEMP/radar_release_result" || exit 0
+          release="$(sed -n 's/^radar_release_id=//p' "$RUNNER_TEMP/radar_release_result" | tail -n 1)"
+          if [[ -z "$release" ]]; then
+            echo 'No deployment release ID; the server-side script already handles rollback on write failures.'
+            exit 0
+          fi
+          [[ "$release" =~ ^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}$ ]] || exit 64
+          ssh -T -i "$RUNNER_TEMP/radar_key" -o BatchMode=yes \
+            -o IdentitiesOnly=yes -o PasswordAuthentication=no \
+            -o KbdInteractiveAuthentication=no -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$RUNNER_TEMP/radar_known_hosts" \
+            -o ConnectTimeout=12 "careeragency_runner@$HOST" \
+            "radar-release-rollback $release"
