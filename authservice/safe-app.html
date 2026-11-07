@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de-CH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Mein Konto – Career.Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{font-family:Onest,system-ui,sans-serif;background:#f6f6f7;color:#292d32}
+*{box-sizing:border-box}body{margin:0}main{max-width:580px;margin:10vh auto;padding:0 20px}
+header a{color:#95516e;font-weight:700;text-decoration:none}
+section{background:white;border:1px solid #dedfe4;border-radius:16px;padding:30px;margin-top:25px}
+h1{font-size:1.7rem;letter-spacing:-.035em;margin:0 0 14px}
+p{line-height:1.65;color:#5d6470}button,a.action{font:inherit;border:0;border-radius:9px;background:#95516e;color:white;padding:11px 17px;cursor:pointer;text-decoration:none;display:inline-block}
+button:focus-visible,a:focus-visible{outline:3px solid #a88cab;outline-offset:3px}
+#adminLink{margin:0 0 15px;display:none}
+small{color:#687080}
+</style></head><body><main><header><a href="/">Career.Agency</a></header>
+<section>
+<h1 id="heading">Mein Konto</h1>
+<p>Deine Anmeldung ist bestätigt. Dein persönlicher Bereich wird schrittweise um eine sichere Speicherung von Bewertungen und Bewerbungsdossiers erweitert.</p>
+<p><small>Bis die Datenübernahme geprüft ist, werden keine privaten Dossiers automatisch aus dem bisherigen Browser-Dashboard übertragen.</small></p>
+<a class="action" id="adminLink" href="/admin">Benutzerverwaltung</a>
+<button id="logout" type="button">Abmelden</button>
+<p id="message" role="status"></p>
+</section></main>
+<script>
+(async()=>{
+  const message=document.querySelector('#message');
+  try{
+    const r=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});
+    if(!r.ok)throw Error('Sitzung ungültig');
+    const u=await r.json();
+    if(u.next!=='app'){location.replace('/account/login');return}
+    document.querySelector('#heading').textContent='Hallo '+u.first_name;
+    if(u.role==='admin')document.querySelector('#adminLink').style.display='inline-block';
+  }catch{location.replace('/account/login')}
+})();
+document.querySelector('#logout').onclick=async()=>{
+  try{
+    const r=await fetch('/api/auth/logout',{method:'POST',credentials:'same-origin',
+      headers:{'Content-Type':'application/json'},body:'{}'});
+    if(!r.ok)throw Error();
+    location.replace('/account/login');
+  }catch{document.querySelector('#message').textContent='Abmelden nicht möglich. Bitte erneut versuchen.'}
+};
+</script></body></html>
