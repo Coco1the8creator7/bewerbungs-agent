@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Root-owned, forced-command SSH entry point.
+# The SSH account MUST have no sudo rights and no production write access.
+set -euo pipefail
+export PATH=/usr/bin:/bin
+export GIT_TERMINAL_PROMPT=0
+umask 077
+
+case "${SSH_ORIGINAL_COMMAND:-}" in
+  status)
+    echo "careeragency_operations=connected"
+    echo "time_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    if systemctl is-active --quiet caddy; then
+      echo "caddy=active"
+    else
+      echo "caddy=not_active"
+    fi
+    if [[ -f /var/www/careeragency/current/index.html ]]; then
+      echo "landing_file=present"
+    else
+      echo "landing_file=missing"
+    fi
+    if [[ -s /srv/careeragency-landing-feed/jobs.json ]]; then
+      echo "yousty_feed_file=present"
+    else
+      echo "yousty_feed_file=missing"
+    fi
+    ;;
+  tests)
+    # Isolated, disposable clone. Never execute test code as root or ubuntu.
+    workdir="$(mktemp -d /tmp/careeragency-ops-tests.XXXXXXXX)"
+    trap 'rm -rf -- "$workdir"' EXIT
+    timeout 120s git clone --quiet --depth 1 \
+      --branch poc/lehrstellen-crawler-isolated \
+      https://github.com/Coco1the8creator7/bewerbungs-agent.git \
+      "$workdir/repo"
+    cd "$workdir/repo"
+    timeout 120s node --test \
+      tests/yousty-landing-feed.test.mjs \
+      tests/landing-unfiltered.test.mjs
+    timeout 120s python3 -m unittest \
+      crawler.tests.test_yousty_landing_export -v
+    echo "remote_tests=passed"
+    ;;
+  *)
+    echo "Denied: SSH command is not on the Career.Agency allowlist." >&2
+    exit 64
+    ;;
+esac
