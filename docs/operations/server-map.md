@@ -7,11 +7,11 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Repository-Stand | **VERIFIZIERT** | be274736924b2b48ca08a7043fa967520147f591, 07.11.2026; GitHub Commit API, ergänzt um die unten dokumentierten Rollout-Prüfungen |
-| PR-Lage | **VERIFIZIERT** | #102 gemergt in 861c1e0; #104 und PRs #103/#97 sind ebenfalls enthalten. |
-| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Scoped SSH-Gateway und kanonischer Webroot geprüft; Auth-Backend vorbereitet, noch nicht öffentlich aktiviert. Siehe aktuelle Nachweise unten. |
-| Rollout des geprüften Commits | **VORBEREITUNG VERIFIZIERT** | Lockdown und Backend-Vorbereitung erfolgreich; öffentliche Auth-Aktivierung und echter SMTP-Versand weiterhin OFFEN. |
-| letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub APIs, scoped SSH-Rollout und direkte anonyme HTTPS-Prüfungen. Details und Grenzen unten. |
+| geprüfter Repository-Stand | **VERIFIZIERT** | be274736924b2b48ca08a7043fa967520147f591, 07.11.2026; GitHub Commit API |
+| PR-Lage | **VERIFIZIERT** | #115 (UI) in 7685b15 und #118 (Radar-Releasepfad) in be27473 gemergt. |
+| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Scoped SSH-Gateway und Webroot geprüft; Auth-Backend und Datenbank vorbereitet, noch nicht öffentlich aktiviert. Aktuelle Nachweise unten. |
+| Rollout des geprüften Commits | **VORBEREITUNG VERIFIZIERT** | Feedback-Sperre und Backend-Vorbereitung erfolgreich; öffentliche Auth-Aktivierung und echter SMTP-Versand bleiben OFFEN. |
+| letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub APIs, scoped SSH-Rollout und direkte anonyme HTTPS-Prüfungen; Details unten. |
 
 ## Architekturübersicht
 
@@ -137,6 +137,15 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - Produktion: **VERIFIZIERT** / **ungeprüft** / **nicht ausgerollt**
 - Live-Prüfmethode, Zeitpunkt und Endpunkte/Dienste:
 - Offene Prüfungen / Rollback-Referenz:
+
+## Prüfung zu PR #115 — Landingpage „Daten & Entwicklung“
+
+- **Repository/Base:** `main`, Base-SHA `306b656d0417f0f2ab68259364e7c340493b72eb`, Merge-SHA `7685b15945bab46edc801d78ca64d44c2592f14c`.
+- **Änderungen:** `dashboard/index.html` blendet den Footer-Abschnitt `Daten & Entwicklung` und den schwebenden GitHub-Speicherbutton aus; `tests/test_dashboard_contract.py` und `tests/test_landing_cleanup.cjs` prüfen den Zustand.
+- **Auswirkungen:** nur Landingpage-UI und Regressionstests; keine API-, Domain-, Caddy-, Server-, Datenbank-, SSH-, Dienst- oder Crawler-Änderung. Die Funktionen und Markup-Elemente bleiben im HTML verborgen, um bestehende Initialisierungen und lokale Datenabläufe intakt zu halten.
+- **Workflow-Nachweis:** Dashboard-CI erfolgreich auf PR-Head `7a122fdde2cbdb5cd708bd98eb6a809dd2a78f00` (Run 42389657598).
+- **Produktion:** **nicht ausgerollt / nicht verifiziert**. Der geschützte Frontend-Release benötigt GitHub Actions `Career.Agency production deployment` mit Operation `deploy`; der Workflow wurde nicht gestartet.
+- **Liveprüfung / Rollback:** nicht ausgeführt. Rollback bleibt auf ein vorheriges `index.html`-Release begrenzt und erfordert dessen Release-ID.
 
 ## Prüfung zu PR #108 — Dispatcher-Installer
 
