@@ -47,7 +47,7 @@ def run(*args: str, cwd: Path | None = None, timeout: int = 125) -> bytes:
 PUBLIC_ROOT_HELPER = Path("/usr/local/lib/careeragency-ops/radar-public-root.py")
 
 
-def validate_live(trusted_uids: set[int] | None = None) -> None:
+def validate_live(trusted_uids: set[int] | None = None, helper_owner: int = 0) -> None:
     """Use the existing production public-root policy, never a second policy.
 
     The canonical policy permits only root and the trusted deployment user,
@@ -61,7 +61,7 @@ def validate_live(trusted_uids: set[int] | None = None) -> None:
     if helper.is_symlink() or not helper.is_file():
         raise ValueError("missing or symlinked installed public-root validator")
     helper_stat = helper.stat()
-    if helper_stat.st_uid != 0 or stat.S_IMODE(helper_stat.st_mode) & 0o022:
+    if helper_stat.st_uid != helper_owner or stat.S_IMODE(helper_stat.st_mode) & 0o022:
         raise ValueError("untrusted public-root validator permissions")
     spec = importlib.util.spec_from_file_location("careeragency_public_root_for_radar", helper)
     if spec is None or spec.loader is None:
