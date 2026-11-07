@@ -215,3 +215,12 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - **WIDERLEGT:** Die Annahme einer korrekt erzeugten `/account.html`-Weiterleitung. Caddy interpretiert bei `redir /account/login 308` das erste Argument als Pfadmatcher; tatsächlicher Handler hatte Status 302 und wirkte nur unter `/account/login` innerhalb von `/account.html`. Ergebnis 200 mit leerem Body. Der kanonische Login war erreichbar.
 - **Korrektur:** `redir * /account/login 308`; exakte Altregel wird auch bei erneuter Aktivierung aktualisiert. CI prüft nun zusätzlich Status und Location im tatsächlich adaptierten Caddy-JSON. Live-Smoke verlangt 308 und exaktes Weiterleitungsziel, statt nur Caddy-Syntax zu prüfen. Keine öffentlichen Frontend-Dateien oder persönlichen Daten verändert.
 - **Offen:** produktive Anwendung/Verifikation dieser Redirect-Korrektur; Admin-TOTP, echte Mailzustellung und produktive Zwei-Konten-Abnahme weiterhin offen.
+
+
+## Abschluss der technischen Auth-Aktivierung (07.11.2026, 22:31 UTC)
+
+- **VERIFIZIERT:** [Rollout 42421025129](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42421025129) erfolgreich, Ops-Commit `518540116836ed5cb86e71baec0a6359c54f5a08`. Backup `/var/backups/careeragency-ops/production/20261107T223145Z-518540116836`; vorbereitete Runtime unverändert `7685b15945bab46edc801d78ca64d44c2592f14c`.
+- Alle **15** öffentlichen Smoke-Prüfungen erfolgreich, einschliesslich Registrierung 200 und korrigierter Legacy-Weiterleitung `/account.html` mit 308 und Location `/account/login`. Der oben beschriebene Redirect-Fehler ist damit **behoben und produktiv verifiziert**.
+- Crawler-Freigabeprüfung läuft nun fehlerfrei aus der Runtime: `crawler_timer=disabled source_approval_missing=true`. Kein Crawl und keine Quellenfreigabe vorgenommen.
+- [Read-only-Plan 42420819319](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42420819319) bestätigt Auth-Dienst und Mail-Timer aktiv/aktiviert, Crawler-Timer inaktiv/deaktiviert. Öffentliche Landingpage unverändert; Dossier Studio ausgeklammert.
+- **Verbleibende Abnahme:** Administrator meldet sich unter https://careeragency.ch/account/login mit den lokal gesetzten Zugangsdaten an, richtet TOTP ein und sichert Notfallcodes. Reale Mailzustellung, produktive Zwei-Konten-Isolation und dokumentierte Crawler-Quellenfreigabe bleiben offen. SMTP-Anmeldung ist bestätigt; erfolgreiche Anmeldung am SMTP-Server belegt keine Postfachzustellung. Technischer Rollout abgeschlossen, fachliche Ende-zu-Ende-Abnahme eingeschränkt.
