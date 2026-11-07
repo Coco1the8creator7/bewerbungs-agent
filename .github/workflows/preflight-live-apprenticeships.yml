@@ -1,0 +1,103 @@
+name: Preflight live apprentice feed initializer repair
+
+on:
+  push:
+    branches: [fix/landing-remove-temporary-feed-block]
+    paths:
+      - 'ops/server/publish_lehrstellen.py'
+      - 'ops/tests/test_publish_lehrstellen.py'
+      - '.github/workflows/preflight-live-apprenticeships.yml'
+  pull_request:
+    paths:
+      - 'ops/server/publish_lehrstellen.py'
+      - 'ops/tests/test_publish_lehrstellen.py'
+      - '.github/workflows/preflight-live-apprenticeships.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  live-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Offline publisher and SSH regression tests
+        run: python3 -m unittest discover -s ops/tests -v
+      - name: Safely patch a COPY of live HTML and verify the actual source feed
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from urllib.request import urlopen, Request
+          import os, json, sys
+          sys.path.insert(0, 'ops/server')
+          from publish_lehrstellen import patch_landing
+          def get(url):
+              with urlopen(Request(url, headers={'Cache-Control':'no-cache'}),timeout=25) as r:
+                  return r.read()
+          html=get('https://careeragency.ch/').decode('utf-8')
+          feed=json.loads(get('https://careeragency.ch/lehrstellen.json'))
+          if not isinstance(feed,list) or len(feed)<50 or any(j.get('source')!='yousty.ch' for j in feed):
+              raise SystemExit('Expected verified public Yousty feed')
+          before=html.count('Der Lehrstellenpool wird vorbereitet.')
+          patched,changes=patch_landing(html)
+          if before!=1:
+              raise SystemExit(f'Expected exactly one current temporary live guard, found {before}')
+          if 'Der Lehrstellenpool wird vorbereitet.' in patched:
+              raise SystemExit('Obsolete live guard remains in patched result')
+          out=Path(os.environ['RUNNER_TEMP'])/'preview-repaired-index.html'
+          out.write_text(patched,encoding='utf-8')
+          print(json.dumps({'public_feed_entries':len(feed),'temporary_guards_before':before,
+                            'temporary_guards_after':0,'patches':changes,
+                            'actual_live_html_structure_preserved':True}))
+          PY
+      - name: Install headless browser
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Confirm 185 cards render when only the guard is removed
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const path=require('node:path');
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1350,height:850}});
+            const html=fs.readFileSync(path.join(process.env.RUNNER_TEMP,'preview-repaired-index.html'),'utf8');
+            const errors=[],responses=[];
+            page.on('pageerror',e=>errors.push((e.name+':'+e.message).slice(0,250)));
+            page.on('response',r=>{if(r.url().includes('/lehrstellen.json'))responses.push(r.status());});
+            await page.route('https://careeragency.ch/',r=>r.fulfill({
+              status:200,contentType:'text/html;charset=utf-8',body:html,
+              headers:{'cache-control':'no-store'}
+            }));
+            try {
+              await page.goto('https://careeragency.ch/',{waitUntil:'domcontentloaded',timeout:30000});
+              await page.waitForFunction(
+                ()=>document.querySelector('#viewUnrated')?.textContent?.includes('(185)'),
+                {timeout:20000}
+              ).catch(()=>{});
+              await page.waitForTimeout(750);
+              const metrics=await page.evaluate(()=>({
+                open:document.querySelector('#viewUnrated')?.textContent||null,
+                cards:document.querySelectorAll('#newJobsList article').length,
+                status:(document.querySelector('#message')?.textContent||'').slice(0,130),
+                feedback_ready:window.CareerFeedbackReady===true
+              }));
+              console.log('PATCHED_BROWSER_METRICS='+JSON.stringify(metrics));
+              console.log('LEHRSTELLEN_FETCH_STATUS='+JSON.stringify(responses));
+              console.log('PAGE_ERRORS='+JSON.stringify(errors));
+              if(metrics.cards!==185||!metrics.open?.includes('(185)')||
+                 !responses.includes(200)||errors.length){
+                throw Error('Actual browser did not render all 185 apprenticeship listings');
+              }
+            }finally{await browser.close();}
+          })().catch(e=>{console.error('Preflight failed: '+e.message);process.exitCode=1;});
+          NODE
