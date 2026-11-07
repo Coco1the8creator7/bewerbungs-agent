@@ -21,7 +21,7 @@ p=Path('/usr/local/bin/careeragency-ops-command')
 s=p.read_text()
 needle='  *)\n    echo "Denied: SSH command is not on the Career.Agency allowlist."'
 assert needle in s, 'Unknown gateway format'
-if 'release-check\\\\ ' in s: raise SystemExit('Already installed')
+if 'exec sudo -n /usr/local/sbin/careeragency-release' in s: raise SystemExit('Already installed')
 addition='''  release-check\\ [0-9a-f]*|release-deploy\\ [0-9a-f]*|release-rollback\\ *)
     request="${SSH_ORIGINAL_COMMAND}"
     mode="${request%% *}"
