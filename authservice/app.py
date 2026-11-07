@@ -203,7 +203,7 @@ def mfa_confirm(data:Code,request:Request):
                     (int(now().timestamp())//30,u["id"]))
         con.execute("UPDATE career_auth.sessions SET mfa_verified_at=now() WHERE id=%s",(u["session_id"],))
         codes=[new_bearer_secret() for _ in range(10)]
-        con.executemany("INSERT INTO career_auth.recovery_codes(id,user_id,code_hash) VALUES(%s,%s,%s)",
+        con.cursor().executemany("INSERT INTO career_auth.recovery_codes(id,user_id,code_hash) VALUES(%s,%s,%s)",
                         [(uuid.uuid4(),u["id"],h) for _,h in codes])
     return {"recovery_codes":[t for t,_ in codes]}
 
