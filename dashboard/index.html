@@ -477,7 +477,7 @@ header .sub,.section-heading p{color:#6b5744}
   <div id="mobileJobSentinel" class="mobile-load" hidden><span id="mobileJobCount"></span><button type="button" class="secondary" onclick="appendJobBatch();observeMobileJobs()">Weitere 5 anzeigen</button></div>
   <div id="swipeUndoToast" class="job-swipe-undo" role="status" aria-live="polite" hidden><span id="swipeUndoText"></span><button type="button" id="swipeUndoButton" class="secondary">Rückgängig</button></div>
 </section>
-<footer class="bottom">
+<footer class="bottom" hidden>
   <details class="tools">
     <summary>Daten &amp; Entwicklung <span aria-hidden="true">⌄</span></summary>
     <div class="buttons">
@@ -2006,6 +2006,11 @@ el("loadGithubFeedback").addEventListener("click",async()=>{
 
 function updateFloatingSaveVisibility(){
  const main=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback");
+ if(document.querySelector("footer.bottom[hidden]")){
+  floating.hidden=true;
+  el("floatingSaveStatus").hidden=true;
+  return;
+ }
  if(document.body.dataset.activeMode!=="startseite"){
   floating.hidden=true;
   el("floatingSaveStatus").hidden=true;

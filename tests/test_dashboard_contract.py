@@ -63,8 +63,9 @@ class DashboardContractTests(unittest.TestCase):
         self.assertLess(overview, weekly)
         for marker in ('id="newCount"', 'id="unratedCount"', 'id="reviewTotalCount"', 'id="declinedNewCount"'):
             self.assertIn(marker, html)
-        self.assertIn('id="exportDecisions"', html)
+        self.assertIn('<footer class="bottom" hidden>', html)
         self.assertIn('class="tools"', html)
+        self.assertIn('id="floatingSaveGithubFeedback" type="button" class="floating-save" aria-label="Inseratebewertungen in GitHub speichern" hidden', html)
         self.assertIn('stage_changed_at', html)
         self.assertIn('id="persistEnabled"', html)
         self.assertIn('id="exportWorkspace"', html)

@@ -12,7 +12,7 @@ const header=html.slice(html.indexOf('<header class="career-app-header">'),html.
 const start=html.indexOf('id="mode-startseite"');
 const mission=html.indexOf('id="missionTitle"',start);
 const list=html.indexOf('id="newJobsTitle"',start);
-const footer=html.indexOf('<footer class="bottom">',list);
+const footer=html.indexOf('<footer class="bottom" hidden>',list);
 const world=html.indexOf('id="agencyWorld"',footer);
 const listing=html.slice(list,footer);
 const tools=html.slice(footer,world);
