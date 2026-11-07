@@ -164,7 +164,7 @@
   // No network request when nothing has changed.
   if(hasPending()&&navigator.onLine!==false)sync();
  }
- window.CareerFilterSync=Object.freeze({isConfirmed,sync});
+ window.CareerFilterSync=Object.freeze({isConfirmed,sync,hasPending});
  window.addEventListener("career-filter-rating-dirty",e=>capture(e.detail?.kind,e.detail?.job_id));
  window.addEventListener("career-feedback-ready",start);
  window.addEventListener("career-radar-ready",start);

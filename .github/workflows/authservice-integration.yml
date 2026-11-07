@@ -51,3 +51,31 @@ jobs:
       - run: python -m unittest discover -s crawler/tests -v
       - run: node --test tests/filter-sync.test.mjs tests/private-state.test.mjs
       - run: python -m compileall -q authservice crawler
+
+      - name: Synthetic private app HTTPS browser test
+        shell: bash
+        env:
+          CAREER_AUTH_DATABASE_URL: postgresql://postgres:testonly@localhost:5432/careeragency_auth_test
+          CAREER_AUTH_PUBLIC_ORIGIN: https://localhost:8443
+          CAREER_APP_ROOT: ${{ github.workspace }}/dashboard
+          CAREER_PUBLIC_FEED: /tmp/career-e2e-feed.json
+        run: |
+          set -euo pipefail
+          export CAREER_AUTH_TOTP_KEY=$(python -c 'from cryptography.fernet import Fernet;print(Fernet.generate_key().decode())')
+          python - <<'PYTEST'
+          import os,json,uuid,psycopg
+          from pathlib import Path
+          from auth.security import hash_password
+          with psycopg.connect(os.environ['CAREER_AUTH_DATABASE_URL']) as con:
+              for email in ['e2e-a@example.com','e2e-b@example.com']:
+                  con.execute("INSERT INTO career_auth.users(id,email,first_name,last_name,residence,password_hash,status,email_verified_at) VALUES(%s,%s,'Synthetic','E2E','ZH',%s,'active',now())",(uuid.uuid4(),email,hash_password('synthetic test password')))
+          Path('/tmp/career-e2e-feed.json').write_text(json.dumps([{'id':'apprenticeship-synthetic-e2e','source':'yousty.ch','title':'Lehrstelle Koch EFZ','company':'Fiktiver Betrieb','location':'Zürich','categories':['Lehrstelle','EFZ'],'description':'Fiktives Testinserat','url':'https://example.invalid/test','first_seen_at':'2026-11-07T12:00:00Z'}]))
+          PYTEST
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout /tmp/ca-e2e.key -out /tmp/ca-e2e.crt -days 1 -subj '/CN=localhost' >/dev/null 2>&1
+          python -m uvicorn authservice.asgi:app --host 127.0.0.1 --port 8443 --ssl-keyfile /tmp/ca-e2e.key --ssl-certfile /tmp/ca-e2e.crt > /tmp/ca-e2e-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..30}; do curl -kfsS https://localhost:8443/healthz >/dev/null && break; sleep 1; done
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node tests/private-app-e2e.cjs

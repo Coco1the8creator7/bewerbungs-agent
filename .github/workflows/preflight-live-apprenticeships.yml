@@ -46,8 +46,10 @@ jobs:
               raise SystemExit('Expected verified public Yousty feed')
           before=html.count('Der Lehrstellenpool wird vorbereitet.')
           patched,changes=patch_landing(html)
-          if before!=1:
-              raise SystemExit(f'Expected exactly one current temporary live guard, found {before}')
+          if before not in (0,1):
+              raise SystemExit(f'Unexpected number of obsolete guards: {before}')
+          if before==0 and (patched!=html or changes):
+              raise SystemExit('Already repaired live HTML must remain unchanged')
           if 'Der Lehrstellenpool wird vorbereitet.' in patched:
               raise SystemExit('Obsolete live guard remains in patched result')
           out=Path(os.environ['RUNNER_TEMP'])/'preview-repaired-index.html'
@@ -60,7 +62,7 @@ jobs:
         run: |
           npm install --no-save --ignore-scripts playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Confirm 185 cards render when only the guard is removed
+      - name: Confirm the current apprenticeship feed renders without obsolete guards
         shell: bash
         run: |
           node - <<'NODE'

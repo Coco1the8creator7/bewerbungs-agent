@@ -17,6 +17,7 @@
   if(window.CareerAccount){
    const logout=document.createElement("button");logout.type="button";logout.className="secondary";logout.textContent="Abmelden";
    logout.onclick=async()=>{logout.disabled=true;try{
+    await window.CareerAccountFlush?.();
     const response=await fetch("/api/auth/logout",{method:"POST",credentials:"same-origin",headers:{"Content-Type":"application/json"},body:"{}"});
     if(!response.ok)throw Error("Abmelden fehlgeschlagen");location.href="/account/login";
    }catch(error){logout.disabled=false;logout.textContent=error.message;}};

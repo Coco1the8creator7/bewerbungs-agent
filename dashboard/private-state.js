@@ -51,6 +51,11 @@
    return {...result,sha:String(result.revision)};
   }
  });
+ window.CareerAccountFlush=async()=>{
+  await Promise.all([...chains.values()]);
+  await window.CareerFilterSync?.sync();
+  if(window.CareerFilterSync?.hasPending())throw Error("Bewertungen noch nicht gespeichert. Bitte Synchronisation erneut versuchen.");
+ };
  document.addEventListener("DOMContentLoaded",()=>{
   document.querySelector("#githubToken")?.closest(".persist-panel")?.setAttribute("hidden","");
   const checkbox=document.getElementById("persistEnabled");if(checkbox){checkbox.checked=true;checkbox.disabled=true;}
