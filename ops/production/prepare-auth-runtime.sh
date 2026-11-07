@@ -48,7 +48,7 @@ fi
 release="/opt/careeragency/auth-releases/$sha"
 [[ ! -e "$release" && ! -L "$release" ]] || { echo 'Release directory already exists' >&2; exit 73; }
 mkdir -p "$tmp/runtime"
-cp -a "$tmp/repo/auth" "$tmp/repo/authservice" "$tmp/runtime/"
+cp -a "$tmp/repo/auth" "$tmp/repo/authservice" "$tmp/repo/dashboard" "$tmp/runtime/"
 python3 -m venv "$tmp/runtime/.venv"
 "$tmp/runtime/.venv/bin/python" -m pip install --disable-pip-version-check -r "$tmp/runtime/authservice/requirements.txt"
 "$tmp/runtime/.venv/bin/python" -m compileall -q "$tmp/runtime/auth" "$tmp/runtime/authservice"
