@@ -23,11 +23,13 @@ flowchart TD
  B -->|nach Aktivierung: /app und /api/auth| A[FastAPI Auth-Dienst]
  A --> DB[(PostgreSQL)]
  GH[GitHub main / Actions] -->|manueller geprüfter Rollout| C
- GH -.->|deaktivierte Legacy Pages/Import-Workflows| B
- E[Gmail / Yousty] -->|Gmail-Import stillgelegt; Servercrawler nur nach Freigabe| GH
+ GH -.->|deaktivierte Legacy Pages/Importer| B
+ G[Gmail] -.->|stillgelegter Legacy-Importer| GH
+ Y[Yousty] -->|nach dokumentierter Quellenfreigabe| K[Server-Crawler]
+ K --> F
 ```
 
-Pfeile zu Auth, Datenbank und Yousty-Servercrawler bilden Repository-Code oder einen offenen Vorschlag ab; sie bestätigen keine aktiven Produktionsverbindungen.
+Pfeile zu Auth, Datenbank und Crawler bilden den aktuellen Repository-Zielpfad ab; aktive Produktionsverbindungen sind nicht bestätigt.
 
 ## Komponenten und Aufgaben
 
