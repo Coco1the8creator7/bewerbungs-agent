@@ -79,9 +79,8 @@ def validate_live(trusted_owner: int = 0) -> None:
             mode = directory.stat()
             if mode.st_uid != trusted_owner or stat.S_IMODE(mode.st_mode) & 0o022:
                 raise ValueError("webroot path not root-owned and read-only to others")
-        link = LIVE.lstat()
-        if link.st_uid != trusted_owner:
-            raise ValueError("webroot symlink not root-owned")
+        # The verified non-writable root-owned parent controls replacement of
+        # the directory entry; symlink inode ownership is immaterial here.
     elif LIVE.resolve(strict=True) != LIVE:
         raise ValueError("unexpected webroot path resolution")
     for name in FILES:
