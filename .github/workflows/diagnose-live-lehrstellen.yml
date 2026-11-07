@@ -1,0 +1,92 @@
+name: Diagnose public Career.Agency apprenticeship visibility
+
+on:
+  push:
+    branches: [fix/live-lehrstellen-visibility-diagnostic]
+    paths:
+      - '.github/workflows/diagnose-live-lehrstellen.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fetch the ACTUAL live HTML and public JSON without SSH or cookies
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --max-time 30 \
+            --header 'Cache-Control: no-cache' \
+            https://careeragency.ch/ -o "$RUNNER_TEMP/live-index.html"
+          curl --fail --silent --show-error --location --max-time 30 \
+            --header 'Cache-Control: no-cache' \
+            https://careeragency.ch/lehrstellen.json -o "$RUNNER_TEMP/live-lehrstellen.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const path=require('path');
+          const temp=process.env.RUNNER_TEMP;
+          const html=fs.readFileSync(path.join(temp,'live-index.html'),'utf8');
+          const jobs=JSON.parse(fs.readFileSync(path.join(temp,'live-lehrstellen.json'),'utf8'));
+          const result={
+            actual_html_bytes:Buffer.byteLength(html),
+            feed_entries:Array.isArray(jobs)?jobs.length:'not_array',
+            only_yousty:Array.isArray(jobs)&&jobs.every(j=>j.source==='yousty.ch'),
+            live_html_fetches_new_feed:html.includes('fetch("./lehrstellen.json"'),
+            live_html_still_fetches_old_feed:html.includes('fetch("./jobs.json"'),
+            live_html_has_cards:html.includes('id="newJobsList"'),
+            live_html_has_archive_helper:html.includes('archiveLegacyWorkspaceOnce(saved)'),
+            live_html_has_adult_filter:html.includes('function visibleJobs(){return jobs.filter'),
+            live_html_has_initialize:html.includes('async function initialize(){'),
+          };
+          console.log(JSON.stringify(result));
+          if (!result.only_yousty||result.feed_entries<50)process.exitCode=1;
+          NODE
+      - name: Install headless browser
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Observe real browser errors and cards on live page
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1350,height:950}});
+            const errors=[], network=[];
+            page.on('pageerror',err=>errors.push((err.name+': '+err.message).slice(0,400)));
+            page.on('response',response=>{
+              if(response.url().includes('lehrstellen.json')||response.url().includes('jobs.json')){
+                network.push({path:new URL(response.url()).pathname,status:response.status()});
+              }
+            });
+            try {
+              await page.goto('https://careeragency.ch/',{waitUntil:'domcontentloaded',timeout:30000});
+              await page.waitForTimeout(5000);
+              const result=await page.evaluate(()=>({
+                document_title:document.title,
+                count_open:document.querySelector('#viewUnrated')?.textContent||null,
+                count_reviewed:document.querySelector('#viewReviewed')?.textContent||null,
+                count_interested:document.querySelector('#viewInterested')?.textContent||null,
+                count_hidden:document.querySelector('#viewDismissed')?.textContent||null,
+                card_count:document.querySelectorAll('#newJobsList article').length,
+                message_text:(document.querySelector('#message')?.textContent||'').slice(0,300),
+                ui_mode:location.hash,
+                js_ready:window.CareerFeedbackReady===true,
+                feed_requested:performance.getEntriesByType('resource').some(x=>x.name.includes('lehrstellen.json')),
+                visible_function_available:typeof window.CareerDossierJobs==='function',
+              }));
+              console.log('BROWSER_DIAGNOSTIC='+JSON.stringify(result));
+              console.log('FEED_NETWORK='+JSON.stringify(network));
+              console.log('SCRIPT_ERRORS='+JSON.stringify(errors.slice(0,8)));
+            }finally{await browser.close();}
+          })().catch(err=>{console.error('Browser setup failure '+err.message);process.exitCode=2;});
+          NODE
