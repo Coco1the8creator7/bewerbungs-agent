@@ -1,5 +1,5 @@
 name: Career.Agency controlled production release
-run-name: "Release \${{ github.event.issue.title || inputs.operation }} by \${{ github.actor }}"
+run-name: "Release ${{ github.event.issue.title || inputs.operation }} by ${{ github.actor }}"
 on:
   issues:
     types: [opened]
@@ -46,24 +46,24 @@ jobs:
       - name: Check out the exact main commit
         uses: actions/checkout@v4
         with:
-          ref: \${{ github.sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Validate owner request and select one scoped operation
         id: request
         shell: bash
         env:
-          EVENT: \${{ github.event_name }}
-          TITLE: \${{ github.event.issue.title }}
-          INPUT_OPERATION: \${{ inputs.operation }}
-          INPUT_ARGUMENT: \${{ inputs.argument }}
-          COMMIT: \${{ github.sha }}
+          EVENT: ${{ github.event_name }}
+          TITLE: ${{ github.event.issue.title }}
+          INPUT_OPERATION: ${{ inputs.operation }}
+          INPUT_ARGUMENT: ${{ inputs.argument }}
+          COMMIT: ${{ github.sha }}
         run: |
           set -euo pipefail
           if [[ "$EVENT" == issues ]]; then
             [[ "$TITLE" =~ ^CA-RELEASE:\ (frontend-check|frontend-deploy|frontend-rollback|radar-check|radar-deploy|radar-rollback)\ ([A-Za-z0-9T-]+)$ ]] || exit 64
-            operation="\${BASH_REMATCH[1]}"
-            argument="\${BASH_REMATCH[2]}"
+            operation="${BASH_REMATCH[1]}"
+            argument="${BASH_REMATCH[2]}"
           else
             operation="$INPUT_OPERATION"
             argument="$INPUT_ARGUMENT"
@@ -92,9 +92,9 @@ jobs:
       - name: Install pinned SSH credentials
         shell: bash
         env:
-          PRIVATE_KEY: \${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
-          KNOWN_HOSTS: \${{ secrets.CA_OPS_KNOWN_HOSTS }}
-          SSH_HOST: \${{ secrets.CA_OPS_HOST }}
+          PRIVATE_KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.CA_OPS_KNOWN_HOSTS }}
+          SSH_HOST: ${{ secrets.CA_OPS_HOST }}
         run: |
           set -euo pipefail
           umask 077
@@ -109,9 +109,9 @@ jobs:
         id: deploy
         shell: bash
         env:
-          SSH_HOST: \${{ secrets.CA_OPS_HOST }}
-          REMOTE: \${{ steps.request.outputs.remote }}
-          OPERATION: \${{ steps.request.outputs.operation }}
+          SSH_HOST: ${{ secrets.CA_OPS_HOST }}
+          REMOTE: ${{ steps.request.outputs.remote }}
+          OPERATION: ${{ steps.request.outputs.operation }}
         run: |
           set -euo pipefail
           if [[ "$OPERATION" == frontend-deploy || "$OPERATION" == radar-deploy ]]; then
@@ -148,7 +148,7 @@ jobs:
           set -euo pipefail
           curl --retry 3 --retry-delay 3 --fail --silent --show-error \
             -H 'Cache-Control: no-cache' \
-            "https://careeragency.ch/?release=\${{ github.run_id }}" \
+            "https://careeragency.ch/?release=${{ github.run_id }}" \
             -o "$RUNNER_TEMP/live_index.html"
           curl --retry 3 --retry-delay 3 --fail --silent --show-error \
             -H 'Cache-Control: no-cache' \
@@ -172,8 +172,8 @@ jobs:
         if: failure() && steps.request.outputs.operation == 'frontend-deploy' && steps.deploy.outputs.release_id != ''
         shell: bash
         env:
-          SSH_HOST: \${{ secrets.CA_OPS_HOST }}
-          RELEASE_ID: \${{ steps.deploy.outputs.release_id }}
+          SSH_HOST: ${{ secrets.CA_OPS_HOST }}
+          RELEASE_ID: ${{ steps.deploy.outputs.release_id }}
         run: |
           set -euo pipefail
           ssh -T -i "$RUNNER_TEMP/careeragency_release_key" \
@@ -188,8 +188,8 @@ jobs:
         if: failure() && steps.request.outputs.operation == 'radar-deploy' && steps.deploy.outputs.release_id != ''
         shell: bash
         env:
-          SSH_HOST: \${{ secrets.CA_OPS_HOST }}
-          RELEASE_ID: \${{ steps.deploy.outputs.release_id }}
+          SSH_HOST: ${{ secrets.CA_OPS_HOST }}
+          RELEASE_ID: ${{ steps.deploy.outputs.release_id }}
         run: |
           set -euo pipefail
           ssh -T -i "$RUNNER_TEMP/careeragency_release_key" \
