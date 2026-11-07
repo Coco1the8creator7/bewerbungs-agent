@@ -8,12 +8,15 @@ on:
   workflow_dispatch:
     inputs:
       operation:
-        description: "Allowlisted non-productive server operation"
+        description: "Allowlisted diagnostics (no database writes or deployment)"
         required: true
         type: choice
         options:
           - status
           - tests
+          - feed-audit
+          - crawler-probe
+          - release-check
 
 permissions:
   contents: read
@@ -32,7 +35,10 @@ jobs:
           github.event.issue.user.id == 343900642 &&
           (
             github.event.issue.title == 'CA-OPS: status' ||
-            github.event.issue.title == 'CA-OPS: tests'
+            github.event.issue.title == 'CA-OPS: tests' ||
+            github.event.issue.title == 'CA-OPS: feed-audit' ||
+            github.event.issue.title == 'CA-OPS: crawler-probe' ||
+            github.event.issue.title == 'CA-OPS: release-check'
           )
         ) ||
         (
@@ -40,7 +46,10 @@ jobs:
           github.actor == 'Coco1the8creator7' &&
           (
             inputs.operation == 'status' ||
-            inputs.operation == 'tests'
+            inputs.operation == 'tests' ||
+            inputs.operation == 'feed-audit' ||
+            inputs.operation == 'crawler-probe' ||
+            inputs.operation == 'release-check'
           )
         )
       )
@@ -65,11 +74,14 @@ jobs:
             case "$ISSUE_TITLE" in
               'CA-OPS: status') operation='status' ;;
               'CA-OPS: tests') operation='tests' ;;
+              'CA-OPS: feed-audit') operation='feed-audit' ;;
+              'CA-OPS: crawler-probe') operation='crawler-probe' ;;
+              'CA-OPS: release-check') operation='release-check' ;;
               *) echo "::error::Issue title is not an allowlisted server operation"; exit 1 ;;
             esac
           elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             case "$MANUAL_OPERATION" in
-              status|tests) operation="$MANUAL_OPERATION" ;;
+              status|tests|feed-audit|crawler-probe|release-check) operation="$MANUAL_OPERATION" ;;
               *) echo "::error::Not an allowlisted operation"; exit 1 ;;
             esac
           else
