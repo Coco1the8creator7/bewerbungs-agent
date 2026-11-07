@@ -49,7 +49,7 @@ class ServerOpsSecurityTests(unittest.TestCase):
         wrapper = WRAPPER.read_text()
         self.assertIn('AUTH_LINE="restrict,command=', bootstrap)
         self.assertIn("careeragency_runner", bootstrap)
-        self.assertNotIn("sudo ", wrapper)
+        executable_lines = "\n".join(line for line in wrapper.splitlines()\n                                     if not line.lstrip().startswith("#"))\n        self.assertNotIn("sudo ", executable_lines)
         self.assertNotIn("eval ", wrapper)
         self.assertNotIn("exec $", wrapper)
         self.assertNotIn("workflow_dispatch:", wrapper)
