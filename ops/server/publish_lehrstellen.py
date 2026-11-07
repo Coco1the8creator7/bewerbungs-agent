@@ -38,15 +38,15 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
     """
     changes: list[str] = []
 
-    def change(old: str, new: str, name: str) -> None:
+    def change(old: str, new: str, name: str, alternatives: tuple[str, ...] = ()) -> None:
         nonlocal html
         if old == new:
             return
         if html.count(old) == 1:
             html = html.replace(old, new, 1)
             changes.append(name)
-        elif new in html and old not in html:
-            return  # Already patched.
+        elif old not in html and (new in html or any(x in html for x in alternatives)):
+            return  # Already patched in a reviewed earlier landing variant.
         else:
             raise ValueError("Unsupported live landing revision at " + name)
 
@@ -72,6 +72,7 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
         ':getScore(j)??window.AgentCareerFilter?.classify(j)?.priority??null;',
         ':getScore(j)??null;',
         "remove_adult_score_prediction",
+        ("const predicted=null;",),
     )
     change(
         'fetch("./jobs.json",{cache:"no-store"})',
@@ -95,11 +96,13 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
         'el("message").textContent=visibleJobs().length+" Inserate in der Vorauswahl ("+(jobs.length-visibleJobs().length)+" zurückgestellt · Radar > Filter-KI). Alle Originaldaten und Bewertungen bleiben erhalten.";',
         'el("message").textContent=visibleJobs().length+" Lehrstellen geladen. Bestehende Bewertungen bleiben erhalten.";',
         "remove_personal_selection_message",
+        ('el("message").textContent=visibleJobs().length+" Inserate geladen. Bestehende Bewertungen und Inseratdaten bleiben erhalten.";',),
     )
     change(
         'el("message").textContent=visibleJobs().length+" Inserate vorausgewählt; "+(jobs.length-visibleJobs().length)+" im Radar zur Prüfung zurückgestellt. Bewertungen und Inseratdaten bleiben erhalten.";',
         'el("message").textContent=visibleJobs().length+" Lehrstellen geladen. Bestehende Bewertungen bleiben erhalten.";',
         "update_feed_success_message",
+        ('el("message").textContent=visibleJobs().length+" Inserate geladen. Bestehende Bewertungen und Inseratdaten bleiben erhalten.";',),
     )
     change(
         '   el("message").textContent="Lokaler Arbeitsstand geladen. GitHub-Feed derzeit nicht verfügbar: "+err.message;\n   return;',
