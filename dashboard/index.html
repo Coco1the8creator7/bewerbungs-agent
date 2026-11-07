@@ -2006,6 +2006,11 @@ el("loadGithubFeedback").addEventListener("click",async()=>{
 
 function updateFloatingSaveVisibility(){
  const main=el("saveGithubFeedback"),floating=el("floatingSaveGithubFeedback");
+ if(document.querySelector("footer.bottom[hidden]")){
+  floating.hidden=true;
+  el("floatingSaveStatus").hidden=true;
+  return;
+ }
  if(document.body.dataset.activeMode!=="startseite"){
   floating.hidden=true;
   el("floatingSaveStatus").hidden=true;
