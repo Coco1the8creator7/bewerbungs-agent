@@ -17,6 +17,9 @@ log() { logger -t careeragency-release -- "$*"; printf '%s\n' "$*"; }
 if [[ "$mode" == plan ]]; then
   printf 'commit=%s\n' "$sha"
   systemctl is-active careeragency-auth.service || true
+  printf 'live_path_kind=%s\n' "$([[ -L "$live" ]] && echo symlink || echo directory_or_missing)"
+  printf 'live_resolved_path=%s\n' "$(readlink -e "$live" || true)"
+  stat -Lc 'live_target_owner=%U:%G live_target_mode=%a' "$live" 2>/dev/null || true
   for f in /etc/careeragency/auth.env /etc/caddy/Caddyfile /opt/careeragency/auth-current; do
     if [[ -e "$f" ]]; then printf 'present=%s\n' "$f"; else printf 'missing=%s\n' "$f"; fi
   done
@@ -26,7 +29,9 @@ fi
 git -C "$src" fetch -q origin main
 [[ "$(git -C "$src" rev-parse origin/main)" == "$sha" ]] || { echo 'Checkout must equal current main'; exit 65; }
 [[ -z "$(git -C "$src" status --porcelain --untracked-files=no)" ]] || { echo 'Tracked local changes found'; exit 65; }
-[[ -d "$live" && ! -L "$live" && -f "$live/index.html" && ! -L "$live/index.html" ]] || exit 65
+# Pin the canonical release path; a normal current -> releases/<id> symlink
+# is supported, while external/untrusted/symlinked assets remain rejected.
+live=$(python3 "$src/ops/production/public_root.py") || exit 65
 install -d -m 0700 "$backup"
 cp -p /etc/caddy/Caddyfile "$backup/Caddyfile"
 if [[ "$mode" == lockdown ]]; then
