@@ -203,11 +203,13 @@ class SafeRadarReleaseTests(unittest.TestCase):
                 release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_production_workflow_requires_owner_and_pinned_ssh(self):
-        workflow = (ROOT / ".github/workflows/radar-safe-release.yml").read_text()
+        workflow = (ROOT / ".github/workflows/careeragency-production.yml").read_text()
         self.assertIn("github.event.issue.user.id == 343900642", workflow)
         self.assertIn("StrictHostKeyChecking=yes", workflow)
         self.assertIn("careeragency-ops", workflow)
         self.assertIn("radar-release-", workflow)
+        self.assertIn("radar-deploy", workflow)
+        self.assertIn("Roll back failed Radar deploy", workflow)
         self.assertNotIn("ssh-keyscan", workflow)
         self.assertNotIn("StrictHostKeyChecking=no", workflow)
         cmd = (ROOT / "ops/server/ca-ops-command").read_text()

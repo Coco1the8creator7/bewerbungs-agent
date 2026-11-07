@@ -1,71 +1,209 @@
-name: Career.Agency production deployment
-run-name: "Production ${{ inputs.operation }} by ${{ github.actor }}"
+name: Career.Agency controlled production release
+run-name: "Release ${{ github.event.issue.title || inputs.operation }} by ${{ github.actor }}"
 on:
+  issues:
+    types: [opened]
   workflow_dispatch:
     inputs:
       operation:
-        description: "Inspect, deploy or rollback static frontend"
+        description: "Backend, frontend or scoped Radar operation"
         required: true
         type: choice
-        options: [check, deploy, rollback]
-      release_id:
-        description: "Required for rollback (release ID from prior deployment)"
-        required: false
+        options:
+          - frontend-check
+          - frontend-deploy
+          - frontend-rollback
+          - radar-check
+          - radar-deploy
+          - radar-rollback
+          - backend-plan
+          - backend-lockdown
+          - backend-prepare
+          - backend-activate
+      argument:
+        description: "Current main SHA for check/deploy, or release ID for rollback"
+        required: true
         type: string
+
 permissions:
   contents: read
-concurrency:
-  group: careeragency-production
-  cancel-in-progress: false
+
 jobs:
-  deploy:
-    if: github.ref == 'refs/heads/main'
+  release:
+    if: >-
+      github.repository == 'Coco1the8creator7/bewerbungs-agent' &&
+      (
+        (github.event_name == 'issues' &&
+         github.event.issue.user.id == 343900642 &&
+         startsWith(github.event.issue.title, 'CA-RELEASE: ')) ||
+        (github.event_name == 'workflow_dispatch' &&
+         github.actor == 'Coco1the8creator7' &&
+         github.ref == 'refs/heads/main')
+      )
+    concurrency:
+      group: careeragency-production
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     environment: careeragency-ops
     timeout-minutes: 15
     steps:
-      - name: Validate request
+      - name: Check out the exact main commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Validate owner request and select one scoped operation
+        id: request
         shell: bash
         env:
-          OPERATION: ${{ inputs.operation }}
-          RELEASE_ID: ${{ inputs.release_id }}
+          EVENT: ${{ github.event_name }}
+          TITLE: ${{ github.event.issue.title }}
+          INPUT_OPERATION: ${{ inputs.operation }}
+          INPUT_ARGUMENT: ${{ inputs.argument }}
+          COMMIT: ${{ github.sha }}
         run: |
           set -euo pipefail
-          case "$OPERATION" in
-            check|deploy) [[ -z "$RELEASE_ID" ]] ;;
-            rollback) [[ "$RELEASE_ID" =~ ^[0-9]{8}T[0-9]{6}Z-[a-f0-9]{12}$ ]] ;;
+          if [[ "$EVENT" == issues ]]; then
+            [[ "$TITLE" =~ ^CA-RELEASE:\ (frontend-check|frontend-deploy|frontend-rollback|radar-check|radar-deploy|radar-rollback|backend-plan|backend-lockdown|backend-prepare|backend-activate)\ ([A-Za-z0-9T-]+)$ ]] || exit 64
+            operation="${BASH_REMATCH[1]}"
+            argument="${BASH_REMATCH[2]}"
+          else
+            operation="$INPUT_OPERATION"
+            argument="$INPUT_ARGUMENT"
+          fi
+          case "$operation" in
+            frontend-check|frontend-deploy|radar-check|radar-deploy|backend-plan|backend-lockdown|backend-prepare|backend-activate)
+              [[ "$argument" =~ ^[0-9a-f]{40}$ && "$argument" == "$COMMIT" ]] || {
+                echo "::error::Check/deploy must target this exact main commit"
+                exit 64
+              } ;;
+            frontend-rollback|radar-rollback)
+              [[ "$argument" =~ ^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}$ ]] || exit 64 ;;
             *) exit 64 ;;
           esac
-      - name: Install SSH key and pin host
+          case "$operation" in
+            frontend-check) remote="release-check $argument" ;;
+            frontend-deploy) remote="release-deploy $argument" ;;
+            frontend-rollback) remote="release-rollback $argument" ;;
+            radar-check) remote="radar-release-check $argument" ;;
+            radar-deploy) remote="radar-release-deploy $argument" ;;
+            radar-rollback) remote="radar-release-rollback $argument" ;;
+            backend-plan) remote="production-plan $argument" ;;
+            backend-lockdown) remote="production-lockdown $argument" ;;
+            backend-prepare) remote="production-prepare $argument" ;;
+            backend-activate) remote="production-activate $argument" ;;
+          esac
+          printf 'operation=%s\n' "$operation" >> "$GITHUB_OUTPUT"
+          printf 'remote=%s\n' "$remote" >> "$GITHUB_OUTPUT"
+
+      - name: Install pinned SSH credentials
         shell: bash
         env:
           PRIVATE_KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
           KNOWN_HOSTS: ${{ secrets.CA_OPS_KNOWN_HOSTS }}
+          SSH_HOST: ${{ secrets.CA_OPS_HOST }}
         run: |
           set -euo pipefail
           umask 077
-          mkdir -p ~/.ssh
-          printf '%s\n' "$PRIVATE_KEY" > ~/.ssh/id_ed25519
-          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-          test -s ~/.ssh/id_ed25519
-          test -s ~/.ssh/known_hosts
-      - name: Execute pinned operation via SSH
+          [[ "$SSH_HOST" =~ ^[A-Za-z0-9.-]+$ ]]
+          printf '%s\n' "$PRIVATE_KEY" > "$RUNNER_TEMP/careeragency_release_key"
+          printf '%s\n' "$KNOWN_HOSTS" > "$RUNNER_TEMP/careeragency_release_hosts"
+          chmod 600 "$RUNNER_TEMP/careeragency_release_key" "$RUNNER_TEMP/careeragency_release_hosts"
+          ssh-keygen -y -f "$RUNNER_TEMP/careeragency_release_key" >/dev/null
+          ssh-keygen -F "$SSH_HOST" -f "$RUNNER_TEMP/careeragency_release_hosts" >/dev/null
+
+      - name: Execute scoped release operation
+        id: deploy
         shell: bash
         env:
           SSH_HOST: ${{ secrets.CA_OPS_HOST }}
-          OPERATION: ${{ inputs.operation }}
-          RELEASE_ID: ${{ inputs.release_id }}
-          COMMIT: ${{ github.sha }}
+          REMOTE: ${{ steps.request.outputs.remote }}
+          OPERATION: ${{ steps.request.outputs.operation }}
         run: |
           set -euo pipefail
-          [[ "$SSH_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]
-          [[ "$COMMIT" =~ ^[a-f0-9]{40}$ ]]
-          if [[ "$OPERATION" == rollback ]]; then
-            remote="release-rollback $RELEASE_ID"
+          if [[ "$OPERATION" == frontend-deploy || "$OPERATION" == radar-deploy ]]; then
+            ssh -T -i "$RUNNER_TEMP/careeragency_release_key" \
+              -o BatchMode=yes -o IdentitiesOnly=yes \
+              -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no \
+              -o StrictHostKeyChecking=yes \
+              -o UserKnownHostsFile="$RUNNER_TEMP/careeragency_release_hosts" \
+              -o ConnectTimeout=12 "careeragency_runner@$SSH_HOST" "$REMOTE" |
+              tee "$RUNNER_TEMP/release_result"
+            release_id="$(sed -n 's/^rollback_release_id=//p; s/^radar_release_id=//p' "$RUNNER_TEMP/release_result" | tail -n 1)"
+            if [[ -n "$release_id" ]]; then
+              [[ "$release_id" =~ ^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}$ ]] || exit 64
+              printf 'release_id=%s\n' "$release_id" >> "$GITHUB_OUTPUT"
+            fi
           else
-            remote="release-$OPERATION $COMMIT"
+            ssh -T -i "$RUNNER_TEMP/careeragency_release_key" \
+              -o BatchMode=yes -o IdentitiesOnly=yes \
+              -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no \
+              -o StrictHostKeyChecking=yes \
+              -o UserKnownHostsFile="$RUNNER_TEMP/careeragency_release_hosts" \
+              -o ConnectTimeout=12 "careeragency_runner@$SSH_HOST" "$REMOTE"
           fi
-          ssh -T -i ~/.ssh/id_ed25519 \
-            -o BatchMode=yes -o StrictHostKeyChecking=yes \
-            -o ConnectTimeout=15 -o IdentitiesOnly=yes \
-            "careeragency_runner@$SSH_HOST" "$remote"
+
+      - name: Verify public site and protected routes
+        if: startsWith(steps.request.outputs.operation, 'frontend-') || steps.request.outputs.operation == 'backend-activate'
+        shell: bash
+        run: python3 ops/production/smoke-production.py
+
+      - name: Verify apprenticeship-only Radar
+        if: startsWith(steps.request.outputs.operation, 'radar-')
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --retry 3 --retry-delay 3 --fail --silent --show-error \
+            -H 'Cache-Control: no-cache' \
+            "https://careeragency.ch/?release=${{ github.run_id }}" \
+            -o "$RUNNER_TEMP/live_index.html"
+          curl --retry 3 --retry-delay 3 --fail --silent --show-error \
+            -H 'Cache-Control: no-cache' \
+            "https://careeragency.ch/radar.js?v=20261107-lehrstellen-radar-1" \
+            -o "$RUNNER_TEMP/live_radar.js"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ["RUNNER_TEMP"])
+          html=(p/"live_index.html").read_text(encoding="utf-8")
+          js=(p/"live_radar.js").read_text(encoding="utf-8")
+          assert 'class="radar-markets"' not in html, "market switch visible"
+          assert 'fetch("./lehrstellen.json",{cache:"no-store"})' in html, "public landing feed patch lost"
+          assert 'const market=()=>"apprentice"' in js, "Radar not apprenticeship-only"
+          assert 'fetch("./lehrstellen.json",{cache:"no-store"})' in js, "Radar wrong source"
+          assert 'id="radarDial"' in html, "Zen radar missing"
+          print("radar_production_smoke=passed")
+          PY
+
+      - name: Roll back failed frontend deploy
+        if: failure() && steps.request.outputs.operation == 'frontend-deploy' && steps.deploy.outputs.release_id != ''
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.CA_OPS_HOST }}
+          RELEASE_ID: ${{ steps.deploy.outputs.release_id }}
+        run: |
+          set -euo pipefail
+          ssh -T -i "$RUNNER_TEMP/careeragency_release_key" \
+            -o BatchMode=yes -o IdentitiesOnly=yes \
+            -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$RUNNER_TEMP/careeragency_release_hosts" \
+            -o ConnectTimeout=12 "careeragency_runner@$SSH_HOST" \
+            "release-rollback $RELEASE_ID"
+
+      - name: Roll back failed Radar deploy
+        if: failure() && steps.request.outputs.operation == 'radar-deploy' && steps.deploy.outputs.release_id != ''
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.CA_OPS_HOST }}
+          RELEASE_ID: ${{ steps.deploy.outputs.release_id }}
+        run: |
+          set -euo pipefail
+          ssh -T -i "$RUNNER_TEMP/careeragency_release_key" \
+            -o BatchMode=yes -o IdentitiesOnly=yes \
+            -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$RUNNER_TEMP/careeragency_release_hosts" \
+            -o ConnectTimeout=12 "careeragency_runner@$SSH_HOST" \
+            "radar-release-rollback $RELEASE_ID"

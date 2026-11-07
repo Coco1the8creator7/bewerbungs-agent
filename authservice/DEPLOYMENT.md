@@ -1,6 +1,6 @@
 # Career.Agency – Authentifizierung, Release-Gates und Betriebsgrenzen
 
-**Stand:** Code im Repository, **nicht produktiv freigeschaltet**. Die Migration `001_auth_foundation.sql` und die ergänzende `002_auth_runtime.sql` sind auf einer isolierten CI-Datenbank zu prüfen. Ein Git-Merge ersetzt weder Datenbankmigration noch Serverdeployment.
+**Stand 07.11.2026:** Auth-Backend und Kontorouten sind auf `careeragency.ch` aktiviert. Der Server-Smoke bestätigt Landingpage/Feed/Login/Registrierung und den Schutz privater App-, Admin- und API-Routen ohne Sitzung. Reale Admin-Anmeldung mit TOTP, Zustellung einer echten E-Mail und Zwei-Konten-Abnahme sind noch nicht nachgewiesen. Ein Git-Merge ersetzt weder Datenbankmigration noch Serverdeployment.
 
 ## Beschlossene MVP-Eigenschaften
 - Kostenlos; keine Zahlungsschranke.
@@ -13,7 +13,7 @@
 - Kein Klassenmodell, keine neue Datenfreigabe und keine Migration persönlicher Daten.
 - Vorhandene Landingpage, Radar, Dossiers, Agency, globales Design und Lehrstellenfeed bleiben unverändert.
 
-## Backend-Start (erst nach Freigabe)
+## Laufender Produktionsbetrieb
 Die ASGI-Anwendung liegt unter `authservice.asgi:app`. Sie braucht eine dedizierte PostgreSQL-Rolle mit minimalen Rechten und die folgenden **serverseitigen** Umgebungsvariablen:
 ```text
 CAREER_AUTH_DATABASE_URL          # PostgreSQL DSN, nur auf dem Server
@@ -38,20 +38,20 @@ Die folgende Skizze ist **keine** produktionsfertige Caddyfile. Erst den aktuell
 - Öffentliche Landingpage und der zulässige zentrale Lehrstellenfeed können öffentlich bleiben. Es dürfen keine früheren Gmail-Jobdaten veröffentlicht werden.
 - Ein noch öffentliches GitHub-Pages-Deployment darf **nicht** als geschützte Instanz behandelt werden. Vor Produktionsfreigabe alternative URLs und alte Kopien prüfen.
 
-## Release-Gates
-1. Tatsächliches Caddy-Routing, Dienste, PostgreSQL-Installation, Backups und SMTP verifizieren.
-2. Migrationen auf separat gesicherter Testdatenbank ausführen; PostgreSQL-CI muss vollständig grün sein.
-3. Benutzerregistrierung → Bestätigung → Warteseite → Admin-MFA → Freigabe → Benachrichtigung → Zugriff real testen.
-4. Direktaufrufe von `/app/`, statischen Ressourcen, `/admin`, und Backend-API ohne Session/mit fremdem Konto prüfen.
-5. Sessionwiderruf bei Sperrung und Reset, Brute-Force-Schutz, einmalige Tokens, TOTP-Replay und Wiederherstellungscodes testen.
-6. HTML/JS-Regression der bisherigen Landingpage, Hauptnavigation, Radar, Filter-KI, Dossier Studio und Agency; alter Gmail-Feed bleibt verborgen.
-7. Sicherheitsreview, Datenschutz- und Datenaufbewahrungsregeln für Minderjährige, E-Mail-Zustellbarkeit und Wiederherstellung im Notfall.
-8. Erst dann getrennte Produktivfreigabe mit überprüftem Rollback.
+## Noch offene Produktionsabnahmen
+1. Echte Benutzerregistrierung, Bestätigungsmail, Wartestatus und Admin-Freigabe mit erfolgreicher Nachricht vollständig durchspielen.
+2. Admin-Anmeldung samt TOTP und Sicherung der Einmalcodes bestätigen.
+3. Mit zwei echten Testkonten fremde Datenzugriffe und Sessionwiderruf nach Sperrung/Reset abnehmen.
+4. SMTP-Zustellung im Zielpostfach nachweisen; die erfolgreiche SMTP-Anmeldung allein reicht dafür nicht.
+5. Datenschutzinformationen, Datenaufbewahrung und Notfallwiederherstellung für die Zielgruppe abnehmen.
+6. Für künftige Runtime-/Schemaänderungen einen geprüften Backend-Release-/Rollback-Pfad ergänzen.
+
+Der Read-only-Produktionsplan hat Caddy-Routing, Dienste, PostgreSQL und Backups sowie anonyme Sperren für private Seiten/API geprüft. Das ersetzt keine der oben genannten interaktiven Abnahmen.
 
 ## Offene Risiken / Implementierungsgrenzen
-- Der bestehende GitHub-Actions-SSH-Runner erlaubt **nur das Staging** von Commits in seinem privaten Workspace. Er hat weder produktive Caddy-/systemd-Rechte noch Datenbankmigration- oder Deployment-Rechte. Keine Umgehung durch SSH-Key-Entfernung oder globale sudo-Rechte.
+- Der GitHub-Actions-SSH-Runner darf nur fest erlaubte, argumentvalidierte Produktionsaktionen für statische Website, Radar und den gebündelten Auth-Rollout ausführen. Er hat keine beliebigen Caddy-, systemd- oder Datenbankrechte. Laufende Backend-Runtime-Updates und Schemaänderungen benötigen weiterhin einen geprüften Release-/Rollback-Pfad.
 - SMTP-Versand erfolgt derzeit direkt nach der Transaktion. Bei Mailfehlern ist eine nachträgliche Zustellung nicht garantiert; für Produktionsbetrieb transaktionales Outbox-/Retry-Verfahren ergänzen.
-- `/app/` wird vom neuen ASGI-Dienst **noch nicht ausgeliefert**, da zunächst die vorhandenen statischen Daten und öffentlichen Kopien geprüft werden müssen. Eine reine Kontooberfläche darf keine Scheinsicherheit vermitteln.
+- `/app/` und zugehörige private Ressourcen werden vom ASGI-Dienst ausgeliefert und ohne Sitzung serverseitig abgewiesen. Die produktive Zwei-Konten-Isolation ist noch nicht separat abgenommen.
 - Reverse-Proxy-IP-Zuordnung, sichere Protokollaufbewahrung, Löschung abgelaufener Tokens und Datenschutzinformationen sind für produktiven Betrieb noch abzunehmen.
 - Passwort- und MFA-Management sowie E-Mail-Verifizierung brauchen Tests in einem realen, geschützten Stagingbetrieb; ein erfolgreicher CI-Test allein ist kein Produktivnachweis.
 

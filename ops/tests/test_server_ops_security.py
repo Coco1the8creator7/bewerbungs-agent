@@ -50,6 +50,26 @@ class ServerOpsSecurityTests(unittest.TestCase):
                 self.assertEqual(proc.returncode, 64)
                 self.assertIn("Denied", proc.stderr)
 
+    def test_auth_preflight_uses_active_release_path(self):
+        preflight = (ROOT / "ops/production/auth-preflight.sh").read_text()
+        self.assertIn("/opt/careeragency/auth-current/authservice", preflight)
+        self.assertNotIn("/opt/careeragency/authservice", preflight)
+
+    def test_unified_release_workflow_has_scoped_operations(self):
+        workflow = (ROOT / ".github/workflows/careeragency-production.yml").read_text()
+        for operation in ("frontend-check", "frontend-deploy", "frontend-rollback",
+                          "radar-check", "radar-deploy", "radar-rollback",
+                          "backend-plan", "backend-lockdown", "backend-prepare", "backend-activate"):
+            self.assertIn(operation, workflow)
+        self.assertIn("github.event.issue.user.id == 343900642", workflow)
+        self.assertIn("CA-RELEASE: ", workflow)
+        self.assertIn("cancel-in-progress: false", workflow)
+        self.assertIn("StrictHostKeyChecking=yes", workflow)
+        self.assertIn("Roll back failed Radar deploy", workflow)
+        self.assertIn('remote="production-activate $argument"', workflow)
+        self.assertIn("smoke-production.py", workflow)
+        self.assertNotIn("\\${{", workflow)
+
     def test_issue_titles_and_actor_are_hard_coded(self):
         yaml_text = WORKFLOW.read_text()
         self.assertIn("github.event.issue.user.id == 343900642", yaml_text)
