@@ -22,7 +22,8 @@ import tempfile
 from datetime import datetime, timezone
 
 REPO = "https://github.com/Coco1the8creator7/bewerbungs-agent.git"
-LIVE = Path("/var/www/careeragency/current")
+WEBROOT_PARENT = Path("/var/www/careeragency")
+LIVE = WEBROOT_PARENT / "current"
 BACKUPS = Path("/var/backups/careeragency-ops/radar-releases")
 LOCK = Path("/run/lock/careeragency-release.lock")
 FILES = ("index.html", "radar.js", "radar-model.js")
@@ -43,9 +44,45 @@ def run(*args: str, cwd: Path | None = None, timeout: int = 125) -> bytes:
     ).stdout
 
 
-def validate_live() -> None:
-    if LIVE.is_symlink() or not LIVE.is_dir():
-        raise ValueError("unexpected or symlinked webroot")
+def validate_live(trusted_owner: int = 0) -> None:
+    """Accept a root-controlled, in-tree release symlink, never an arbitrary target.
+
+    The production host can point /var/www/careeragency/current at a versioned
+    directory. Verify that the pointer, its parent and every target directory
+    are non-writable by other accounts; target must remain inside the expected
+    Career.Agency webroot. This prevents writing to attacker-selected paths.
+    """
+    root = WEBROOT_PARENT.resolve(strict=True)
+    if root != WEBROOT_PARENT or not root.is_dir():
+        raise ValueError("unexpected webroot parent or symlink")
+    if not LIVE.exists() or not LIVE.is_dir():
+        raise ValueError("live webroot unavailable")
+    if LIVE.is_symlink():
+        # Resolve ".." lexically first, without following intermediate links.
+        # This rejects hidden symlinks inside the release-directory chain.
+        raw = LIVE.readlink()
+        raw = raw if raw.is_absolute() else LIVE.parent / raw
+        lexical = Path(os.path.normpath(str(raw)))
+        if lexical == root or not lexical.is_relative_to(root):
+            raise ValueError("webroot symlink target escapes approved webroot")
+        target = LIVE.resolve(strict=True)
+        if target != lexical:
+            raise ValueError("nested symlink in webroot target")
+        # A directory name could itself be a symlink; reject every link in
+        # the chain. The only permitted link is /current itself.
+        parts = [root]
+        for name in lexical.relative_to(root).parts:
+            parts.append(parts[-1] / name)
+        for directory in [LIVE.parent, *parts]:
+            if directory.is_symlink() or not directory.is_dir():
+                raise ValueError("untrusted symlink in webroot target")
+            mode = directory.stat()
+            if mode.st_uid != trusted_owner or stat.S_IMODE(mode.st_mode) & 0o022:
+                raise ValueError("webroot path not root-owned and read-only to others")
+        # The verified non-writable root-owned parent controls replacement of
+        # the directory entry; symlink inode ownership is immaterial here.
+    elif LIVE.resolve(strict=True) != LIVE:
+        raise ValueError("unexpected webroot path resolution")
     for name in FILES:
         path = LIVE / name
         if path.is_symlink() or not path.is_file() or path.stat().st_size > 4_000_000:
