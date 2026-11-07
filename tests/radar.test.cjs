@@ -56,8 +56,8 @@ test("radar is isolated from adult CRM and uses opt-in local persistence",()=>{
  for(const marker of ["radarTabOverview","radarTabProfile","radarTabReview","radarSkills-interessen","radarSources","radarReviewList","radarSaveOptIn"]){
   assert.ok(html.includes('id="'+marker+'"'),marker);
  }
- assert.match(html,/src="\.\/radar-model\.js\?v=20261027-zen-magenta-1"/);
- assert.match(html,/src="\.\/radar\.js\?v=20261027-zen-magenta-1"/);
+ assert.match(html,/src="\.\/radar-model\.js\?v=20261107-lehrstellen-radar-1"/);
+ assert.match(html,/src="\.\/radar\.js\?v=20261107-lehrstellen-radar-1"/);
  assert.match(html,/href="\.\/radar\.css\?v=20261027-radar-clean-1"/);
  assert.match(js,/AgentStore\.saveRadar/);
  assert.match(js,/AgentStore\.clearRadar/);
@@ -106,14 +106,16 @@ test("career ratings, skills and source choices are disjoint from youth profile"
  assert.deepEqual(migrated.skills.berufserfahrung,["Fachbauleitung"]);
 });
 
-test("Radar uses original public jobs.json and keeps legacy CRM intact",()=>{
+test("Radar loads public apprenticeships without exposing adult mode; adult CRM remains intact",()=>{
  const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
  const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
  const nav=fs.readFileSync(path.join(root,"dashboard/mode-nav.js"),"utf8");
- assert.match(html,/data-market="career"/);
- assert.match(html,/data-market="apprentice"/);
+ assert.doesNotMatch(html,/class="radar-market"/);
+ assert.doesNotMatch(html,/data-market="career"/);
+ assert.doesNotMatch(html,/data-market="apprentice"/);
  assert.doesNotMatch(html,/id="radarSourcesInfo"/);
- assert.match(radar,/fetch\("\.\/jobs\.json"/);
+ assert.match(radar,/fetch\("\.\/lehrstellen\.json"/);
+ assert.doesNotMatch(radar,/fetch\("\.\/jobs\.json"/);
  assert.match(radar,/model\.careerCriteria/);
  assert.match(radar,/model\.matchesPreferences/);
  assert.match(radar,/AgentCareerFilter\.isVisible/);
@@ -204,4 +206,38 @@ test("Radar shows new precise scope reasons and retains the audit queue",()=>{
  assert.match(radar,/adult&&mode==="filtered"\?true/);
  assert.equal(preselector.classify({title:"Fachbauleiter Fernwärme"}).visible,true);
  assert.equal(preselector.classify({title:"Bauleiter Fernwärme"}).visible,false);
+});
+
+test("published Yousty apprenticeships count even without 'Lehrstelle' in title",()=>{
+ const now=new Date("2026-11-07T16:30:00Z");
+ const item={id:"apprenticeship-"+("a".repeat(24)),title:"Kauffrau EFZ 2027",
+  source:"yousty.ch",categories:["Lehrstelle","EFZ","Lehrbeginn 2027"],
+  first_seen_at:"2026-11-07T09:00:00Z"};
+ assert.equal(model.isApprenticeship(item),true);
+ assert.equal(model.summarize([item],now,"apprentice").total,1);
+ assert.equal(model.summarize([item],now,"apprentice").sinceYesterday,1);
+ assert.equal(model.newJobs([item],now,"apprentice","yesterday").length,1);
+ assert.equal(model.isApprenticeship({...item,categories:[]}),false);
+ assert.equal(model.isApprenticeship({...item,source:"jobs.ch"}),false);
+ assert.equal(model.isApprenticeship({...item,id:"job-old"}),false);
+});
+
+test("Radar forces apprentice mode after restoring old local state and never accesses adult feed",()=>{
+ const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
+ const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ assert.match(radar,/const market=\(\)=>"apprentice"/);
+ assert.match(radar,/state\.market="apprentice"/);
+ assert.match(radar,/Object\.assign\(state,model\.normalizedState\(saved\)\);[\s\S]*?state\.market="apprentice"/);
+ assert.doesNotMatch(radar,/\.radar-market/);
+ assert.match(radar,/fetch\("\.\/lehrstellen\.json"/);
+ assert.match(radar,/model\.isApprenticeship\(j\)/);
+ assert.doesNotMatch(html,/Berufsstellen · persönlicher Test/);
+ assert.doesNotMatch(html,/Lehrstellen · Vorschau/);
+ assert.match(html,/>Filter-KI<\/button>/);
+ assert.match(html,/id="radarDial" data-design="zen"/);
+ assert.match(html,/id="radarTargetCount"/);
+ assert.match(html,/id="radarPeriodControls"/);
+ assert.match(html,/id="radarSources"/);
+ assert.match(radar,/AgentStore\.saveRadar/);
+ assert.match(radar,/AgentStore\.loadRadar/);
 });

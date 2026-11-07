@@ -162,7 +162,8 @@ test("published Zen assets have matching cache-busting versions and highest styl
  const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
  const version="20261027-zen-magenta-1";
  for(const src of ["radar-model.js","radar-designs.js","radar.js"]){
-  assert.ok(html.includes('src="./'+src+'?v='+version+'"'),src+" must bypass stale browser cache");
+  const scriptVersion=src==="radar-designs.js"?version:"20261107-lehrstellen-radar-1";
+  assert.ok(html.includes('src="./'+src+'?v='+scriptVersion+'"'),src+" must bypass stale browser cache");
  }
  for(const src of ["radar.css","radar-designs.css"]){
   const assetVersion=src==="radar.css"?"20261027-radar-clean-1":version;
