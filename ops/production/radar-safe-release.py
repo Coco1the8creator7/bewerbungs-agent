@@ -44,49 +44,52 @@ def run(*args: str, cwd: Path | None = None, timeout: int = 125) -> bytes:
     ).stdout
 
 
-def validate_live(trusted_owner: int = 0) -> None:
-    """Accept a root-controlled, in-tree release symlink, never an arbitrary target.
+PUBLIC_ROOT_HELPER = Path("/usr/local/lib/careeragency-ops/radar-public-root.py")
 
-    The production host can point /var/www/careeragency/current at a versioned
-    directory. Verify that the pointer, its parent and every target directory
-    are non-writable by other accounts; target must remain inside the expected
-    Career.Agency webroot. This prevents writing to attacker-selected paths.
+
+def validate_live(trusted_uids: set[int] | None = None, helper_owner: int = 0) -> None:
+    """Use the existing production public-root policy, never a second policy.
+
+    The canonical policy permits only root and the trusted deployment user,
+    controls group-writer membership and rejects world-writable paths.
+    This release additionally forbids intermediate symlinks and unexpected
+    asset links; these rules do not relax the canonical policy.
     """
+    import importlib.util
+
+    helper = PUBLIC_ROOT_HELPER
+    if helper.is_symlink() or not helper.is_file():
+        raise ValueError("missing or symlinked installed public-root validator")
+    helper_stat = helper.stat()
+    if helper_stat.st_uid != helper_owner or stat.S_IMODE(helper_stat.st_mode) & 0o022:
+        raise ValueError("untrusted public-root validator permissions")
+    spec = importlib.util.spec_from_file_location("careeragency_public_root_for_radar", helper)
+    if spec is None or spec.loader is None:
+        raise ValueError("public-root validator cannot be loaded")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
     root = WEBROOT_PARENT.resolve(strict=True)
     if root != WEBROOT_PARENT or not root.is_dir():
         raise ValueError("unexpected webroot parent or symlink")
-    if not LIVE.exists() or not LIVE.is_dir():
-        raise ValueError("live webroot unavailable")
     if LIVE.is_symlink():
-        # Resolve ".." lexically first, without following intermediate links.
-        # This rejects hidden symlinks inside the release-directory chain.
         raw = LIVE.readlink()
         raw = raw if raw.is_absolute() else LIVE.parent / raw
         lexical = Path(os.path.normpath(str(raw)))
-        if lexical == root or not lexical.is_relative_to(root):
-            raise ValueError("webroot symlink target escapes approved webroot")
-        target = LIVE.resolve(strict=True)
-        if target != lexical:
+        if lexical != LIVE.resolve(strict=True):
             raise ValueError("nested symlink in webroot target")
-        # A directory name could itself be a symlink; reject every link in
-        # the chain. The only permitted link is /current itself.
-        parts = [root]
-        for name in lexical.relative_to(root).parts:
-            parts.append(parts[-1] / name)
-        for directory in [LIVE.parent, *parts]:
-            if directory.is_symlink() or not directory.is_dir():
-                raise ValueError("untrusted symlink in webroot target")
-            mode = directory.stat()
-            if mode.st_uid != trusted_owner or stat.S_IMODE(mode.st_mode) & 0o022:
-                raise ValueError("webroot path not root-owned and read-only to others")
-        # The verified non-writable root-owned parent controls replacement of
-        # the directory entry; symlink inode ownership is immaterial here.
-    elif LIVE.resolve(strict=True) != LIVE:
-        raise ValueError("unexpected webroot path resolution")
+
+    resolved = module.resolve_public_root(
+        base=WEBROOT_PARENT, trusted_uids=trusted_uids
+    )
+    if resolved != LIVE.resolve(strict=True):
+        raise ValueError("live target differs from canonical webroot validation")
     for name in FILES:
         path = LIVE / name
         if path.is_symlink() or not path.is_file() or path.stat().st_size > 4_000_000:
             raise ValueError("missing or untrusted live file: " + name)
+        if path.stat().st_mode & stat.S_IWOTH:
+            raise ValueError("world-writable live asset: " + name)
 
 
 def patch_index(live_html: str, repo_html: str) -> tuple[str, list[str]]:

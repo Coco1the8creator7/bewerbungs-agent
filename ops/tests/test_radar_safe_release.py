@@ -137,20 +137,21 @@ class SafeRadarReleaseTests(unittest.TestCase):
                 (target/name).write_text("test",encoding="utf-8")
             current=base/"current"
             current.symlink_to(target,target_is_directory=True)
-            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current):
-                release.validate_live(trusted_owner=os.geteuid())
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
+                release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_rejects_webroot_symlink_escape(self):
         with tempfile.TemporaryDirectory() as folder:
             base=Path(folder)/"careeragency"
             base.mkdir()
+            (base/"releases").mkdir()
             external=Path(folder)/"other-project"
             external.mkdir()
             current=base/"current"
             current.symlink_to(external,target_is_directory=True)
-            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current):
-                with self.assertRaisesRegex(ValueError,"escapes approved webroot"):
-                    release.validate_live(trusted_owner=os.geteuid())
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
+                with self.assertRaisesRegex(ValueError,"outside direct application releases"):
+                    release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_rejects_nested_symlinks_even_within_webroot(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -161,11 +162,11 @@ class SafeRadarReleaseTests(unittest.TestCase):
             alias.symlink_to(base/"releases",target_is_directory=True)
             current=base/"current"
             current.symlink_to(alias/"real",target_is_directory=True)
-            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current):
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
                 with self.assertRaisesRegex(ValueError,"nested symlink"):
-                    release.validate_live(trusted_owner=os.geteuid())
+                    release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
-    def test_rejects_group_writable_webroot_parent(self):
+    def test_rejects_world_writable_webroot_parent(self):
         with tempfile.TemporaryDirectory() as folder:
             base=Path(folder)/"careeragency"
             target=base/"releases"/"rev"
@@ -174,10 +175,32 @@ class SafeRadarReleaseTests(unittest.TestCase):
                 (target/name).write_text("test",encoding="utf-8")
             current=base/"current"
             current.symlink_to(target,target_is_directory=True)
-            base.chmod(0o775)
-            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current):
-                with self.assertRaisesRegex(ValueError,"not root-owned and read-only"):
-                    release.validate_live(trusted_owner=os.geteuid())
+            base.chmod(0o777)
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
+                with self.assertRaisesRegex(ValueError,"world-writable path"):
+                    release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
+
+    def test_installer_bundles_canonical_helper_with_reviewed_gateway(self):
+        installer=(ROOT/"ops/production/install-radar-release.sh").read_text()
+        gateway=(ROOT/"ops/production/radar-safe-release.py").read_text()
+        self.assertIn("ops/production/public_root.py",installer)
+        self.assertIn('install -o root -g root -m 0644 "$helper_src" "$helper_dest"',installer)
+        self.assertIn("module.resolve_public_root(",gateway)
+        self.assertIn('PUBLIC_ROOT_HELPER = Path("/usr/local/lib/careeragency-ops/radar-public-root.py")',gateway)
+
+    def test_trusted_deployer_group_writers_allowed_if_only_trusted_uids(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base=Path(folder)/"careeragency"
+            target=base/"releases"/"rev"
+            target.mkdir(parents=True)
+            for name in release.FILES:
+                (target/name).write_text("test",encoding="utf-8")
+            current=base/"current"
+            current.symlink_to(target,target_is_directory=True)
+            target.chmod(0o775)
+            # The canonical production rule validates group membership.
+            with patch.object(release,"WEBROOT_PARENT",base),patch.object(release,"LIVE",current),patch.object(release,"PUBLIC_ROOT_HELPER",ROOT/"ops/production/public_root.py"):
+                release.validate_live(trusted_uids={os.geteuid()}, helper_owner=os.geteuid())
 
     def test_production_workflow_requires_owner_and_pinned_ssh(self):
         workflow = (ROOT / ".github/workflows/radar-safe-release.yml").read_text()
