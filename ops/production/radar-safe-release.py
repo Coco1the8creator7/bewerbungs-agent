@@ -44,7 +44,7 @@ def run(*args: str, cwd: Path | None = None, timeout: int = 125) -> bytes:
     ).stdout
 
 
-def validate_live() -> None:
+def validate_live(trusted_owner: int = 0) -> None:
     """Accept a root-controlled, in-tree release symlink, never an arbitrary target.
 
     The production host can point /var/www/careeragency/current at a versioned
@@ -71,10 +71,10 @@ def validate_live() -> None:
             if directory.is_symlink() or not directory.is_dir():
                 raise ValueError("untrusted symlink in webroot target")
             mode = directory.stat()
-            if mode.st_uid != 0 or stat.S_IMODE(mode.st_mode) & 0o022:
+            if mode.st_uid != trusted_owner or stat.S_IMODE(mode.st_mode) & 0o022:
                 raise ValueError("webroot path not root-owned and read-only to others")
         link = LIVE.lstat()
-        if link.st_uid != 0:
+        if link.st_uid != trusted_owner:
             raise ValueError("webroot symlink not root-owned")
     elif LIVE.resolve(strict=True) != LIVE:
         raise ValueError("unexpected webroot path resolution")
