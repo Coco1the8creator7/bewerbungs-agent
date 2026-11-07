@@ -13,11 +13,11 @@ on:
         required: true
 permissions:
   contents: read
-concurrency:
-  group: careeragency-production
-  cancel-in-progress: false
 jobs:
   rollout:
+    concurrency:
+      group: careeragency-production
+      cancel-in-progress: false
     if: >-
       github.repository == 'Coco1the8creator7/bewerbungs-agent' &&
       ((github.event_name == 'issues' && github.event.issue.user.id == 343900642 && startsWith(github.event.issue.title, 'CA-PROD: ')) ||
