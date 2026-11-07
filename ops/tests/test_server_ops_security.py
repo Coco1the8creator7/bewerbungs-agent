@@ -71,6 +71,7 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn("Compare live landingpage with repository commit", workflow)
         self.assertIn("live_index_comparison=different", workflow)
         self.assertIn("SequenceMatcher", workflow)
+        self.assertEqual(workflow.count("if: steps.request.outputs.operation != 'frontend-check'"), 2)
         self.assertNotIn("\\${{", workflow)
 
     def test_issue_titles_and_actor_are_hard_coded(self):
