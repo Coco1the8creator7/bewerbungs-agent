@@ -11,7 +11,8 @@ def main():
         raise SystemExit("Interactive TTY required; refuses automated invocation.")
     if os.environ.get("CAREER_AUTH_ALLOW_ADMIN_BOOTSTRAP")!="YES_ONCE":
         raise SystemExit("Set CAREER_AUTH_ALLOW_ADMIN_BOOTSTRAP=YES_ONCE locally after review.")
-    address=canonical_email(input("Administrator E-Mail: "))
+    default_email="colinmarcfuchsai@gmail.com"
+    address=canonical_email(input(f"Administrator E-Mail [{default_email}]: ").strip() or default_email)
     first=input("Vorname: ").strip()
     last=input("Nachname: ").strip()
     password=getpass.getpass("Neues Passwort (min. 12 Zeichen): ")
