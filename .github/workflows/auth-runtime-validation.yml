@@ -18,7 +18,9 @@ jobs:
         run: |
           set -euo pipefail
           bash -n ops/production/prepare-auth-runtime.sh
-          systemd-analyze verify ops/production/careeragency-auth.service || test "$?" -eq 1
+          grep -Fq 'User=careeragency_auth' ops/production/careeragency-auth.service
+          grep -Fq -- '--host 127.0.0.1' ops/production/careeragency-auth.service
+          grep -Fq 'EnvironmentFile=/etc/careeragency/auth.env' ops/production/careeragency-auth.service
       - name: Validate Python imports and package structure
         run: |
           python -m compileall -q auth authservice
