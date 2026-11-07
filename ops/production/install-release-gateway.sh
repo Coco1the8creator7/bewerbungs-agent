@@ -9,7 +9,6 @@ test -f /usr/local/sbin/careeragency-admin
 id careeragency_runner >/dev/null
 install -d -m 0700 /var/backups/careeragency-ops
 ts=$(date -u +%Y%m%dT%H%M%SZ)
-cp -p /usr/local/bin/careeragency-ops-command "/var/backups/careeragency-ops/forced-command-$ts"
 cp -p /etc/sudoers.d/careeragency-admin "/var/backups/careeragency-ops/sudoers-$ts"
 install -o root -g root -m 0750 "$src/release-gateway.sh" /usr/local/sbin/careeragency-release
 printf '%s\n' 'careeragency_runner ALL=(root) NOPASSWD: /usr/local/sbin/careeragency-release *' > /etc/sudoers.d/careeragency-release
