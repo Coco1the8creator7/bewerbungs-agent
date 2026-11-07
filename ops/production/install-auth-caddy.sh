@@ -61,6 +61,7 @@ caddy reload --config "$file" >/dev/null || {
 }
 # Fail-closed public smoke tests; any bypass restores the prior Caddyfile.
 [[ "$(probe https://careeragency.ch/account/login)" == 200 ]] || exit 73
+[[ "$(probe https://careeragency.ch/account.html)" == 308 ]] || exit 73
 [[ "$(probe https://careeragency.ch/api/auth/me)" == 401 ]] || exit 73
 [[ "$(probe https://careeragency.ch/admin)" == 401 ]] || exit 73
 [[ "$(probe https://careeragency.ch/app/)" == 401 ]] || exit 73

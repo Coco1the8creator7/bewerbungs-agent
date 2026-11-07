@@ -65,6 +65,8 @@ class AuthIntegration(unittest.TestCase):
         self.assertEqual(self.client.get("/api/admin/users").status_code,200)
         self.assertEqual(self.client.get("/admin").status_code,200)
         self.assertEqual(self.client.get("/app/").status_code,200)
+        self.assertIn("keine privaten Dossiers automatisch",self.client.get("/app/").text)
+        self.assertEqual(self.client.get("/app/storage.js").status_code,404)
         self.assertEqual(self.client.get("/app/../authservice/app.py").status_code,404)
         r=self.post("/api/admin/users/"+str(user_id)+"/activate")
         self.assertEqual(r.status_code,200,r.text)

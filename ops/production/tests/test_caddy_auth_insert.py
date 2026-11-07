@@ -26,7 +26,7 @@ careeragency.ch {
         self.assertIn("respond @feed",updated)
         self.assertIn("handle /app/*",updated)
         self.assertEqual(updated.count("handle /admin {"),1)
-        self.assertEqual(module.brace_pairs(updated).__len__(),8)
+        self.assertEqual(module.brace_pairs(updated).__len__(),9)
     def test_invalid_or_ambiguous(self):
         for original in ("", "other.example.com { respond ok }",
                          "careeragency.ch { respond ok", 

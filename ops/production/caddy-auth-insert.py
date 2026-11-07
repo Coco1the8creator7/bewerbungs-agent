@@ -17,6 +17,10 @@ ROUTES = """
     handle /account/* {
         reverse_proxy 127.0.0.1:8765
     }
+    # Inert historical Supabase pilot must not become a second login entry.
+    handle /account.html {
+        redir /account/login 308
+    }
     handle /admin {
         reverse_proxy 127.0.0.1:8765
     }
