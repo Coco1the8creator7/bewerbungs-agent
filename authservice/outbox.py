@@ -41,5 +41,7 @@ def deliver_batch(connection,send_message=send,maximum=20):
     return {"sent":sent,"failed":failed}
 def main():
     from .app import db
-    print(json.dumps(deliver_batch(db)))
+    result=deliver_batch(db)
+    print(json.dumps(result))
+    raise SystemExit(1 if result["failed"] else 0)
 if __name__=="__main__":main()

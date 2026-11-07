@@ -4,6 +4,8 @@ After=network-online.target postgresql.service
 Wants=network-online.target
 Requires=postgresql.service
 
+OnFailure=careeragency-ops-alert@%n.service
+
 [Service]
 Type=simple
 User=careeragency_auth

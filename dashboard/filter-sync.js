@@ -6,7 +6,7 @@
  const pending=empty();
  const confirmed=new Set();
  const touchedBeforeReady=[];
- let ready=false,busy=false,lastError="",successUntil=0,writing=Promise.resolve(),storageError="";
+ let ready=false,starting=false,busy=false,lastError="",successUntil=0,writing=Promise.resolve(),storageError="";
  let writeRevision=0,savedRevision=0;
  const button=document.getElementById("radarSyncFeedback");
  const status=document.getElementById("radarSyncStatus");
@@ -117,8 +117,9 @@
   }
  }
  async function start(){
-  if(ready)return;
+  if(ready||starting)return;
   if(!window.CareerFeedbackReady||!window.CareerRadarReady)return;
+  starting=true;
   try{
    const old=await window.AgentStore.loadFilterSync();
    if(old&&old.version===1){
@@ -158,13 +159,13 @@
   }catch(err){
    storageError="Lokale Bewertungen konnten nicht geladen werden: "+err.message;
   }
-  ready=true;
+  ready=true;starting=false;
   for(const item of touchedBeforeReady.splice(0))capture(item.kind,item.id);
   show();syncUpdated();
   // No network request when nothing has changed.
   if(hasPending()&&navigator.onLine!==false)sync();
  }
- window.CareerFilterSync=Object.freeze({isConfirmed,sync,hasPending});
+ window.CareerFilterSync=Object.freeze({isConfirmed,sync,hasPending,isReady:()=>ready});
  window.addEventListener("career-filter-rating-dirty",e=>capture(e.detail?.kind,e.detail?.job_id));
  window.addEventListener("career-feedback-ready",start);
  window.addEventListener("career-radar-ready",start);
@@ -178,5 +179,6 @@
   e.preventDefault();e.returnValue="";
  });
  setInterval(()=>{if(hasPending()&&navigator.onLine!==false)sync();else show();},20000);
+ show();
  start();
 })();
