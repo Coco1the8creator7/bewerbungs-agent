@@ -68,6 +68,9 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn("Roll back failed Radar deploy", workflow)
         self.assertIn('remote="production-activate $argument"', workflow)
         self.assertIn("smoke-production.py", workflow)
+        self.assertIn("Compare live landingpage with repository commit", workflow)
+        self.assertIn("live_index_comparison=different", workflow)
+        self.assertIn("SequenceMatcher", workflow)
         self.assertNotIn("\\${{", workflow)
 
     def test_issue_titles_and_actor_are_hard_coded(self):
