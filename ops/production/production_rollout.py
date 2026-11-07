@@ -35,7 +35,10 @@ def legacy_basic_auth_only(config):
 
 def patch_caddy(text, legacy_basic_auth_reviewed=False):
     marker='# Career.Agency private API v1'
-    if marker in text:return text
+    if marker in text:
+        # Upgrade the exact earlier redirect. Without '*', Caddy interprets the
+        # leading slash as a matcher, leaving /account.html with no response.
+        return text.replace('        redir /account/login 308\n', '        redir * /account/login 308\n')
     matches=list(re.finditer(r'(?m)^careeragency\.ch\s*\{\s*$',text))
     if len(matches)!=1:raise ValueError('Expected exactly one standalone careeragency.ch site block; review current Caddyfile')
     if re.search(r'(?m)^\s*(rewrite|try_files|uri|method|redir|forward_auth)\s',text):
@@ -49,7 +52,7 @@ def patch_caddy(text, legacy_basic_auth_reviewed=False):
     insertion='''
     # Career.Agency private API v1
     handle /account.html {
-        redir /account/login 308
+        redir * /account/login 308
     }
     handle /lehrstellen.json {
         root * /srv/careeragency-public

@@ -45,3 +45,19 @@ jobs:
           Path('/tmp/LegacyPatched').write_text(module.patch_caddy(Path('/tmp/LegacyCaddyfile').read_text(),legacy_basic_auth_reviewed=True))
           PY
           docker run --rm -v /tmp/LegacyPatched:/etc/caddy/Caddyfile:ro caddy:2.10.2 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+
+      - name: Verify redirect semantics in adapted proxy configuration
+        run: |
+          docker run --rm -v /tmp/LegacyPatched:/etc/caddy/Caddyfile:ro caddy:2.10.2 caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile > /tmp/patched-adapted.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          def walk(value):
+              if isinstance(value,dict):
+                  yield value
+                  for child in value.values(): yield from walk(child)
+              elif isinstance(value,list):
+                  for child in value: yield from walk(child)
+          handlers=[x for x in walk(json.loads(Path('/tmp/patched-adapted.json').read_text())) if x.get('handler')=='static_response' and x.get('headers',{}).get('Location')==['/account/login']]
+          assert len(handlers)==1 and str(handlers[0]['status_code'])=='308', 'Legacy account redirect must point to login with status 308'
+          PY
