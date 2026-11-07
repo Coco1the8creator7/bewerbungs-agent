@@ -17,8 +17,8 @@ from crawler.yousty_preview_export import accepted_ids, verified_profile_url
 
 DB_NAME = "careeragency_test"
 SOURCE = "yousty_poc"
-QUALIFICATION = re.compile(r"\\b(EFZ|EBA)\\b", re.IGNORECASE)
-JOB_PREFIX = re.compile(r"\\b(?:lehrstelle|lehrling|ausbildungsplatz|lehre als|lernende[rn]?)\\b", re.I)
+QUALIFICATION = re.compile(r"\b(EFZ|EBA)\b", re.IGNORECASE)
+JOB_PREFIX = re.compile(r"\b(?:lehrstelle|lehrling|ausbildungsplatz|lehre als|lernende[rn]?)\b", re.I)
 
 
 def collect(conn, verified: set[str]) -> list[dict]:
