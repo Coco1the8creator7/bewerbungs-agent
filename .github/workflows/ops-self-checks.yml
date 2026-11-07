@@ -25,6 +25,19 @@ jobs:
       - uses: actions/checkout@v4
       - name: Shell syntax and denylist tests
         run: python3 -m unittest discover -s ops/tests -v
+      - name: Integration - write a Git snapshot as restricted Linux user
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo useradd --create-home --shell /bin/bash careeragency_runner
+          sudo install -d -o careeragency_runner -g careeragency_runner -m 0700 /home/careeragency_runner/careeragency-workspace
+          sudo install -d -o careeragency_runner -g careeragency_runner -m 0700 /home/careeragency_runner/careeragency-workspace/releases
+          git_sha=b80941a80968880b63db6d2d1ce0be8feebaa720
+          sudo -u careeragency_runner bash ops/server/stage_commit.sh "$git_sha"
+          sudo -u careeragency_runner bash ops/server/stage_commit.sh "$git_sha"
+          test -f "/home/careeragency_runner/careeragency-workspace/releases/$git_sha/AGENTS.md"
+          test -d "/home/careeragency_runner/careeragency-workspace/releases/$git_sha/dashboard"
+          echo "Workspace write integration: success"
       - name: Parse workflow YAML and verify issue trigger
         run: |
           python3 -m pip install --quiet 'PyYAML==6.0.2'
