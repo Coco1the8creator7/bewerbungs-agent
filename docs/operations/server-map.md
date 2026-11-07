@@ -7,11 +7,11 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Repository-Stand | **VERIFIZIERT** | Aktueller `main`: `d1c402b3d20c6aaf64b3e82573ca971bf0361024`; öffentlicher Live-Diff gegen Vorgänger `eb551491045718e9e54d7b10ad6f17eb73506088`, 08.11.2026. |
-| PR-Lage | **VERIFIZIERT** | #115/#118 sowie #148 (Releasepfade), #149 (Live-Diff), #151 (read-only Check) und #153 (Symlink-Gateway) gemergt. |
+| geprüfter Anwendungscode | **VERIFIZIERT** | Zuletzt geprüfter Anwendungscode in `main`: `d1c402b3d20c6aaf64b3e82573ca971bf0361024`; öffentlicher Live-Diff gegen Vorgänger `eb551491045718e9e54d7b10ad6f17eb73506088`, 08.11.2026. PR #154 enthält nur diese Dokumentationskorrektur. |
+| PR-Lage | **VERIFIZIERT** | #115/#118 sowie #148 (Releasepfade), #149 (Live-Diff), #151 (read-only Check), #153 (Symlink-Gateway) und #154 (Serverlandkarte) gemergt. |
 | aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Caddy, Auth-Backend, PostgreSQL und geschützte Kontorouten produktiv aktiv; anonyme Smoke-Checks erfolgreich. Echte Admin-/Mail-/Zwei-Konten-Abnahme offen. |
 | Rollout des geprüften Commits | **TEILWEISE VERIFIZIERT** | Auth-Aktivierung erfolgreich. Read-only Frontend-Abgleich meldet eine Abweichung zwischen Live-`index.html` und `main`; vollständiger Frontend-Deploy ist deshalb gesperrt. |
-| letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub APIs, scoped SSH-Rollout und direkte anonyme HTTPS-Prüfungen; Details unten. |
+| letzte Prüfung | **VERIFIZIERT** | 08.11.2026; GitHub APIs und öffentlicher read-only Frontend-Diff; Produktionsschreibzugriff nicht ausgeführt. Details unten. |
 
 ## Architekturübersicht
 
