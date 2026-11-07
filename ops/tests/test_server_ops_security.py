@@ -66,7 +66,7 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn("StrictHostKeyChecking=yes", workflow)
         self.assertIn("Rollback failed Radar deploy", workflow)
         self.assertIn("smoke-production.py", workflow)
-        self.assertNotIn("\\\\${{", workflow)
+        self.assertNotIn("\\${{", workflow)
 
     def test_issue_titles_and_actor_are_hard_coded(self):
         yaml_text = WORKFLOW.read_text()
