@@ -7,8 +7,8 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Repository-Stand | **VERIFIZIERT** | 890b8e53c6d9eab35d5e29466048d2ad6af5c82f, 07.11.2026; GitHub Commit API |
-| PR-Lage | **VERIFIZIERT** | #104 gemergt; #102 offen. #102 basiert auf a562f50, vor PRs #103 und #104. |
+| geprüfter Repository-Stand | **VERIFIZIERT** | 861c1e076d06d09a10133bb126a4cfa906c7cf9b, 07.11.2026; GitHub Commit API |
+| PR-Lage | **VERIFIZIERT** | #102 gemergt in 861c1e0; #104 und PRs #103/#97 sind ebenfalls enthalten. |
 | aktuelle Serverkonfiguration | **OFFEN** | Bei dieser Bestandsaufnahme kein Live-Statusabruf; frühere Nachweise sind zeitgebunden und teils widersprüchlich. |
 | Rollout des geprüften Commits | **OFFEN** | Repository-Commit oder CI allein belegt kein Produktionsdeployment. |
 | letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub Repository-, Datei-, Commit- und PR-API; keine Serverabfrage oder Änderung. |
@@ -22,9 +22,9 @@ flowchart TD
  C --> F[Lehrstellen-Feed]
  B -->|nach Aktivierung: /app und /api/auth| A[FastAPI Auth-Dienst]
  A --> DB[(PostgreSQL)]
- GH[GitHub main / Actions] -->|SFTP Workflow im main| C
- GH -->|Pages und Import-Workflows| B
- E[Gmail / Yousty] -->|Import in Actions; Servercrawler nur im offenen PR| GH
+ GH[GitHub main / Actions] -->|manueller geprüfter Rollout| C
+ GH -.->|deaktivierte Legacy Pages/Import-Workflows| B
+ E[Gmail / Yousty] -->|Gmail-Import stillgelegt; Servercrawler nur nach Freigabe| GH
 ```
 
 Pfeile zu Auth, Datenbank und Yousty-Servercrawler bilden Repository-Code oder einen offenen Vorschlag ab; sie bestätigen keine aktiven Produktionsverbindungen.
@@ -35,33 +35,33 @@ Pfeile zu Auth, Datenbank und Yousty-Servercrawler bilden Repository-Code oder e
 |---|---|---|
 | dashboard/ | Statisches Frontend, Landingpage und Radar | **AUS REPOSITORY**. PR #104 lädt lehrstellen.json statt des früheren jobs.json. Live-Stand: **OFFEN**. |
 | careeragency.ch | Domain in Workflows und Live-Preflight | **AUS REPOSITORY**. DNS-Ziel, aktives Zertifikat und aktuelle Caddy-Routen: **OFFEN**. |
-| Infomaniak / Caddy | Produktionsziel und Reverse Proxy | **OFFEN** für aktuellen Host- und Laufzeitzustand. Frühere Gesprächsnachweise ersetzen keinen aktuellen Serverabruf. |
+| Infomaniak / Caddy | Produktionsziel und Reverse Proxy | **AUS REPOSITORY**. Aktuelle Host- und Laufzeitkonfiguration bleiben **OFFEN**; kein aktueller Liveabruf. |
 | /var/www/careeragency/current | Im SSH-Dispatcher geprüfter Landingpage-Pfad | **AUS REPOSITORY**: status prüft index.html dort. Inhalt und Symlink-Ziel nicht live geprüft. |
 | /srv/careeragency-landing-feed/jobs.json | Im Dispatcher geprüfte Feed-Datei | **AUS REPOSITORY**. Abgleich mit lehrstellen.json ist **OFFEN**. |
 | authservice/ | FastAPI Authentifizierung und private API | **AUS REPOSITORY**; produktiv aktiv: **OFFEN**. |
 | PostgreSQL / careeragency_auth | Auth- und Nutzerdaten gemäß Migrationen | **AUS REPOSITORY**; aktive Datenbank, Schema, Rollen und Backups nicht geprüft. |
-| Yousty-Crawler | Lehrstellenfeed erzeugen | Im aktuellen main kein installierter Server-Timer belegt. PR #102 schlägt Dienst und Timer vor: **OFFEN / nur PR-Vorschlag**. |
-| GitHub Pages | Zusätzlicher statischer Veröffentlichungsweg | Workflows existieren (**AUS REPOSITORY**); aktiv/öffentlich: **OFFEN**. |
+| Yousty-Crawler | Zentraler Lehrstellenfeed und Statusprotokoll | Service/Timer sind nach PR #102 **AUS REPOSITORY**; Timer bleibt laut PR ohne dokumentierte Quellenfreigabe deaktiviert. Auf dem Server installiert/aktiv: **OFFEN**. |
+| GitHub Pages | Historischer statischer Veröffentlichungsweg | Workflow bleibt manuell startbar, Deploy-Job ist deaktiviert (**AUS REPOSITORY**); live öffentlich erreichbar: **OFFEN**. |
 | GitHub Actions | Import, Tests und Veröffentlichung | Definitionen **AUS REPOSITORY**; aktuelle Laufhistorie nicht geprüft. |
 
 ## Anfrage- und Datenwege
 
-1. **Statische Webauslieferung — AUS REPOSITORY:** Browser → careeragency.ch → vorgesehene Infomaniak-/Caddy-Auslieferung. .github/workflows/deploy-infomaniak.yml lädt bei passenden main-Änderungen oder manuellem Start per SFTP. PR-Events deployen nicht. Secret-Namen: INFOMANIAK_SFTP_HOST, INFOMANIAK_SFTP_USER, INFOMANIAK_SFTP_PASSWORD, INFOMANIAK_SFTP_PATH, INFOMANIAK_SSH_KNOWN_HOSTS. Ziel und Secret-Konfiguration sind nicht geprüft.
-2. **GitHub Pages — AUS REPOSITORY:** deploy-pages.yml veröffentlicht dashboard/. Importworkflows veröffentlichen Pages ebenfalls. Maßgebliche URL und Parallelbetrieb: **OFFEN**.
-3. **Jobmail-Import — AUS REPOSITORY:** GitHub Actions liest Gmail-Abo-E-Mails, normalisiert Inserate und aktualisiert dashboard/jobs.json; der Workflow ist täglich geplant und manuell startbar. Secret-Namen: GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN. Werte gehören nur in den Secret-Speicher.
-4. **Manuelle URLs — AUS REPOSITORY:** import-stellenurls.yml verarbeitet maximal 20 öffentliche URLs und aktualisiert Feed und Pages.
-5. **Lehrstellen-Radar — AUS REPOSITORY:** PR #104 stellt den Radar auf Lehrstellen um und erwartet ./lehrstellen.json. Live-Route und Inhalt nicht geprüft.
+1. **Statische Webauslieferung — AUS REPOSITORY:** Browser → careeragency.ch → vorgesehene Infomaniak-/Caddy-Auslieferung. deploy-infomaniak.yml ist auf manuellen Start begrenzt und führt nur Prüfungen aus; SFTP-Veröffentlichung ist entfernt. Ein freigegebener, manueller Infomaniak-Rollout ist in docs/production-completion.md beschrieben. Er wurde hier nicht ausgeführt oder live bestätigt.
+2. **GitHub Pages — AUS REPOSITORY:** deploy-pages.yml ist stillgelegt; der Deploy-Job ist deaktiviert. Pages ist nicht mehr als Produktionsweg vorgesehen. Ob eine alte Pages-Kopie noch erreichbar ist: **OFFEN**.
+3. **Jobmail-Import — AUS REPOSITORY:** alter Gmail-Importer ist mit if: false stillgelegt; Zeitplan und automatisches Schreiben in dashboard/jobs.json sind deaktiviert. Die bisherigen Secret-Namen dürfen nicht als Hinweis auf aktive Nutzung gelten.
+4. **Manuelle URLs — AUS REPOSITORY:** alter URL-Importer ist mit if: false stillgelegt; keine Feed-/Pages-Veröffentlichung aus diesem Workflow.
+5. **Lehrstellen-Radar — AUS REPOSITORY:** main stellt den Radar auf Lehrstellen um und erwartet ./lehrstellen.json. Live-Route und Inhalt nicht geprüft.
 6. **Konten und private Daten — BESCHLOSSEN / AUS REPOSITORY:** eigener FastAPI-Dienst mit PostgreSQL, E-Mail-Verifizierung, manueller Admin-Freigabe und TOTP für Administratoren. Alte IndexedDB-Daten werden nicht automatisch zugeordnet. Dossier-Studio-Dateien und Cloud-Synchronisation sind nicht im aktuellen Loginpfad. Installation und produktive Abnahme: **OFFEN**.
-7. **Crawler und Outbox — OFFEN im main:** PR #102 schlägt nutzergetrennte PostgreSQL-Ablage, verschlüsselte Mail-Outbox und begrenzte Yousty-Crawler-Läufe vor. Nicht als bestehende Produktionsdienste behandeln.
+7. **Crawler und Outbox — AUS REPOSITORY:** PR #102 ist gemergt und enthält nutzergetrennte PostgreSQL-Ablage, verschlüsselte Mail-Outbox und begrenzte Yousty-Crawler-Läufe. Dienste, Migrationen, SMTP und Quellennutzungsfreigabe sind auf Produktion noch nicht verifiziert; der Crawler-Timer ist ohne dokumentierte Freigabe deaktiviert.
 
 ## Deployment und PR-Ablauf
 
 ### Aktueller Repositorystand
 
-- **Infomaniak-Frontend:** .github/workflows/deploy-infomaniak.yml; Push auf main mit passenden Pfaden oder manueller Start; Frontend-Prüfungen vor SFTP. Kein PR-Deployment.
-- **GitHub Pages:** .github/workflows/deploy-pages.yml veröffentlicht dashboard/. Importworkflows können ebenfalls deployen.
+- **Infomaniak-Frontend:** deploy-infomaniak.yml ist nur manuell startbar und prüft das Frontend; der frühere SFTP-Deploy wurde entfernt. Produktionsreleases erfordern den in docs/production-completion.md beschriebenen Betreiberablauf.
+- **GitHub Pages:** deploy-pages.yml ist stillgelegt; der Job ist deaktiviert. Importworkflows für Gmail und URLs sind ebenfalls deaktiviert.
 - **Eingeschränkter SSH-Dispatcher:** ops/server/ca-ops-command enthält eine Befehls-Allowlist. ops/server/install-ops-dispatcher.sh ist laut Code zentraler Installationspunkt und sichert die Vorversion. Skripte belegen keine Übereinstimmung der Serverinstallation.
-- **Auth-/Backend-Rollout:** Unit und Skripte sind teilweise im Repository. Eine ausgeführte Installation oder Aktivierung ist nicht belegt. PR #102 beschreibt einen offenen Rollout.
+- **Auth-/Backend-Rollout:** owner-setup.sh und apply-production.sh beschreiben einen interaktiven, betreiberseitigen Installationsweg. Der Merge startet ihn nicht. Ausführung und Aktivierung sind hier nicht belegt; siehe docs/production-completion.md.
 
 ### Bei jedem PR
 
@@ -95,7 +95,7 @@ Backend, Datenbank und Adminoberfläche sollen nicht öffentlich lauschen. Die A
 - **AUS REPOSITORY:** Auth-Unit nutzt careeragency_auth als dedizierten Benutzer, Loopback und systemd-Härtungsoptionen.
 - **BESCHLOSSEN:** Nutzergetrennte Konten und Aktivitäten; manuelle Admin-Freigabe und Admin-TOTP.
 - **OFFEN:** installierte SSH-Key-Einschränkungen, sudoers, UFW/Anbieter-Firewall, Dateirechte, Secret-Verteilung, DB-Rollen, Backup-Verschlüsselung und Restore-Probe.
-- **Kritischer Prüfhinweis:** Im aktuellen main existieren SFTP- und GitHub-Pages-Wege. PR #102 will ältere Wege stilllegen. Bis Repository und Produktion abgeglichen sind, ist mit mehreren Veröffentlichungszielen zu rechnen.
+- **Kritischer Prüfhinweis:** Die alten SFTP-/Pages-/Importer-Workflows sind im Repository deaktiviert. Bereits veröffentlichte GitHub-Pages-Kopien oder alte Serverdateien können dennoch erreichbar sein; ihren aktuellen Status separat prüfen.
 
 ## Produktionsprüfung und Rollback
 
@@ -111,17 +111,17 @@ Backend, Datenbank und Adminoberfläche sollen nicht öffentlich lauschen. Die A
 4. Datenbank/Crawler über Read-only-Status, Migrationstabelle, Timerstatus und letzte Laufprotokolle prüfen.
 5. Vor einem Rollback Release-ID und Sicherung prüfen. Rollback nur mit ausdrücklichem Auftrag; danach Status und HTTP erneut prüfen.
 
-Der Repository-Dispatcher kennt release-check, release-deploy und release-rollback. Installierte Helfer und Wirkung sind **OFFEN**. Wiederherstellbarkeit gilt ohne aktuelle Probe nicht als verifiziert.
+Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollbackdetails und Live-Wiederherstellbarkeit stehen in docs/production-completion.md. Installation und aktuelle Sicherungen sind **OFFEN**; Wiederherstellbarkeit gilt ohne Live-Probe nicht als verifiziert.
 
 ## Offene Punkte und Risiken
 
 1. **OFFEN — Liveinventar:** Caddy-Routen, Dienste, Dateien, DNS/TLS, Firewall und Deployment-SHA über freigegebenen Read-only-Zugang abrufen.
-2. **OFFEN — PR #102:** nicht gemergt und auf älterem main-Basisstand; vor Merge Rebase/Konflikte und Workflows prüfen. Services/Migrationen daraus sind nicht Produktionsbestand.
-3. **OFFEN — Veröffentlichungsziel:** SFTP nach Infomaniak und GitHub Pages bestehen im main. Maßgebliches Ziel und Parallelbetrieb festlegen.
+2. **OFFEN — nach Merge #102:** Merge ist erfolgt, aber der manuelle Betreiber-Bootstrap und die abschließende Liveabnahme sind separat nachzuweisen. Code/Unit/Migrationen im main beweisen keine Installation.
+3. **OFFEN — Altbestände:** automatische SFTP-/Pages-/Importer-Wege sind im main deaktiviert. Verifizieren, dass Livehost, alte Pages-Kopie und Legacy-Feeds keine unbeabsichtigten Altinhalte mehr ausliefern.
 4. **OFFEN — Feedpfad:** Radar erwartet lehrstellen.json; ältere Ops-Prüfungen referenzieren jobs.json. Proxy und Publisher müssen denselben Feed bereitstellen.
 5. **OFFEN — Auth-Abnahme:** Auth, PostgreSQL, SMTP, TOTP, Freigabe, Redirects und 401-Schutz auf dem Zielsystem nachweisen.
 6. **OFFEN — Datenschutz:** keine Dossier-Cloudablage im beschlossenen Umfang. Schutz Minderjähriger, Speicherfristen und Exporte vor Synchronisation persönlicher Dokumente klären.
-7. **OFFEN — alte Imports:** Gmail-Workflow kann öffentliche Jobdaten in main committen und Pages auslösen. Aktive Zeitpläne/Secrets sind nicht geprüft; historischen Jobmail-Pfad nicht mit Lehrstellenfokus verwechseln.
+7. **OFFEN — Lehrstellenbetrieb:** Crawler-Timer erst mit dokumentierter Quellenfreigabe aktivieren. Laufzeit, Fehleralarm, Feedroute und öffentliche Ausgabe nach Betreiber-Bootstrap prüfen.
 
 ## Eintrag je PR
 
