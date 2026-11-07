@@ -23,7 +23,14 @@ if [[ "$mode" == plan ]]; then
   for f in /etc/careeragency/auth.env /etc/caddy/Caddyfile /opt/careeragency/auth-current; do
     if [[ -e "$f" ]]; then printf 'present=%s\n' "$f"; else printf 'missing=%s\n' "$f"; fi
   done
+  for unit in careeragency-auth.service careeragency-mail.timer careeragency-crawler.timer; do
+    printf 'unit=%s active=%s enabled=%s\n' "$unit" "$(systemctl is-active "$unit" || true)" "$(systemctl is-enabled "$unit" || true)"
+  done
   python3 "$src/ops/production/caddy-routing-summary.py"
+  if systemctl is-active --quiet careeragency-auth.service; then
+    python3 "$src/ops/production/smoke-production.py"
+    curl -sS --max-time 15 -o /dev/null -w 'legacy_account_redirect_status=%{http_code} target=%{redirect_url}\n' https://careeragency.ch/account.html
+  fi
   exit
 fi
 # Never run a checkout different from reviewed, current main; never install dirty code.
@@ -175,10 +182,24 @@ python3 "$src/ops/production/smoke-production.py"
 systemctl enable careeragency-auth.service careeragency-mail.timer
 systemctl start careeragency-mail.timer
 # Source approval cannot be inferred from technical reachability.
-if /opt/careeragency/auth-current/.venv/bin/python -c 'from crawler.production import config;config("/etc/careeragency/crawler.json")'; then
+if (cd "$runtime" && .venv/bin/python - <<'PYCONFIG'
+from crawler.production import config
+try:
+    config("/etc/careeragency/crawler.json")
+except PermissionError:
+    raise SystemExit(3)
+except (ValueError, OSError):
+    raise SystemExit(2)
+PYCONFIG
+); then
   systemctl enable --now careeragency-crawler.timer
 else
-  log 'crawler_timer=disabled source_approval_missing=true'
+  result=$?
+  if [[ "$result" == 3 ]]; then
+    log 'crawler_timer=disabled source_approval_missing=true'
+  else
+    log 'crawler_timer=disabled configuration_check_failed=true'
+  fi
 fi
 trap - ERR
 log "production_activate=complete backup=$backup code=$sha"
