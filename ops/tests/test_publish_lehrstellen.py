@@ -63,6 +63,21 @@ class LandingPublishingTests(unittest.TestCase):
         self.assertEqual(once, twice)
         self.assertEqual(changes, [])
 
+    def test_previous_poc_landing_variant_is_accepted_without_replacing_ui(self):
+        updated, _ = module.patch_landing(self.current)
+        poc = updated.replace(
+            ':getScore(j)??null;',
+            'const predicted=null;',  # Previously approved POC display behavior.
+        )
+        poc = poc.replace(
+            'el("message").textContent=visibleJobs().length+" Lehrstellen geladen. Bestehende Bewertungen bleiben erhalten.";',
+            'el("message").textContent=visibleJobs().length+" Inserate geladen. Bestehende Bewertungen und Inseratdaten bleiben erhalten.";',
+        )
+        changed, _ = module.patch_landing(poc)
+        self.assertIn('fetch("./lehrstellen.json"', changed)
+        self.assertIn('const predicted=null;', changed)
+        self.assertIn('function visibleJobs(){return jobs;}', changed)
+
     def test_unknown_live_html_rejected_not_overwritten(self):
         with self.assertRaises(ValueError):
             module.patch_landing("<html><body>unknown UI</body></html>")
