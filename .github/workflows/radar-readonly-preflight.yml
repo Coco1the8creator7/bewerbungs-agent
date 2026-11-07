@@ -1,0 +1,50 @@
+name: Read-only live Radar release preflight
+on:
+  pull_request:
+    paths:
+      - 'ops/production/radar-safe-release.py'
+      - 'ops/tests/test_radar_safe_release.py'
+      - '.github/workflows/radar-readonly-preflight.yml'
+permissions:
+  contents: read
+jobs:
+  live-read-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check HTML and script contracts without credentials or server writes
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, re
+          from urllib.request import urlopen,Request
+          def fetch(url):
+              with urlopen(Request(url,headers={"Cache-Control":"no-cache",
+                            "User-Agent":"CareerAgency-Radar-ReadOnly-Preflight/1"}),
+                           timeout=25) as response:
+                  return response.status,response.read()
+          code,body=fetch("https://careeragency.ch/?radar_preflight=20261107")
+          html=body.decode("utf-8")
+          script=re.search(r'<script src="(\./radar\.js(?:\?v=[^"]+)?)"',html)
+          checks={
+              "http_status":code,
+              "index_sha256":hashlib.sha256(body).hexdigest(),
+              "live_feeds_yousty":'fetch("./lehrstellen.json",{cache:"no-store"})' in html,
+              "legacy_feed_in_html":'fetch("./jobs.json",{cache:"no-store"})' in html,
+              "radar_present":'id="mode-radar"' in html and 'id="radarDial"' in html,
+              "market_toggle_present":'class="radar-markets"' in html,
+              "intro_count":html.count('id="radarIntro"'),
+              "radar_script_reference":script.group(1) if script else None,
+          }
+          if script:
+              js_code,js=fetch("https://careeragency.ch/"+script.group(1)[2:])
+              txt=js.decode("utf-8")
+              checks.update({"radar_js_http":js_code,
+                             "js_sha256":hashlib.sha256(js).hexdigest(),
+                             "reads_lehrstellen":'fetch("./lehrstellen.json",{cache:"no-store"})' in txt,
+                             "reads_legacy_jobs":'fetch("./jobs.json",{cache:"no-store"})' in txt})
+          print("LIVE_RADAR_READ_ONLY="+json.dumps(checks,ensure_ascii=False))
+          if code!=200 or not checks["live_feeds_yousty"] or not checks["radar_present"]:
+              raise SystemExit("The live server structure requires review before releasing")
+          if not script:
+              raise SystemExit("Radar script ref missing")
+          PY
