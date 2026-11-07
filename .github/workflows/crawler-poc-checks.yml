@@ -4,6 +4,8 @@ on:
     branches: [poc/lehrstellen-crawler-isolated]
     paths:
       - 'crawler/**'
+      - 'dashboard/career-filter.js'
+      - 'tests/yousty-landing-feed.test.mjs'
       - '.github/workflows/crawler-poc-checks.yml'
   workflow_dispatch:
 permissions:
@@ -22,3 +24,8 @@ jobs:
         run: python -m unittest discover -s crawler/tests -v
       - name: Synthetic fixture smoke test
         run: python -m crawler.prototype --source synthetic --html crawler/fixtures/synthetic.html
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apprenticeship landing filter regression
+        run: node --test tests/yousty-landing-feed.test.mjs
