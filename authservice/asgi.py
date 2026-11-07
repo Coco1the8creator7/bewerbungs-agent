@@ -10,3 +10,9 @@ def account_page(page: str):
         raise HTTPException(404,"Not found")
     return FileResponse(Path(__file__).with_name("account.html"),media_type="text/html",
         headers={"Cache-Control":"no-store"})
+
+@app.get("/admin",include_in_schema=False)
+def admin_page():
+    # UI itself may be fetched; all admin data/actions remain server-authorized.
+    return FileResponse(Path(__file__).with_name("account.html"),media_type="text/html",
+        headers={"Cache-Control":"no-store"})
