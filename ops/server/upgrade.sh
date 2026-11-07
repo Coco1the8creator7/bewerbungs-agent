@@ -33,16 +33,9 @@ ast.parse(pathlib.Path(sys.argv[1]).read_text(encoding="utf-8"))
 print("feed_audit_syntax=valid")
 PY
 
-if [[ ! -e /usr/local/bin/careeragency-ops-command.before-upgrade ]]; then
-  cp -a /usr/local/bin/careeragency-ops-command \
-    /usr/local/bin/careeragency-ops-command.before-upgrade
-fi
-install -d -o root -g root -m 0755 /usr/local/lib/careeragency-ops
-install -o root -g root -m 0644 "$AUDITOR" /usr/local/lib/careeragency-ops/feed_audit.py.new
-mv -f /usr/local/lib/careeragency-ops/feed_audit.py.new /usr/local/lib/careeragency-ops/feed_audit.py
-install -o root -g root -m 0755 "$WRAPPER" /usr/local/bin/careeragency-ops-command.new
-mv -f /usr/local/bin/careeragency-ops-command.new /usr/local/bin/careeragency-ops-command
+# Only the shared installer may replace the forced-command dispatcher.
+bash "$SOURCE_DIR/install-ops-dispatcher.sh"
 
 echo "ops_upgrade=installed"
-echo "allowed_operations=status,tests,feed-audit,crawler-probe,release-check"
+echo "allowed_operations=status,tests,feed-audit,crawler-probe,stage,publish-lehrstellen,release-check,release-deploy,release-rollback,auth-preflight"
 echo "production_modified=false"

@@ -26,9 +26,6 @@ for group in $(id -nG "$ACCOUNT"); do
   case "$group" in sudo|adm|docker|lxd|disk|root) die "Runner has unsafe membership: $group" ;; esac
 done
 
-install -o root -g root -m 0755 \
-  "$(dirname "$0")/ca-ops-command" /usr/local/bin/careeragency-ops-command
-
 KEY_DIR=/root/.config/careeragency-runner
 install -d -o root -g root -m 0700 "$KEY_DIR"
 KEY="$KEY_DIR/github_actions_ed25519"
@@ -54,6 +51,9 @@ else
 fi
 chown "$ACCOUNT:$ACCOUNT" "$AUTH"
 chmod 600 "$AUTH"
+
+# Provision the same dispatcher used by all subsequent capability installers.
+bash "$(dirname "$0")/install-ops-dispatcher.sh"
 
 echo
 echo "Bootstrap configured. No production data or services were changed."

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Root-owned, forced-command SSH entry point.
-# The SSH account MUST have no sudo rights and no production write access.
+# The SSH key is forced-command restricted; privileged operations use scoped sudoers.
 set -euo pipefail
 export PATH=/usr/bin:/bin
 export GIT_TERMINAL_PROMPT=0
@@ -100,6 +100,37 @@ case "${SSH_ORIGINAL_COMMAND:-}" in
       echo "release_check=live_index_differs_from_main"
       exit 2
     fi
+    ;;
+  auth-preflight)
+    # Read-only root preflight, gated by a dedicated sudoers entry.
+    exec sudo -n /usr/local/sbin/careeragency-auth-preflight
+    ;;
+  release-check\ *|release-deploy\ *|release-rollback\ *)
+    # Do not pass unchecked SSH_ORIGINAL_COMMAND to a privileged program.
+    request="$SSH_ORIGINAL_COMMAND"
+    operation="${request%% *}"
+    argument="${request#* }"
+    case "$operation" in
+      release-check|release-deploy)
+        if [[ ! "$argument" =~ ^[0-9a-f]{40}$ ]]; then
+          echo "Denied: release commit must be a lowercase 40-character SHA." >&2
+          exit 64
+        fi
+        if [[ "$operation" == release-check ]]; then mode=check; else mode=deploy; fi
+        ;;
+      release-rollback)
+        if [[ ! "$argument" =~ ^[0-9]{8}T[0-9]{6}Z-[0-9a-f]{12}$ ]]; then
+          echo "Denied: invalid rollback release ID." >&2
+          exit 64
+        fi
+        mode=rollback
+        ;;
+      *)
+        echo "Denied: invalid release operation." >&2
+        exit 64
+        ;;
+    esac
+    exec sudo -n /usr/local/sbin/careeragency-release "$mode" "$argument"
     ;;
   *)
     echo "Denied: SSH command is not on the Career.Agency allowlist." >&2
