@@ -46,6 +46,36 @@ jobs:
           done
           psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -c "CREATE ROLE career_test_runtime; GRANT USAGE ON SCHEMA career_private TO career_test_runtime; GRANT SELECT,INSERT,UPDATE,DELETE ON career_private.user_state TO career_test_runtime;"
           psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f db/tests/auth_foundation_smoke.sql
+      - name: Replay production migration ledger on empty and legacy fixture databases
+        shell: bash
+        env:
+          PGPASSWORD: testonly
+        run: |
+          set -euo pipefail
+          python - <<'PYRENDER'
+          from pathlib import Path
+          import subprocess
+          root=Path.cwd()
+          script=Path('ops/production/migrate-production.sh').read_text()
+          script=script.replace('[[ $EUID == 0 && $# -ge 1 && $# -le 2 ]] || exit 64','true')
+          executor='runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -v target_db="$db" -d "$db" < "$work" >/dev/null'
+          assert executor in script
+          script=script.replace(executor,'cat "$work"')
+          result=subprocess.run(['bash','-c',script,'render',str(root)],check=True,capture_output=True,text=True)
+          Path('/tmp/ca-migrations.sql').write_text(result.stdout)
+          PYRENDER
+          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d postgres -c 'CREATE ROLE careeragency_auth; CREATE ROLE careeragency_crawler;'
+          for db in careeragency_restore_000000000001 careeragency_restore_000000000002; do
+            createdb -h localhost -U postgres "$db"
+          done
+          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_restore_000000000002 -f db/migrations/001_auth_foundation.sql
+          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_restore_000000000002 -f db/migrations/002_auth_runtime.sql
+          for db in careeragency_restore_000000000001 careeragency_restore_000000000002; do
+            for replay in 1 2; do
+              psql -X -v ON_ERROR_STOP=1 -v target_db="$db" -h localhost -U postgres -d "$db" -f /tmp/ca-migrations.sql >/dev/null
+            done
+            test "$(psql -XAt -h localhost -U postgres -d "$db" -c 'SELECT count(*) FROM career_ops.migrations')" = 5
+          done
       - name: Test security and database integration
         run: python -m unittest discover -s authservice/tests -v
       - run: python -m unittest discover -s crawler/tests -v

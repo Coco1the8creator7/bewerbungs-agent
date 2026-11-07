@@ -22,6 +22,7 @@ const assert=require('node:assert/strict');
  await page.reload();
  await page.waitForFunction(()=>window.CareerFeedbackReady&&window.CareerRadarReady&&window.CareerFilterSync&&!document.getElementById("radarSyncFeedback").disabled);
  await page.waitForFunction(()=>window.AgentCareerFeedback.getScore('apprenticeship-synthetic-e2e')===83);
+ await page.locator('#openModeSidebar').click();
  await page.getByRole('button',{name:'Abmelden',exact:true}).click();await page.waitForURL('**/account/login');
  await login('e2e-b@example.com');
  assert.equal(await page.evaluate(()=>window.AgentCareerFeedback.getScore('apprenticeship-synthetic-e2e')),null);

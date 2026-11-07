@@ -143,6 +143,7 @@ rollback() {
   systemctl reload caddy || true
   cp -p "$backup/index.html" "$live/index.html"
   cp -p "$backup/github-sync.js" "$live/github-sync.js"
+  if [[ -f "$backup/mode-nav.js" ]]; then cp -p "$backup/mode-nav.js" "$live/mode-nav.js"; fi
   if [[ -f "$backup/radar.js" ]]; then cp -p "$backup/radar.js" "$live/radar.js"; fi
   systemctl stop careeragency-auth.service careeragency-mail.timer || true
   # Security lockdown is retained; personal data is never republished on rollback.
@@ -157,6 +158,8 @@ for name in feedback.json; do
  done
 install -m 0644 "$src/dashboard/index.html" "$live/index.html"
 install -m 0644 "$src/dashboard/github-sync.js" "$live/github-sync.js"
+cp -p "$live/mode-nav.js" "$backup/mode-nav.js"
+install -m 0644 "$src/dashboard/mode-nav.js" "$live/mode-nav.js"
 cp -p "$live/radar.js" "$backup/radar.js"
 install -m 0644 "$src/dashboard/radar.js" "$live/radar.js"
 cp "$backup/Caddyfile.next" /etc/caddy/Caddyfile
