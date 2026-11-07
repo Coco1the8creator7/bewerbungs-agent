@@ -241,3 +241,9 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - **VERIFIZIERT:** Die Unterschiede entsprechen den Änderungen im Repository: Account-Persistenz/Archivierung in der späteren Lehrstellen-/Account-Version und die Footer-Ausblendung in den Commits `104d306c2a` und `d009011131`. Die Ausblendung entspricht dem zuvor erteilten Auftrag zur Entfernung des Abschnitts. Kein blindes Überschreiben; die Account-Datenlogik bleibt separat zu beurteilen.
 - **VERIFIZIERT:** Der installierte SSH-Releasehelfer schlug mit `unexpected live directory` fehl, weil er `current` als Symlink pauschal verbietet. Der vorhandene `public_root.py`-Guard akzeptiert nur einen geprüften direkten Release-Symlink. PR #153 für die Wiederverwendung dieses Guards und den gehärteten Installer ist gemergt; der installierte Server-Helper ist noch unverändert.
 - **OFFEN:** Der korrigierte Gateway ist noch nicht auf dem Server installiert. Deshalb ist trotz erfolgreichem öffentlichen Diff kein sicherer SSH-Deploy-/Rollback-Test erfolgt. Das Installationsskript verändert nur root-eigene Release-Helfer/Sudoers und prüft zuvor per Backup; Produktionsdateien werden dabei nicht ersetzt.
+
+## Release-Gateway nach Betreiberinstallation
+
+- Betreiber meldet die Ausführung des Installers als erfolgt; unabhängiger Laufzeitnachweis steht noch aus.
+- `frontend-check` führt wieder den serverseitigen `release-check <SHA>` aus, zusätzlich zum öffentlichen HTML-Vergleich und HTTP-Smoke. Der serverseitige Check validiert Webroot und Commit und protokolliert die beiden HTML-Hashes, ohne öffentliche Dateien zu ersetzen.
+- Erfolgskriterium: kein Symlink-Abbruch, erwartete Hashes und erfolgreiche öffentliche Smoke-Prüfungen. Ein erfolgreicher Check ist kein Deploymentnachweis.
