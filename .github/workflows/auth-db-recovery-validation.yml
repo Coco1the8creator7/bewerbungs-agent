@@ -1,0 +1,23 @@
+name: Auth DB bootstrap recovery checks
+on:
+  pull_request:
+    paths:
+      - 'ops/production/prepare-auth-database.sh'
+      - 'ops/production/recover-empty-auth-database.sh'
+      - '.github/workflows/auth-db-recovery-validation.yml'
+permissions:
+  contents: read
+jobs:
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate shell syntax and restricted recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n ops/production/prepare-auth-database.sh
+          bash -n ops/production/recover-empty-auth-database.sh
+          grep -Fq ' < "$migration_a"' ops/production/prepare-auth-database.sh
+          grep -Fq ' < "$migration_b"' ops/production/prepare-auth-database.sh
+          grep -Fq '[[ "$schema" == none && "$objects" == 0 ]]' ops/production/recover-empty-auth-database.sh
