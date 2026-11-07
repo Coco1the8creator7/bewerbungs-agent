@@ -156,3 +156,9 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - **Verifiziert:** Autorisierter Lockdown [Run 42389011901](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42389011901) vor Änderungen mit Exit 65 abgebrochen. Der bisherige Webroot-Guard verbietet sämtliche current-Symlinks; der kanonische Zielpfad ist noch auszulesen.
 - **Korrektur:** Rollout akzeptiert ein geprüftes current-Verzeichnis oder einen Verweis auf ein direktes Release unter /var/www/careeragency/releases. Eigentümer und Schreibrechte sowie Asset-Symlinks werden geprüft; externe Ziele bleiben gesperrt. Der Plan meldet Zielpfad/Dateityp/Rechte, ohne Inhalte oder Secrets auszugeben.
 - **Offen:** Korrektur integrieren, Read-only-Plan erneut ausführen, tatsächlichen Zielpfad bestätigen und Lockdown/Backend-Vorbereitung kontrolliert fortsetzen. SMTP und abschliessende Auth-Aktivierung bleiben offen.
+
+## Bestätigter Live-Webroot (07.11.2026)
+
+- Read-only-[Run 42389350307](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42389350307) erfolgreich: current ist ein Symlink auf `/var/www/careeragency/releases/legacy-hidden-20261106`; Eigentümer ubuntu:ubuntu, Modus 775. Auth weiterhin inaktiv, auth.env fehlt.
+- Die Rechteprüfung berücksichtigt administrative Gruppen nur nach tatsächlicher Unix-Mitgliederprüfung. Gruppen-Schreibrecht wird nur akzeptiert, wenn sämtliche primären und zusätzlichen Gruppenmitglieder zur unveränderten Vertrauensmenge root/ubuntu gehören. Welt-Schreibrecht, fremde Eigentümer, unaufgelöste Gruppen und fremde Gruppenmitglieder bleiben gesperrt. Keine Dateirechte werden dadurch verändert.
+- 12 lokale Rollout-Tests einschliesslich negativer Rechtefälle erfolgreich. Serverseitiger Lockdown und Backend-Vorbereitung bleiben bis zur erfolgreichen Ausführung unbestätigt.

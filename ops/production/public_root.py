@@ -1,6 +1,11 @@
 """Resolve only the trusted Career.Agency webroot or a direct release beneath it."""
-import os,pwd,stat
+import os,pwd,grp,stat
 from pathlib import Path
+
+def group_writer_uids(gid):
+    names=set(grp.getgrgid(gid).gr_mem)
+    names.update(user.pw_name for user in pwd.getpwall() if user.pw_gid==gid)
+    return {pwd.getpwnam(name).pw_uid for name in names}
 
 def resolve_public_root(base=Path('/var/www/careeragency'),trusted_uids=None):
     base=Path(base)
@@ -11,7 +16,12 @@ def resolve_public_root(base=Path('/var/www/careeragency'),trusted_uids=None):
     def trusted(path,symlink=False):
         info=path.lstat()
         if info.st_uid not in trusted_uids:raise ValueError('untrusted owner: '+str(path))
-        if not symlink and info.st_mode & (stat.S_IWGRP|stat.S_IWOTH):raise ValueError('unsafe write permissions: '+str(path))
+        if not symlink:
+            if info.st_mode & stat.S_IWOTH:raise ValueError('world-writable path: '+str(path))
+            if info.st_mode & stat.S_IWGRP:
+                try:members=group_writer_uids(info.st_gid)
+                except KeyError:raise ValueError('unresolved writer group: '+str(path))
+                if not members.issubset(trusted_uids):raise ValueError('untrusted group writers: '+str(path))
     if base.is_symlink() or not base.is_dir():raise ValueError('unexpected application base')
     trusted(base)
     current=base/'current'
