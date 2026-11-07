@@ -10,8 +10,8 @@ Um zwei parallele Registrierungswege zu vermeiden, leitet der neue Caddy-Release
 
 ## Zugriffsgrenzen
 - Die bestehende öffentliche Landingpage und der allgemeine Lehrstellenfeed bleiben öffentlich. Dies ist **keine** nutzergetrennte Dossier-API.
-- Der authentifizierte `/app/`-Pfad prüft Session, Aktivierung, MFA und Sperrstatus **für jede HTML-/Asset-Anfrage**.
-- Bestehende browserlokale IndexedDB-Daten, Bewertungen und Dossiers werden dadurch **nicht** automatisch serverseitig getrennt, synchronisiert oder migriert. Kein Benutzerimport, keine Datenlöschung und kein automatischer CV-Upload.
+- Der authentifizierte `/app/`-Pfad prüft Session, Aktivierung, MFA und Sperrstatus bei jedem Request. **Er liefert vorläufig eine datenneutrale Kontooberfläche und bewusst nicht das ältere Dashboard**. Legacy-JavaScript und private IndexedDB-Daten dürfen nicht darüber ausgeliefert werden.
+- Die alte Dashboard-Speicherung verwendet den festen IndexedDB-Namen `bewerbungs-agent-local-v1` und ist deshalb nicht mandantenfähig. Bestehende browserlokale Daten, Bewertungen und Dossiers werden **nicht** automatisch serverseitig getrennt, synchronisiert oder migriert. Kein Benutzerimport, keine Datenlöschung und kein automatischer CV-Upload.
 - Alte GitHub-Pages-Kopien können weiter erreichbar sein. Keine persönlichen Daten oder Auth-Secrets aus dem SaaS in historische öffentliche Pfade schreiben.
 - Datenschutzanforderungen für minderjährige Nutzer, Speicherfristen, sichere Datenexporte und Benutzertrennung müssen separat verifiziert werden, bevor persönliche Dossiers produktiv synchronisiert werden.
 
