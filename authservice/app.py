@@ -124,6 +124,9 @@ def verify(data:LinkToken):
     with db() as con:
         uid=consume(con,data.token,"verify_email")
         con.execute("UPDATE career_auth.users SET email_verified_at=now(),updated_at=now() WHERE id=%s",(uid,))
+        admin_addresses=[a["email"] for a in con.execute("SELECT email FROM career_auth.users WHERE role='admin' AND status='active'").fetchall()]
+    for address in admin_addresses:
+        mail(address,"Neue Career.Agency Registrierung","Ein bestätigtes Konto wartet auf Freischaltung im Admin-Dashboard.")
     return {"message":"E-Mail bestätigt. Dein Konto wartet auf Freischaltung."}
 
 @app.post("/api/auth/login")
@@ -280,3 +283,27 @@ def check_app(request:Request):
     with db() as con:
         u=session(con,request);gate(u)
     return {"ok":True}
+
+@app.post("/api/auth/verify-email/resend")
+def resend_verification(data:ResetEmail,request:Request):
+    email=canonical_email(data.email)
+    limit("verify-resend-ip",ip(request),8,3600)
+    with db() as con:
+        u=con.execute("""SELECT id FROM career_auth.users WHERE lower(trim(email))=%s
+            AND email_verified_at IS NULL AND status='pending'""",(email,)).fetchone()
+        t=create_token(con,u["id"],"verify_email",timedelta(hours=24)) if u else None
+    if t:
+        mail(email,"Bestätige deine E-Mail-Adresse",f"Bestätige: {origin()}/account/verify?token={quote(t)}")
+    return {"message":"Falls eine Bestätigung aussteht, erhältst du einen neuen Link."}
+
+@app.post("/api/admin/users/{user_id}/unblock")
+def unblock(user_id:uuid.UUID,request:Request):
+    with db() as con:
+        a=session(con,request);admin(a)
+        u=con.execute("SELECT id,email_verified_at FROM career_auth.users WHERE id=%s AND role='user' FOR UPDATE",(user_id,)).fetchone()
+        if not u: raise HTTPException(404,"Konto nicht gefunden")
+        new_status="active" if u["email_verified_at"] else "pending"
+        con.execute("UPDATE career_auth.users SET status=%s,blocked_at=NULL WHERE id=%s",(new_status,user_id))
+        con.execute("INSERT INTO career_auth.admin_audit(id,actor_user_id,target_user_id,action) VALUES(%s,%s,%s,%s)",
+                    (uuid.uuid4(),a["id"],user_id,"unblock_user"))
+    return {"message":"Sperrung aufgehoben"}
