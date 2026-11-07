@@ -68,6 +68,15 @@ case "${SSH_ORIGINAL_COMMAND:-}" in
     cd "$workdir/repo"
     timeout 60s python3 -m crawler.yousty_probe
     ;;
+  stage\ [0-9a-f][0-9a-f][0-9a-f]*)
+    # Only a full immutable commit SHA can be staged. The helper checks repo provenance.
+    target_sha="${SSH_ORIGINAL_COMMAND#stage }"
+    if [[ ! "$target_sha" =~ ^[0-9a-f]{40}$ ]]; then
+      echo "Denied: stage requires exactly 40 lowercase hexadecimal characters" >&2
+      exit 64
+    fi
+    timeout 180s /usr/local/lib/careeragency-ops/stage_commit.sh "$target_sha"
+    ;;
   release-check)
     # Read-only comparison; never copy files or restart services.
     workdir="$(mktemp -d /tmp/careeragency-ops-release.XXXXXXXX)"
