@@ -48,8 +48,11 @@ install -d -o root -g root -m 0755 /opt/careeragency /opt/careeragency/auth-rele
 install -d -o root -g root -m 0700 /etc/careeragency
 [[ ! -e "$release" ]] || exit 73
 mv "$tmp/runtime" "$release"
-chown -R root:root "$release"
-chmod -R go-w "$release"
+chown -R root:careeragency_auth "$release"
+# The service account needs read/traverse rights; umask 077 initially closes these.
+find "$release" -type d -exec chmod 0750 {} +
+find "$release" -type f -exec chmod 0640 {} +
+find "$release/.venv/bin" -maxdepth 1 -type f -exec chmod 0750 {} +
 ln -s "auth-releases/$sha" /opt/careeragency/auth-current
 install -o root -g root -m 0644 "$tmp/repo/ops/production/careeragency-auth.service" /etc/systemd/system/careeragency-auth.service
 systemctl daemon-reload
