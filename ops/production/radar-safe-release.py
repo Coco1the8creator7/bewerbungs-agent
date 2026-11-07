@@ -22,7 +22,8 @@ import tempfile
 from datetime import datetime, timezone
 
 REPO = "https://github.com/Coco1the8creator7/bewerbungs-agent.git"
-LIVE = Path("/var/www/careeragency/current")
+WEBROOT_PARENT = Path("/var/www/careeragency")
+LIVE = WEBROOT_PARENT / "current"
 BACKUPS = Path("/var/backups/careeragency-ops/radar-releases")
 LOCK = Path("/run/lock/careeragency-release.lock")
 FILES = ("index.html", "radar.js", "radar-model.js")
@@ -44,8 +45,39 @@ def run(*args: str, cwd: Path | None = None, timeout: int = 125) -> bytes:
 
 
 def validate_live() -> None:
-    if LIVE.is_symlink() or not LIVE.is_dir():
-        raise ValueError("unexpected or symlinked webroot")
+    """Accept a root-controlled, in-tree release symlink, never an arbitrary target.
+
+    The production host can point /var/www/careeragency/current at a versioned
+    directory. Verify that the pointer, its parent and every target directory
+    are non-writable by other accounts; target must remain inside the expected
+    Career.Agency webroot. This prevents writing to attacker-selected paths.
+    """
+    root = WEBROOT_PARENT.resolve(strict=True)
+    if root != WEBROOT_PARENT or not root.is_dir():
+        raise ValueError("unexpected webroot parent or symlink")
+    if not LIVE.exists() or not LIVE.is_dir():
+        raise ValueError("live webroot unavailable")
+    if LIVE.is_symlink():
+        target = LIVE.resolve(strict=True)
+        if target == root or not target.is_relative_to(root):
+            raise ValueError("webroot symlink target escapes approved webroot")
+        # A directory name could itself be a symlink; reject every link in
+        # the chain. The only permitted link is /current itself.
+        parts = [root]
+        rel = target.relative_to(root)
+        for name in rel.parts:
+            parts.append(parts[-1] / name)
+        for directory in [LIVE.parent, *parts]:
+            if directory.is_symlink() or not directory.is_dir():
+                raise ValueError("untrusted symlink in webroot target")
+            mode = directory.stat()
+            if mode.st_uid != 0 or stat.S_IMODE(mode.st_mode) & 0o022:
+                raise ValueError("webroot path not root-owned and read-only to others")
+        link = LIVE.lstat()
+        if link.st_uid != 0:
+            raise ValueError("webroot symlink not root-owned")
+    elif LIVE.resolve(strict=True) != LIVE:
+        raise ValueError("unexpected webroot path resolution")
     for name in FILES:
         path = LIVE / name
         if path.is_symlink() or not path.is_file() or path.stat().st_size > 4_000_000:
