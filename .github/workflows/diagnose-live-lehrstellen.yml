@@ -47,6 +47,19 @@ jobs:
             live_html_has_initialize:html.includes('async function initialize(){'),
           };
           console.log(JSON.stringify(result));
+          const markers=[
+            'Der Lehrstellenpool wird vorbereitet.',
+            'async function initialize(){',
+            'fetch("./lehrstellen.json"',
+            'function visibleJobs(){',
+          ];
+          for(const marker of markers){
+            const pos=html.indexOf(marker);
+            const range=marker==='async function initialize(){'?3500:marker.includes('Lehrstellenpool')?2100:800;
+            console.log('LIVE_HTML_CONTEXT '+JSON.stringify({
+              marker,pos,snippet:pos>=0?html.slice(Math.max(0,pos-550),pos+range):null,
+            }));
+          }
           if (!result.only_yousty||result.feed_entries<50)process.exitCode=1;
           NODE
       - name: Install headless browser
