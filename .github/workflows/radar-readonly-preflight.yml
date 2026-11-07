@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Check HTML and script contracts without credentials or server writes
         run: |
           python3 - <<'PY'
@@ -47,4 +50,31 @@ jobs:
               raise SystemExit("The live server structure requires review before releasing")
           if not script:
               raise SystemExit("Radar script ref missing")
+          PY
+      - name: Verify both live Radar scripts match an approved Git revision
+        run: |
+          python3 - <<'PY'
+          from urllib.request import urlopen,Request
+          import subprocess,hashlib,json
+          def fetch(name):
+              with urlopen(Request("https://careeragency.ch/"+name,headers={"Cache-Control":"no-cache"}),
+                           timeout=25) as r:
+                  if r.status!=200: raise RuntimeError(name+" HTTP "+str(r.status))
+                  return r.read()
+          for name in ("radar.js","radar-model.js"):
+              actual=fetch(name)
+              revisions=subprocess.check_output(["git","log","--format=%H","origin/main",
+                   "--","dashboard/"+name],text=True).splitlines()[:150]
+              matched=None
+              for sha in revisions:
+                  old=subprocess.check_output(["git","show",sha+":dashboard/"+name])
+                  if actual==old:
+                      matched=sha
+                      break
+              print("LIVE_RADAR_SCRIPT_PROVENANCE="+json.dumps({
+                  "name":name,"sha256":hashlib.sha256(actual).hexdigest(),
+                  "in_reviewed_history":bool(matched),"matching_revision":matched
+              }))
+              if not matched:
+                  raise SystemExit("Local production changes detected; do not overwrite "+name)
           PY
