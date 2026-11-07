@@ -58,5 +58,11 @@ class LegacyAuthScopeTests(unittest.TestCase):
             self.assertNotIn('"$live/' + name + '"\n', activation.replace('cmp -s "$src/dashboard/github-sync.js" "$live/github-sync.js" || {', ''))
         self.assertIn('cmp -s "$src/dashboard/github-sync.js" "$live/github-sync.js"', activation)
 
+    def test_existing_exact_legacy_redirect_is_upgraded(self):
+        correct = module.patch_caddy('careeragency.ch {\n file_server\n}\n')
+        broken = correct.replace('redir * /account/login 308', 'redir /account/login 308')
+        self.assertEqual(module.patch_caddy(broken), correct)
+        self.assertEqual(module.patch_caddy(correct), correct)
+
     def test_absent_auth_cannot_approve(self):
         self.assertFalse(module.legacy_basic_auth_only(config([])))

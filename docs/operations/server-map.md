@@ -207,3 +207,11 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - **Gefundene Ops-Abweichung:** Die zusätzliche Crawler-Freigabeprüfung lief aus falschem Arbeitsverzeichnis und meldete `ModuleNotFoundError`. Timer blieb deaktiviert. Die Prüfung wechselt künftig in die verifizierte Runtime und unterscheidet fehlende Freigabe von Konfigurationsfehlern. Quellenfreigabe wurde nicht erteilt und kein Crawl gestartet.
 - **Nicht verifiziert:** echte Mailzustellung, interaktiver Admin-Login/TOTP und Zwei-Konten-Abnahme auf Produktion. CI prüft Nutzerisolation, Synchronisation, Reload und Logout; dies ersetzt keine produktive Zwei-Konten-Abnahme. Externe Probe `/account.html` ergab 200 mit leerem Body trotz vorgesehener Weiterleitung; kanonischer Login funktioniert. Weiterleitung gesondert prüfen.
 - **Status:** eingeschränkt funktionsfähig bis Admin-TOTP, reale Mailzustellung und Kontenabläufe bestätigt sind. Crawler benötigt weiterhin dokumentierte Quellenfreigabe. Dossier Studio bleibt ausgeklammert.
+
+
+## Abschliessender Live-Plan / Legacy-Kontoweiterleitung (07.11.2026)
+
+- **VERIFIZIERT:** Read-only-Plan nach Aktivierung bestätigt Auth-Dienst und Mail-Timer aktiv/aktiviert; Crawler-Timer inaktiv/deaktiviert. Alle 14 öffentlichen Statusprüfungen erfolgreich, 185 Yousty-Lehrstellen erreichbar.
+- **WIDERLEGT:** Die Annahme einer korrekt erzeugten `/account.html`-Weiterleitung. Caddy interpretiert bei `redir /account/login 308` das erste Argument als Pfadmatcher; tatsächlicher Handler hatte Status 302 und wirkte nur unter `/account/login` innerhalb von `/account.html`. Ergebnis 200 mit leerem Body. Der kanonische Login war erreichbar.
+- **Korrektur:** `redir * /account/login 308`; exakte Altregel wird auch bei erneuter Aktivierung aktualisiert. CI prüft nun zusätzlich Status und Location im tatsächlich adaptierten Caddy-JSON. Live-Smoke verlangt 308 und exaktes Weiterleitungsziel, statt nur Caddy-Syntax zu prüfen. Keine öffentlichen Frontend-Dateien oder persönlichen Daten verändert.
+- **Offen:** produktive Anwendung/Verifikation dieser Redirect-Korrektur; Admin-TOTP, echte Mailzustellung und produktive Zwei-Konten-Abnahme weiterhin offen.
