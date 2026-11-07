@@ -1,0 +1,30 @@
+name: Auth runtime packaging validation
+on:
+  pull_request:
+    paths:
+      - 'ops/production/prepare-auth-runtime.sh'
+      - 'ops/production/careeragency-auth.service'
+      - '.github/workflows/auth-runtime-validation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell syntax and systemd unit syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n ops/production/prepare-auth-runtime.sh
+          grep -Fq 'User=careeragency_auth' ops/production/careeragency-auth.service
+          grep -Fq -- '--host 127.0.0.1' ops/production/careeragency-auth.service
+          grep -Fq 'EnvironmentFile=/etc/careeragency/auth.env' ops/production/careeragency-auth.service
+      - name: Validate Python imports and package structure
+        run: |
+          python -m compileall -q auth authservice
+          test -f auth/security.py
+          test -f authservice/asgi.py
+          test -f db/migrations/001_auth_foundation.sql
+          test -f db/migrations/002_auth_runtime.sql
