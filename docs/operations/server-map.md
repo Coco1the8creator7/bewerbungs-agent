@@ -7,10 +7,10 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Repository-Stand | **VERIFIZIERT** | be274736924b2b48ca08a7043fa967520147f591, 07.11.2026; GitHub Commit API |
+| geprüfter Repository-Stand | **VERIFIZIERT** | Produktionsaudit am Stand `7ce2df7fd35c2916a1e1b60457eceb273302ae58`, 07.11.2026; Implementierung folgt in diesem Branch/PR. |
 | PR-Lage | **VERIFIZIERT** | #115 (UI) in 7685b15 und #118 (Radar-Releasepfad) in be27473 gemergt. |
-| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Scoped SSH-Gateway und Webroot geprüft; Auth-Backend und Datenbank vorbereitet, noch nicht öffentlich aktiviert. Aktuelle Nachweise unten. |
-| Rollout des geprüften Commits | **VORBEREITUNG VERIFIZIERT** | Feedback-Sperre und Backend-Vorbereitung erfolgreich; öffentliche Auth-Aktivierung und echter SMTP-Versand bleiben OFFEN. |
+| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Caddy, Auth-Backend, PostgreSQL und geschützte Kontorouten produktiv aktiv; anonyme Smoke-Checks erfolgreich. Echte Admin-/Mail-/Zwei-Konten-Abnahme offen. |
+| Rollout des geprüften Commits | **TEILWEISE VERIFIZIERT** | Auth-Aktivierung erfolgreich. Read-only Frontend-Abgleich meldet eine Abweichung zwischen Live-`index.html` und `main`; vollständiger Frontend-Deploy ist deshalb gesperrt. |
 | letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub APIs, scoped SSH-Rollout und direkte anonyme HTTPS-Prüfungen; Details unten. |
 
 ## Architekturübersicht
@@ -22,26 +22,26 @@ flowchart TD
  C --> F[Lehrstellen-Feed]
  B -->|nach Aktivierung: /app und /api/auth| A[FastAPI Auth-Dienst]
  A --> DB[(PostgreSQL)]
- GH[GitHub main / Actions] -->|manueller geprüfter Rollout| C
+ GH[GitHub main / Actions] -->|kontrollierter, gescopter Release| C
  GH -.->|deaktivierte Legacy Pages/Importer| B
  G[Gmail] -.->|stillgelegter Legacy-Importer| GH
  Y[Yousty] -->|nach dokumentierter Quellenfreigabe| K[Server-Crawler]
  K --> F
 ```
 
-Pfeile zu Auth, Datenbank und Crawler bilden den aktuellen Repository-Zielpfad ab; aktive Produktionsverbindungen sind nicht bestätigt.
+Pfeile zu Auth und Datenbank sind durch den erfolgreichen Aktivierungs- und Live-Plan bestätigt. Der Crawler bleibt ohne dokumentierte Quellenfreigabe deaktiviert.
 
 ## Komponenten und Aufgaben
 
 | Komponente | Aufgabe | Status |
 |---|---|---|
-| dashboard/ | Statisches Frontend, Landingpage und Radar | **AUS REPOSITORY**. PR #104 lädt lehrstellen.json statt des früheren jobs.json. Live-Stand: **OFFEN**. |
-| careeragency.ch | Domain in Workflows und Live-Preflight | **AUS REPOSITORY**. DNS-Ziel, aktives Zertifikat und aktuelle Caddy-Routen: **OFFEN**. |
-| Infomaniak / Caddy | Produktionsziel und Reverse Proxy | **AUS REPOSITORY**. Aktuelle Host- und Laufzeitkonfiguration bleiben **OFFEN**; kein aktueller Liveabruf. |
+| dashboard/ | Statisches Frontend, Landingpage und Radar | Live-Landingpage weicht von `main` ab; keine Vollauslieferung bis zum Abgleich produktiver Anpassungen. Scoped Radar-Release ist read-only geprüft. |
+| careeragency.ch | Domain in Workflows und Live-Preflight | HTTPS und produktive Kontorouten im serverseitigen Smoke geprüft; Mailzustellung und interaktive Admin-Nutzung offen. |
+| Infomaniak / Caddy | Produktionsziel und Reverse Proxy | Caddy aktiv; Auth-/Admin-/Account-/App-Routen im Read-only-Produktionsplan bestätigt. |
 | /var/www/careeragency/current | Im SSH-Dispatcher geprüfter Landingpage-Pfad | **AUS REPOSITORY**: status prüft index.html dort. Inhalt und Symlink-Ziel nicht live geprüft. |
 | /srv/careeragency-landing-feed/jobs.json | Im Dispatcher geprüfte Feed-Datei | **AUS REPOSITORY**. Abgleich mit lehrstellen.json ist **OFFEN**. |
-| authservice/ | FastAPI Authentifizierung und private API | **AUS REPOSITORY**; produktiv aktiv: **OFFEN**. |
-| PostgreSQL / careeragency_auth | Auth- und Nutzerdaten gemäß Migrationen | **AUS REPOSITORY**; aktive Datenbank, Schema, Rollen und Backups nicht geprüft. |
+| authservice/ | FastAPI Authentifizierung und private API | Produktiv aktiv; private Pfade ohne Sitzung verweigert. Reale Kontenabnahme offen. |
+| PostgreSQL / careeragency_auth | Auth- und Nutzerdaten gemäß Migrationen | PostgreSQL und Auth-Runtime aktiv; DB-Backup/Restore wurden im Rollout geprüft. Keine DB-Inhalte im Audit ausgegeben. |
 | Yousty-Crawler | Zentraler Lehrstellenfeed und Statusprotokoll | Service/Timer sind nach PR #102 **AUS REPOSITORY**; Timer bleibt laut PR ohne dokumentierte Quellenfreigabe deaktiviert. Auf dem Server installiert/aktiv: **OFFEN**. |
 | GitHub Pages | Historischer statischer Veröffentlichungsweg | Workflow bleibt manuell startbar, Deploy-Job ist deaktiviert (**AUS REPOSITORY**); live öffentlich erreichbar: **OFFEN**. |
 | GitHub Actions | Import, Tests und Veröffentlichung | Definitionen **AUS REPOSITORY**; aktuelle Laufhistorie nicht geprüft. |
@@ -224,3 +224,13 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - Crawler-Freigabeprüfung läuft nun fehlerfrei aus der Runtime: `crawler_timer=disabled source_approval_missing=true`. Kein Crawl und keine Quellenfreigabe vorgenommen.
 - [Read-only-Plan 42420819319](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42420819319) bestätigt Auth-Dienst und Mail-Timer aktiv/aktiviert, Crawler-Timer inaktiv/deaktiviert. Öffentliche Landingpage unverändert; Dossier Studio ausgeklammert.
 - **Verbleibende Abnahme:** Administrator meldet sich unter https://careeragency.ch/account/login mit den lokal gesetzten Zugangsdaten an, richtet TOTP ein und sichert Notfallcodes. Reale Mailzustellung, produktive Zwei-Konten-Isolation und dokumentierte Crawler-Quellenfreigabe bleiben offen. SMTP-Anmeldung ist bestätigt; erfolgreiche Anmeldung am SMTP-Server belegt keine Postfachzustellung. Technischer Rollout abgeschlossen, fachliche Ende-zu-Ende-Abnahme eingeschränkt.
+
+## Deployment-Audit: Release-Pfade konsolidiert (07.11.2026)
+
+- **VERIFIZIERT:** Der read-only Live-Plan bestätigt Caddy, Auth-Dienst und Mail-Timer aktiv; Crawler-Timer bleibt aus. Anonyme Prüfungen zeigen Landingpage/Feed/Login/Registrierung erreichbar und private Ressourcen/API geschützt.
+- **VERIFIZIERT:** Der `CA-RELEASE`-Workflow im Branch bündelt Frontend- und Radar-Check/Deploy/Rollback, pinnt SSH-Hostschlüssel, verlangt die exakte aktuelle `main`-SHA für Check/Deploy, führt nach dem Eingriff passende öffentliche Smoke-Prüfungen aus und startet bei fehlgeschlagenem Deploy-Smoke einen Rollback. Deploy-/Rollback-Schreibpfade wurden nicht durch einen echten Produktionsrelease getestet.
+- **VERIFIZIERT:** Read-only `release-check` meldet `live_index_differs_from_main`. Der Frontend-Deploy bleibt deshalb gesperrt, bis der Live-Unterschied nachvollziehbar übernommen oder als unerwünschte Abweichung klassifiziert ist. Kein Voll-Deploy ausgeführt.
+- **VERIFIZIERT:** Radar-Check/Deploy-Test war ein No-op mit `changes: []`; das zeigt SSH-Gateway und Smoke-Pfad, aber keine erfolgreiche produktive Dateiänderung.
+- **Korrektur:** Auth-Preflight prüft nun den aktiven Release-Symlink `/opt/careeragency/auth-current/authservice` statt eines nicht vorhandenen alten Direktpfads. Offline-Regressionstest ergänzt.
+- **Kritischer Prüfhinweis:** Laufende Backend-Runtime-Updates und Schemaänderungen haben noch keinen regulären Release-/Rollback-Pfad. Diese Änderung behauptet nicht, Backend-Deployment bereits gelöst zu haben. Bis dahin Auth-/DB-Änderungen nur über den gebündelten, explizit geprüften Rollout vornehmen.
+- **Kritischer Prüfhinweis:** Admin-TOTP, echte Mailzustellung und Zwei-Konten-Isolation sind nicht abgenommen. Der anonyme HTTP-Smoke belegt Erreichbarkeit und Zugriffsschutz ohne Session, aber keinen erfolgreichen Benutzerablauf.
