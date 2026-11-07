@@ -1,5 +1,5 @@
-/* Career.Agency / Radar 0.2. Legacy job alerts remain the live adult feed.
- * Separate future apprenticeship mode; local opt-in storage only.
+/* Career.Agency apprenticeship Radar. Historical adult preferences and ratings
+ * remain stored separately but are never exposed or evaluated in the public Radar.
  */
 (function(){
  "use strict";
@@ -12,10 +12,11 @@
   if(label!==undefined)e.textContent=String(label);
   return e;
  };
- const state=model.normalizedState(window.CareerAccount?{market:"apprentice"}:null);
+ const state=model.normalizedState(null);
+ state.market="apprentice"; // Visible Radar is exclusively for apprenticeships.
  let jobs=[],feedLoaded=false,feedBusy=false,showDemo=false,persistent=!!window.CareerAccount,pending=Promise.resolve();
  let reviewLimit=50;
- const market=()=>state.market;
+ const market=()=>"apprentice";
  const bucket=()=>market()==="career"?state.career:state;
  const profile=()=>bucket().profile;
  const groups=()=>market()==="career"?model.careerSkillGroups:model.skillGroups;
@@ -143,7 +144,12 @@
    if(!response.ok)throw Error("HTTP "+response.status);
    const rows=await response.json();
    if(!Array.isArray(rows))throw Error("Ungültiges Stellenformat");
-   jobs=rows.filter(j=>j&&typeof j.id==="string"&&typeof j.title==="string");
+   // Fail closed if this endpoint is ever repointed at legacy career jobs.
+   // The audited Yousty feed supplies apprenticeship metadata even if a title
+   // itself does not contain the word "Lehrstelle".
+   if(rows.some(j=>!j||typeof j.id!=="string"||typeof j.title!=="string"||
+      !model.isApprenticeship(j)))throw Error("Feed enthält keine reinen Lehrstellen.");
+   jobs=rows;
    feedLoaded=true;updateStats();renderSources();
   }catch(err){
    get("radarFeedStatus").textContent="Stellen konnten nicht geladen werden. Bitte Seite erneut öffnen: "+err.message;
@@ -274,7 +280,7 @@
     "Keine offenen Stellen passen zu den gewählten Filtern.":"Keine "+(adult?"Berufsstellen":"Lehrstellen")+" im bisherigen Import."));
    empty.append(make("p",adult?
     "Unter «Zurückgestellt» sind auch die aus der Startseite ausgeblendeten Inserate vollständig erreichbar. Die Importdaten bleiben erhalten.":
-    "Die Jugend-Lehrstellenquellen werden erst später angebunden. Drei fiktive Beispiele stehen zum Testen bereit."));
+    "Prüfe deine Suchkriterien oder lade die Seite neu. Der Lehrstellenfeed wird regelmässig aktualisiert."));
    host.append(empty);
   }else{
    for(const job of [...selected,...examples])host.append(jobCard(job));
@@ -284,13 +290,9 @@
  }
  function renderMarket(){
   const adult=market()==="career";
-  for(const b of root.querySelectorAll(".radar-market"))b.setAttribute("aria-pressed",String(b.dataset.market===market()));
-  get("radarIntro").textContent=adult?
-   "Deine bestehenden Stellenabos liefern weiterhin aktuelle Inserate. Teste hier das Radar mit deinen eigenen Stellen.":
-   "Entdecke deine Stärken, Wunschberufe und spätere Lehrstellenquellen. Noch im Prototyp ohne eigenständigen Lehrstellenimport.";
-  get("radarSegmentLabel").textContent=adult?"Davon im CRM sichtbar":"Mögliche Lehrstellen";
-  get("radarSegmentHint").textContent=adult?"Bestehende CRM-Anzeigeregeln · kein Importfilter":
-   "Im Titel als Lehrstelle erkannt, noch nicht geprüft";
+  get("radarIntro").textContent="Entdecke aktuelle Lehrstellen und Berufe, die zu deinen Interessen passen.";
+  get("radarSegmentLabel").textContent="Erkannte Lehrstellen";
+  get("radarSegmentHint").textContent="Eindeutig als Lehrstellen gekennzeichnete Inserate";
   get("radarSkillsTitle").textContent=adult?"Deine Kompetenzen":"Was kannst du schon?";
   get("radarSkillIntro").textContent=adult?"Fachwissen, Erfahrung und Interessen helfen, Stellen besser einzuordnen.":
    "Auch Schule, Freizeit und Schnupperlehren zählen. Wähle nur aus, was auf dich zutrifft.";
@@ -334,7 +336,7 @@
  }
  async function forget(){
   if(!window.confirm("Alle Radar-Skills, Suchwünsche und Testbewertungen beider Ansichten von diesem Gerät löschen?"))return;
-  Object.assign(state,model.normalizedState(null));persistent=false;showDemo=false;
+  Object.assign(state,model.normalizedState(null));state.market="apprentice";persistent=false;showDemo=false;
   get("radarSaveOptIn").checked=false;
   await pending.catch(()=>{});
   try{await window.AgentStore.clearRadar();message("Radar-Profil und Bewertungen auf diesem Gerät gelöscht.");}
@@ -346,8 +348,9 @@
    const saved=await window.AgentStore.loadRadar();
    if(saved){
     Object.assign(state,model.normalizedState(saved));
+    state.market="apprentice"; // Never activate the legacy career mode from saved state.
     persistent=true;get("radarSaveOptIn").checked=true;
-    message("Dein lokaler Radar-Stand wurde wiederhergestellt.");
+    message(window.CareerAccount?"Dein Radar-Stand wurde aus deinem Konto geladen.":"Dein lokaler Radar-Stand wurde wiederhergestellt.");
    }
   }catch(err){message("Lokaler Speicher nicht verfügbar · nur aktuelle Sitzung.");}
   if(window.CareerAccount){get("radarSaveOptIn").checked=true;get("radarSaveOptIn").disabled=true;}
@@ -361,12 +364,6 @@
    const arr=[...root.querySelectorAll(".radar-tab")],i=arr.indexOf(tab);
    const next=arr[(i+(event.key==="ArrowLeft"?-1:1)+arr.length)%arr.length];
    event.preventDefault();switchTab(next.dataset.tab);next.focus();
-  });
- }
- for(const b of root.querySelectorAll(".radar-market")){
-  b.addEventListener("click",()=>{
-   if(b.dataset.market===market())return;
-   state.market=b.dataset.market;showDemo=false;renderMarket();changed();
   });
  }
  setupForm();
