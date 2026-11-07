@@ -14,6 +14,7 @@ jobs:
           for script in ops/production/*.sh; do bash -n "$script"; done
           python -m compileall -q ops/production authservice crawler
           python -m unittest discover -s ops/tests -v
+          python -m unittest discover -s ops/production/tests -v
           node --test tests/private-state.test.mjs tests/filter-sync.test.mjs
       - name: Validate patched proxy with real Caddy
         run: |
@@ -26,3 +27,21 @@ jobs:
           Path('/tmp/Caddyfile').write_text(module.patch_caddy('careeragency.ch {\n root * /srv\n file_server\n}\n'))
           PY
           docker run --rm -v /tmp/Caddyfile:/etc/caddy/Caddyfile:ro caddy:2.10.2 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+      - name: Verify existing legacy Basic Auth with real Caddy
+        run: |
+          docker run --rm caddy:2.10.2 caddy hash-password --plaintext synthetic-fixture-password > /tmp/fixture-hash
+          python - <<'PY'
+          from pathlib import Path
+          hashed=Path('/tmp/fixture-hash').read_text().strip()
+          Path('/tmp/LegacyCaddyfile').write_text('careeragency.ch {\n handle /jobs.json {\n basic_auth {\n synthetic-user '+hashed+'\n }\n file_server\n }\n handle {\n root * /srv\n file_server\n }\n}\n')
+          PY
+          docker run --rm -v /tmp/LegacyCaddyfile:/etc/caddy/Caddyfile:ro caddy:2.10.2 caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile > /tmp/legacy-adapted.json
+          python - <<'PY'
+          import importlib.util,json
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('rollout','ops/production/production_rollout.py')
+          module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+          assert module.legacy_basic_auth_only(json.loads(Path('/tmp/legacy-adapted.json').read_text()))
+          Path('/tmp/LegacyPatched').write_text(module.patch_caddy(Path('/tmp/LegacyCaddyfile').read_text(),legacy_basic_auth_reviewed=True))
+          PY
+          docker run --rm -v /tmp/LegacyPatched:/etc/caddy/Caddyfile:ro caddy:2.10.2 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
