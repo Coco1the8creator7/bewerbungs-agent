@@ -1,0 +1,28 @@
+name: Production rollout validation
+on:
+  pull_request:
+    paths: ['ops/**', 'authservice/**', 'db/**', 'crawler/**', 'dashboard/private-state.js', '.github/workflows/production*']
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax and rollback/allowlist tests
+        run: |
+          for script in ops/production/*.sh; do bash -n "$script"; done
+          python -m compileall -q ops/production authservice crawler
+          python -m unittest discover -s ops/tests -v
+          node --test tests/private-state.test.mjs tests/filter-sync.test.mjs
+      - name: Validate patched proxy with real Caddy
+        run: |
+          docker run --rm caddy:2.10.2 caddy version
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          spec=importlib.util.spec_from_file_location('rollout','ops/production/production_rollout.py')
+          module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+          Path('/tmp/Caddyfile').write_text(module.patch_caddy('careeragency.ch {\n root * /srv\n file_server\n}\n'))
+          PY
+          docker run --rm -v /tmp/Caddyfile:/etc/caddy/Caddyfile:ro caddy:2.10.2 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile

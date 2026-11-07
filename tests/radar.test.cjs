@@ -141,7 +141,8 @@ test("v2 preserves access to all excluded careers through Radar even if wishlist
  assert.match(radar,/Mit meinen Kriterien bewerten/);
  assert.match(filter,/career-preselector-v2/);
  assert.match(filter,/const isVisible = job => classify\(job\)\.visible/);
- assert.match(html,/value="priority" selected/);
+ assert.match(html,/value="date" selected/);
+ assert.doesNotMatch(html,/value="priority" selected/);
  assert.doesNotMatch(radar,/\.splice\([^)]*jobs/);
 });
 

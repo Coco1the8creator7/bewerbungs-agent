@@ -1,13 +1,6 @@
-name: Career.Agency – Infomaniak Frontend automatisch veröffentlichen
+name: Career.Agency – Infomaniak Legacy Frontend nur prüfen (Veröffentlichung ersetzt)
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'dashboard/**'
-      - 'tests/agency-world.test.mjs'
-      - 'tests/filter-sync.test.mjs'
-      - '.github/workflows/deploy-infomaniak.yml'
   workflow_dispatch:
 
 permissions:
@@ -49,66 +42,3 @@ jobs:
       - name: Automatisierte Tests
         run: |
           node --test tests/agency-world.test.mjs tests/filter-sync.test.mjs
-
-  deploy:
-    name: Frontend per SFTP hochladen
-    needs: verify
-    runs-on: ubuntu-latest
-    # Nur Push auf main oder bewusster manueller Start; keine PR-Deployments.
-    if: github.ref == 'refs/heads/main'
-    env:
-      SFTP_HOST: ${{ secrets.INFOMANIAK_SFTP_HOST }}
-      SFTP_USER: ${{ secrets.INFOMANIAK_SFTP_USER }}
-      SFTP_PASSWORD: ${{ secrets.INFOMANIAK_SFTP_PASSWORD }}
-      SFTP_REMOTE_PATH: ${{ secrets.INFOMANIAK_SFTP_PATH }}
-      SSH_KNOWN_HOSTS: ${{ secrets.INFOMANIAK_SSH_KNOWN_HOSTS }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Zugang und Zielpfad prüfen
-        shell: bash
-        run: |
-          for name in SFTP_HOST SFTP_USER SFTP_PASSWORD SFTP_REMOTE_PATH SSH_KNOWN_HOSTS; do
-            if [[ -z "${!name}" ]]; then
-              echo "::error::Fehlende Infomaniak-Konfiguration: $name. Siehe docs/infomaniak-auto-deploy.md"
-              exit 1
-            fi
-          done
-          if [[ ! "$SFTP_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]; then
-            echo "::error::Ungültiger SFTP-Hostname"
-            exit 1
-          fi
-          if [[ ! "$SFTP_REMOTE_PATH" =~ ^/[a-zA-Z0-9_./-]+$ || "$SFTP_REMOTE_PATH" == "/" || "$SFTP_REMOTE_PATH" == *".."* ]]; then
-            echo "::error::Unsicherer oder ungültiger Zielpfad"
-            exit 1
-          fi
-      - name: SFTP-Client installieren
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq lftp
-      - name: SSH-Hostschlüssel hinterlegen
-        shell: bash
-        run: |
-          mkdir -p "$HOME/.ssh"
-          chmod 700 "$HOME/.ssh"
-          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
-          chmod 600 "$HOME/.ssh/known_hosts"
-          ssh-keygen -F "$SFTP_HOST" -f "$HOME/.ssh/known_hosts" > /dev/null || {
-            echo "::error::SSH-Known-Hosts enthält keinen passenden Eintrag für den Infomaniak-Host"
-            exit 1
-          }
-      - name: Geprüftes Dashboard übertragen
-        shell: bash
-        run: |
-          # Das Ziel muss vorher auf Infomaniak angelegt worden sein.
-          # Kein --delete: bestehende Nutzerdateien werden nicht entfernt.
-          cat > "$RUNNER_TEMP/deploy.lftp" <<EOF
-          set cmd:fail-exit yes
-          set net:max-retries 2
-          set sftp:auto-confirm no
-          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=yes -o UserKnownHostsFile=$HOME/.ssh/known_hosts"
-          cd "$SFTP_REMOTE_PATH"
-          mirror --reverse --verbose=1 --exclude-glob .env* --exclude-glob credentials.json --exclude-glob token.json dashboard .
-          bye
-          EOF
-          lftp -u "$SFTP_USER","$SFTP_PASSWORD" "sftp://$SFTP_HOST" -f "$RUNNER_TEMP/deploy.lftp"
-          rm -f "$RUNNER_TEMP/deploy.lftp"

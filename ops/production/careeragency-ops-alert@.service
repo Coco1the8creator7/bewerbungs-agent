@@ -1,0 +1,5 @@
+[Unit]
+Description=Log Career.Agency failed unit %i
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/logger -p daemon.err -t careeragency-alert "Failed unit %i; inspect journalctl and source approval before retry"

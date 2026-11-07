@@ -1,0 +1,52 @@
+name: Career.Agency bundled production rollout
+on:
+  issues:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      operation:
+        type: choice
+        options: [plan, lockdown, prepare, activate]
+        required: true
+      commit_sha:
+        type: string
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: careeragency-production
+  cancel-in-progress: false
+jobs:
+  rollout:
+    if: >-
+      github.repository == 'Coco1the8creator7/bewerbungs-agent' &&
+      ((github.event_name == 'issues' && github.event.issue.user.id == 343900642 && startsWith(github.event.issue.title, 'CA-PROD: ')) ||
+       (github.event_name == 'workflow_dispatch' && github.actor == 'Coco1the8creator7' && github.ref == 'refs/heads/main'))
+    environment: careeragency-ops
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Run exact owner-authorized operation
+        shell: bash
+        env:
+          TITLE: ${{ github.event.issue.title }}
+          EVENT: ${{ github.event_name }}
+          OPERATION: ${{ inputs.operation }}
+          COMMIT: ${{ inputs.commit_sha }}
+          KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
+          HOSTS: ${{ secrets.CA_OPS_KNOWN_HOSTS }}
+          HOST: ${{ secrets.CA_OPS_HOST }}
+        run: |
+          set -euo pipefail
+          umask 077
+          if [[ "$EVENT" == issues ]]; then
+            [[ "$TITLE" =~ ^CA-PROD:\ (plan|lockdown|prepare|activate)\ ([a-f0-9]{40})$ ]] || exit 64
+            OPERATION="${BASH_REMATCH[1]}"; COMMIT="${BASH_REMATCH[2]}"
+          fi
+          case "$OPERATION" in plan|lockdown|prepare|activate) ;; *) exit 64 ;; esac
+          [[ "$COMMIT" =~ ^[a-f0-9]{40}$ && "$HOST" =~ ^[a-zA-Z0-9.-]+$ ]] || exit 64
+          printf '%s\n' "$KEY" > "$RUNNER_TEMP/ca-key"
+          printf '%s\n' "$HOSTS" > "$RUNNER_TEMP/ca-hosts"
+          ssh -T -i "$RUNNER_TEMP/ca-key" -o BatchMode=yes -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$RUNNER_TEMP/ca-hosts" \
+            -o ConnectTimeout=10 "careeragency_runner@$HOST" "production-$OPERATION $COMMIT"

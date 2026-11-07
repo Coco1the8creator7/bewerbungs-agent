@@ -3,7 +3,9 @@ on:
   pull_request:
     paths:
       - 'authservice/**'
-      - 'db/migrations/002_auth_runtime.sql'
+      - 'db/migrations/**'
+      - 'crawler/**'
+      - 'dashboard/private-state.js'
       - '.github/workflows/authservice-integration.yml'
   workflow_dispatch:
 permissions:
@@ -39,8 +41,71 @@ jobs:
           PGPASSWORD: testonly
         run: |
           psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f db/migrations/001_auth_foundation.sql
-          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f db/migrations/002_auth_runtime.sql
+          for migration in db/migrations/00{2,3,4,5}_*.sql; do
+            psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f "$migration"
+          done
+          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -c "CREATE ROLE career_test_runtime; GRANT USAGE ON SCHEMA career_private TO career_test_runtime; GRANT SELECT,INSERT,UPDATE,DELETE ON career_private.user_state TO career_test_runtime;"
           psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f db/tests/auth_foundation_smoke.sql
+      - name: Replay production migration ledger on empty and legacy fixture databases
+        shell: bash
+        env:
+          PGPASSWORD: testonly
+        run: |
+          set -euo pipefail
+          python - <<'PYRENDER'
+          from pathlib import Path
+          import subprocess
+          root=Path.cwd()
+          script=Path('ops/production/migrate-production.sh').read_text()
+          script=script.replace('[[ $EUID == 0 && $# -ge 1 && $# -le 2 ]] || exit 64','true')
+          executor='runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -v target_db="$db" -d "$db" < "$work" >/dev/null'
+          assert executor in script
+          script=script.replace(executor,'cat "$work"')
+          result=subprocess.run(['bash','-c',script,'render',str(root)],check=True,capture_output=True,text=True)
+          Path('/tmp/ca-migrations.sql').write_text(result.stdout)
+          PYRENDER
+          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d postgres -c 'CREATE ROLE careeragency_auth; CREATE ROLE careeragency_crawler;'
+          for db in careeragency_restore_000000000001 careeragency_restore_000000000002; do
+            createdb -h localhost -U postgres "$db"
+          done
+          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_restore_000000000002 -f db/migrations/001_auth_foundation.sql
+          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_restore_000000000002 -f db/migrations/002_auth_runtime.sql
+          for db in careeragency_restore_000000000001 careeragency_restore_000000000002; do
+            for replay in 1 2; do
+              psql -X -v ON_ERROR_STOP=1 -v target_db="$db" -h localhost -U postgres -d "$db" -f /tmp/ca-migrations.sql >/dev/null
+            done
+            test "$(psql -XAt -h localhost -U postgres -d "$db" -c 'SELECT count(*) FROM career_ops.migrations')" = 5
+          done
       - name: Test security and database integration
         run: python -m unittest discover -s authservice/tests -v
-      - run: python -m compileall -q authservice
+      - run: python -m unittest discover -s crawler/tests -v
+      - run: node --test tests/filter-sync.test.mjs tests/private-state.test.mjs
+      - run: python -m compileall -q authservice crawler
+
+      - name: Synthetic private app HTTPS browser test
+        shell: bash
+        env:
+          CAREER_AUTH_DATABASE_URL: postgresql://postgres:testonly@localhost:5432/careeragency_auth_test
+          CAREER_AUTH_PUBLIC_ORIGIN: https://localhost:8443
+          CAREER_APP_ROOT: ${{ github.workspace }}/dashboard
+          CAREER_PUBLIC_FEED: /tmp/career-e2e-feed.json
+        run: |
+          set -euo pipefail
+          export CAREER_AUTH_TOTP_KEY=$(python -c 'from cryptography.fernet import Fernet;print(Fernet.generate_key().decode())')
+          python - <<'PYTEST'
+          import os,json,uuid,psycopg
+          from pathlib import Path
+          from auth.security import hash_password
+          with psycopg.connect(os.environ['CAREER_AUTH_DATABASE_URL']) as con:
+              for email in ['e2e-a@example.com','e2e-b@example.com']:
+                  con.execute("INSERT INTO career_auth.users(id,email,first_name,last_name,residence,password_hash,status,email_verified_at) VALUES(%s,%s,'Synthetic','E2E','ZH',%s,'active',now())",(uuid.uuid4(),email,hash_password('synthetic test password')))
+          Path('/tmp/career-e2e-feed.json').write_text(json.dumps([{'id':'apprenticeship-synthetic-e2e','source':'yousty.ch','title':'Lehrstelle Koch EFZ','company':'Fiktiver Betrieb','location':'Zürich','categories':['Lehrstelle','EFZ'],'description':'Fiktives Testinserat','url':'https://example.invalid/test','first_seen_at':'2026-11-07T12:00:00Z'}]))
+          PYTEST
+          openssl req -x509 -newkey rsa:2048 -nodes -keyout /tmp/ca-e2e.key -out /tmp/ca-e2e.crt -days 1 -subj '/CN=localhost' >/dev/null 2>&1
+          python -m uvicorn authservice.asgi:app --host 127.0.0.1 --port 8443 --ssl-keyfile /tmp/ca-e2e.key --ssl-certfile /tmp/ca-e2e.crt > /tmp/ca-e2e-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in {1..30}; do curl -kfsS https://localhost:8443/healthz >/dev/null && break; sleep 1; done
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node tests/private-app-e2e.cjs

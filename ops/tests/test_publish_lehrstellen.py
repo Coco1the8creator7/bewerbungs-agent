@@ -40,7 +40,7 @@ class LandingPublishingTests(unittest.TestCase):
 
     def test_patches_current_existing_landing_without_layout_changes(self):
         updated, changes = module.patch_landing(self.current)
-        self.assertGreaterEqual(len(changes), 10)
+        self.assertEqual(changes, [])
         self.assertIn('fetch("./lehrstellen.json",{cache:"no-store"})', updated)
         self.assertIn('function visibleJobs(){return jobs;}', updated)
         self.assertIn('if(!incoming.length||incoming.some(j=>j.source!=="yousty.ch"', updated)
@@ -51,10 +51,7 @@ class LandingPublishingTests(unittest.TestCase):
         # Semantics changed only in application JavaScript, existing layout preserved.
         self.assertEqual(
             self.current.split("<script>\n")[0],
-            updated.split("<script>\n")[0].replace(
-                '<option value="date" selected>Neueste zuerst</option>',
-                '<option value="priority" selected>Priorität</option><option value="date">Neueste zuerst</option>',
-            ),
+            updated.split("<script>\n")[0],
         )
         for marker in ('id="newJobsList"', 'id="details"', './radar.js', './dossiers.js'):
             self.assertIn(marker, updated)

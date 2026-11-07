@@ -1,0 +1,18 @@
+[Unit]
+Description=Career.Agency central apprenticeship refresh
+After=network-online.target postgresql.service
+OnFailure=careeragency-ops-alert@%n.service
+[Service]
+Type=oneshot
+User=careeragency_crawler
+Group=careeragency_crawler
+WorkingDirectory=/opt/careeragency/auth-current
+EnvironmentFile=/etc/careeragency/crawler.env
+ExecStart=/opt/careeragency/auth-current/.venv/bin/python -m crawler.production
+TimeoutStartSec=2h
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/careeragency-public

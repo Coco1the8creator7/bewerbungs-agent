@@ -28,7 +28,7 @@ assert.match(styles,/\.card-thumb-up/);
 assert.match(styles,/\.card-thumb-down/);
 assert.match(styles,/\.card-thumb:focus-visible/);
 assert.match(styles,/width:46px/);
-assert.match(gh,/\["positive_feedback","id"\]/);
+assert.doesNotMatch(gh,/api.github.com/);
 
 // Validate explicit signals and backward compatibility with older feedback.
 const validateStart=html.indexOf("function validatePositiveFeedback(records){");
@@ -98,24 +98,10 @@ assert.equal(dismissedJobFeedback.has(job.id),true);
 assert.equal(positiveJobFeedback.size,0);
 assert.ok(workspaceSaves>=2);
 
-// The data exchange has separate arrays and conflict-safe 3-way GitHub merges.
-const syncContext={window:{}};
-vm.runInNewContext(gh.replace(/window\.GithubFeedback=Object\.freeze\(\{[^}]+\}\);/,
- "window.__mergeForTest=merge;"),syncContext);
-const merge=syncContext.window.__mergeForTest;
-const empty={type:"bewerbungs-agent-feedback",schema_version:"1.0.0",
- annotations:[],relevance_ratings:[],dismissals:[],export_selection:[],overrides:[],manual_jobs:[],activity_log:[]};
-const like={id:"job-1",signal:"interested",source:"thumb_up",marked_at:at};
-const result=merge(empty,{...empty,positive_feedback:[like]},empty);
-assert.equal(JSON.stringify(result.positive_feedback),JSON.stringify([like]));
-assert.equal(result.dismissals.length,0);
-const undone=merge({...empty,positive_feedback:[like]},
- {...empty,positive_feedback:[]},{...empty,positive_feedback:[like]});
-assert.equal(undone.positive_feedback.length,0);
-assert.throws(()=>merge({...empty,positive_feedback:[like]},
- {...empty,positive_feedback:[{...like,marked_at:"2026-11-04T13:00:00Z"}]},
- {...empty,positive_feedback:[{...like,marked_at:"2026-11-04T14:00:00Z"}]}),/Konflikt/);
-console.log("Desktop thumbs, separate positive feedback, undo and GitHub merge checks passed");
+// Private account state preserves the separate signals; no public GitHub writes.
+assert.doesNotMatch(gh,/api.github.com|localStorage.getItem/);
+assert.match(fs.readFileSync("authservice/private_state.py","utf8"),/"positive_feedback"/);
+console.log("Desktop thumbs, separate positive feedback, undo and private account persistence contract checks passed");
 
 }
 run().catch(err=>{console.error(err);process.exitCode=1;});

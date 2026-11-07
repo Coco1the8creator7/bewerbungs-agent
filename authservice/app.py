@@ -17,11 +17,7 @@ app=FastAPI(openapi_url=None,docs_url=None,redoc_url=None)
 COOKIE="ca_session"
 def now(): return datetime.now(timezone.utc)
 def db(): return psycopg.connect(os.environ["CAREER_AUTH_DATABASE_URL"],row_factory=dict_row)
-def mail(to,subject,body):
-    msg=EmailMessage()
-    msg["From"]=os.environ["CAREER_AUTH_MAIL_FROM"];msg["To"]=to;msg["Subject"]=subject;msg.set_content(body)
-    with smtplib.SMTP(os.environ["CAREER_AUTH_SMTP_HOST"],int(os.getenv("CAREER_AUTH_SMTP_PORT","587")),timeout=15) as s:
-        s.starttls(context=ssl.create_default_context());s.login(os.environ["CAREER_AUTH_SMTP_USER"],os.environ["CAREER_AUTH_SMTP_PASS"]);s.send_message(msg)
+from .outbox import queue_mail
 def origin(): return os.environ["CAREER_AUTH_PUBLIC_ORIGIN"].rstrip("/")
 @app.middleware("http")
 async def request_protection(request,call_next):
@@ -118,7 +114,7 @@ def register(data:Registration,request:Request):
                 VALUES(%s,%s,%s,%s,%s,%s,%s)""",(uid,email,data.first_name.strip(),data.last_name.strip(),
                 data.residence.strip(),data.birth_date,hash_password(data.password)))
             t=create_token(con,uid,"verify_email",timedelta(hours=24))
-    if t: mail(email,"Bestätige deine E-Mail-Adresse",f"Bestätige: {origin()}/account/verify?token={quote(t)}")
+        if t: queue_mail(con,email,"Bestätige deine E-Mail-Adresse",f"Bestätige: {origin()}/account/verify?token={quote(t)}")
     return {"message":"Falls eine Registrierung möglich ist, erhältst du eine E-Mail."}
 
 @app.post("/api/auth/verify-email")
@@ -127,8 +123,8 @@ def verify(data:LinkToken):
         uid=consume(con,data.token,"verify_email")
         con.execute("UPDATE career_auth.users SET email_verified_at=now(),updated_at=now() WHERE id=%s",(uid,))
         admin_addresses=[a["email"] for a in con.execute("SELECT email FROM career_auth.users WHERE role='admin' AND status='active'").fetchall()]
-    for address in admin_addresses:
-        mail(address,"Neue Career.Agency Registrierung","Ein bestätigtes Konto wartet auf Freischaltung im Admin-Dashboard.")
+        for address in admin_addresses:
+            queue_mail(con,address,"Neue Career.Agency Registrierung","Ein bestätigtes Konto wartet auf Freischaltung im Admin-Dashboard.")
     return {"message":"E-Mail bestätigt. Dein Konto wartet auf Freischaltung."}
 
 @app.post("/api/auth/login")
@@ -155,7 +151,7 @@ def me(request:Request):
         u=session(con,request)
         state=permitted_area(AccountState(u["status"],u["email_verified_at"] is not None,u["role"],u["totp_enabled"]))
         if state=="app" and u["totp_enabled"] and not u["mfa_verified"]: state="mfa_required"
-    return {"first_name":u["first_name"],"role":u["role"],"status":u["status"],"next":state}
+    return {"id":str(u["id"]),"first_name":u["first_name"],"role":u["role"],"status":u["status"],"next":state}
 
 @app.post("/api/auth/logout")
 def logout(request:Request,response:Response):
@@ -172,7 +168,7 @@ def reset_request(data:ResetEmail,request:Request):
     with db() as con:
         u=con.execute("SELECT id FROM career_auth.users WHERE lower(trim(email))=%s",(email,)).fetchone()
         t=create_token(con,u["id"],"reset_password",timedelta(minutes=30)) if u else None
-    if t: mail(email,"Passwort zurücksetzen",f"Passwort zurücksetzen: {origin()}/account/reset?token={quote(t)}")
+        if t: queue_mail(con,email,"Passwort zurücksetzen",f"Passwort zurücksetzen: {origin()}/account/reset?token={quote(t)}")
     return {"message":"Falls die Adresse existiert, erhältst du eine E-Mail."}
 
 @app.post("/api/auth/password-reset/confirm")
@@ -262,7 +258,7 @@ def activate(user_id:uuid.UUID,request:Request):
         con.execute("UPDATE career_auth.users SET status='active',activated_at=now(),blocked_at=NULL WHERE id=%s",(user_id,))
         con.execute("INSERT INTO career_auth.admin_audit(id,actor_user_id,target_user_id,action) VALUES(%s,%s,%s,%s)",
                     (uuid.uuid4(),a["id"],user_id,"activate_user"))
-    mail(u["email"],"Dein Career Agency Konto ist freigeschaltet",
+        queue_mail(con,u["email"],"Dein Career Agency Konto ist freigeschaltet",
          f"Hey {u['first_name']}! 🚀\nYes! Dein Career.Agency-Konto ist jetzt freigeschaltet! 🎉\n"
          f"Deine Zukunft. Dein Weg. Deine Agency.\n{origin()}/account/login")
     return {"message":"Konto freigeschaltet"}
@@ -294,8 +290,8 @@ def resend_verification(data:ResetEmail,request:Request):
         u=con.execute("""SELECT id FROM career_auth.users WHERE lower(trim(email))=%s
             AND email_verified_at IS NULL AND status='pending'""",(email,)).fetchone()
         t=create_token(con,u["id"],"verify_email",timedelta(hours=24)) if u else None
-    if t:
-        mail(email,"Bestätige deine E-Mail-Adresse",f"Bestätige: {origin()}/account/verify?token={quote(t)}")
+        if t:
+            queue_mail(con,email,"Bestätige deine E-Mail-Adresse",f"Bestätige: {origin()}/account/verify?token={quote(t)}")
     return {"message":"Falls eine Bestätigung aussteht, erhältst du einen neuen Link."}
 
 @app.post("/api/admin/users/{user_id}/unblock")

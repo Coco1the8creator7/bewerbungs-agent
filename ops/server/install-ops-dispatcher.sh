@@ -38,6 +38,7 @@ known = {
     'status', 'tests', 'feed-audit', 'crawler-probe',
     r'stage\ [0-9a-f][0-9a-f][0-9a-f]*',
     'publish-lehrstellen', 'release-check', 'auth-preflight',
+    r'production-plan\ *|production-lockdown\ *|production-prepare\ *|production-activate\ *',
     r'release-check\ *|release-deploy\ *|release-rollback\ *',
     r'release-check\ [0-9a-f]*|release-deploy\ [0-9a-f]*|release-rollback\ *',
     '*',
