@@ -1,6 +1,7 @@
 """Disposable PostgreSQL integration tests. Never point at production."""
 import os,re,uuid,unittest
 import psycopg,pyotp
+from cryptography.fernet import Fernet
 from fastapi.testclient import TestClient
 from authservice import app as server
 from auth.security import hash_password
@@ -12,7 +13,7 @@ class AuthIntegration(unittest.TestCase):
         os.environ["CAREER_AUTH_DATABASE_URL"]=os.environ["CAREER_AUTH_TEST_DATABASE_URL"]
         os.environ["CAREER_AUTH_PUBLIC_ORIGIN"]="https://testserver"
         os.environ["CAREER_AUTH_MAIL_FROM"]="noreply@careeragency.ch"
-        os.environ["CAREER_AUTH_TOTP_KEY"]="dXlFSVVPaXhPWXUzTlJ3ekZ2ZnlTVG02RDQ4VkJxOUM3Y2J5WUxMaXc="
+        os.environ["CAREER_AUTH_TOTP_KEY"]=Fernet.generate_key().decode()
         cls.messages=[]
         server.mail=lambda to,subject,body:cls.messages.append((to,subject,body))
         cls.client=TestClient(server.app,base_url="https://testserver")
