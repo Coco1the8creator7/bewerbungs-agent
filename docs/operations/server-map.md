@@ -188,3 +188,9 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - [Aktivierungsversuch 42391932466](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42391932466) bestätigt `auth_environment=complete` und identische vorbereitete App-/Migrations-/Unit-Dateien (staged 7685b15, current 4b20cd8). Abbruch vor Dienststart/Caddy-Änderung wegen bestehender Request-Transformations-/Auth-Direktive.
 - Neuer Read-only-Plan ergänzt eine whitelist-basierte Routing-Zusammenfassung aus `caddy adapt`: Matcher-Hosts/Pfade, Handler-Arten und Statuscodes; keine Auth-Provider-Felder, Benutzernamen, Passwort-Hashes, Headerwerte oder Response-Bodies. Dadurch kann die bestehende Regel geprüft werden, ohne Konfigurationssecrets offenzulegen.
 - Lokal 18 Rollout-Tests und 45 Ops-Tests erfolgreich; Datenschutz-Negativtests für Routing-Zusammenfassung enthalten. Öffentliche Auth-Aktivierung weiterhin nicht erfolgt.
+
+## Prüfung der bestehenden Legacy-Authentifizierung (07.11.2026)
+
+- **VERIFIZIERT:** Read-only-[Run 42392386855](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42392386855) zeigt die einzige `authentication`-Middleware innerhalb des exakten `/jobs.json`-Handlers. Keine globale Authentifizierung oder Request-Umschreibung im gemeldeten Routing. Auth-Provider und Zugangsdaten wurden nicht ausgegeben.
+- Der Aktivierungsguard prüft diese Begrenzung erneut anhand der tatsächlich adaptierten Caddy-Konfiguration. Sämtliche OR-Matcher müssen auf exakte Legacy-JSON-Pfade begrenzt sein; globale Authentifizierung, Wildcards und unbeschränkte Geschwisterrouten werden weiterhin abgewiesen. Bestehende Regel bleibt erhalten; neue Kontorouten gehen zum Loopback-Backend.
+- **Offen:** erfolgreicher Aktivierungslauf und öffentliche HTTP-Negativtests. SMTP-Anmeldung und Admin-Erstellung sind vom Betreiber bestätigt; echte Mailzustellung und Admin-TOTP bleiben ungeprüft. Keine Dossier-Studio-Änderung.
