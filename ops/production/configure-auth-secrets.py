@@ -35,7 +35,7 @@ def main():
         raise SystemExit("Missing protected /etc/careeragency directory")
     if stat.S_IMODE(folder.stat().st_mode) & 0o077:
         raise SystemExit("Auth config directory must not be accessible to other users")
-    host = input("SMTP hostname (Infomaniak): ").strip()
+    host = input("SMTP hostname [mail.infomaniak.com]: ").strip() or "mail.infomaniak.com"
     port = input("SMTP STARTTLS port [587]: ").strip() or "587"
     sender = input("Absenderadresse (z.B. noreply@careeragency.ch): ").strip()
     user = input("SMTP Benutzername: ").strip()
