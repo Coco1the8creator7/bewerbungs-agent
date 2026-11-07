@@ -7,11 +7,11 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Repository-Stand | **VERIFIZIERT** | 861c1e076d06d09a10133bb126a4cfa906c7cf9b, 07.11.2026; GitHub Commit API |
+| geprüfter Repository-Stand | **VERIFIZIERT** | be274736924b2b48ca08a7043fa967520147f591, 07.11.2026; GitHub Commit API, ergänzt um die unten dokumentierten Rollout-Prüfungen |
 | PR-Lage | **VERIFIZIERT** | #102 gemergt in 861c1e0; #104 und PRs #103/#97 sind ebenfalls enthalten. |
-| aktuelle Serverkonfiguration | **OFFEN** | Bei dieser Bestandsaufnahme kein Live-Statusabruf; frühere Nachweise sind zeitgebunden und teils widersprüchlich. |
-| Rollout des geprüften Commits | **OFFEN** | Repository-Commit oder CI allein belegt kein Produktionsdeployment. |
-| letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub Repository-, Datei-, Commit- und PR-API; keine Serverabfrage oder Änderung. |
+| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Scoped SSH-Gateway und kanonischer Webroot geprüft; Auth-Backend vorbereitet, noch nicht öffentlich aktiviert. Siehe aktuelle Nachweise unten. |
+| Rollout des geprüften Commits | **VORBEREITUNG VERIFIZIERT** | Lockdown und Backend-Vorbereitung erfolgreich; öffentliche Auth-Aktivierung und echter SMTP-Versand weiterhin OFFEN. |
+| letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub APIs, scoped SSH-Rollout und direkte anonyme HTTPS-Prüfungen. Details und Grenzen unten. |
 
 ## Architekturübersicht
 
@@ -162,3 +162,13 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - Read-only-[Run 42389350307](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42389350307) erfolgreich: current ist ein Symlink auf `/var/www/careeragency/releases/legacy-hidden-20261106`; Eigentümer ubuntu:ubuntu, Modus 775. Auth weiterhin inaktiv, auth.env fehlt.
 - Die Rechteprüfung berücksichtigt administrative Gruppen nur nach tatsächlicher Unix-Mitgliederprüfung. Gruppen-Schreibrecht wird nur akzeptiert, wenn sämtliche primären und zusätzlichen Gruppenmitglieder zur unveränderten Vertrauensmenge root/ubuntu gehören. Welt-Schreibrecht, fremde Eigentümer, unaufgelöste Gruppen und fremde Gruppenmitglieder bleiben gesperrt. Keine Dateirechte werden dadurch verändert.
 - 12 lokale Rollout-Tests einschliesslich negativer Rechtefälle erfolgreich. Serverseitiger Lockdown und Backend-Vorbereitung bleiben bis zur erfolgreichen Ausführung unbestätigt.
+
+## Erfolgreiche Produktionsvorbereitung (07.11.2026)
+
+- **Feedback-Sperre VERIFIZIERT:** [Run 42389629129](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42389629129), code 28cbd71dcda62cb1a99dc5418e188bf3ca6dc19d. Live-Payload reversibel ausserhalb des Webroots gesichert; direkter anschliessender GET /feedback.json HTTP 404. Backup: `/var/backups/careeragency-ops/production/20261107T160652Z-28cbd71dcda6`.
+- **Backend-Vorbereitung VERIFIZIERT:** [Run 42389932755](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42389932755), code 7685b15945bab46edc801d78ca64d44c2592f14c. Runtime installiert, Datenbankdump und Restore-Probe erfolgreich, Migrationstracking und additive Migrationen erfolgreich, 185 bestehende Lehrstellen-IDs als zentraler Pool übernommen. Services/Timer installiert; Auth absichtlich noch nicht gestartet. Backup: `/var/backups/careeragency-ops/production/20261107T161026Z-7685b15945ba`.
+- **Konfiguration:** root-only auth.env mit lokal erzeugtem Schlüssel und SMTP-Platzhaltern angelegt. SMTP-Zugangsdaten und initialer Administrator müssen lokal eingegeben werden; reale Zustellung und Admin-TOTP sind NICHT verifiziert. Keine Secrets ausgelesen oder protokolliert.
+- **Paralleländerung:** Ein früherer prepare-Versuch mit veraltetem main-SHA wurde vor Änderungen abgewiesen. Der erfolgreiche Lauf berücksichtigt den inzwischen freigegebenen UI-Commit.
+- **Aktivierung:** Eine vorbereitete, root-verlinkte Runtime darf nach reinen Dokumentations-/Ops-Änderungen aktiviert werden, wenn ihre Git-Revision Vorfahr des aktuellen main ist und Auth-, Backend-, Crawler-, Dashboard-, Migrations- und Unit-Dateien identisch sind. Änderungen an diesen produktiven Artefakten erzwingen erneutes prepare. Das verhindert, dass die Aktualisierung dieser Landkarte allein ein erneutes Runtime-Deployment verlangt.
+- **Konfigurationsbackup:** Vor Aktivierung wird auth.env einschliesslich des Verschlüsselungsschlüssels im root-only Release-Backup gesichert; Werte erscheinen nicht in Logs.
+- **Offen:** lokale SMTP-/Admin-Eingabe, Auth-/Caddy-Aktivierung und HTTP-Negativtests; echte E-Mail-Zustellung, Admin-MFA, zwei reale Testkonten und Crawler-Quellenfreigabe. Crawler-Timer bleibt ohne dokumentierte Freigabe deaktiviert. Dossier Studio bleibt ausgeklammert.

@@ -136,7 +136,13 @@ PY
 fi
 # Activate only a fully prepared, secret-configured, locally bootstrapped installation.
 python3 "$src/ops/production/production_rollout.py" env /etc/careeragency/auth.env
-[[ "$(readlink -f /opt/careeragency/auth-current)" == "/opt/careeragency/auth-releases/$sha" ]] || exit 65
+[[ -L /opt/careeragency/auth-current && $(stat -c %U /opt/careeragency/auth-current) == root ]] || exit 65
+runtime=$(readlink -f /opt/careeragency/auth-current)
+[[ "$runtime" =~ ^/opt/careeragency/auth-releases/([a-f0-9]{40})$ ]] || exit 65
+staged_sha=${BASH_REMATCH[1]}
+bash "$src/ops/production/check-runtime-source.sh" "$src" "$staged_sha" "$sha"
+# Preserve the encryption key/SMTP configuration in the same root-only release backup.
+cp -p /etc/careeragency/auth.env "$backup/auth.env"
 admins=$(runuser -u postgres -- psql -XAt -d careeragency_auth -c "SELECT count(*) FROM career_auth.users WHERE role='admin' AND status='active'")
 [[ "$admins" -ge 1 ]] || { echo 'Create the first administrator interactively before activation'; exit 69; }
 python3 "$src/ops/production/production_rollout.py" caddy /etc/caddy/Caddyfile "$backup/Caddyfile.next"
