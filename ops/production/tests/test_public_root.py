@@ -1,5 +1,6 @@
 import importlib.util,os,tempfile,unittest
 from pathlib import Path
+from unittest.mock import patch
 SRC=Path(__file__).resolve().parents[1]/'public_root.py'
 spec=importlib.util.spec_from_file_location('public_root',SRC);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 class PublicRootTests(unittest.TestCase):
@@ -21,9 +22,16 @@ class PublicRootTests(unittest.TestCase):
  def test_symlinked_asset_is_denied(self):
   current=self.base/'current';current.mkdir();(current/'index.html').write_text('approved');(current/'github-sync.js').symlink_to('/etc/passwd')
   with self.assertRaises(ValueError):self.resolve()
- def test_group_writable_or_untrusted_directory_is_denied(self):
-  current=self.base/'current';current.mkdir();(current/'index.html').write_text('approved')
-  current.chmod(0o775)
+ def test_admin_only_group_write_is_accepted(self):
+  current=self.base/'current';current.mkdir();(current/'index.html').write_text('approved');current.chmod(0o775)
+  with patch.object(module,'group_writer_uids',return_value={os.getuid()}):
+   self.assertEqual(self.resolve(),current)
+ def test_group_with_any_untrusted_writer_is_denied(self):
+  current=self.base/'current';current.mkdir();(current/'index.html').write_text('approved');current.chmod(0o775)
+  with patch.object(module,'group_writer_uids',return_value={os.getuid(),-1}):
+   with self.assertRaises(ValueError):self.resolve()
+ def test_world_writable_and_untrusted_owner_are_always_denied(self):
+  current=self.base/'current';current.mkdir();(current/'index.html').write_text('approved');current.chmod(0o777)
   with self.assertRaises(ValueError):self.resolve()
   current.chmod(0o755)
   with self.assertRaises(ValueError):module.resolve_public_root(self.base,{-1})
