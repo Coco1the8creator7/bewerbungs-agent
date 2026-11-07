@@ -1,3 +1,4 @@
+# Live verification after server publisher operation #88; diagnostic only; no production writes.
 name: Diagnose public Career.Agency apprenticeship visibility
 
 on:
