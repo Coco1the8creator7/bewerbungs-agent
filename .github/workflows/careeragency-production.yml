@@ -1,0 +1,71 @@
+name: Career.Agency production deployment
+run-name: "Production ${{ inputs.operation }} by ${{ github.actor }}"
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "Inspect, deploy or rollback static frontend"
+        required: true
+        type: choice
+        options: [check, deploy, rollback]
+      release_id:
+        description: "Required for rollback (release ID from prior deployment)"
+        required: false
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: careeragency-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: careeragency-ops
+    timeout-minutes: 15
+    steps:
+      - name: Validate request
+        shell: bash
+        env:
+          OPERATION: ${{ inputs.operation }}
+          RELEASE_ID: ${{ inputs.release_id }}
+        run: |
+          set -euo pipefail
+          case "$OPERATION" in
+            check|deploy) [[ -z "$RELEASE_ID" ]] ;;
+            rollback) [[ "$RELEASE_ID" =~ ^[0-9]{8}T[0-9]{6}Z-[a-f0-9]{12}$ ]] ;;
+            *) exit 64 ;;
+          esac
+      - name: Install SSH key and pin host
+        shell: bash
+        env:
+          PRIVATE_KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
+          KNOWN_HOSTS: ${{ secrets.CA_OPS_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p ~/.ssh
+          printf '%s\n' "$PRIVATE_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          test -s ~/.ssh/id_ed25519
+          test -s ~/.ssh/known_hosts
+      - name: Execute pinned operation via SSH
+        shell: bash
+        env:
+          SSH_HOST: ${{ secrets.CA_OPS_HOST }}
+          OPERATION: ${{ inputs.operation }}
+          RELEASE_ID: ${{ inputs.release_id }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          [[ "$SSH_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]
+          [[ "$COMMIT" =~ ^[a-f0-9]{40}$ ]]
+          if [[ "$OPERATION" == rollback ]]; then
+            remote="release-rollback $RELEASE_ID"
+          else
+            remote="release-$OPERATION $COMMIT"
+          fi
+          ssh -T -i ~/.ssh/id_ed25519 \
+            -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o ConnectTimeout=15 -o IdentitiesOnly=yes \
+            "careeragency_runner@$SSH_HOST" "$remote"
