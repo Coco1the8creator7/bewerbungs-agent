@@ -3,7 +3,7 @@ import os,re,uuid,unittest
 import psycopg,pyotp
 from cryptography.fernet import Fernet
 from fastapi.testclient import TestClient
-from authservice import app as server
+from authservice import asgi as server
 from auth.security import hash_password
 
 @unittest.skipUnless(os.getenv("CAREER_AUTH_TEST_DATABASE_URL"),"requires isolated PostgreSQL")
@@ -53,6 +53,7 @@ class AuthIntegration(unittest.TestCase):
         r=self.post("/api/auth/login",{"email":"admin@example.com","password":"another long password"})
         self.assertEqual(r.json()["next"],"admin_2fa_setup",r.text)
         self.assertEqual(self.client.get("/api/admin/users").status_code,403)
+        self.assertEqual(self.client.get("/admin").status_code,403)
         setup=self.post("/api/auth/totp/setup").json()
         self.assertIn("secret",setup)
         code=pyotp.TOTP(setup["secret"]).now()
@@ -60,6 +61,7 @@ class AuthIntegration(unittest.TestCase):
         self.assertEqual(r.status_code,200,r.text)
         self.assertEqual(len(r.json()["recovery_codes"]),10)
         self.assertEqual(self.client.get("/api/admin/users").status_code,200)
+        self.assertEqual(self.client.get("/admin").status_code,200)
         r=self.post("/api/admin/users/"+str(user_id)+"/activate")
         self.assertEqual(r.status_code,200,r.text)
         self.assertIn("freigeschaltet",self.messages[-1][1])
