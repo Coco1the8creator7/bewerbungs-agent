@@ -75,6 +75,37 @@ def patch_landing(html: str) -> tuple[str, list[str]]:
         ("const predicted=null;",),
     )
     change(
+        'async function initialize(){\n await initializeNewJobsWindow();',
+        '''async function archiveLegacyWorkspaceOnce(saved){
+ // Keep an independent, local-only copy before replacing old job listings.
+ if(!Array.isArray(saved?.jobs)||!saved.jobs.some(j=>j.source!=="yousty.ch"))return;
+ await new Promise((resolve,reject)=>{
+  const request=indexedDB.open("bewerbungs-agent-local-v1",1);
+  request.onerror=()=>reject(request.error||new Error("Alte Inserate konnten nicht gesichert werden."));
+  request.onsuccess=()=>{
+   const db=request.result,tx=db.transaction("snapshots","readwrite");
+   const store=tx.objectStore("snapshots");
+   const check=store.get("legacy-workspace-before-apprenticeships-v1");
+   check.onsuccess=()=>{
+    if(check.result===undefined)store.put(saved,"legacy-workspace-before-apprenticeships-v1");
+   };
+   tx.oncomplete=()=>{db.close();resolve();};
+   tx.onabort=()=>{db.close();reject(tx.error||new Error("Backup fehlgeschlagen."));};
+  };
+ });
+}
+async function initialize(){
+ await initializeNewJobsWindow();''',
+        "archive_old_local_workspace_before_feed_import",
+    )
+    change(
+        '  if(saved!==undefined&&saved!==null){\n   applyWorkspace(saved,"lokal gespeicherter Arbeitsstand");',
+        '  if(saved!==undefined&&saved!==null){\n'
+        '   await archiveLegacyWorkspaceOnce(saved);\n'
+        '   applyWorkspace(saved,"lokal gespeicherter Arbeitsstand");',
+        "apply_archival_before_local_workspace_replacement",
+    )
+    change(
         'fetch("./jobs.json",{cache:"no-store"})',
         'fetch("./lehrstellen.json",{cache:"no-store"})',
         "read_public_lehrstellen_feed",
