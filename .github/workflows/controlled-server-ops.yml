@@ -17,6 +17,7 @@ on:
           - feed-audit
           - crawler-probe
           - release-check
+          - publish-lehrstellen
           - stage
       commit_sha:
         description: "Required for stage: immutable 40-character Git commit SHA"
@@ -44,6 +45,7 @@ jobs:
             github.event.issue.title == 'CA-OPS: feed-audit' ||
             github.event.issue.title == 'CA-OPS: crawler-probe' ||
             github.event.issue.title == 'CA-OPS: release-check' ||
+            github.event.issue.title == 'CA-OPS: publish-lehrstellen' ||
             startsWith(github.event.issue.title, 'CA-OPS: stage ')
           )
         ) ||
@@ -56,6 +58,7 @@ jobs:
             inputs.operation == 'feed-audit' ||
             inputs.operation == 'crawler-probe' ||
             inputs.operation == 'release-check' ||
+            inputs.operation == 'publish-lehrstellen' ||
             inputs.operation == 'stage'
           )
         )
@@ -85,12 +88,13 @@ jobs:
               'CA-OPS: feed-audit') operation='feed-audit' ;;
               'CA-OPS: crawler-probe') operation='crawler-probe' ;;
               'CA-OPS: release-check') operation='release-check' ;;
+              'CA-OPS: publish-lehrstellen') operation='publish-lehrstellen' ;;
               'CA-OPS: stage '*) operation='stage'; target_sha="${ISSUE_TITLE#CA-OPS: stage }" ;;
               *) echo "::error::Issue title is not an allowlisted server operation"; exit 1 ;;
             esac
           elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             case "$MANUAL_OPERATION" in
-              status|tests|feed-audit|crawler-probe|release-check) operation="$MANUAL_OPERATION" ;;
+              status|tests|feed-audit|crawler-probe|release-check|publish-lehrstellen) operation="$MANUAL_OPERATION" ;;
               stage) operation="stage"; target_sha="$MANUAL_SHA" ;;
               *) echo "::error::Not an allowlisted operation"; exit 1 ;;
             esac
