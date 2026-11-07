@@ -8,7 +8,7 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
 | geprüfter Repository-Stand | **VERIFIZIERT** | 861c1e076d06d09a10133bb126a4cfa906c7cf9b, 07.11.2026; GitHub Commit API |
-| PR-Lage | **VERIFIZIERT** | #102 gemergt in 861c1e0; #104 und PRs #103/#97 sind ebenfalls enthalten. |
+| PR-Lage | **VERIFIZIERT** | #115 UI-Bereich „Daten & Entwicklung“ auf `main` gemergt (Merge-SHA 7685b15). |
 | aktuelle Serverkonfiguration | **OFFEN** | Bei dieser Bestandsaufnahme kein Live-Statusabruf; frühere Nachweise sind zeitgebunden und teils widersprüchlich. |
 | Rollout des geprüften Commits | **OFFEN** | Repository-Commit oder CI allein belegt kein Produktionsdeployment. |
 | letzte Prüfung | **VERIFIZIERT** | 07.11.2026; GitHub Repository-, Datei-, Commit- und PR-API; keine Serverabfrage oder Änderung. |
@@ -138,6 +138,15 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - Live-Prüfmethode, Zeitpunkt und Endpunkte/Dienste:
 - Offene Prüfungen / Rollback-Referenz:
 
+## Prüfung zu PR #115 — Landingpage „Daten & Entwicklung“
+
+- **Repository/Base:** `main`, Base-SHA `306b656d0417f0f2ab68259364e7c340493b72eb`, Merge-SHA `7685b15945bab46edc801d78ca64d44c2592f14c`.
+- **Änderungen:** `dashboard/index.html` blendet den Footer-Abschnitt `Daten & Entwicklung` und den schwebenden GitHub-Speicherbutton aus; `tests/test_dashboard_contract.py` und `tests/test_landing_cleanup.cjs` prüfen den Zustand.
+- **Auswirkungen:** nur Landingpage-UI und Regressionstests; keine API-, Domain-, Caddy-, Server-, Datenbank-, SSH-, Dienst- oder Crawler-Änderung. Die Funktionen und Markup-Elemente bleiben im HTML verborgen, um bestehende Initialisierungen und lokale Datenabläufe intakt zu halten.
+- **Workflow-Nachweis:** Dashboard-CI erfolgreich auf PR-Head `7a122fdde2cbdb5cd708bd98eb6a809dd2a78f00` (Run 42389657598).
+- **Produktion:** **nicht ausgerollt / nicht verifiziert**. Der geschützte Frontend-Release benötigt GitHub Actions `Career.Agency production deployment` mit Operation `deploy`; der Workflow wurde nicht gestartet.
+- **Liveprüfung / Rollback:** nicht ausgeführt. Rollback bleibt auf ein vorheriges `index.html`-Release begrenzt und erfordert dessen Release-ID.
+
 ## Prüfung zu PR #108 — Dispatcher-Installer
 
 - **Repository/Base:** main, ffbcc95bb8bb9b6fcdbeb31c6d73fff27d518790. Änderung: `ops/server/install-ops-dispatcher.sh`; Regressionen: `ops/tests/test_dispatcher_upgrade.py`.
@@ -150,7 +159,7 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 
 ## Rollout-Fortsetzung nach Betreiberbestätigung (07.11.2026)
 
-- **Verifiziert:** PR #108 gemergt in caed51e698d0e663c49d201d40c9ea508e58dfb3; beide CI-Prüfungen erfolgreich.
+- **Verifiziert:** PR #108 gemergt in 7685b15945bab46edc801d78ca64d44c2592f14c; beide CI-Prüfungen erfolgreich.
 - **Verifiziert:** Neuer Produktionsgateway erreichbar: Read-only-Plan [Run 42388967343](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42388967343) erfolgreich. Auth-Dienst inaktiv, auth.env fehlt, auth-current vorhanden. Kein Secret-Inhalt gelesen.
 - **Verifiziert:** Erneuter HTTPS-Abruf: Login/App/private API noch 404; Feedback weiterhin 200; Lehrstellenfeed HTTP 200 mit 185 Einträgen. Installation ist daher noch nicht abgeschlossen.
 - **Verifiziert:** Autorisierter Lockdown [Run 42389011901](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42389011901) vor Änderungen mit Exit 65 abgebrochen. Der bisherige Webroot-Guard verbietet sämtliche current-Symlinks; der kanonische Zielpfad ist noch auszulesen.
