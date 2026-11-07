@@ -148,15 +148,14 @@ admins=$(runuser -u postgres -- psql -XAt -d careeragency_auth -c "SELECT count(
 [[ "$admins" -ge 1 ]] || { echo 'Create the first administrator interactively before activation'; exit 69; }
 python3 "$src/ops/production/production_rollout.py" caddy /etc/caddy/Caddyfile "$backup/Caddyfile.next"
 caddy validate --config "$backup/Caddyfile.next" --adapter caddyfile
-cp -p "$live/index.html" "$backup/index.html"
-cp -p "$live/github-sync.js" "$backup/github-sync.js"
+# Lockdown already installed this adapter. Do not overwrite independent live UI
+# patches during backend activation; unknown adapter changes require review.
+cmp -s "$src/dashboard/github-sync.js" "$live/github-sync.js" || {
+  echo 'Public account adapter differs from reviewed lockdown version'; exit 65;
+}
 rollback() {
   cp -p "$backup/Caddyfile" /etc/caddy/Caddyfile
   systemctl reload caddy || true
-  cp -p "$backup/index.html" "$live/index.html"
-  cp -p "$backup/github-sync.js" "$live/github-sync.js"
-  if [[ -f "$backup/mode-nav.js" ]]; then cp -p "$backup/mode-nav.js" "$live/mode-nav.js"; fi
-  if [[ -f "$backup/radar.js" ]]; then cp -p "$backup/radar.js" "$live/radar.js"; fi
   systemctl stop careeragency-auth.service careeragency-mail.timer || true
   # Security lockdown is retained; personal data is never republished on rollback.
   log "production_activate=rolled_back backup=$backup"
@@ -168,12 +167,8 @@ curl -fsS http://127.0.0.1:8765/healthz >/dev/null
 for name in feedback.json; do
   if [[ -f "$live/$name" ]]; then mv "$live/$name" "$backup/$name"; fi
  done
-install -m 0644 "$src/dashboard/index.html" "$live/index.html"
-install -m 0644 "$src/dashboard/github-sync.js" "$live/github-sync.js"
-cp -p "$live/mode-nav.js" "$backup/mode-nav.js"
-install -m 0644 "$src/dashboard/mode-nav.js" "$live/mode-nav.js"
-cp -p "$live/radar.js" "$backup/radar.js"
-install -m 0644 "$src/dashboard/radar.js" "$live/radar.js"
+# Approved public markup/assets are deliberately preserved. The authenticated
+# application is served from the separately verified, prepared runtime.
 cp "$backup/Caddyfile.next" /etc/caddy/Caddyfile
 systemctl reload caddy
 python3 "$src/ops/production/smoke-production.py"
