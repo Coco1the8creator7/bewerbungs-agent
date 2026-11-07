@@ -52,5 +52,11 @@ class LegacyAuthScopeTests(unittest.TestCase):
         self.assertIn('reverse_proxy 127.0.0.1:8765', new)
         self.assertEqual(module.patch_caddy(new), new)
 
+    def test_activation_preserves_independent_public_ui(self):
+        activation = (ROOT/'ops/production/apply-production.sh').read_text().split('# Activate only', 1)[1]
+        for name in ('index.html', 'mode-nav.js', 'radar.js', 'github-sync.js'):
+            self.assertNotIn('"$live/' + name + '"\n', activation.replace('cmp -s "$src/dashboard/github-sync.js" "$live/github-sync.js" || {', ''))
+        self.assertIn('cmp -s "$src/dashboard/github-sync.js" "$live/github-sync.js"', activation)
+
     def test_absent_auth_cannot_approve(self):
         self.assertFalse(module.legacy_basic_auth_only(config([])))
