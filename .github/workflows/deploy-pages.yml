@@ -1,10 +1,5 @@
 name: Webseite veröffentlichen (GitHub Pages)
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'dashboard/**'
-      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -18,7 +13,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event.repository.private == false
+    if: ${{ false }} # Retired: Infomaniak is the only production host.
     runs-on: ubuntu-latest
     environment:
       name: github-pages

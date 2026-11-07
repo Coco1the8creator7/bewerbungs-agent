@@ -101,6 +101,13 @@ case "${SSH_ORIGINAL_COMMAND:-}" in
       exit 2
     fi
     ;;
+  production-plan\ *|production-lockdown\ *|production-prepare\ *|production-activate\ *)
+    request="$SSH_ORIGINAL_COMMAND"
+    operation="${request%% *}"
+    sha="${request#* }"
+    [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || exit 64
+    exec sudo -n /usr/local/sbin/careeragency-production "${operation#production-}" "$sha"
+    ;;
   auth-preflight)
     # Read-only root preflight, gated by a dedicated sudoers entry.
     exec sudo -n /usr/local/sbin/careeragency-auth-preflight

@@ -12,7 +12,7 @@ async function run(){
  assert.match(storage,/clear: async \(\) => \{/);
  assert.match(html,/const localSwipeChoices=new Map\(\)/);
  assert.match(html,/await loadLocalSwipeChoices\(\)/);
- assert.ok(html.indexOf("await loadLocalSwipeChoices()")<html.indexOf('fetch("./jobs.json"'),
+ assert.ok(html.indexOf("await loadLocalSwipeChoices()")<html.indexOf('fetch("./lehrstellen.json"'),
   "decisions must be restored before imported cards are rendered");
  assert.match(html,/dismissedJobFeedback\.set\(id,record\);\s*positiveJobFeedback\.delete\(id\);[^\n]*\s*lastDismissedId=id;\s*const durability=persistSwipeChoice\(id,record\)/);
  assert.match(html,/persistSwipeChoice\(id,\{signal:"restored",restored_at:new Date\(\)\.toISOString\(\)\}\)/);

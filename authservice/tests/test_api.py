@@ -16,7 +16,7 @@ class AuthIntegration(unittest.TestCase):
         os.environ["CAREER_AUTH_MAIL_FROM"]="noreply@careeragency.ch"
         os.environ["CAREER_AUTH_TOTP_KEY"]=Fernet.generate_key().decode()
         cls.messages=[]
-        api_module.mail=lambda to,subject,body:cls.messages.append((to,subject,body))
+        api_module.queue_mail=lambda con,to,subject,body:cls.messages.append((to,subject,body))
         cls.client=TestClient(server.app,base_url="https://testserver")
     def setUp(self):
         self.client.cookies.clear()

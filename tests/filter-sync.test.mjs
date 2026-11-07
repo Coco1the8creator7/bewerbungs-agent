@@ -4,57 +4,10 @@ import {readFileSync} from "node:fs";
 import vm from "node:vm";
 import {TextEncoder,TextDecoder} from "node:util";
 
-const ghSource=readFileSync(new URL("../dashboard/github-sync.js",import.meta.url),"utf8");
+// Backend ownership, merge and revision behavior are tested against real PostgreSQL
+// in authservice/tests/test_private_state.py. These tests exercise the UI controller.
 const syncSource=readFileSync(new URL("../dashboard/filter-sync.js",import.meta.url),"utf8");
 const clone=x=>JSON.parse(JSON.stringify(x));
-const initial=()=>({type:"bewerbungs-agent-feedback",schema_version:"1.0.0",
- annotations:[{id:"OTHER",decision:"review",note:"",stage_changed_at:null}],
- relevance_ratings:[{id:"JOB-2",score:55,updated_at:"2026-01-01T00:00:00Z"}],
- radar_career_ratings:[],dismissals:[],export_selection:[],activity_log:[],overrides:[],manual_jobs:[]});
-function githubHarness(){
- let data=initial(),sha="sha-0",writes=0,offline=false;
- const window={},storage={getItem:()=> "github_pat_test"};
- const fetch=async (url,opts={})=>{
-  if(offline)throw Error("network offline");
-  if(opts.method==="PUT"){
-   const body=JSON.parse(opts.body);
-   if(body.sha!==sha)return {ok:false,status:409,json:async()=>({message:"conflict"})};
-   data=JSON.parse(Buffer.from(body.content,"base64").toString("utf8"));
-   sha="sha-"+(++writes);
-   return {ok:true,json:async()=>({commit:{sha}})};
-  }
-  return {ok:true,json:async()=>({sha,content:Buffer.from(JSON.stringify(data)).toString("base64")})};
- };
- vm.runInNewContext(ghSource,{window,localStorage:storage,fetch,TextEncoder,TextDecoder,
-  atob:x=>Buffer.from(x,"base64").toString("binary"),btoa:x=>Buffer.from(x,"binary").toString("base64"),
-  structuredClone:clone,Date,Map,Set,JSON,Uint8Array});
- return {api:window.GithubFeedback,data:()=>data,writes:()=>writes,offline:x=>offline=x};
-}
-test("incremental writes preserve unrelated records, avoid duplicates and skip unchanged saves",async()=>{
- const h=githubHarness(),rating={id:"JOB-1",score:77,updated_at:"2026-11-04T18:00:00Z"};
- await h.api.saveFilterRatings({relevance_ratings:{"JOB-1":rating}});
- assert.equal(h.writes(),1);
- assert.equal(h.data().annotations.length,1);
- assert.equal(h.data().relevance_ratings.length,2);
- const result=await h.api.saveFilterRatings({relevance_ratings:{"JOB-1":rating}});
- assert.equal(result.unchanged,true);
- assert.equal(h.writes(),1);
-});
-test("offline failure does not modify remote data; retry succeeds",async()=>{
- const h=githubHarness(),rating={id:"JOB-1",score:80,updated_at:"2026-11-04T18:00:00Z"};
- h.offline(true);
- await assert.rejects(h.api.saveFilterRatings({relevance_ratings:{"JOB-1":rating}}));
- assert.equal(h.writes(),0);
- h.offline(false);
- await h.api.saveFilterRatings({relevance_ratings:{"JOB-1":rating}});
- assert.equal(h.data().relevance_ratings.find(x=>x.id==="JOB-1").score,80);
-});
-test("newer concurrent remote rating is never overwritten",async()=>{
- const h=githubHarness();
- await h.api.saveFilterRatings({relevance_ratings:{"JOB-1":{id:"JOB-1",score:90,updated_at:"2026-11-04T19:00:00Z"}}});
- await assert.rejects(h.api.saveFilterRatings({relevance_ratings:{"JOB-1":{id:"JOB-1",score:12,updated_at:"2026-11-04T18:00:00Z"}}}),/Bewertungskonflikt/);
- assert.equal(h.data().relevance_ratings.find(x=>x.id==="JOB-1").score,90);
-});
 function controllerHarness(stored=null,options={}){
  const handlers={},elements={},saved={value:stored},writes=[],rating={id:"JOB-1",score:72,updated_at:"2026-11-04T18:00:00Z"};
  let reply=async()=>({sha:"sha",unchanged:false}),interval;

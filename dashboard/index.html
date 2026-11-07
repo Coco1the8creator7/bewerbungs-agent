@@ -504,7 +504,7 @@ header .sub,.section-heading p{color:#6b5744}
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
     <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
-    <div><label for="sort">Sortierung</label><select id="sort"><option value="priority" selected>Priorität</option><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
+    <div><label for="sort">Sortierung</label><select id="sort"><option value="date" selected>Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
   </div>
     </details>
     <div class="persist-panel"><strong>GitHub-Synchronisation</strong><p>Fine-grained Token mit Zugriff nur auf dieses Repository (Contents: Read and write). Der Token bleibt auf diesem Gerät im Browser gespeichert. Nie auf gemeinsam genutzten Geräten einrichten.</p><label for="githubToken">GitHub-Token</label><input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_…" style="margin:8px 0"><div class="buttons"><button type="button" id="connectGithub">Token auf diesem Gerät speichern</button><button type="button" class="secondary" id="loadGithubFeedback">GitHub-Bewertungen laden</button><button type="button" class="secondary" id="disconnectGithub">Token entfernen</button></div><div class="data-state" id="githubStatus" role="status" aria-live="polite">Nicht verbunden</div></div>
@@ -1008,7 +1008,7 @@ function validateOverrides(records){
  }
  return result;
 }
-let persistEnabled=false;
+let persistEnabled=!!window.CareerAccount;
 let pendingSave=Promise.resolve();
 let isRestoring=false;
 let newJobMode=false;
@@ -1206,7 +1206,7 @@ function swipeStorageWarning(label,error){
 function dismissedLandingJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&dismissedJobFeedback.has(j.id));}
 function ratingOf(id){return relevanceRatings.get(id)||null;}
 function hasReviewFeedback(id){const r=ratingOf(id);return !!r&&(Number.isInteger(r.score)||storedReasons(r).length>0||!!r.note?.trim()||Object.keys(r.aspects||{}).length>0||!!r.field_relation||!!r.seniority_assessment);}
-function visibleJobs(){return jobs.filter(j=>!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j));}
+function visibleJobs(){return jobs;}
 function unratedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&!positiveJobFeedback.has(j.id)&&stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
 function reviewedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&!positiveJobFeedback.has(j.id)&&hasReviewFeedback(j.id));}
 function interestedLandingJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&positiveJobFeedback.has(j.id));}
@@ -1482,7 +1482,7 @@ function cardRatingButton(j){
  // Display the existing suggestion as a recommendation, never as a manual rating.
  const suggested=j.selection?.suggested_score;
  const predicted=Number.isFinite(suggested)&&suggested>=0&&suggested<=100?
-  Math.round(suggested):getScore(j)??window.AgentCareerFilter?.classify(j)?.priority??null;
+  Math.round(suggested):getScore(j)??null;
  const display=rated?score:predicted;
  const b=document.createElement("button");b.type="button";
  b.className="card-rating"+(rated?" rated":" suggested");
@@ -1818,10 +1818,6 @@ function renderNewJobs(){
  });
  filtered.sort((a,b)=>{
   const mode=el("sort").value;
-  if(mode==="priority"&&window.AgentCareerFilter){
-   const gap=window.AgentCareerFilter.classify(b).priority-window.AgentCareerFilter.classify(a).priority;
-   if(gap)return gap;
-  }
   return mode==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):
    (validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0);
  });
@@ -1882,7 +1878,7 @@ function loadJobs(rows,name,asDemo=false){
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(visibleJobs().flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
  refill(el("source"),unique(visibleJobs().map(j=>j.source)),"Alle Quellen");
- el("message").textContent=visibleJobs().length+" Inserate in der Vorauswahl ("+(jobs.length-visibleJobs().length)+" zurückgestellt · Radar > Filter-KI). Alle Originaldaten und Bewertungen bleiben erhalten.";
+ el("message").textContent=visibleJobs().length+" Lehrstellen geladen. Bestehende Bewertungen bleiben erhalten.";
  render();
  saveChanges();
 }
@@ -2147,12 +2143,32 @@ el("persistEnabled").addEventListener("change",async e=>{
   await pendingSave;
  }
 });
+async function archiveLegacyWorkspaceOnce(saved){
+ // Keep an independent, local-only copy before replacing old job listings.
+ if(window.CareerAccount)return;
+ if(!Array.isArray(saved?.jobs)||!saved.jobs.some(j=>j.source!=="yousty.ch"))return;
+ await new Promise((resolve,reject)=>{
+  const request=indexedDB.open("bewerbungs-agent-local-v1",1);
+  request.onerror=()=>reject(request.error||new Error("Alte Inserate konnten nicht gesichert werden."));
+  request.onsuccess=()=>{
+   const db=request.result,tx=db.transaction("snapshots","readwrite");
+   const store=tx.objectStore("snapshots");
+   const check=store.get("legacy-workspace-before-apprenticeships-v1");
+   check.onsuccess=()=>{
+    if(check.result===undefined)store.put(saved,"legacy-workspace-before-apprenticeships-v1");
+   };
+   tx.oncomplete=()=>{db.close();resolve();};
+   tx.onabort=()=>{db.close();reject(tx.error||new Error("Backup fehlgeschlagen."));};
+  };
+ });
+}
 async function initialize(){
  await initializeNewJobsWindow();
  let restored=false;
  try{
   const saved=await window.AgentStore.load();
   if(saved!==undefined&&saved!==null){
+   await archiveLegacyWorkspaceOnce(saved);
    applyWorkspace(saved,"lokal gespeicherter Arbeitsstand");
    persistEnabled=true;
    restored=true;
@@ -2169,15 +2185,17 @@ async function initialize(){
   el("storageStatus").textContent="Wischentscheidungen konnten nicht geladen werden: "+err.message;
  }
  try {
-  const response=await fetch("./jobs.json",{cache:"no-store"});
+  const response=await fetch("./lehrstellen.json",{cache:"no-store"});
   if(!response.ok)throw new Error("HTTP "+response.status);
   const incoming=validateJobs(await response.json());
+  if(!incoming.length||incoming.some(j=>j.source!=="yousty.ch"||!j.id.startsWith("apprenticeship-")))
+   throw new Error("Lehrstellen-Feed enthält keine gültigen Lehrstellen.");
   if(incoming.length){
    const byId=new Map(incoming.map(j=>[j.id,applyManualOverrides(j)]));
    if(restored){
     for(const j of jobs)if(j.id.startsWith("MANUAL-")&&!byId.has(j.id))byId.set(j.id,j);
    }
-   loadJobs([...byId.values()],"automatischer GitHub-Import");
+   loadJobs([...byId.values()],"Yousty-Lehrstellen-Feed");
    if(!restored){
     try{
      const remote=await window.GithubFeedback.loadPublic();
@@ -2186,17 +2204,18 @@ async function initialize(){
    }else{
     githubStatus("Lokaler Arbeitsstand vorhanden. Automatisches Überschreiben durch GitHub unterdrückt.");
    }
-   el("message").textContent=visibleJobs().length+" Inserate vorausgewählt; "+(jobs.length-visibleJobs().length)+" im Radar zur Prüfung zurückgestellt. Bewertungen und Inseratdaten bleiben erhalten.";
+   el("message").textContent=visibleJobs().length+" Lehrstellen geladen. Bestehende Bewertungen bleiben erhalten.";
    return;
   }
  }catch(err){
   if(restored){
-   el("message").textContent="Lokaler Arbeitsstand geladen. GitHub-Feed derzeit nicht verfügbar: "+err.message;
+   jobs=[];render();
+   el("message").textContent="Lehrstellen-Feed nicht verfügbar: "+err.message+". Gespeicherte Bewertungen bleiben erhalten.";
    return;
   }
-  el("message").textContent="GitHub-Import nicht verfügbar: "+err.message+". Demo wird angezeigt.";
+  el("message").textContent="Lehrstellen-Feed nicht verfügbar: "+err.message;
  }
- if(!restored)loadDemo();
+ if(!restored){jobs=[];render();}
 }
 for(const [id,view] of [["viewUnrated","unrated"],["viewReviewed","reviewed"],["viewInterested","interested"],["viewDismissed","dismissed"]])el(id).addEventListener("click",()=>{reviewListView=view;el("swipeUndoToast").hidden=true;renderNewJobs();});
 mobileJobQuery.addEventListener("change",()=>{mobileJobLimit=5;mobileJobSignature="";renderNewJobs();});

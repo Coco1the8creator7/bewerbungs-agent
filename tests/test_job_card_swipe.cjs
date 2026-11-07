@@ -30,30 +30,11 @@ assert.match(cards,/restoreLandingJob\(j\.id\)/);
 assert.match(cards,/footer\.append\(quickActions\);card\.append\(footer\)/);
 assert.match(cards,/openDetails\(j\.id\)/);
 assert.match(html,/\["viewDismissed","dismissed"\]/);
-assert.match(github,/\["dismissals","id"\]/);
-// Exercise the real three-way GitHub feedback merge without network calls.
-const syncContext={window:{}};
-vm.runInNewContext(github.replace(/window\.GithubFeedback=Object\.freeze\(\{[^}]+\}\);/,
- "window.__mergeForTest=merge;"),syncContext);
-const merge=syncContext.window.__mergeForTest;
-const oldFeedback={type:"bewerbungs-agent-feedback",schema_version:"1.0.0",
- annotations:[],relevance_ratings:[],export_selection:[],overrides:[],manual_jobs:[],activity_log:[]};
-const first={id:"job-1",signal:"not_interested",source:"swipe_left",dismissed_at:"2026-10-31T15:00:00Z"};
-const second={id:"job-2",signal:"not_interested",source:"button",dismissed_at:"2026-10-31T16:00:00Z"};
-const result=merge(oldFeedback,{...oldFeedback,dismissals:[first]},oldFeedback);
-assert.equal(JSON.stringify(result.dismissals),JSON.stringify([first]),
- "new dismissals must merge with old feedback files lacking the field");
-const updated=merge({...oldFeedback,dismissals:[first]},
- {...oldFeedback,dismissals:[first,second]},{...oldFeedback,dismissals:[first]});
-assert.equal(updated.dismissals.length,2);
-const deleted=merge({...oldFeedback,dismissals:[first,second]},
- {...oldFeedback,dismissals:[second]},{...oldFeedback,dismissals:[first,second]});
-assert.equal(deleted.dismissals.length,1,"undo must remove the stored signal on sync");
-assert.equal(deleted.dismissals[0].id,"job-2");
-assert.throws(()=>merge({...oldFeedback,dismissals:[first]},
- {...oldFeedback,dismissals:[{...first,source:"button"}]},
- {...oldFeedback,dismissals:[{...first,dismissed_at:"2026-10-30T15:00:00Z"}]}),
- /Konflikt/,"conflicting edits must not silently overwrite one another");
+// Shared GitHub merges are retired. Private revision/conflict behavior is covered
+// by the real PostgreSQL tests; swipes keep using the existing save interface.
+assert.doesNotMatch(github,/api.github.com|localStorage.getItem/);
+const privateApi=fs.readFileSync("authservice/private_state.py","utf8");
+assert.match(privateApi,/"dismissals"/);
 assert.match(css,/touch-action:pan-y/);
 assert.match(css,/\.job-swipe-undo\[hidden\]/);
 assert.match(css,/@media\(max-width:650px\)/);

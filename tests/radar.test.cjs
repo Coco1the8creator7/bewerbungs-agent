@@ -106,14 +106,14 @@ test("career ratings, skills and source choices are disjoint from youth profile"
  assert.deepEqual(migrated.skills.berufserfahrung,["Fachbauleitung"]);
 });
 
-test("Radar uses original public jobs.json and keeps legacy CRM intact",()=>{
+test("Radar uses central apprenticeship feed and keeps legacy CRM intact",()=>{
  const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
  const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
  const nav=fs.readFileSync(path.join(root,"dashboard/mode-nav.js"),"utf8");
  assert.match(html,/data-market="career"/);
  assert.match(html,/data-market="apprentice"/);
  assert.doesNotMatch(html,/id="radarSourcesInfo"/);
- assert.match(radar,/fetch\("\.\/jobs\.json"/);
+ assert.match(radar,/fetch\("\.\/lehrstellen\.json"/);
  assert.match(radar,/model\.careerCriteria/);
  assert.match(radar,/model\.matchesPreferences/);
  assert.match(radar,/AgentCareerFilter\.isVisible/);
@@ -139,7 +139,8 @@ test("v2 preserves access to all excluded careers through Radar even if wishlist
  assert.match(radar,/Mit meinen Kriterien bewerten/);
  assert.match(filter,/career-preselector-v2/);
  assert.match(filter,/const isVisible = job => classify\(job\)\.visible/);
- assert.match(html,/value="priority" selected/);
+ assert.match(html,/value="date" selected/);
+ assert.doesNotMatch(html,/value="priority" selected/);
  assert.doesNotMatch(radar,/\.splice\([^)]*jobs/);
 });
 

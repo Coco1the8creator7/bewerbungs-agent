@@ -3,7 +3,9 @@ on:
   pull_request:
     paths:
       - 'authservice/**'
-      - 'db/migrations/002_auth_runtime.sql'
+      - 'db/migrations/**'
+      - 'crawler/**'
+      - 'dashboard/private-state.js'
       - '.github/workflows/authservice-integration.yml'
   workflow_dispatch:
 permissions:
@@ -39,8 +41,13 @@ jobs:
           PGPASSWORD: testonly
         run: |
           psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f db/migrations/001_auth_foundation.sql
-          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f db/migrations/002_auth_runtime.sql
+          for migration in db/migrations/00{2,3,4,5}_*.sql; do
+            psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f "$migration"
+          done
+          psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -c "CREATE ROLE career_test_runtime; GRANT USAGE ON SCHEMA career_private TO career_test_runtime; GRANT SELECT,INSERT,UPDATE,DELETE ON career_private.user_state TO career_test_runtime;"
           psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f db/tests/auth_foundation_smoke.sql
       - name: Test security and database integration
         run: python -m unittest discover -s authservice/tests -v
-      - run: python -m compileall -q authservice
+      - run: python -m unittest discover -s crawler/tests -v
+      - run: node --test tests/filter-sync.test.mjs tests/private-state.test.mjs
+      - run: python -m compileall -q authservice crawler

@@ -130,7 +130,7 @@
     window.AgentCareerFeedback?.restoreEntry(id,value);
    for(const [id,value] of Object.entries(pending.radar_career_ratings))
     window.CareerRadarBridge?.restoreCareerRating(id,value);
-   // Read the committed GitHub state once at startup. Previously synced 1–5
+   // Read the account state once at startup. Previously synced 1–5
    // criteria were not part of the dashboard's original feedback loader.
    // Never overwrite a pending draft or a newer local opt-in rating.
    if(navigator.onLine!==false){
@@ -146,8 +146,11 @@
        }
       }
       for(const item of remote.relevance_ratings||[]){
-       if(item?.id&&!Object.hasOwn(pending.relevance_ratings,item.id)&&
-          window.AgentCareerFeedback?.getScore(item.id)===item.score)confirmed.add(item.id);
+       if(!item?.id||Object.hasOwn(pending.relevance_ratings,item.id))continue;
+       const local=window.AgentCareerFeedback?.getEntry(item.id);
+       if(!local||(Date.parse(local.updated_at)||0)<(Date.parse(item.updated_at)||0))
+        window.AgentCareerFeedback?.restoreEntry(item.id,item);
+       if(window.AgentCareerFeedback?.getScore(item.id)===item.score)confirmed.add(item.id);
       }
      }
     }catch(_err){/* Offline reads must not block local drafts or retry. */}

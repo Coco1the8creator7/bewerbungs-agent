@@ -12,8 +12,8 @@
   if(label!==undefined)e.textContent=String(label);
   return e;
  };
- const state=model.normalizedState(null);
- let jobs=[],feedLoaded=false,feedBusy=false,showDemo=false,persistent=false,pending=Promise.resolve();
+ const state=model.normalizedState(window.CareerAccount?{market:"apprentice"}:null);
+ let jobs=[],feedLoaded=false,feedBusy=false,showDemo=false,persistent=!!window.CareerAccount,pending=Promise.resolve();
  let reviewLimit=50;
  const market=()=>state.market;
  const bucket=()=>market()==="career"?state.career:state;
@@ -33,7 +33,7 @@
   pending.catch(e=>message("Speichern fehlgeschlagen: "+e.message));
  }
  function changed(){
-  message(persistent?"Wird nur auf diesem Gerät gespeichert (keine Cloud-Synchronisation).":"Nur in diesem Tab · nicht dauerhaft gespeichert.");
+  message(window.CareerAccount?"Wird in deinem Konto gespeichert.":persistent?"Wird nur auf diesem Gerät gespeichert (keine Cloud-Synchronisation).":"Nur in diesem Tab · nicht dauerhaft gespeichert.");
   persist();
  }
  function sources(){
@@ -139,7 +139,7 @@
   feedBusy=true;
   get("radarFeedStatus").hidden=true;
   try{
-   const response=await fetch("./jobs.json",{cache:"no-store"});
+   const response=await fetch("./lehrstellen.json",{cache:"no-store"});
    if(!response.ok)throw Error("HTTP "+response.status);
    const rows=await response.json();
    if(!Array.isArray(rows))throw Error("Ungültiges Stellenformat");
@@ -350,6 +350,7 @@
     message("Dein lokaler Radar-Stand wurde wiederhergestellt.");
    }
   }catch(err){message("Lokaler Speicher nicht verfügbar · nur aktuelle Sitzung.");}
+  if(window.CareerAccount){get("radarSaveOptIn").checked=true;get("radarSaveOptIn").disabled=true;}
   renderMarket();
   if(window.location.hash==="#radar")loadFeed();
  }
