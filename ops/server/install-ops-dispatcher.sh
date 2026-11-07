@@ -33,7 +33,38 @@ import re
 import sys
 
 content = Path(sys.argv[1]).read_text(encoding="utf-8")
-installed = set(re.findall(r'(?m)^  (.+?)\)\s*$', content))
+# Inspect only arms of the outer SSH dispatch case. Nested release validation
+# cases are implementation details, regardless of their indentation.
+installed = set()
+depth = 0
+outer_seen = False
+try:
+    for raw in content.splitlines():
+        line = raw.strip()
+        if not line or line.startswith('#'):
+            continue
+        if re.fullmatch(r'case\s+.+\s+in', line):
+            if depth == 0:
+                if outer_seen or line != 'case "${SSH_ORIGINAL_COMMAND:-}" in':
+                    raise ValueError('unrecognized outer case')
+                outer_seen = True
+            depth += 1
+            continue
+        if line == 'esac':
+            depth -= 1
+            if depth < 0:
+                raise ValueError('unbalanced case')
+            continue
+        if depth == 1:
+            arm = re.fullmatch(r'([^()]+?)\)(?:[ \t]+.*)?', line)
+            if arm:
+                installed.add(arm.group(1).strip())
+    if not outer_seen or depth != 0:
+        raise ValueError('unsupported case structure')
+except ValueError:
+    print('dispatcher_install=denied: unrecognized installed SSH case structure',
+          file=sys.stderr)
+    raise SystemExit(65)
 known = {
     'status', 'tests', 'feed-audit', 'crawler-probe',
     r'stage\ [0-9a-f][0-9a-f][0-9a-f]*',
