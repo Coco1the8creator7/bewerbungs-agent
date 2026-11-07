@@ -44,8 +44,8 @@ fi
 runuser -u postgres -- createdb --owner=postgres --encoding=UTF8 --template=template0 "$db"
 runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -d postgres -c "REVOKE CONNECT ON DATABASE $db FROM PUBLIC"
 runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -d postgres -c "GRANT CONNECT ON DATABASE $db TO $role"
-runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$migration_a" >/dev/null
-runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$migration_b" >/dev/null
+runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -d "$db" < "$migration_a" >/dev/null
+runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -d "$db" < "$migration_b" >/dev/null
 runuser -u postgres -- psql -X -v ON_ERROR_STOP=1 -d "$db" <<SQL
 REVOKE ALL ON SCHEMA career_auth FROM PUBLIC;
 GRANT USAGE ON SCHEMA career_auth TO $role;
