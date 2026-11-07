@@ -98,6 +98,7 @@ jobs:
           printf 'remote=%s\n' "$remote" >> "$GITHUB_OUTPUT"
 
       - name: Install pinned SSH credentials
+        if: steps.request.outputs.operation != 'frontend-check'
         shell: bash
         env:
           PRIVATE_KEY: ${{ secrets.CA_OPS_SSH_PRIVATE_KEY }}
@@ -115,6 +116,7 @@ jobs:
 
       - name: Execute scoped release operation
         id: deploy
+        if: steps.request.outputs.operation != 'frontend-check'
         shell: bash
         env:
           SSH_HOST: ${{ secrets.CA_OPS_HOST }}
