@@ -39,14 +39,27 @@ Sicherheitsbruch, den read-only `production-plan`-Befehl dafür
 umzufunktionieren. Der Repository-Inhaber installiert den geprüften
 neuen Gateway einmal mit Root-Berechtigung:
 
-1. Den freigegebenen, getesteten `main`-Commit per
-   `CA-OPS: stage <VOLLER-SHA>` im vorhandenen eingeschränkten
-   SSH-Workflow bereitstellen.
-2. Als Serveradministrator den **exakten zuvor gestagten Commit**
-   verwenden und einmal ausführen:
+1. Den gemergten und getesteten Commit als **40-stellige SHA** festlegen.
+   Das vorherige `CA-OPS: stage` bestätigt die Verbindung, ist aber
+   ausdrücklich **kein vertrauenswürdiger Ausführungspfad für Root**:
+   dieses Verzeichnis gehört dem eingeschränkten Benutzer und kann vor
+   der Ausführung verändert werden.
+2. Als Serveradministrator einen eigenen temporären Root-Checkout unter
+   `/root` erstellen, den exakten Commit prüfen und den Installer daraus
+   aufrufen (keine fremden oder beschreibbaren Quellverzeichnisse):
 
    ```bash
-   sudo bash /home/careeragency_runner/careeragency-workspace/releases/<VOLLER-SHA>/ops/production/install-radar-release.sh
+   sudo bash -c '
+     set -euo pipefail
+     sha="<VOLLER-GEMERGTER-SHA>"
+     [[ "$sha" =~ ^[0-9a-f]{40}$ ]]
+     dir="$(mktemp -d /root/ca-radar-install.XXXXXXXX)"
+     trap '\''rm -rf -- "$dir"'\'' EXIT
+     git clone -q --no-checkout https://github.com/Coco1the8creator7/bewerbungs-agent.git "$dir/repo"
+     git -C "$dir/repo" checkout -q --detach "$sha"
+     [[ "$(git -C "$dir/repo" rev-parse HEAD)" == "$sha" ]]
+     bash "$dir/repo/ops/production/install-radar-release.sh"
+   '
    ```
 
 3. Die Ausgabe `radar_gateway=installed` und

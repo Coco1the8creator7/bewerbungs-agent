@@ -6,6 +6,17 @@ export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 umask 077
 [[ $EUID -eq 0 && $# -eq 0 ]] || { echo 'Run as root with no arguments'; exit 77; }
 root="$(cd -- "$(dirname -- "$0")/../.." && pwd -P)"
+# Never execute root-owned installation logic from the unprivileged
+# careeragency_runner staging area. Only a root-owned checkout below /root
+# is acceptable; verify its path components and exact immutable Git identity.
+[[ "$root" == /root/* && -d "$root/.git" && ! -L "$root" ]] || {
+  echo 'Refusing to install from a non-root-owned repository checkout'; exit 77;
+}
+for dir in "$root" "$root/ops" "$root/ops/production"; do
+  [[ -d "$dir" && ! -L "$dir" && "$(stat -c %u "$dir")" == 0 ]] || {
+    echo 'Refusing writable or symlinked source path'; exit 77;
+  }
+done
 src="$root/ops/production/radar-safe-release.py"
 dest=/usr/local/sbin/careeragency-radar-release
 sudoers=/etc/sudoers.d/careeragency-radar-release
