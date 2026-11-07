@@ -64,7 +64,7 @@ class ServerOpsSecurityTests(unittest.TestCase):
         self.assertIn("CA-RELEASE: ", workflow)
         self.assertIn("cancel-in-progress: false", workflow)
         self.assertIn("StrictHostKeyChecking=yes", workflow)
-        self.assertIn("Rollback failed Radar deploy", workflow)
+        self.assertIn("Roll back failed Radar deploy", workflow)
         self.assertIn("smoke-production.py", workflow)
         self.assertNotIn("\\${{", workflow)
 
