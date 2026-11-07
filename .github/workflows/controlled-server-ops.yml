@@ -13,6 +13,7 @@ on:
         type: choice
         options:
           - status
+          - auth-preflight
           - tests
           - feed-audit
           - crawler-probe
@@ -41,6 +42,7 @@ jobs:
           github.event.issue.user.id == 343900642 &&
           (
             github.event.issue.title == 'CA-OPS: status' ||
+            github.event.issue.title == 'CA-OPS: auth-preflight' ||
             github.event.issue.title == 'CA-OPS: tests' ||
             github.event.issue.title == 'CA-OPS: feed-audit' ||
             github.event.issue.title == 'CA-OPS: crawler-probe' ||
@@ -54,6 +56,7 @@ jobs:
           github.actor == 'Coco1the8creator7' &&
           (
             inputs.operation == 'status' ||
+            inputs.operation == 'auth-preflight' ||
             inputs.operation == 'tests' ||
             inputs.operation == 'feed-audit' ||
             inputs.operation == 'crawler-probe' ||
@@ -84,6 +87,7 @@ jobs:
           if [[ "$EVENT_NAME" == "issues" ]]; then
             case "$ISSUE_TITLE" in
               'CA-OPS: status') operation='status' ;;
+              'CA-OPS: auth-preflight') operation='auth-preflight' ;;
               'CA-OPS: tests') operation='tests' ;;
               'CA-OPS: feed-audit') operation='feed-audit' ;;
               'CA-OPS: crawler-probe') operation='crawler-probe' ;;
@@ -94,7 +98,7 @@ jobs:
             esac
           elif [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
             case "$MANUAL_OPERATION" in
-              status|tests|feed-audit|crawler-probe|release-check|publish-lehrstellen) operation="$MANUAL_OPERATION" ;;
+              status|auth-preflight|tests|feed-audit|crawler-probe|release-check|publish-lehrstellen) operation="$MANUAL_OPERATION" ;;
               stage) operation="stage"; target_sha="$MANUAL_SHA" ;;
               *) echo "::error::Not an allowlisted operation"; exit 1 ;;
             esac
