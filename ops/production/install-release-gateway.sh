@@ -11,9 +11,13 @@ root="$(cd -- "$(dirname -- "$0")/../.." && pwd -P)"
   echo 'Refusing to install from a non-root-owned repository checkout' >&2
   exit 77
 }
-for dir in "$root" "$root/ops" "$root/ops/production" "$root/ops/server"; do
-  mode="$(stat -c %a "$dir" 2>/dev/null || true)"
-  [[ -d "$dir" && ! -L "$dir" && "$(stat -c %u "$dir")" == 0 ]] && (( (8#$mode & 022) == 0 )) || {
+for dir in /root "$root" "$root/ops" "$root/ops/production" "$root/ops/server"; do
+  [[ -d "$dir" && ! -L "$dir" && "$(stat -c %u "$dir")" == 0 ]] || {
+    echo "Refusing writable or symlinked source path" >&2
+    exit 77
+  }
+  mode="$(stat -c %a "$dir")"
+  (( (8#$mode & 022) == 0 )) || {
     echo 'Refusing writable or symlinked source path' >&2
     exit 77
   }
