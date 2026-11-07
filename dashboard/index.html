@@ -504,7 +504,7 @@ header .sub,.section-heading p{color:#6b5744}
     <div><label for="query">Stelle suchen</label><input id="query" type="search" placeholder="Titel, Arbeitgeber, Arbeitsort …"></div>
     <div><label for="category">Karriere-Kategorie</label><select id="category"><option value="">Alle Kategorien</option></select></div>
     <div><label for="source">Plattform</label><select id="source"><option value="">Alle Quellen</option></select></div>
-    <div><label for="sort">Sortierung</label><select id="sort"><option value="priority" selected>Priorität</option><option value="date">Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
+    <div><label for="sort">Sortierung</label><select id="sort"><option value="date" selected>Neueste zuerst</option><option value="oldest">Älteste zuerst</option></select></div>
   </div>
     </details>
     <div class="persist-panel"><strong>GitHub-Synchronisation</strong><p>Fine-grained Token mit Zugriff nur auf dieses Repository (Contents: Read and write). Der Token bleibt auf diesem Gerät im Browser gespeichert. Nie auf gemeinsam genutzten Geräten einrichten.</p><label for="githubToken">GitHub-Token</label><input type="password" id="githubToken" autocomplete="off" placeholder="github_pat_…" style="margin:8px 0"><div class="buttons"><button type="button" id="connectGithub">Token auf diesem Gerät speichern</button><button type="button" class="secondary" id="loadGithubFeedback">GitHub-Bewertungen laden</button><button type="button" class="secondary" id="disconnectGithub">Token entfernen</button></div><div class="data-state" id="githubStatus" role="status" aria-live="polite">Nicht verbunden</div></div>
@@ -1206,7 +1206,8 @@ function swipeStorageWarning(label,error){
 function dismissedLandingJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&dismissedJobFeedback.has(j.id));}
 function ratingOf(id){return relevanceRatings.get(id)||null;}
 function hasReviewFeedback(id){const r=ratingOf(id);return !!r&&(Number.isInteger(r.score)||storedReasons(r).length>0||!!r.note?.trim()||Object.keys(r.aspects||{}).length>0||!!r.field_relation||!!r.seniority_assessment);}
-function visibleJobs(){return jobs.filter(j=>!window.AgentCareerFilter||window.AgentCareerFilter.isVisible(j));}
+// Public landing is unfiltered; personal adult preferences remain in Radar.
+function visibleJobs(){return jobs;}
 function unratedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&!positiveJobFeedback.has(j.id)&&stageOf(j.id)==="open"&&!hasReviewFeedback(j.id));}
 function reviewedJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&!positiveJobFeedback.has(j.id)&&hasReviewFeedback(j.id));}
 function interestedLandingJobs(){return visibleJobs().filter(j=>!dossierLinkedJobIds.has(j.id)&&!dismissedJobFeedback.has(j.id)&&positiveJobFeedback.has(j.id));}
@@ -1479,10 +1480,9 @@ function secretDossierButton(job){
 function cardRatingButton(j){
  const score=ratingOf(j.id)?.score;
  const rated=Number.isInteger(score)&&score>=1&&score<=100;
- // Display the existing suggestion as a recommendation, never as a manual rating.
- const suggested=j.selection?.suggested_score;
- const predicted=Number.isFinite(suggested)&&suggested>=0&&suggested<=100?
-  Math.round(suggested):getScore(j)??window.AgentCareerFilter?.classify(j)?.priority??null;
+ // Public landing never applies an adult-personal scoring model.
+ // Manual user ratings remain visible and editable when present.
+ const predicted=null;
  const display=rated?score:predicted;
  const b=document.createElement("button");b.type="button";
  b.className="card-rating"+(rated?" rated":" suggested");
@@ -1818,10 +1818,6 @@ function renderNewJobs(){
  });
  filtered.sort((a,b)=>{
   const mode=el("sort").value;
-  if(mode==="priority"&&window.AgentCareerFilter){
-   const gap=window.AgentCareerFilter.classify(b).priority-window.AgentCareerFilter.classify(a).priority;
-   if(gap)return gap;
-  }
   return mode==="oldest"?(validDate(a.first_seen_at)||0)-(validDate(b.first_seen_at)||0):
    (validDate(b.first_seen_at)||0)-(validDate(a.first_seen_at)||0);
  });
@@ -1882,7 +1878,7 @@ function loadJobs(rows,name,asDemo=false){
  jobs=rows;demoMode=asDemo;
  refill(el("category"),unique(visibleJobs().flatMap(j=>Array.isArray(j.categories)?j.categories:[])),"Alle Kategorien");
  refill(el("source"),unique(visibleJobs().map(j=>j.source)),"Alle Quellen");
- el("message").textContent=visibleJobs().length+" Inserate in der Vorauswahl ("+(jobs.length-visibleJobs().length)+" zurückgestellt · Radar > Filter-KI). Alle Originaldaten und Bewertungen bleiben erhalten.";
+ el("message").textContent=visibleJobs().length+" Inserate geladen. Bestehende Bewertungen und Inseratdaten bleiben erhalten.";
  render();
  saveChanges();
 }
@@ -2186,7 +2182,7 @@ async function initialize(){
    }else{
     githubStatus("Lokaler Arbeitsstand vorhanden. Automatisches Überschreiben durch GitHub unterdrückt.");
    }
-   el("message").textContent=visibleJobs().length+" Inserate vorausgewählt; "+(jobs.length-visibleJobs().length)+" im Radar zur Prüfung zurückgestellt. Bewertungen und Inseratdaten bleiben erhalten.";
+   el("message").textContent=visibleJobs().length+" Inserate geladen. Bewertungen und Inseratdaten bleiben erhalten.";
    return;
   }
  }catch(err){
