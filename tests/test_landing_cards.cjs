@@ -3,7 +3,7 @@
 const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const vm=require("node:vm");
-const html=fs.readFileSync("dashboard/index.html","utf8");
+const html=fs.readFileSync("authservice/mission-control.html","utf8");
 const css=fs.readFileSync("dashboard/landing-cards.css","utf8");
 const bellCss=fs.readFileSync("dashboard/notifications.css","utf8");
 

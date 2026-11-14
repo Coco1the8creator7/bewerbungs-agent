@@ -4,7 +4,7 @@ const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const vm=require("node:vm");
 async function run(){
- const html=fs.readFileSync("dashboard/index.html","utf8");
+ const html=fs.readFileSync("authservice/mission-control.html","utf8");
  const storage=fs.readFileSync("dashboard/storage.js","utf8");
  assert.match(storage,/SWIPE_PREFS_KEY = "landing-swipe-preferences-v1"/);
  assert.match(storage,/loadSwipePrefs: \(\) => operation\("readonly", store => store\.get\(SWIPE_PREFS_KEY\)\)/);

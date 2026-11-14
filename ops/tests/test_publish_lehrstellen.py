@@ -36,7 +36,7 @@ def synthetic_record() -> dict:
 class LandingPublishingTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.current = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        cls.current = (ROOT / "authservice/mission-control.html").read_text(encoding="utf-8")
 
     def test_patches_current_existing_landing_without_layout_changes(self):
         updated, changes = module.patch_landing(self.current)

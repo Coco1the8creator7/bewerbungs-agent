@@ -15,7 +15,7 @@ class CareerFilterTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_dashboard_loads_filter_before_inline_script(self):
-        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        html = (ROOT / "authservice/mission-control.html").read_text(encoding="utf-8")
         self.assertIn('<script src="./career-filter.js"></script>', html)
         self.assertLess(html.index('src="./career-filter.js"'), html.index('function visibleJobs()'))
         self.assertIn('function unratedJobs(){return visibleJobs()', html)

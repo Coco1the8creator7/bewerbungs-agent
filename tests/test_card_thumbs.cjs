@@ -4,7 +4,7 @@ async function run(){
 const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const vm=require("node:vm");
-const html=fs.readFileSync("dashboard/index.html","utf8");
+const html=fs.readFileSync("authservice/mission-control.html","utf8");
 const styles=fs.readFileSync("dashboard/landing-thumbs.css","utf8");
 const gh=fs.readFileSync("dashboard/github-sync.js","utf8");
 const segment=html.slice(html.indexOf("function renderNewJobs(){"),html.indexOf("\nfunction render(){",html.indexOf("function renderNewJobs(){")));

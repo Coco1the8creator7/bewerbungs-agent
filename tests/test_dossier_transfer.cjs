@@ -5,7 +5,7 @@ const fs=require("node:fs");
 const vm=require("node:vm");
 
 async function run(){
-const html=fs.readFileSync("dashboard/index.html","utf8");
+const html=fs.readFileSync("authservice/mission-control.html","utf8");
 const dossier=fs.readFileSync("dashboard/dossiers.js","utf8");
 const css=fs.readFileSync("dashboard/card-dossier-action.css","utf8");
 const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];

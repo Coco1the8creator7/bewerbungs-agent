@@ -2,7 +2,7 @@
 const {test}=require("node:test");
 const assert=require("node:assert/strict");
 const fs=require("node:fs");
-const html=fs.readFileSync("dashboard/index.html","utf8");
+const html=fs.readFileSync("authservice/mission-control.html","utf8");
 const popupCSS=fs.readFileSync("dashboard/job-popup.css","utf8");
 const dossierJS=fs.readFileSync("dashboard/dossiers.js","utf8");
 

@@ -34,6 +34,7 @@ class PrivateStateTests(unittest.TestCase):
   client=TestClient(asgi.app,base_url='https://testserver')
   r=client.post('/api/auth/login',json={'email':name+'@example.com','password':'long test password'},headers={'Origin':'https://testserver'})
   self.assertEqual(r.status_code,200,r.text)
+  client.headers["X-Career-Account"]=str(uid)
   return client,uid
  def put(self,c,key,data,revision=0):return c.put('/api/user/state/'+key,json={'revision':revision,'data':data},headers={'Origin':'https://testserver'})
  def test_two_accounts_are_isolated_and_conflicts_preserve_data(self):
@@ -45,6 +46,12 @@ class PrivateStateTests(unittest.TestCase):
   self.assertEqual(self.a.get('/api/user/state/profile').json()['data'],{'preference':'A'})
   bad=self.a.put('/api/user/state/profile',json={'revision':1,'data':{},'user_id':str(self.bid)},headers={'Origin':'https://testserver'})
   self.assertEqual(bad.status_code,422)
+ def test_stale_tab_cannot_read_or_write_after_cookie_switch(self):
+  self.b.headers["X-Career-Account"]=str(self.aid)
+  self.assertEqual(self.b.get('/api/user/state/profile').status_code,409)
+  self.assertEqual(self.put(self.b,'profile',{'preference':'A'}).status_code,409)
+  self.b.headers["X-Career-Account"]=str(self.bid)
+  self.assertIsNone(self.b.get('/api/user/state/profile').json()['data'])
  def test_noop_does_not_increment_revision_and_block_revokes_api(self):
   self.assertEqual(self.put(self.a,'swipes',[]).json()['revision'],1)
   self.assertEqual(self.put(self.a,'swipes',[],1).json()['revision'],1)

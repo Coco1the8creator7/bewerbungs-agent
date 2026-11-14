@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class DashboardContractTests(unittest.TestCase):
     def test_sidebar_navigation_has_six_modes_with_icons_and_bottom_account_links(self):
-        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        html = (ROOT / "authservice/mission-control.html").read_text(encoding="utf-8")
         css = (ROOT / "dashboard/mode-nav.css").read_text(encoding="utf-8")
         js = (ROOT / "dashboard/mode-nav.js").read_text(encoding="utf-8")
         sidebar = re.search(r'<aside id="modeSidebar".*?</aside>', html, re.DOTALL)
@@ -35,7 +35,7 @@ class DashboardContractTests(unittest.TestCase):
             self.assertIn(f'data-mode-page="{mode}"', html)
 
     def test_dashboard_has_valid_javascript(self):
-        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        html = (ROOT / "authservice/mission-control.html").read_text(encoding="utf-8")
         scripts = re.findall(r"<script>(.*?)</script>", html, flags=re.DOTALL | re.IGNORECASE)
         self.assertEqual(len(scripts), 1, "Expected one inline dashboard script")
         self.assertIn('<script src="./storage.js"></script>', html)
@@ -45,7 +45,7 @@ class DashboardContractTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_dashboard_keeps_crm_sections_and_agency_status(self):
-        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        html = (ROOT / "authservice/mission-control.html").read_text(encoding="utf-8")
         mission = html.index('id="missionTitle"')
         pipeline = html.index('id="pipelineTitle"')
         new_jobs = html.index('id="newJobsTitle"')
@@ -81,7 +81,7 @@ class DashboardContractTests(unittest.TestCase):
         self.assertNotIn("localStorage", html)
 
     def test_job_rating_controls_only_appear_inside_details_dialog(self):
-        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        html = (ROOT / "authservice/mission-control.html").read_text(encoding="utf-8")
         cards = re.search(r"function renderNewJobs\(\)\{(.*?)\n\}\nfunction render\(", html, re.DOTALL)
         details = re.search(r"function openDetails\(id\)\{(.*?)\n\}\nfunction startNewJob\(", html, re.DOTALL)
         self.assertIsNotNone(cards, "Job-card rendering function not found")
@@ -96,7 +96,7 @@ class DashboardContractTests(unittest.TestCase):
                       "The existing rating editor must remain in the details dialog")
 
     def test_earth_palette_covers_dashboard_and_agency(self):
-        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        html = (ROOT / "authservice/mission-control.html").read_text(encoding="utf-8")
         agency = (ROOT / "dashboard/agency-world.css").read_text(encoding="utf-8")
         light = (ROOT / "dashboard/light-earth.css").read_text(encoding="utf-8")
         self.assertIn("--world-design-background:#f1e7d8", html)
@@ -146,7 +146,7 @@ class DashboardContractTests(unittest.TestCase):
                                     f"Insufficient contrast: {foreground} on {background}")
 
     def test_floating_rating_save_reuses_existing_github_action(self):
-        html = (ROOT / "dashboard/index.html").read_text(encoding="utf-8")
+        html = (ROOT / "authservice/mission-control.html").read_text(encoding="utf-8")
         self.assertIn('id="floatingSaveGithubFeedback"', html)
         self.assertIn('class="floating-save"', html)
         self.assertIn('position:fixed;', html)

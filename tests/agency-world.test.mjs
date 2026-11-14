@@ -81,7 +81,7 @@ test("Agency artwork remains data-free and all known islands reuse one renderer"
  }
 });
 test("Warm beige styling loads after the legacy theme and has reduced-motion safeguards",()=>{
- const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const html=readFileSync(new URL("../authservice/mission-control.html",import.meta.url),"utf8");
  const css=readFileSync(new URL("../dashboard/agency-theme-beige.css",import.meta.url),"utf8");
  assert.ok(html.indexOf("agency-world.css")<html.indexOf("agency-theme-beige.css"));
  assert.ok(html.indexOf("agency-art.js")<html.indexOf("agency-world.js"));
@@ -90,7 +90,7 @@ test("Warm beige styling loads after the legacy theme and has reduced-motion saf
 });
 
 test("Mission Control previews use the same Agency renderer and current CRM levels",()=>{
- const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const html=readFileSync(new URL("../authservice/mission-control.html",import.meta.url),"utf8");
  const css=readFileSync(new URL("../dashboard/agency-theme-beige.css",import.meta.url),"utf8");
  assert.equal((html.match(/class="mission-route-art"/g)||[]).length,5);
  assert.doesNotMatch(html,/id="routeShip"|el\("routeShip"\)/);
@@ -121,7 +121,7 @@ test("World map has seven stops with Analysis milestones integrated into Radar",
  assert.deepEqual(shown.slice(1,4).map(p=>p.title),["PREPPER","MACHER:IN","STALKER"]);
 });
 test("Agency modal has the annotated minimal header, no redundant intro and a close icon",()=>{
- const html=readFileSync(new URL("../dashboard/index.html",import.meta.url),"utf8");
+ const html=readFileSync(new URL("../authservice/mission-control.html",import.meta.url),"utf8");
  const section=html.slice(html.indexOf('<dialog class="agency-world"'),html.indexOf('id="agencyInspector"'));
  assert.match(section,/<h2 id="agencyTitle">Agency World<\/h2>/);
  assert.match(section,/id="closeAgency"[^>]*aria-label="Agency World schliessen"[^>]*>×<\/button>/);

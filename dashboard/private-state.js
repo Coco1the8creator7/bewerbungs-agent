@@ -6,7 +6,7 @@
  const versions=new Map(),chains=new Map();
  async function request(path,options={}){
   const response=await fetch("/api/user/"+path,{credentials:"same-origin",cache:"no-store",...options,
-   headers:{"Content-Type":"application/json",...(options.headers||{})}});
+   headers:{"Content-Type":"application/json","X-Career-Account":account.id,...(options.headers||{})}});
   if(!response.ok){
    let detail="HTTP "+response.status;try{detail=(await response.json()).detail||detail;}catch{}
    if(response.status===401||response.status===403)detail="Sitzung abgelaufen oder Zugriff gesperrt. Bitte erneut anmelden.";
@@ -57,6 +57,7 @@
   if(window.CareerFilterSync?.hasPending())throw Error("Bewertungen noch nicht gespeichert. Bitte Synchronisation erneut versuchen.");
  };
  document.addEventListener("DOMContentLoaded",()=>{
+  document.getElementById("loadMorePrivateJobs")?.addEventListener("click",()=>{window.appendJobBatch();window.observeMobileJobs();});
   document.querySelector("#githubToken")?.closest(".persist-panel")?.setAttribute("hidden","");
   const checkbox=document.getElementById("persistEnabled");if(checkbox){checkbox.checked=true;checkbox.disabled=true;}
  });
