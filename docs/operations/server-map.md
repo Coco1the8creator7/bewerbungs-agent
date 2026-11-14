@@ -247,3 +247,9 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 - **VERIFIZIERT:** Betreiberinstallation durch [Run 42426823125](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/42426823125), Commit `dd20e29461a038ecca51f34d071df6305bb9ace3`, unabhängig geprüft. Serverseitiger Release-Check erfolgreich; alle 15 öffentlichen Smoke-Prüfungen erfolgreich. Live-Hash weiterhin `46befcc89569953786fb0e98f6d6fae3ad297588480959f127996c1c3112b4a5`. Kein Frontend-Deploy erfolgt.
 - `frontend-check` führt wieder den serverseitigen `release-check <SHA>` aus, zusätzlich zum öffentlichen HTML-Vergleich und HTTP-Smoke. Der serverseitige Check validiert Webroot und Commit und protokolliert die beiden HTML-Hashes, ohne öffentliche Dateien zu ersetzen.
 - Erfolgskriterium: kein Symlink-Abbruch, erwartete Hashes und erfolgreiche öffentliche Smoke-Prüfungen. Ein erfolgreicher Check ist kein Deploymentnachweis.
+
+## Öffentliche Landingpage vom 14.11.2026
+
+[Run 43572119588](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/43572119588) veröffentlichte die öffentliche `index.html` aus `0ea5f1b3450e64705f40a4af52debca092058077`. Alle 15 HTTP-Prüfungen erfolgreich. Ein separater HTTPS-Abruf bestätigte den Zielhash `350e59b4f66b2bf4ef0762f199994574d1b5f008c24547d624a7ad9fc9dd8cae`. Der Vier-Punkte-Diff ist erledigt.
+
+Die geschützte App verwendet `/opt/careeragency/auth-current/dashboard`. Der öffentliche Release ersetzt ausschliesslich die öffentliche `index.html`. Fünf lokale Kontoadapter-Tests und der IndexedDB-Vertragstest erfolgreich. Produktive Zwei-Konten-Abnahme und praktische Rollback-Prüfung bleiben offen.
