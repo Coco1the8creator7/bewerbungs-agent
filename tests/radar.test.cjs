@@ -50,7 +50,7 @@ test("unanswered evaluation fields never become implicit ratings",()=>{
 });
 
 test("radar is isolated from adult CRM and uses opt-in local persistence",()=>{
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  const js=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
  const store=fs.readFileSync(path.join(root,"dashboard/storage.js"),"utf8");
  for(const marker of ["radarTabOverview","radarTabProfile","radarTabReview","radarSkills-interessen","radarSources","radarReviewList","radarSaveOptIn"]){
@@ -107,7 +107,7 @@ test("career ratings, skills and source choices are disjoint from youth profile"
 });
 
 test("Radar loads public apprenticeships without exposing adult mode; adult CRM remains intact",()=>{
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
  const nav=fs.readFileSync(path.join(root,"dashboard/mode-nav.js"),"utf8");
  assert.doesNotMatch(html,/class="radar-market"/);
@@ -128,7 +128,7 @@ test("Radar loads public apprenticeships without exposing adult mode; adult CRM 
 
 test("v2 preserves access to all excluded careers through Radar even if wishlist restricts candidates",()=>{
  const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  const filter=fs.readFileSync(path.join(root,"dashboard/career-filter.js"),"utf8");
  for(const id of ["radarReviewScope","radarReviewScopeGroup","radarReviewMore","radarReviewList"]){
   assert.ok(html.includes('id="'+id+'"'),"Missing "+id);
@@ -149,7 +149,7 @@ test("v2 preserves access to all excluded careers through Radar even if wishlist
 
 test("career Radar shares explicit overall score with the CRM, not proxy criterion ratings",()=>{
  const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  assert.match(html,/window\.AgentCareerFeedback=Object\.freeze/);
  assert.match(html,/setScore:\(id,score\)=>/);
  assert.match(radar,/window\.AgentCareerFeedback\.getScore\(job\.id\)/);
@@ -158,7 +158,7 @@ test("career Radar shares explicit overall score with the CRM, not proxy criteri
 });
 
 test("screenshot decluttering keeps only actionable Radar overview content",()=>{
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  const js=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
  const css=fs.readFileSync(path.join(root,"dashboard/radar.css"),"utf8");
  const begin=html.indexOf('id="mode-radar"');
@@ -225,7 +225,7 @@ test("published Yousty apprenticeships count even without 'Lehrstelle' in title"
 
 test("Radar forces apprentice mode after restoring old local state and never accesses adult feed",()=>{
  const radar=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  assert.match(radar,/const market=\(\)=>"apprentice"/);
  assert.match(radar,/state\.market="apprentice"/);
  assert.match(radar,/Object\.assign\(state,model\.normalizedState\(saved\)\);[\s\S]*?state\.market="apprentice"/);

@@ -9,7 +9,7 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
 | geprüfter Anwendungscode | **VERIFIZIERT** | Zuletzt geprüfter Anwendungscode in `main`: `d1c402b3d20c6aaf64b3e82573ca971bf0361024`; öffentlicher Live-Diff gegen Vorgänger `eb551491045718e9e54d7b10ad6f17eb73506088`, 08.11.2026. |
 | PR-Lage | **VERIFIZIERT** | Anwendung/Deployment: #115/#118 sowie #148 (Releasepfade), #149 (Live-Diff), #151 (read-only Check) und #153 (Symlink-Gateway) gemergt. |
-| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Caddy, Auth-Backend, PostgreSQL und geschützte Kontorouten produktiv aktiv; anonyme Smoke-Checks erfolgreich. Echte Admin-/Mail-/Zwei-Konten-Abnahme offen. |
+| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Caddy, Auth-Backend, PostgreSQL und geschützte Kontorouten produktiv aktiv; anonyme Smoke-Checks erfolgreich. Admin, Registrierung, Mailzustellung, Freischaltung und Login eines Testkontos vom Betreiber am 14.11.2026 bestätigt. Produktive Zwei-Konten-Datentrennung offen. |
 | Rollout des geprüften Commits | **TEILWEISE VERIFIZIERT** | Auth-Aktivierung erfolgreich. Read-only Frontend-Abgleich meldet eine Abweichung zwischen Live-`index.html` und `main`; vollständiger Frontend-Deploy ist deshalb gesperrt. |
 | letzte Prüfung | **VERIFIZIERT** | 08.11.2026; GitHub APIs und öffentlicher read-only Frontend-Diff; Produktionsschreibzugriff nicht ausgeführt. Details unten. |
 
@@ -253,3 +253,9 @@ Der neue Produktionsgateway kennt plan, lockdown, prepare und activate; Rollback
 [Run 43572119588](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/43572119588) veröffentlichte die öffentliche `index.html` aus `0ea5f1b3450e64705f40a4af52debca092058077`. Alle 15 HTTP-Prüfungen erfolgreich. Ein separater HTTPS-Abruf bestätigte den Zielhash `350e59b4f66b2bf4ef0762f199994574d1b5f008c24547d624a7ad9fc9dd8cae`. Der Vier-Punkte-Diff ist erledigt.
 
 Die geschützte App verwendet `/opt/careeragency/auth-current/dashboard`. Der öffentliche Release ersetzt ausschliesslich die öffentliche `index.html`. Fünf lokale Kontoadapter-Tests und der IndexedDB-Vertragstest erfolgreich. Produktive Zwei-Konten-Abnahme und praktische Rollback-Prüfung bleiben offen.
+
+## Kontozugang und getrennte Einstiege (14.11.2026)
+
+Der Betreiber bestätigt den produktiven Ablauf mit einem Testkonto einschliesslich Mailzustellung und Freischaltung im Admindashboard. Vor der Änderung zeigte die Domain Mission Control, mit beiden Kontolinks im Seitenmenü.
+
+Im neuen Repositorystand ist dashboard/index.html der eigenständige öffentliche Einstieg. Das geschützte HTML liegt in authservice/mission-control.html. Die private API vergleicht die Konto-ID des geöffneten Tabs mit der authentifizierten Sitzung. Auth-Runtime und privater JavaScript-Adapter bilden eine Release-Einheit. Der öffentliche Frontend-Gateway aktualisiert nur die Landingpage. Der bestehende Radar-Gateway für den früheren öffentlichen Dashboard-Index ist für die private App ungeeignet. Dossier Studio bleibt ausserhalb der geschützten App. Produktiver Zwei-Konten-Test sowie Aktivierung der geänderten Runtime separat nachweisen.

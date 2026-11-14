@@ -108,7 +108,7 @@ test("switching design and timeframe never inserts fake contacts",()=>{
 });
 
 test("Radar UI uses one shared list for markers, excludes hardcoded decorative ping dots",()=>{
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  const js=fs.readFileSync(path.join(root,"dashboard/radar.js"),"utf8");
  const css=fs.readFileSync(path.join(root,"dashboard/radar-designs.css"),"utf8");
  assert.match(html,/id="radarTargets"/);
@@ -123,7 +123,7 @@ test("Radar UI uses one shared list for markers, excludes hardcoded decorative p
 });
 
 test("Zen is the initial theme with four purely decorative concentric waves",()=>{
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  const css=fs.readFileSync(path.join(root,"dashboard/radar-designs.css"),"utf8");
  const js=fs.readFileSync(path.join(root,"dashboard/radar-designs.js"),"utf8");
  assert.match(html,/id="radarDial" data-design="zen"/);
@@ -159,7 +159,7 @@ test("pulse design switch changes CSS only; targets and jobs stay untouched",()=
 });
 
 test("published Zen assets have matching cache-busting versions and highest stylesheet priority",()=>{
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  const version="20261027-zen-magenta-1";
  for(const src of ["radar-model.js","radar-designs.js","radar.js"]){
   const scriptVersion=src==="radar-designs.js"?version:"20261107-lehrstellen-radar-1";
@@ -180,7 +180,7 @@ test("published Zen assets have matching cache-busting versions and highest styl
 });
 
 test("design-picker visibility: hidden previews, with Zen, time windows and live point layer intact",()=>{
- const html=fs.readFileSync(path.join(root,"dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(root,"authservice/mission-control.html"),"utf8");
  assert.match(html,/<div class="radar-design-heading" hidden>/);
  assert.match(html,/<div class="radar-design-options" id="radarDesignOptions"[^>]*hidden>/);
  assert.match(html,/id="radarDial" data-design="zen"/);

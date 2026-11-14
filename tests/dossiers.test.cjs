@@ -1,6 +1,6 @@
 "use strict";
 const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs");
-const html=fs.readFileSync("dashboard/index.html","utf8");
+const html=fs.readFileSync("authservice/mission-control.html","utf8");
 const js=fs.readFileSync("dashboard/dossiers.js","utf8");
 const css=fs.readFileSync("dashboard/dossiers.css","utf8");
 

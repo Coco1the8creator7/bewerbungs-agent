@@ -19,10 +19,18 @@ class Ratings(BaseModel):
     relevance_ratings:dict=Field(default_factory=dict)
     radar_career_ratings:dict=Field(default_factory=dict)
 def validate_size(data):
-    if len(json.dumps(data,ensure_ascii=False,allow_nan=False).encode())>4_500_000:
+    try:
+        encoded = json.dumps(data, ensure_ascii=False, allow_nan=False).encode()
+    except (ValueError, UnicodeError, RecursionError):
+        raise HTTPException(422,"Ungültige JSON-Daten")
+    if b"\\u0000" in encoded:
+        raise HTTPException(422,"Ungültiges Nullzeichen")
+    if len(encoded)>4_500_000:
         raise HTTPException(413,"Datenmenge zu gross")
 def owner(con,request):
     u=session(con,request);gate(u)
+    if request.headers.get("X-Career-Account") != str(u["id"]):
+        raise HTTPException(409,"Das Konto hat gewechselt. Bitte lade die App neu.")
     con.execute("SELECT set_config('career.user_id',%s,true)",(str(u["id"]),))
     return u["id"]
 def lock(con,uid,key):

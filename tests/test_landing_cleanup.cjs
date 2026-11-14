@@ -2,7 +2,7 @@
 "use strict";
 const assert=require("node:assert/strict");
 const fs=require("node:fs");
-const html=fs.readFileSync("dashboard/index.html","utf8");
+const html=fs.readFileSync("authservice/mission-control.html","utf8");
 const css=fs.readFileSync("dashboard/landing-cleanup.css","utf8");
 const theme=fs.readFileSync("dashboard/urban-mono-magenta.css","utf8");
 const js=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];

@@ -10,10 +10,14 @@ from psycopg.rows import dict_row
 from cryptography.fernet import Fernet
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, EmailStr, Field
+from fastapi.exceptions import RequestValidationError
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+import unicodedata
 from auth.security import canonical_email,hash_password,password_matches,new_bearer_secret,digest_bearer_secret,expiry_for_session,AccountState,permitted_area
 
 app=FastAPI(openapi_url=None,docs_url=None,redoc_url=None)
+from .request_limits import RequestLimits
+app.add_middleware(RequestLimits)
 COOKIE="ca_session"
 def now(): return datetime.now(timezone.utc)
 def db(): return psycopg.connect(os.environ["CAREER_AUTH_DATABASE_URL"],row_factory=dict_row)
@@ -80,24 +84,47 @@ def admin(user):
     gate(user)
     if user["role"]!="admin": raise HTTPException(403,"Admin-Zugriff erforderlich")
 def totpkey(): return Fernet(os.environ["CAREER_AUTH_TOTP_KEY"].encode())
-class Registration(BaseModel):
+@app.exception_handler(RequestValidationError)
+async def invalid_request(request, exc):
+    return JSONResponse({"detail":"Ungültige Eingabe. Bitte prüfe deine Angaben."}, status_code=422)
+
+class AccountInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    @field_validator("*", mode="before")
+    @classmethod
+    def valid_unicode(cls, value):
+        if isinstance(value, str):
+            try:
+                value.encode("utf-8")
+            except UnicodeEncodeError:
+                raise ValueError("Ungültiger Text") from None
+        return value
+
+class Registration(AccountInput):
     first_name:str=Field(min_length=1,max_length=120)
     last_name:str=Field(min_length=1,max_length=120)
     residence:str=Field(min_length=1,max_length=250)
     birth_date:date|None=None
     email:EmailStr
     password:str=Field(min_length=12,max_length=1024)
-class Credentials(BaseModel):
+    @field_validator("first_name", "last_name", "residence")
+    @classmethod
+    def single_line(cls, value):
+        if not value.strip() or any(unicodedata.category(c) in {"Cc", "Cs"} for c in value):
+            raise ValueError("Ungültiges Textfeld")
+        return value.strip()
+
+class Credentials(AccountInput):
     email:EmailStr
-    password:str
+    password:str=Field(min_length=1,max_length=1024)
     remember:bool=False
-class LinkToken(BaseModel): token:str
-class ResetEmail(BaseModel): email:EmailStr
-class ResetPassword(BaseModel):
-    token:str
+class LinkToken(AccountInput): token:str=Field(min_length=1,max_length=128)
+class ResetEmail(AccountInput): email:EmailStr
+class ResetPassword(LinkToken):
     password:str=Field(min_length=12,max_length=1024)
-class Code(BaseModel): code:str=Field(min_length=6,max_length=8)
-class Recovery(BaseModel): code:str
+class Code(AccountInput): code:str=Field(pattern=r"^[0-9]{6}$")
+class Recovery(AccountInput): code:str=Field(min_length=1,max_length=128)
 
 @app.post("/api/auth/register",status_code=202)
 def register(data:Registration,request:Request):
@@ -197,6 +224,7 @@ def mfa_confirm(data:Code,request:Request):
     with db() as con:
         u=session(con,request)
         f=con.execute("SELECT * FROM career_auth.totp_credentials WHERE user_id=%s FOR UPDATE",(u["id"],)).fetchone()
+        limit("mfa-confirm",str(u["id"]),8)
         if not f or f["enabled_at"]: raise HTTPException(409,"Keine offene Einrichtung")
         secret=totpkey().decrypt(bytes(f["encrypted_secret"])).decode()
         if not pyotp.TOTP(secret).verify(data.code,valid_window=1): raise HTTPException(401,"Ungültiger Code")

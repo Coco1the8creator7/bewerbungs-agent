@@ -4,7 +4,7 @@ const assert=require("node:assert/strict");
 const fs=require("node:fs");
 const vm=require("node:vm");
 
-const html=fs.readFileSync("dashboard/index.html","utf8");
+const html=fs.readFileSync("authservice/mission-control.html","utf8");
 const style=fs.readFileSync("dashboard/notifications.css","utf8");
 const agencyStyle=fs.readFileSync("dashboard/agency-theme-beige.css","utf8");
 assert.match(html,/id="notificationBell"/);

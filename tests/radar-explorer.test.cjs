@@ -61,7 +61,7 @@ test("profile normalization preserves every earlier skill and opt-in interest de
 });
 
 test("explorer UI is accessible without drag, contains no server write and stays within Radar",()=>{
- const html=fs.readFileSync(path.join(__dirname,"../dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(__dirname,"../authservice/mission-control.html"),"utf8");
  const js=fs.readFileSync(path.join(__dirname,"../dashboard/radar-explorer-ui.js"),"utf8");
  const css=fs.readFileSync(path.join(__dirname,"../dashboard/radar-explorer.css"),"utf8");
  assert.match(html,/id="radarPanelProfile"/);
@@ -108,7 +108,7 @@ test("legacy 32-interest choices migrate without clobbering explicit new respons
 });
 
 test("the page integrates original SVG art and full 37-interest count",()=>{
- const html=fs.readFileSync(path.join(__dirname,"../dashboard/index.html"),"utf8");
+ const html=fs.readFileSync(path.join(__dirname,"../authservice/mission-control.html"),"utf8");
  const ui=fs.readFileSync(path.join(__dirname,"../dashboard/radar-explorer-ui.js"),"utf8");
  assert.match(html,/src="\.\/radar-interest-pictograms\.js"/);
  assert.match(html,/0 von 37/);

@@ -3,7 +3,7 @@
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
-const html = fs.readFileSync("dashboard/index.html", "utf8");
+const html = fs.readFileSync("authservice/mission-control.html", "utf8");
 assert.match(html, /id="exportMarkedJobs"/);
 assert.match(html, /type="range"/); // Created dynamically by ratingPanel
 const worldStart=html.indexOf('<dialog class="agency-world"');
