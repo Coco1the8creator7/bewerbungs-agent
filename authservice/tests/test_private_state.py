@@ -37,6 +37,23 @@ class PrivateStateTests(unittest.TestCase):
   client.headers["X-Career-Account"]=str(uid)
   return client,uid
  def put(self,c,key,data,revision=0):return c.put('/api/user/state/'+key,json={'revision':revision,'data':data},headers={'Origin':'https://testserver'})
+ def test_minimal_registration_and_authenticated_waiting_status(self):
+  client=TestClient(asgi.app,base_url='https://testserver')
+  body={'first_name':'Lia','email':'minimal@example.com','password':'synthetic long password'}
+  headers={'Origin':'https://testserver'}
+  self.assertEqual(client.post('/api/auth/register',json=body,headers=headers).status_code,202)
+  with self.connect() as con:
+   row=con.execute("SELECT * FROM career_auth.users WHERE email=%s",(body['email'],)).fetchone()
+   self.assertIsNone(row['last_name']);self.assertIsNone(row['residence'])
+   self.assertEqual(row['status'],'pending')
+  self.assertEqual(client.post('/api/auth/login',json={'email':body['email'],'password':body['password']},headers=headers).status_code,200)
+  status=client.get('/api/auth/me').json()
+  self.assertFalse(status['email_verified']);self.assertEqual(status['next'],'waiting')
+  with self.connect() as con:
+   con.execute('UPDATE career_auth.users SET email_verified_at=now() WHERE id=%s',(row['id'],))
+  status=client.get('/api/auth/me').json()
+  self.assertTrue(status['email_verified']);self.assertEqual(status['next'],'waiting')
+  self.assertEqual(client.get('/app/').status_code,403)
  def test_two_accounts_are_isolated_and_conflicts_preserve_data(self):
   self.assertEqual(self.put(self.a,'profile',{'preference':'A'}).status_code,200)
   self.assertEqual(self.b.get('/api/user/state/profile').json(),{'data':None,'revision':0})
