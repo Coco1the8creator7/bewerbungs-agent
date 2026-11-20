@@ -7,11 +7,11 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Anwendungscode | **VERIFIZIERT** | Zuletzt geprüfter Anwendungscode in `main`: `d1c402b3d20c6aaf64b3e82573ca971bf0361024`; öffentlicher Live-Diff gegen Vorgänger `eb551491045718e9e54d7b10ad6f17eb73506088`, 08.11.2026. |
-| PR-Lage | **VERIFIZIERT** | Anwendung/Deployment: #115/#118 sowie #148 (Releasepfade), #149 (Live-Diff), #151 (read-only Check) und #153 (Symlink-Gateway) gemergt. |
-| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Caddy, Auth-Backend, PostgreSQL und geschützte Kontorouten produktiv aktiv; anonyme Smoke-Checks erfolgreich. Admin, Registrierung, Mailzustellung, Freischaltung und Login eines Testkontos vom Betreiber am 14.11.2026 bestätigt. Produktive Zwei-Konten-Datentrennung offen. |
-| Rollout des geprüften Commits | **TEILWEISE VERIFIZIERT** | Auth-Aktivierung erfolgreich. Read-only Frontend-Abgleich meldet eine Abweichung zwischen Live-`index.html` und `main`; vollständiger Frontend-Deploy ist deshalb gesperrt. |
-| letzte Prüfung | **VERIFIZIERT** | 08.11.2026; GitHub APIs und öffentlicher read-only Frontend-Diff; Produktionsschreibzugriff nicht ausgeführt. Details unten. |
+| geprüfter Anwendungscode | **VERIFIZIERT** | Produktiv `265183af441dba2b8c825bacf8edfb0b4942c53f`, einschliesslich PR #161 und #163. |
+| PR-Lage | **VERIFIZIERT** | #161 (Kontozugang und Eingabeprüfung) und #163 (laufendes Runtime-Update samt Abnahmetest) gemergt und produktiv. |
+| aktuelle Serverkonfiguration | **VERIFIZIERT** | Auth-Dienst aktiv; öffentliche Landingpage, private App-/API-Routen geschützt. Zwei-Konten-Datentrennung über produktives HTTPS am 20.11.2026 bestanden. Registrierung/Mail/Freischaltung vom Betreiber am 14.11. bestätigt. |
+| Rollout des geprüften Commits | **VERIFIZIERT** | Run 44771419583 erfolgreich. Runtime und öffentliche Landingpage gemeinsam aktualisiert; öffentlicher Zielhash unabhängig bestätigt. |
+| letzte Prüfung | **VERIFIZIERT** | 20.11.2026, 17:15 MEZ. Serverseitiger Rollout, Zwei-Konten-HTTPS-Probe und anschliessende unabhängige HTTP-Prüfung. Prüfgrenzen im Abschlussabschnitt. |
 
 ## Architekturübersicht
 
