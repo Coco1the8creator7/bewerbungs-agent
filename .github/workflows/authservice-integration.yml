@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'authservice/**'
+      - 'ops/production/verify-two-accounts.py'
       - 'db/migrations/**'
       - 'crawler/**'
       - 'dashboard/private-state.js'
@@ -12,7 +13,7 @@ permissions:
   contents: read
 jobs:
   integration:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     services:
       postgres:
@@ -109,3 +110,12 @@ jobs:
           npm install --no-save --ignore-scripts playwright@1.56.1
           npx playwright install --with-deps chromium
           node tests/private-app-e2e.cjs
+          # Exercise the production probe against the disposable HTTPS database fixture.
+          SSL_CERT_FILE=/tmp/ca-e2e.crt python - <<'PYPROBE'
+          import importlib.util, os
+          spec=importlib.util.spec_from_file_location('probe','ops/production/verify-two-accounts.py')
+          probe=importlib.util.module_from_spec(spec);spec.loader.exec_module(probe)
+          probe.ORIGIN='https://localhost:8443'
+          probe.DSN=os.environ['CAREER_AUTH_DATABASE_URL']
+          probe.main()
+          PYPROBE
