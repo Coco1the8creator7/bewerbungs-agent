@@ -16,5 +16,5 @@ class MigrationRenderTests(unittest.TestCase):
    self.assertNotIn('\x1b',sql)
    controls=[line for line in sql.splitlines() if line.startswith('\\')]
    self.assertEqual(sum(line.startswith('\\if ') for line in controls),controls.count('\\endif'))
-   self.assertEqual(controls.count('\\endif'),7)
+   self.assertEqual(controls.count('\\endif'),8)
    self.assertIn('career_pool.listings',sql)

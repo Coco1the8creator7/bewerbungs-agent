@@ -42,7 +42,7 @@ jobs:
           PGPASSWORD: testonly
         run: |
           psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f db/migrations/001_auth_foundation.sql
-          for migration in db/migrations/00{2,3,4,5}_*.sql; do
+          for migration in db/migrations/00{2,3,4,5,6}_*.sql; do
             psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -f "$migration"
           done
           psql -X -v ON_ERROR_STOP=1 -h localhost -U postgres -d careeragency_auth_test -c "CREATE ROLE career_test_runtime; GRANT USAGE ON SCHEMA career_private TO career_test_runtime; GRANT SELECT,INSERT,UPDATE,DELETE ON career_private.user_state TO career_test_runtime;"
@@ -75,7 +75,7 @@ jobs:
             for replay in 1 2; do
               psql -X -v ON_ERROR_STOP=1 -v target_db="$db" -h localhost -U postgres -d "$db" -f /tmp/ca-migrations.sql >/dev/null
             done
-            test "$(psql -XAt -h localhost -U postgres -d "$db" -c 'SELECT count(*) FROM career_ops.migrations')" = 5
+            test "$(psql -XAt -h localhost -U postgres -d "$db" -c 'SELECT count(*) FROM career_ops.migrations')" = 6
           done
       - name: Test security and database integration
         run: python -m unittest discover -s authservice/tests -v
@@ -110,6 +110,7 @@ jobs:
           npm install --no-save --ignore-scripts playwright@1.56.1
           npx playwright install --with-deps chromium
           node tests/private-app-e2e.cjs
+          node tests/auth-journey-e2e.cjs
           # Exercise the production probe against the disposable HTTPS database fixture.
           SSL_CERT_FILE=/tmp/ca-e2e.crt python - <<'PYPROBE'
           import importlib.util, os

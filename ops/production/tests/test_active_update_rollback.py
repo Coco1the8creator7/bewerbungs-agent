@@ -19,7 +19,7 @@ class ActiveUpdateRollbackTests(unittest.TestCase):
             (root / 'backup/dossier-studio.html').write_text('previous dossier')
             (root / 'live/index.html').write_text('broken release')
             source = SOURCE.read_text()
-            functions = source[source.index('switch_runtime() {'):source.index('trap rollback ERR INT TERM')]
+            functions = source[source.index('switch_runtime() {'):source.index('# Rehearse migration')]
             functions = functions.replace('/opt/careeragency/', folder + '/')
             script = '''set -euo pipefail
 systemctl() { printf '%s\\n' "$*" >> "$record"; }

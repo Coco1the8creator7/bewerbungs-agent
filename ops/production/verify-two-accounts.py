@@ -60,8 +60,9 @@ def main():
             for uid, email, password in zip(ids, emails, passwords):
                 con.execute("""INSERT INTO career_auth.users
                     (id,email,first_name,last_name,residence,password_hash,status,email_verified_at)
-                    VALUES (%s,%s,'Release','Test','Synthetic',%s,'active',now())""",
-                    (uid, email, hash_password(password)))
+                    VALUES (%s,%s,'Release',%s,%s,%s,'active',now())""",
+                    (uid, email, None if uid == ids[0] else 'Test',
+                     None if uid == ids[0] else 'Synthetic', hash_password(password)))
         clients = [Client(uid) for uid in ids]
         for client, email, password, other in zip(clients, emails, passwords, reversed(ids)):
             client.request('/api/auth/login', 200, 'POST', {'email': email, 'password': password})
