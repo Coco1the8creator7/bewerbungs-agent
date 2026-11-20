@@ -7,11 +7,11 @@ Diese Karte trennt Repositorystand, verbindliche Architekturentscheidungen und t
 | Angabe | Status | Nachweis |
 |---|---|---|
 | Repository und Zielbranch | **VERIFIZIERT** | Coco1the8creator7/bewerbungs-agent, Standardbranch main |
-| geprüfter Anwendungscode | **VERIFIZIERT** | Zuletzt geprüfter Anwendungscode in `main`: `d1c402b3d20c6aaf64b3e82573ca971bf0361024`; öffentlicher Live-Diff gegen Vorgänger `eb551491045718e9e54d7b10ad6f17eb73506088`, 08.11.2026. |
-| PR-Lage | **VERIFIZIERT** | Anwendung/Deployment: #115/#118 sowie #148 (Releasepfade), #149 (Live-Diff), #151 (read-only Check) und #153 (Symlink-Gateway) gemergt. |
-| aktuelle Serverkonfiguration | **TEILWEISE VERIFIZIERT** | Caddy, Auth-Backend, PostgreSQL und geschützte Kontorouten produktiv aktiv; anonyme Smoke-Checks erfolgreich. Admin, Registrierung, Mailzustellung, Freischaltung und Login eines Testkontos vom Betreiber am 14.11.2026 bestätigt. Produktive Zwei-Konten-Datentrennung offen. |
-| Rollout des geprüften Commits | **TEILWEISE VERIFIZIERT** | Auth-Aktivierung erfolgreich. Read-only Frontend-Abgleich meldet eine Abweichung zwischen Live-`index.html` und `main`; vollständiger Frontend-Deploy ist deshalb gesperrt. |
-| letzte Prüfung | **VERIFIZIERT** | 08.11.2026; GitHub APIs und öffentlicher read-only Frontend-Diff; Produktionsschreibzugriff nicht ausgeführt. Details unten. |
+| geprüfter Anwendungscode | **VERIFIZIERT** | Produktiv `265183af441dba2b8c825bacf8edfb0b4942c53f`, einschliesslich PR #161 und #163. |
+| PR-Lage | **VERIFIZIERT** | #161 (Kontozugang und Eingabeprüfung) und #163 (laufendes Runtime-Update samt Abnahmetest) gemergt und produktiv. |
+| aktuelle Serverkonfiguration | **VERIFIZIERT** | Auth-Dienst aktiv; öffentliche Landingpage, private App-/API-Routen geschützt. Zwei-Konten-Datentrennung über produktives HTTPS am 20.11.2026 bestanden. Registrierung/Mail/Freischaltung vom Betreiber am 14.11. bestätigt. |
+| Rollout des geprüften Commits | **VERIFIZIERT** | Run 44771419583 erfolgreich. Runtime und öffentliche Landingpage gemeinsam aktualisiert; öffentlicher Zielhash unabhängig bestätigt. |
+| letzte Prüfung | **VERIFIZIERT** | 20.11.2026, 17:15 MEZ. Serverseitiger Rollout, Zwei-Konten-HTTPS-Probe und anschliessende unabhängige HTTP-Prüfung. Prüfgrenzen im Abschlussabschnitt. |
 
 ## Architekturübersicht
 
@@ -265,3 +265,13 @@ Im neuen Repositorystand ist dashboard/index.html der eigenständige öffentlich
 Produktionsplan 44770004979 bestätigt aktiven Auth-Dienst und Mail-Timer, deaktivierten Crawler sowie HTTP 401 für private Ressourcen ohne Sitzung. Die öffentliche index.html hat noch SHA-256 350e59b4f66b2bf4ef0762f199994574d1b5f008c24547d624a7ad9fc9dd8cae. PR #161 ist unter 32b97f7 gemergt, seine sechs CI-Läufe erfolgreich.
 
 Bei aktivem Dienst führt backend-activate künftig ein codebezogenes Update aus. Schema, Dependencies-Anforderungen und systemd-Units müssen gegenüber der bisherigen Runtime unverändert sein. Neue Runtime und öffentlicher Einstieg werden nach Sicherung gemeinsam ausgeliefert. Bei Prüfungsfehlern werden vorherige Runtime und öffentliche HTML-Dateien wiederhergestellt. Der veraltete öffentliche Dossier-Einstieg wird gesichert und entfernt. Zwei zufällig benannte Testkonten prüfen Login, sechs Datenspeicher, fremde Konto-IDs, Kontowechsel und Logout über produktives HTTPS. Nur diese Testkonten und ihre abhängigen Daten werden anschliessend gelöscht. Runtime- und Produktionsnachweis stehen bis zum erfolgreichen Aktivierungslauf aus.
+
+## Produktionsabnahme vom 20.11.2026, 17:15 MEZ
+
+**Verifiziert.** Vorprüfung [44771289974](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/44771289974) identifizierte Runtime `7685b15945bab46edc801d78ca64d44c2592f14c`, PID 120945. ASGI- und Speicheradapter-Hashes entsprachen diesem Commit. Die öffentliche HTML-Datei entsprach dem Release vom 14.11.
+
+**Verifiziert.** [Aktivierung 44771419583](https://github.com/Coco1the8creator7/bewerbungs-agent/actions/runs/44771419583) aktualisierte Backend und Landingpage auf `265183af441dba2b8c825bacf8edfb0b4942c53f` (PR #161 plus Deploymentpfad #163). Neuer Auth-Prozess PID 266171, Start 16:15:19 UTC. Backup `/var/backups/careeragency-ops/production/20261120T161503Z-265183af441d`. Öffentlicher HTML-Zielhash `2e007c9445ea67bc5108f6ee7c85f4de257be2f08b97ea195e9ef1213657041a` auf `/` und `/index.html`. Der öffentliche Dossier-Einstieg wurde gesichert und entfernt.
+
+**Verifiziert über produktives HTTPS mit zwei temporären Nicht-Admin-Konten.** Anonyme Requests auf private HTML-/Asset-/API-Routen und Adminbereich ergaben 401. Beide Konten konnten sich regulär anmelden. Alle sechs privaten Speicher waren getrennt. Fremde Kontoheader und Schreibversuche nach Kontowechsel ergaben 409, eingeschleuste Benutzerzuordnung im Schreibkörper 422. Logout entzog den App-Zugriff, erneuter Login stellte die eigenen Daten wieder bereit. Testkonten, Sitzungen und private Testdaten wurden per begrenztem Cleanup entfernt. Zusätzlich waren alle 15 öffentlichen Smoke-Prüfungen erfolgreich.
+
+**Prüfgrenzen.** Der interaktive Browserablauf wurde in der isolierten CI ausgeführt, die Produktionsabnahme erfolgte über HTTPS mit separaten Cookie-Sitzungen. Die Testkonten wurden direkt als aktive synthetische Benutzer angelegt; Registrierung, Mailzustellung und Admin-Freischaltung wurden dabei nicht erneut ausgeführt. Der automatische Rückfall wurde im isolierten Funktionstest geprüft, kein absichtlicher Produktionsausfall ausgelöst. Schema und systemd-Units wurden bei diesem Rollout nicht geändert. Dossier Studio ist weiterhin ausserhalb der geschützten App.
