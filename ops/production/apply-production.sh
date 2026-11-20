@@ -16,6 +16,9 @@ backup=/var/backups/careeragency-ops/production/$(date -u +%Y%m%dT%H%M%SZ)-${sha
 log() { logger -t careeragency-release -- "$*"; printf '%s\n' "$*"; }
 if [[ "$mode" == plan ]]; then
   printf 'commit=%s\n' "$sha"
+  printf 'auth_runtime=%s\n' "$(readlink -e /opt/careeragency/auth-current || true)"
+  systemctl show careeragency-auth.service --property=MainPID --property=ExecMainStartTimestamp
+  sha256sum "$live/index.html" /opt/careeragency/auth-current/authservice/asgi.py /opt/careeragency/auth-current/dashboard/private-state.js
   systemctl is-active careeragency-auth.service || true
   printf 'live_path_kind=%s\n' "$([[ -L "$live" ]] && echo symlink || echo directory_or_missing)"
   printf 'live_resolved_path=%s\n' "$(readlink -e "$live" || true)"
@@ -140,6 +143,11 @@ PY
   runuser -u careeragency_auth -- psql -XAt -d careeragency_auth -c 'SELECT count(*) FROM career_auth.users' >/dev/null
   log "production_prepare=complete backup=$backup code=$sha service_not_started=true"
   echo 'Next: sudo python3 ops/production/configure-auth.py; then bootstrap the administrator locally and run activate.'
+  exit
+fi
+# A running installation uses the reversible, schema-preserving update path.
+if [[ "$mode" == activate ]] && systemctl is-active --quiet careeragency-auth.service; then
+  bash "$src/ops/production/update-active-runtime.sh" "$src" "$backup" "$live"
   exit
 fi
 # Activate only a fully prepared, secret-configured, locally bootstrapped installation.
