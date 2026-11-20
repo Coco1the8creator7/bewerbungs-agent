@@ -86,7 +86,14 @@ def admin(user):
 def totpkey(): return Fernet(os.environ["CAREER_AUTH_TOTP_KEY"].encode())
 @app.exception_handler(RequestValidationError)
 async def invalid_request(request, exc):
-    return JSONResponse({"detail":"Ungültige Eingabe. Bitte prüfe deine Angaben."}, status_code=422)
+    messages = {"first_name": "Bitte gib deinen Vornamen ein (maximal 120 Zeichen).",
+                "last_name": "Bitte prüfe deinen Nachnamen.", "residence": "Bitte prüfe deinen Wohnort.",
+                "email": "Bitte gib eine gültige E-Mail-Adresse ein.",
+                "password": "Bitte prüfe dein Passwort. Ein neues Passwort braucht mindestens 12 Zeichen.",
+                "birth_date": "Bitte prüfe dein Geburtsdatum.", "code": "Bitte gib den sechsstelligen Code ein."}
+    fields = {str(e["loc"][-1]): messages[str(e["loc"][-1])] for e in exc.errors()
+              if e.get("loc") and str(e["loc"][-1]) in messages}
+    return JSONResponse({"detail":"Bitte prüfe die markierten Angaben.", "fields": fields}, status_code=422)
 
 class AccountInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -103,14 +110,16 @@ class AccountInput(BaseModel):
 
 class Registration(AccountInput):
     first_name:str=Field(min_length=1,max_length=120)
-    last_name:str=Field(min_length=1,max_length=120)
-    residence:str=Field(min_length=1,max_length=250)
+    last_name:str|None=Field(default=None,min_length=1,max_length=120)
+    residence:str|None=Field(default=None,min_length=1,max_length=250)
     birth_date:date|None=None
     email:EmailStr
     password:str=Field(min_length=12,max_length=1024)
     @field_validator("first_name", "last_name", "residence")
     @classmethod
     def single_line(cls, value):
+        if value is None:
+            return None
         if not value.strip() or any(unicodedata.category(c) in {"Cc", "Cs"} for c in value):
             raise ValueError("Ungültiges Textfeld")
         return value.strip()
@@ -138,8 +147,8 @@ def register(data:Registration,request:Request):
         if not existing:
             uid=uuid.uuid4()
             con.execute("""INSERT INTO career_auth.users(id,email,first_name,last_name,residence,birth_date,password_hash)
-                VALUES(%s,%s,%s,%s,%s,%s,%s)""",(uid,email,data.first_name.strip(),data.last_name.strip(),
-                data.residence.strip(),data.birth_date,hash_password(data.password)))
+                VALUES(%s,%s,%s,%s,%s,%s,%s)""",(uid,email,data.first_name,data.last_name,
+                data.residence,data.birth_date,hash_password(data.password)))
             t=create_token(con,uid,"verify_email",timedelta(hours=24))
         if t: queue_mail(con,email,"Bestätige deine E-Mail-Adresse",f"Bestätige: {origin()}/account/verify?token={quote(t)}")
     return {"message":"Falls eine Registrierung möglich ist, erhältst du eine E-Mail."}
@@ -178,7 +187,7 @@ def me(request:Request):
         u=session(con,request)
         state=permitted_area(AccountState(u["status"],u["email_verified_at"] is not None,u["role"],u["totp_enabled"]))
         if state=="app" and u["totp_enabled"] and not u["mfa_verified"]: state="mfa_required"
-    return {"id":str(u["id"]),"first_name":u["first_name"],"role":u["role"],"status":u["status"],"next":state}
+    return {"id":str(u["id"]),"first_name":u["first_name"],"role":u["role"],"status":u["status"],"next":state,"email":u["email"],"email_verified":u["email_verified_at"] is not None}
 
 @app.post("/api/auth/logout")
 def logout(request:Request,response:Response):
